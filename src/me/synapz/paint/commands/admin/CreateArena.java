@@ -14,7 +14,7 @@ public class CreateArena extends Command{
         String arenaName = args[2];
 
         Arena a = new Arena(arenaName);
-
+         // check is name exists
         Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + a.getName() + " successfully created.", "Next steps: ");
     }
 
