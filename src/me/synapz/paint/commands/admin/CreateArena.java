@@ -13,19 +13,9 @@ public class CreateArena extends Command{
     public void onCommand(Player player, String[] args) {
         String arenaName = args[2];
 
-        if (ArenaManager.getArenaManager().getArenas().contains(ArenaManager.getArenaManager().getArena(arenaName))) {
-            Message.getMessenger().msg(player, ChatColor.RED, "Arena " + arenaName + " already exists!");
-        }
-
         Arena a = new Arena(arenaName);
-        ArenaManager.getArenaManager().addArena(a);
 
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + a.getName() + " successfully created.", "Next steps: " + getNextSteps());
-    }
-
-    public String[] getNextSteps() {
-        String[] steps = {"setlobby", "setspawn"};
-        return steps;
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + a.getName() + " successfully created.", "Next steps: ");
     }
 
     public String getName() {
@@ -48,7 +38,7 @@ public class CreateArena extends Command{
         return CommandType.ADMIN;
     }
 
-    public int getArgsInt() {
+    public int getMaxArgs() {
         return 3;
     }
 

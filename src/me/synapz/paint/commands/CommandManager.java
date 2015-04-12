@@ -8,6 +8,7 @@ import me.synapz.paint.commands.admin.SetSpawn;
 import me.synapz.paint.commands.admin.Admin;
 import me.synapz.paint.commands.player.Join;
 import me.synapz.paint.commands.player.LeaveArena;
+import me.synapz.paint.commands.player.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,6 +31,7 @@ public class CommandManager implements CommandExecutor{
         // player menu
         commands.add(new Join());
         commands.add(new LeaveArena());
+        commands.add(new List());
         commands.add(new Admin(Command.CommandType.PLAYER));
 
         // admin menu
@@ -58,40 +60,46 @@ public class CommandManager implements CommandExecutor{
                 return true;
             }
 
-            else if (args.length >= 1 && args.length <= 3) {
-                Command command = stringToCommand(args[0]);
+            else if (args.length >= 1) {
+                Command command = stringToCommand(args[0], player);
+
+                if (nullCheck(command, player)) {
+                    return true;
+                }
 
                 if (command.getName().equalsIgnoreCase("admin")) {
                     if (args.length == 1) {
                         dispatchCommand(command, player, args);
                     }
                     else {
-                        Command command1 = stringToCommand(args[1]);
+                        Command command1 = stringToCommand(args[1], player);
+                        if (nullCheck(command1, player)) {
+                            return true;
+                        }
                         dispatchCommand(command1, player, args);
                     }
                     return true;
                 }
                 dispatchCommand(command, player, args);
-            } else {
-                Message.getMessenger().msg(player, ChatColor.RED, COMMAND_NOT_FOUND);
             }
         }
         return false;
     }
 
-    private Command stringToCommand(String command) {
+    private Command stringToCommand(String commandString, Player player) {
+        Command command = null;
         for (Command cmd : commands) {
-            if (cmd.getName().equalsIgnoreCase(command))
-                return cmd;
+            if (cmd.getName().equalsIgnoreCase(commandString))
+                command = cmd;
         }
-        return null;
+        return command;
     }
 
     private boolean nullCheck(Command command, CommandSender sender) {
         try{
             command.getName();
             return false;
-        }catch(NullPointerException e) {
+        }catch(Exception e) {
             Message.getMessenger().msg(sender, ChatColor.RED, COMMAND_NOT_FOUND);
             return true;
         }
@@ -103,18 +111,20 @@ public class CommandManager implements CommandExecutor{
 
         String beginning = type == Command.CommandType.ADMIN ? ChatColor.DARK_AQUA + "/paintball " + "admin " : ChatColor.DARK_AQUA + "/paintball ";
         for (Command command : commands) {
+            String name = command.getName().equals("admin") && type == Command.CommandType.ADMIN ? "" : command.getName();
+            String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
             if (command.getCommandType() == type) {
-                player.sendMessage(beginning + command.getName() + " " + command.getArgs() + ChatColor.WHITE + " - " + ChatColor.GRAY + command.getInfo());
+                player.sendMessage(beginning + name + args + ChatColor.WHITE + " - " + ChatColor.GRAY + command.getInfo());
             }
         }
     }
 
     private void dispatchCommand(Command command, Player player, String[] args) {
         try {
-            if (!Message.getMessenger().permissionValidator(player, command.getPermission()) || nullCheck(command, player)) {
+            if (!Message.getMessenger().permissionValidator(player, command.getPermission())) {
                 return;
             }
-            if (args.length != command.getArgsInt()) {
+            if (args.length != command.getMaxArgs()) {
                 Message.getMessenger().wrongUsage(command, player);
                 return;
             }

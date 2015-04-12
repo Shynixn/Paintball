@@ -15,9 +15,7 @@ public class Admin extends Command{
     }
 
     public void onCommand(Player player, String[] args) {
-        if (Message.getMessenger().permissionValidator(player, getPermission())) {
-            CommandManager.displayHelp(player, CommandType.ADMIN);
-        }
+        CommandManager.displayHelp(player, CommandType.ADMIN);
     }
 
     public String getArgs() {
@@ -41,7 +39,7 @@ public class Admin extends Command{
         return type;
     }
 
-    public int getArgsInt() {
+    public int getMaxArgs() {
         return 1;
     }
 

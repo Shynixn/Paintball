@@ -1,9 +1,11 @@
 package me.synapz.paint.commands.admin;
 
 
+import me.synapz.paint.Message;
 import me.synapz.paint.arenas.Arena;
 import me.synapz.paint.arenas.ArenaManager;
 import me.synapz.paint.commands.Command;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -11,20 +13,24 @@ public class SetLobbySpawn extends Command{
 
     public void onCommand(Player player, String[] args) {
         Location spawn = player.getLocation();
-        String arenaName = args[2];
+        Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
-        Arena a = ArenaManager.getArenaManager().getArena(arenaName);
-
-        if (a == null) {
-            // no arena named that
+        if (arena == null) {
+            Message.getMessenger().msg(player, ChatColor.RED, "Invalid arena.");
+            return;
         }
 
-        a.setSpawn(spawn, ArenaManager.Team.RED);
+        if (arena.getLobbySpawn() != null) {
+            Message.getMessenger().msg(player, ChatColor.RED, "Arena lobby is already set!");
+            return;
+        }
 
+        arena.setLobbySpawn(spawn);
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Lobby spawn for " + arena.getName() + " set!");
     }
 
     public String getArgs() {
-        String args = "<id>";
+        String args = "<name>";
         return args;
     }
 
@@ -44,8 +50,8 @@ public class SetLobbySpawn extends Command{
         return CommandType.ADMIN;
     }
 
-    public int getArgsInt() {
-        return 2;
+    public int getMaxArgs() {
+        return 3;
     }
 
 }

@@ -31,7 +31,7 @@ public class LeaveArena extends Command {
         return CommandType.PLAYER;
     }
 
-    public int getArgsInt() {
+    public int getMaxArgs() {
         return 1;
     }
 }

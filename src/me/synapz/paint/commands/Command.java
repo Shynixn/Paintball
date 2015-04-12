@@ -17,14 +17,15 @@ public abstract class Command {
 
     public abstract CommandType getCommandType();
 
-    public abstract int getArgsInt();
+    public abstract int getMaxArgs();
+
+
 
     public String getCorrectUsage(Command command) {
         String type = command.getCommandType() == CommandType.ADMIN ? "admin " : "";
-        return "/paintball " + type + command.getName() + " " + command.getArgs();
+        String name = command.getName().equals("admin") ? "" : command.getName();
+        return "/paintball " + type + name + " " + command.getArgs();
     }
-
-    // check config for next steps and strike them out...
 
     public enum CommandType {
         ADMIN,

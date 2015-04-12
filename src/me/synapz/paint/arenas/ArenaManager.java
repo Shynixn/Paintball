@@ -29,8 +29,9 @@ public class ArenaManager {
 
     public Arena getArena(String name) {
         for (Arena a : arenas) {
-            if (a.getName() == name)
+            if (a.getName().equalsIgnoreCase(name)) {
                 return a;
+            }
         }
         return null;
     }

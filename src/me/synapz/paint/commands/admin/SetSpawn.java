@@ -31,7 +31,7 @@ public class SetSpawn extends Command {
         return CommandType.ADMIN;
     }
 
-    public int getArgsInt() {
+    public int getMaxArgs() {
         return 3;
     }
 }

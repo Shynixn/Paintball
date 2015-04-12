@@ -1,6 +1,8 @@
 package me.synapz.paint.arenas;
 
 
+import me.synapz.paint.Message;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -10,12 +12,14 @@ public class Arena {
 
     private int max;
     private int min;
+
     private String name;
-    private Location redspawn, bluespawn;
+    private Location redspawn, bluespawn, lobbyspawn;
     private HashMap<String, ArenaManager.Team> players = new HashMap<String, ArenaManager.Team>();
 
     public Arena(String name) {
         this.name = name;
+        ArenaManager.getArenaManager().addArena(this);
     }
 
     public String getName() {
@@ -33,6 +37,10 @@ public class Arena {
         }
     }
 
+    public boolean isSetup() {
+        return true;
+    }
+
     public void setSpawn(Location location, ArenaManager.Team team) {
         switch (team) {
             case RED:
@@ -42,6 +50,15 @@ public class Arena {
                 bluespawn = location;
                 break;
         }
+    }
+
+    public void setLobbySpawn(Location location) {
+        // nextStep.lobby = true;
+        this.lobbyspawn = location;
+    }
+
+    public Location getLobbySpawn() {
+        return this.lobbyspawn;
     }
 
     public void setMaxPlayers(int max) {
@@ -65,7 +82,10 @@ public class Arena {
     }
 
     public void addPlayer(Player player) {
-        players.put(player.getName(), getTeamWithLessPlayers());
+        ArenaManager.Team team = getTeamWithLessPlayers();
+        players.put(player.getName(), team);
+        player.teleport(getLobbySpawn());
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully joined " + this.getName() + ".");
     }
 
     public boolean containsPlayer(Player player) {

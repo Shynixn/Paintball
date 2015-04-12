@@ -1,10 +1,10 @@
 name: PaintBall
 version: Beta_1
-description: PaintBall Minigame.
+description: Paintball Minigame.
 author: Synapz_
 main: me.synapz.paint.PaintBall
 database: false
 
 commands:
    paintball:
-      description: Open the PaintBall command menu.
+      description: Open the Paintbal command menu.
