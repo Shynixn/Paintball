@@ -50,7 +50,7 @@ public class SetMin extends Command{
         return CommandType.ADMIN;
     }
 
-    public int getMaxArgs() {
-        return 4;
+    public int[] getHandledArgs() {
+        return new int[] {4};
     }
 }

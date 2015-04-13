@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class PaintBall extends JavaPlugin{
 
+    // TODO: sign to leave red arena and go to blue arena?
     @Override
     public void onEnable() {
         ArenaManager.getArenaManager().setup();

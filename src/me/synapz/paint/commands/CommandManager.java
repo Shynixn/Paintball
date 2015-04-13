@@ -123,12 +123,19 @@ public class CommandManager implements CommandExecutor{
             if (!Message.getMessenger().permissionValidator(player, command.getPermission())) {
                 return;
             }
-            if (args.length != command.getMaxArgs()) {
-                String error = args.length < command.getMaxArgs() ? "Not enough arguments!" : "To many arguments!";
-                Message.getMessenger().msg(player, ChatColor.RED, error, "Usage: " + command.getCorrectUsage(command));
+
+            int[] handledArgs = command.getHandledArgs();
+            if (command.getName().equals("join") && handledArgs[0] != args.length && handledArgs[1] != args.length) {
+                Message.getMessenger().msg(player, ChatColor.RED, "Please use the correct argument count", "Usage: " + command.getCorrectUsage(command));
                 return;
             }
 
+            int length = command.getHandledArgs()[0];
+            if (args.length != length && !command.getName().equals("join")) {
+                String error = args.length < length ? "Not enough arguments!" : "To many arguments!";
+                Message.getMessenger().msg(player, ChatColor.RED, error, "Usage: " + command.getCorrectUsage(command));
+                return;
+            }
             command.onCommand(player, args);
         }catch (Exception e) {
             Message.getMessenger().msg(player, ChatColor.RED, "An internal error occurred: " + e.getMessage());

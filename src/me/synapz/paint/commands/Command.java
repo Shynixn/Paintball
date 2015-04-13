@@ -1,6 +1,7 @@
 package me.synapz.paint.commands;
 
 
+import me.synapz.paint.arenas.ArenaManager;
 import org.bukkit.entity.Player;
 
 public abstract class Command {
@@ -17,7 +18,7 @@ public abstract class Command {
 
     public abstract CommandType getCommandType();
 
-    public abstract int getMaxArgs();
+    public abstract int[] getHandledArgs();
 
 
 
@@ -25,6 +26,14 @@ public abstract class Command {
         String type = command.getCommandType() == CommandType.ADMIN ? "admin " : "";
         String name = command.getName().equals("admin") ? "" : command.getName();
         return "/paintball " + type + name + " " + command.getArgs();
+    }
+
+    public ArenaManager.Team stringToTeam(Player player, String t) {
+        ArenaManager.Team team = null;
+        if (t.equalsIgnoreCase("blue") || t.equalsIgnoreCase("red")) {
+            team = t.equalsIgnoreCase("blue") ? ArenaManager.Team.BLUE : ArenaManager.Team.RED;
+        }
+        return team;
     }
 
     public enum CommandType {

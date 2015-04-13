@@ -15,7 +15,7 @@ public class List extends Command{
         String name = "";
         for (Arena a : ArenaManager.getArenaManager().getArenas()) {
             if (!a.isSetup()) {
-                name = ChatColor.STRIKETHROUGH + a.getName() + ChatColor.RESET + "" + ChatColor.BLUE;
+                name = ChatColor.STRIKETHROUGH + a.getName() + ChatColor.RESET + ChatColor.GRAY;
             } else {
                 name = a.getName();
             }
@@ -52,8 +52,8 @@ public class List extends Command{
         return CommandType.PLAYER;
     }
 
-    public int getMaxArgs() {
-        return 1;
+    public int[] getHandledArgs() {
+        return new int[] {1};
     }
 
 }

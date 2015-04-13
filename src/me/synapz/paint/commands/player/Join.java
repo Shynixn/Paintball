@@ -12,19 +12,23 @@ public class Join extends Command {
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[1]);
+        ArenaManager.Team team = null;
 
+        if (args.length == 3) {
+            team = stringToTeam(player, args[2]);
+        }
         if (arena == null) {
             Message.getMessenger().msg(player, ChatColor.RED, "Invalid arena.");
             return;
         }
 
         if (arena.containsPlayer(player)) {
-            Message.getMessenger().msg(player, ChatColor.RED, "You already joined the arena.");
+            Message.getMessenger().msg(player, ChatColor.RED, "You already joined that arena.");
             return;
         }
 
         if (arena.isSetup()) {
-            arena.joinArena(player);
+            arena.joinArena(player, team);
             // sendMessage, p.getname + joined 1/max players!
         } else {
             Message.getMessenger().msg(player, ChatColor.RED, "That arena has not been fully setup.");
@@ -32,7 +36,7 @@ public class Join extends Command {
     }
 
     public String getArgs() {
-        String args = "<name>";
+        String args = "<name> [red/blue]";
         return args;
     }
 
@@ -52,7 +56,7 @@ public class Join extends Command {
         return CommandType.PLAYER;
     }
 
-    public int getMaxArgs() {
-        return 2;
+    public int[] getHandledArgs() {
+        return new int[] {2, 3};
     }
 }

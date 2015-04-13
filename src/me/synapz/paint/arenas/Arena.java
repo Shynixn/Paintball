@@ -18,6 +18,9 @@ public class Arena {
     private boolean isBlueLobbySet;
     private boolean isRedLobbySet;
 
+    private boolean inProgress;
+    private boolean isEnabled;
+
     private int max;
     private int min;
 
@@ -59,31 +62,6 @@ public class Arena {
                 break;
         }
     }
-
-    public String getSteps() {
-        String finalString = "";
-        ChatColor done = ChatColor.STRIKETHROUGH;
-        String end = ChatColor.RESET + "" + ChatColor.GREEN;
-
-        String max = isMaxSet ? done + "setMax"+end : "setMax";
-        String min = isMinSet ? done + "setMin"+end : "setMin";
-        String redSpawn = isRedSpawnSet ? done + "redSpawn"+end : "redSpawn";
-        String blueSpawn = isBlueSpawnSet ? done + "blueSpawn"+end : "blueSpawn";
-        String redLobbySpawn = isRedLobbySet ? done + "redLobby"+end : "redLobby";
-        String blueLobbySpawn = isBlueLobbySet ? done + "blueLobby"+end : "blueLobby";
-        String[] steps = {max, min, redSpawn, blueSpawn, redLobbySpawn, blueLobbySpawn};
-
-        for (String step : steps) {
-            finalString = finalString + ", " + step;
-        }
-
-        return isSetup() ? "All steps are finished." : finalString.substring(2, finalString.length());
-    }
-
-    public boolean isSetup() {
-        return isMinSet && isMaxSet && isRedLobbySet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet;
-    }
-
 
     public void setLobbySpawn(Location location, ArenaManager.Team team) {
         switch (team) {
@@ -129,23 +107,72 @@ public class Arena {
         return min;
     }
 
+    public String getSteps() {
+        String finalString = "";
+        ChatColor done = ChatColor.STRIKETHROUGH;
+        String end = ChatColor.RESET + "" + ChatColor.GREEN;
 
-    public void startGame() {
+        String max = isMaxSet ? done + "setMax"+end : "setMax";
+        String min = isMinSet ? done + "setMin"+end : "setMin";
+        String redSpawn = isRedSpawnSet ? done + "redSpawn"+end : "redSpawn";
+        String blueSpawn = isBlueSpawnSet ? done + "blueSpawn"+end : "blueSpawn";
+        String redLobbySpawn = isRedLobbySet ? done + "redLobby"+end : "redLobby";
+        String blueLobbySpawn = isBlueLobbySet ? done + "blueLobby"+end : "blueLobby";
+        String[] steps = {max, min, redSpawn, blueSpawn, redLobbySpawn, blueLobbySpawn};
+
+        for (String step : steps) {
+            finalString = finalString + ", " + step;
+        }
+
+        return isSetup() ? "All steps are finished." : finalString.substring(2, finalString.length());
+    }
+
+    public void startGame(Player sender) {
         if (lobbyPlayers.keySet().size() <= this.getMax() && lobbyPlayers.keySet().size() >= this.getMin()) {
-            for (String player : lobbyPlayers.keySet()) {
-                this.addPlayerToArena(Bukkit.getPlayer(player));
+            for (String p : lobbyPlayers.keySet()) {
+                Player player = Bukkit.getPlayer(p);
+                this.addPlayerToArena(player);
             }
+            inProgress = true;
+        } else {
+            Message.getMessenger().msg(sender, ChatColor.RED, "There are not enough players in the lobby to start.");
         }
     }
 
-    public ArenaManager.Team getTeam(Player player) {
-        return players.get(player.getName());
+    public boolean isSetup() {
+        return isMinSet && isMaxSet && isRedLobbySet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet;
     }
 
-    public void joinArena(Player player) {
-        lobbyPlayers.put(player.getName(), getTeamWithLessPlayers());
+    public boolean isEnable() {
+        return isEnabled;
+    }
+
+    public void removePlayer(Player player) {
+        lobbyPlayers.keySet().remove(player.getName());
+        players.keySet().remove(player.getName());
+        // player.teleport <getbacklocation from config>
+    }
+
+    public ArenaManager.Team getTeam(Player player) {
+        return lobbyPlayers.get(player.getName());
+    }
+
+    public void joinArena(Player player, ArenaManager.Team team) {
+        if (this.inProgress) {
+            Message.getMessenger().msg(player, ChatColor.RED, "That arena is currently in progress!");
+            return;
+        }
+        if (team == null) {
+            lobbyPlayers.put(player.getName(), getTeamWithLessPlayers());
+        } else {
+            lobbyPlayers.put(player.getName(), team);
+        }
         player.teleport(getLobbySpawn(getTeam(player)));
         Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully joined arena " + this.getName() + "'s lobby.");
+
+        if (lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax()) {
+            this.startGame(player);
+        }
     }
 
     private void addPlayerToArena(Player player) {
@@ -158,7 +185,7 @@ public class Arena {
     }
 
     public boolean containsPlayer(Player player) {
-        return players.keySet().contains(player.getName());
+        return lobbyPlayers.keySet().contains(player.getName()) || players.keySet().contains(player.getName());
     }
 
     private ArenaManager.Team getTeamWithLessPlayers() {

@@ -39,8 +39,8 @@ public class Admin extends Command{
         return type;
     }
 
-    public int getMaxArgs() {
-        return 1;
+    public int[] getHandledArgs() {
+        return new int[] {1};
     }
 
 }

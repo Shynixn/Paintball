@@ -25,7 +25,7 @@ public class SetSpawn extends Command {
         if (teamString.equalsIgnoreCase("blue") || teamString.equalsIgnoreCase("red")) {
             team = teamString.equalsIgnoreCase("blue") ? ArenaManager.Team.BLUE : ArenaManager.Team.RED;
         } else {
-            Message.getMessenger().msg(player, ChatColor.RED, args[3] + " is an invalid team. Choose only red/blue");
+            Message.getMessenger().msg(player, ChatColor.RED, args[3] + " is an invalid team. Choose either red/blue");
             return;
         }
 
@@ -59,7 +59,7 @@ public class SetSpawn extends Command {
         return CommandType.ADMIN;
     }
 
-    public int getMaxArgs() {
-        return 4;
+    public int[] getHandledArgs() {
+        return new int[] {4};
     }
 }
