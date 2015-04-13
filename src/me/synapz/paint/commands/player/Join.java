@@ -19,12 +19,15 @@ public class Join extends Command {
         }
 
         if (arena.containsPlayer(player)) {
-            Message.getMessenger().msg(player, ChatColor.RED, "You already joined the arena!");
+            Message.getMessenger().msg(player, ChatColor.RED, "You already joined the arena.");
             return;
         }
 
         if (arena.isSetup()) {
-            arena.addPlayer(player);
+            arena.joinArena(player);
+            // sendMessage, p.getname + joined 1/max players!
+        } else {
+            Message.getMessenger().msg(player, ChatColor.RED, "That arena has not been fully setup.");
         }
     }
 

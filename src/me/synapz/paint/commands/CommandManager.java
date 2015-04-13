@@ -2,10 +2,7 @@ package me.synapz.paint.commands;
 
 
 import me.synapz.paint.Message;
-import me.synapz.paint.commands.admin.CreateArena;
-import me.synapz.paint.commands.admin.SetLobbySpawn;
-import me.synapz.paint.commands.admin.SetSpawn;
-import me.synapz.paint.commands.admin.Admin;
+import me.synapz.paint.commands.admin.*;
 import me.synapz.paint.commands.player.Join;
 import me.synapz.paint.commands.player.LeaveArena;
 import me.synapz.paint.commands.player.List;
@@ -38,6 +35,8 @@ public class CommandManager implements CommandExecutor{
         commands.add(new CreateArena());
         commands.add(new SetLobbySpawn());
         commands.add(new SetSpawn());
+        commands.add(new SetMin());
+        commands.add(new SetMax());
         commands.add(new Admin(Command.CommandType.ADMIN)); // used so it gets displayed in /paintball admin
     }
 
@@ -125,7 +124,8 @@ public class CommandManager implements CommandExecutor{
                 return;
             }
             if (args.length != command.getMaxArgs()) {
-                Message.getMessenger().wrongUsage(command, player);
+                String error = args.length < command.getMaxArgs() ? "Not enough arguments!" : "To many arguments!";
+                Message.getMessenger().msg(player, ChatColor.RED, error, "Usage: " + command.getCorrectUsage(command));
                 return;
             }
 

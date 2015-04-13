@@ -12,14 +12,24 @@ public class List extends Command{
 
     public void onCommand(Player player, String[] args) {
         String arenas = "";
+        String name = "";
         for (Arena a : ArenaManager.getArenaManager().getArenas()) {
-            arenas = arenas + ", " + a.getName();
+            if (!a.isSetup()) {
+                name = ChatColor.STRIKETHROUGH + a.getName() + ChatColor.RESET + "" + ChatColor.BLUE;
+            } else {
+                name = a.getName();
+            }
+
+            arenas = arenas + ", " + name;
         }
 
         if (arenas.equals("")) {
-            arenas = "There are currently no arenas";
+            arenas = "There are currently no arenas.";
+            Message.getMessenger().msg(player, ChatColor.BLUE, arenas);
+            return;
         }
-        Message.getMessenger().msg(player, ChatColor.BLUE, arenas);
+
+        Message.getMessenger().msg(player, ChatColor.BLUE, "Arenas: " + ChatColor.GRAY + arenas.substring(2, arenas.length()));
     }
 
     public String getName() {

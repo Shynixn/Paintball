@@ -35,7 +35,7 @@ public class Message {
     }
 
     public void wrongUsage(Command command, Player player) {
-        msg(player, ChatColor.RED, command.getInfo(), "Correct usage: " + command.getCorrectUsage(command));
+        msg(player, ChatColor.RED, command.getInfo(), "Usage: " + command.getCorrectUsage(command));
     }
 
 

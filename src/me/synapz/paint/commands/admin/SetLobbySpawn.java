@@ -14,23 +14,33 @@ public class SetLobbySpawn extends Command{
     public void onCommand(Player player, String[] args) {
         Location spawn = player.getLocation();
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
+        String teamString = args[3];
+        ArenaManager.Team team;
 
         if (arena == null) {
-            Message.getMessenger().msg(player, ChatColor.RED, "Invalid arena.");
+            Message.getMessenger().msg(player, ChatColor.RED, args[2] + " is an invalid arena.");
             return;
         }
 
-        if (arena.getLobbySpawn() != null) {
-            Message.getMessenger().msg(player, ChatColor.RED, "Arena lobby is already set!");
+        if (teamString.equalsIgnoreCase("blue") || teamString.equalsIgnoreCase("red")) {
+            team = teamString.equalsIgnoreCase("blue") ? ArenaManager.Team.BLUE : ArenaManager.Team.RED;
+        } else {
+            Message.getMessenger().msg(player, ChatColor.RED, args[3] + " is an invalid team. Choose only red/blue");
             return;
         }
 
-        arena.setLobbySpawn(spawn);
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Lobby spawn for " + arena.getName() + " set!");
+
+        if (arena.getLobbySpawn(team) != null) {
+            Message.getMessenger().msg(player, ChatColor.RED, "Lobby spawn for " + team + " was already set.");
+            return;
+        }
+
+        arena.setLobbySpawn(spawn, team);
+        Message.getMessenger().msg(player, ChatColor.GREEN, team + " lobby spawn for " + arena.getName() + " set!", "Steps: " + arena.getSteps());
     }
 
     public String getArgs() {
-        String args = "<name>";
+        String args = "<name> <red/blue>";
         return args;
     }
 
@@ -51,7 +61,7 @@ public class SetLobbySpawn extends Command{
     }
 
     public int getMaxArgs() {
-        return 3;
+        return 4;
     }
 
 }
