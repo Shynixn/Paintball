@@ -24,7 +24,7 @@ public class CreateArena extends Command{
 
         Arena a = new Arena(arenaName);
 
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + a.getName() + " successfully created.", "Steps: " + a.getSteps());
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + a.getName() + " successfully created.", a.getSteps());
     }
 
     public String getName() {
@@ -47,8 +47,12 @@ public class CreateArena extends Command{
         return CommandType.ADMIN;
     }
 
-    public int[] getHandledArgs() {
-        return new int[] {3};
+    public int getMaxArgs() {
+        return 3;
+    }
+
+    public int getMinArgs() {
+        return 3;
     }
 
 }

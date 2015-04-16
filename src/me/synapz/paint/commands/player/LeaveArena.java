@@ -47,7 +47,11 @@ public class LeaveArena extends Command {
         return CommandType.PLAYER;
     }
 
-    public int[] getHandledArgs() {
-        return new int[] {1};
+    public int getMaxArgs() {
+        return 1;
+    }
+
+    public int getMinArgs() {
+        return 1;
     }
 }

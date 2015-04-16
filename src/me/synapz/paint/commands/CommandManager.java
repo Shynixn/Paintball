@@ -123,23 +123,33 @@ public class CommandManager implements CommandExecutor{
             if (!Message.getMessenger().permissionValidator(player, command.getPermission())) {
                 return;
             }
-
-            int[] handledArgs = command.getHandledArgs();
-            if (command.getName().equals("join") && handledArgs[0] != args.length && handledArgs[1] != args.length) {
-                Message.getMessenger().msg(player, ChatColor.RED, "Please use the correct argument count", "Usage: " + command.getCorrectUsage(command));
-                return;
+            if (argumentChecker(command, player, args)) {
+                command.onCommand(player, args);
             }
-
-            int length = command.getHandledArgs()[0];
-            if (args.length != length && !command.getName().equals("join")) {
-                String error = args.length < length ? "Not enough arguments!" : "To many arguments!";
-                Message.getMessenger().msg(player, ChatColor.RED, error, "Usage: " + command.getCorrectUsage(command));
-                return;
-            }
-            command.onCommand(player, args);
         }catch (Exception e) {
             Message.getMessenger().msg(player, ChatColor.RED, "An internal error occurred: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private boolean argumentChecker(Command command, Player player, String[] args) {
+        if (command.getMaxArgs() == command.getMinArgs()) {
+            if (args.length < command.getMinArgs()) {
+                Message.getMessenger().wrongUsage(command, player, Message.Usage.NOT_ENOUGH_ARGS);
+                return false;
+            } else if (args.length > command.getMaxArgs()) {
+                Message.getMessenger().wrongUsage(command, player, Message.Usage.TO_MANY_ARGS);
+                return false;
+            }
+        } else {
+            if (args.length < command.getMinArgs()) {
+                Message.getMessenger().wrongUsage(command, player, Message.Usage.NOT_ENOUGH_ARGS);
+                return false;
+            } else if (args.length > command.getMaxArgs()) {
+                Message.getMessenger().wrongUsage(command, player, Message.Usage.TO_MANY_ARGS);
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -56,7 +56,11 @@ public class Join extends Command {
         return CommandType.PLAYER;
     }
 
-    public int[] getHandledArgs() {
-        return new int[] {2, 3};
+    public int getMaxArgs() {
+        return 3;
+    }
+
+    public int getMinArgs() {
+        return 2;
     }
 }

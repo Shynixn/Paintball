@@ -110,7 +110,7 @@ public class Arena {
     public String getSteps() {
         String finalString = "";
         ChatColor done = ChatColor.STRIKETHROUGH;
-        String end = ChatColor.RESET + "" + ChatColor.GREEN;
+        String end = ChatColor.RESET + "" + ChatColor.GRAY;
 
         String max = isMaxSet ? done + "setMax"+end : "setMax";
         String min = isMinSet ? done + "setMin"+end : "setMin";
@@ -121,10 +121,10 @@ public class Arena {
         String[] steps = {max, min, redSpawn, blueSpawn, redLobbySpawn, blueLobbySpawn};
 
         for (String step : steps) {
-            finalString = finalString + ", " + step;
+            finalString = finalString + ", " + ChatColor.GRAY + step;
         }
 
-        return isSetup() ? "All steps are finished." : finalString.substring(2, finalString.length());
+        return isSetup() ? "Complete. Arena is now open!" : ChatColor.BLUE + "Steps: " + finalString.subSequence(2, finalString.length());
     }
 
     public void startGame(Player sender) {

@@ -18,7 +18,9 @@ public abstract class Command {
 
     public abstract CommandType getCommandType();
 
-    public abstract int[] getHandledArgs();
+    public abstract int getMaxArgs();
+
+    public abstract int getMinArgs();
 
 
 

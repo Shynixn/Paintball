@@ -35,7 +35,7 @@ public class SetSpawn extends Command {
         }
 
         arena.setArenaSpawn(spawn, team);
-        Message.getMessenger().msg(player, ChatColor.GREEN, team + " spawn for " + arena.getName() + " set!", "Steps: " + arena.getSteps());
+        Message.getMessenger().msg(player, ChatColor.GREEN, team + " spawn for " + arena.getName() + " set!", arena.getSteps());
     }
 
     public String getArgs() {
@@ -59,7 +59,11 @@ public class SetSpawn extends Command {
         return CommandType.ADMIN;
     }
 
-    public int[] getHandledArgs() {
-        return new int[] {4};
+    public int getMaxArgs() {
+        return 4;
+    }
+
+    public int getMinArgs() {
+        return 4;
     }
 }

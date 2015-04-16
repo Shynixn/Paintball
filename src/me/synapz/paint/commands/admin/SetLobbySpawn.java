@@ -36,7 +36,7 @@ public class SetLobbySpawn extends Command{
         }
 
         arena.setLobbySpawn(spawn, team);
-        Message.getMessenger().msg(player, ChatColor.GREEN, team + " lobby spawn for " + arena.getName() + " set!", "Steps: " + arena.getSteps());
+        Message.getMessenger().msg(player, ChatColor.GREEN, team + " lobby spawn for " + arena.getName() + " set!", arena.getSteps());
     }
 
     public String getArgs() {
@@ -60,8 +60,12 @@ public class SetLobbySpawn extends Command{
         return CommandType.ADMIN;
     }
 
-    public int[] getHandledArgs() {
-        return new int[] {4};
+    public int getMaxArgs() {
+        return 4;
+    }
+
+    public int getMinArgs() {
+        return 4;
     }
 
 }

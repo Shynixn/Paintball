@@ -28,7 +28,7 @@ public class SetMax extends Command{
         }
 
         arena.setMaxPlayers(max);
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Max players for " + arena.getName() + " set to " + max, "Steps: " + arena.getSteps());
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Max players for " + arena.getName() + " set to " + max, arena.getSteps());
     }
 
     public String getName() {
@@ -51,7 +51,11 @@ public class SetMax extends Command{
         return CommandType.ADMIN;
     }
 
-    public int[] getHandledArgs() {
-        return new int[] {4};
+    public int getMaxArgs() {
+        return 4;
+    }
+
+    public int getMinArgs() {
+        return 4;
     }
 }
