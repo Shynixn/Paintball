@@ -2,9 +2,11 @@ package me.synapz.paint.arenas;
 
 
 import me.synapz.paint.Message;
+import me.synapz.paint.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -19,16 +21,15 @@ public class Arena {
     private boolean isRedLobbySet;
 
     private boolean inProgress;
-    private boolean isEnabled;
 
     private int max;
     private int min;
 
     private String name;
-    private Location redSpawn, blueSpawn, redLobbySpawn, blueLobbySpawn;
 
     private HashMap<String, ArenaManager.Team> players = new HashMap<String, ArenaManager.Team>();
     private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<String, ArenaManager.Team>();
+    private FileConfiguration file = Settings.getSettings().getArenaFile();
 
     public Arena(String name) {
         this.name = name;
@@ -40,71 +41,43 @@ public class Arena {
     }
 
     public Location getSpawn(ArenaManager.Team team) {
-        switch (team) {
-            case RED:
-                return redSpawn;
-            case BLUE:
-                return blueSpawn;
-            default:
-                return null;
-        }
+        String value = team == ArenaManager.Team.BLUE ? "Blue-Spawn" : "Red-Spawn";
+        return (Location) file.get(value);
     }
 
     public void setArenaSpawn(Location location, ArenaManager.Team team) {
-        switch (team) {
-            case RED:
-                isRedSpawnSet = true;
-                redSpawn = location;
-                break;
-            case BLUE:
-                isBlueSpawnSet = true;
-                blueSpawn = location;
-                break;
-        }
+        String value = team == ArenaManager.Team.BLUE ? "Blue-Spawn" : "Red-Spawn";
+        file.set("Arenas." + this.getName() + "." + value, location);
+        Settings.getSettings().saveArenaFile();
     }
 
     public void setLobbySpawn(Location location, ArenaManager.Team team) {
-        switch (team) {
-            case BLUE:
-                isBlueLobbySet = true;
-                blueLobbySpawn = location;
-                break;
-            case RED:
-                isRedLobbySet = true;
-                redLobbySpawn = location;
-                break;
-            default:
-                break;
-        }
+        String value = team == ArenaManager.Team.BLUE ? "Blue-Lobby" : "Red-Lobby";
+        file.set("Arenas." + this.getName() + "." + value, location);
+        Settings.getSettings().saveArenaFile();
     }
 
     public Location getLobbySpawn(ArenaManager.Team team) {
-        switch (team) {
-            case BLUE:
-                return blueLobbySpawn;
-            case RED:
-                return redLobbySpawn;
-            default:
-                return null;
-        }
+        String value = team == ArenaManager.Team.BLUE ? "Blue-Lobby" : "Red-Lobby";
+        return (Location) file.get(value);
     }
 
     public void setMaxPlayers(int max) {
-        isMaxSet = true;
-        this.max = max;
+        file.set("Arenas." + this.getName() + ".Max-Players", max);
+        Settings.getSettings().saveArenaFile();
     }
 
     public void setMinPlayers(int min) {
-        isMinSet = true;
-        this.min = min;
+        file.set("Arenas." + this.getName() + ".Min-Players", min);
+        Settings.getSettings().saveArenaFile();
     }
 
     public int getMax() {
-        return max;
+        return file.getInt("Arenas." + this.getName() + ".Max-Players");
     }
 
     public int getMin() {
-        return min;
+        return file.getInt("Arenas." + this.getName() + ".Min-Players");
     }
 
     public String getSteps() {
@@ -143,9 +116,6 @@ public class Arena {
         return isMinSet && isMaxSet && isRedLobbySet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet;
     }
 
-    public boolean isEnable() {
-        return isEnabled;
-    }
 
     public void removePlayer(Player player) {
         lobbyPlayers.keySet().remove(player.getName());
@@ -200,6 +170,10 @@ public class Arena {
             return ArenaManager.Team.BLUE;
         else
             return ArenaManager.Team.RED;
+    }
+
+    private void loadVaules() {
+
     }
 
 

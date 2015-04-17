@@ -9,8 +9,8 @@ public class PaintBall extends JavaPlugin{
     // TODO: sign to leave red arena and go to blue arena?
     @Override
     public void onEnable() {
+        Settings.getSettings().init(this);
         ArenaManager.getArenaManager().setup();
-
         CommandManager commandManager = new CommandManager();
         commandManager.init();
 
