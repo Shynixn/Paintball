@@ -1,10 +1,12 @@
-package me.synapz.paint;
+package me.synapz.paintball;
 
-import me.synapz.paint.arenas.ArenaManager;
-import me.synapz.paint.commands.CommandManager;
+import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.commands.CommandManager;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class PaintBall extends JavaPlugin{
+public class Paintball extends JavaPlugin{
 
     // TODO: sign to leave red arena and go to blue arena?
     @Override
@@ -15,6 +17,7 @@ public class PaintBall extends JavaPlugin{
         commandManager.init();
 
         getCommand("paintball").setExecutor(commandManager);
+
     }
 
     @Override

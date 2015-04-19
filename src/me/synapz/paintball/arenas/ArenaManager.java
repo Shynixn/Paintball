@@ -1,14 +1,10 @@
-package me.synapz.paint.arenas;
+package me.synapz.paintball.arenas;
 
 
-import me.synapz.paint.Settings;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import me.synapz.paintball.Settings;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class ArenaManager {

@@ -1,14 +1,18 @@
-package me.synapz.paint;
+package me.synapz.paintball;
 
 
-import me.synapz.paint.commands.Command;
+import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Message {
 
-    public static final String SUFFIX = ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + "PaintBall" + ChatColor.DARK_GRAY + "] ";
+    // config values
+    public static final String PREFIX = ChatColor.translateAlternateColorCodes('&', Settings.getSettings().prefix + " ");
+    public static final String THEME = Settings.getSettings().theme;
+
+    // determined default values
     public static final String NO_PERMS = "You don't have access to that command!";
 
     private static Message instance = new Message();
@@ -21,7 +25,7 @@ public class Message {
         String[] messages = msg;
 
         for (String string : messages) {
-            sender.sendMessage(SUFFIX + color + string);
+            sender.sendMessage(PREFIX + color + string);
         }
     }
 
@@ -32,10 +36,6 @@ public class Message {
             msg(player, ChatColor.RED, NO_PERMS);
             return false;
         }
-    }
-
-    public void wrongUsage(Command command, Player player) {
-        msg(player, ChatColor.RED, command.getInfo(), "Usage: " + command.getCorrectUsage(command));
     }
 
     public void wrongUsage(Command command, Player player, Usage usage) {

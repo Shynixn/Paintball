@@ -1,9 +1,8 @@
-package me.synapz.paint.commands.admin;
+package me.synapz.paintball.commands.admin;
 
 
-import me.synapz.paint.Message;
-import me.synapz.paint.commands.Command;
-import me.synapz.paint.commands.CommandManager;
+import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.CommandManager;
 import org.bukkit.entity.Player;
 
 public class Admin extends Command{

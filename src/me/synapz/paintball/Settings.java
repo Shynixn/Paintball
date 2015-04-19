@@ -1,4 +1,4 @@
-package me.synapz.paint;
+package me.synapz.paintball;
 
 
 import org.bukkit.Bukkit;
@@ -16,7 +16,7 @@ public class Settings {
     private FileConfiguration config, arena;
     private File cFile, aFile;
 
-    private String suffix, version;
+    public String prefix, version, theme;
 
     private Settings() {}
 
@@ -24,7 +24,7 @@ public class Settings {
         return settings;
     }
 
-    public void init(PaintBall pb) {
+    public void init(Paintball pb) {
         config = pb.getConfig();
         config.options().copyDefaults(true);
         cFile = new File(pb.getDataFolder(), "config.yml");
@@ -46,8 +46,9 @@ public class Settings {
 
         arena = YamlConfiguration.loadConfiguration(aFile);
 
-        version = config.getString("version");
-        suffix = config.getString("suffix");
+        version = pb.getDescription().getVersion();
+        prefix = config.getString("prefix");
+        theme = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
 
         saveConfig();
     }

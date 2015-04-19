@@ -1,19 +1,18 @@
-package me.synapz.paint.commands.admin;
+package me.synapz.paintball.commands.admin;
 
-import me.synapz.paint.Message;
-import me.synapz.paint.arenas.Arena;
-import me.synapz.paint.arenas.ArenaManager;
-import me.synapz.paint.commands.Command;
+import me.synapz.paintball.Message;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class SetMax extends Command{
+public class SetMin extends Command{
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
-        String maxString = args[3];
-        int max = 0;
+        String minString = args[3];
+        int min = 0;
 
         if (arena == null) {
             Message.getMessenger().msg(player, ChatColor.RED, args[2] + " is an invalid arena.");
@@ -21,22 +20,22 @@ public class SetMax extends Command{
         }
 
         try {
-            max = Integer.parseInt(maxString);
+            min = Integer.parseInt(minString);
         } catch (NumberFormatException e) {
-            Message.getMessenger().msg(player, ChatColor.RED, maxString + " is not a valid number!");
+            Message.getMessenger().msg(player, ChatColor.RED, minString + " is not a valid number!");
             return;
         }
 
-        arena.setMaxPlayers(max);
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Max players for " + arena.getName() + " set to " + max, arena.getSteps());
+        arena.setMinPlayers(min);
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Min players for " + arena.getName() + " set to " + min, arena.getSteps());
     }
 
     public String getName() {
-        return "max";
+        return "min";
     }
 
     public String getInfo() {
-        return "Set the maximum amount of players";
+        return "Set the minimum amount of players";
     }
 
     public String getArgs() {
@@ -44,7 +43,7 @@ public class SetMax extends Command{
     }
 
     public String getPermission() {
-        return "paintball.admin.setmax";
+        return "paintball.admin.setmin";
     }
 
     public CommandType getCommandType() {

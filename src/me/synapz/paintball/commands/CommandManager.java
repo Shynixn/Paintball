@@ -1,18 +1,18 @@
-package me.synapz.paint.commands;
+package me.synapz.paintball.commands;
 
 
-import me.synapz.paint.Message;
-import me.synapz.paint.commands.admin.*;
-import me.synapz.paint.commands.player.Join;
-import me.synapz.paint.commands.player.LeaveArena;
-import me.synapz.paint.commands.player.List;
+import me.synapz.paintball.Message;
+import me.synapz.paintball.Settings;
+import me.synapz.paintball.commands.admin.*;
+import me.synapz.paintball.commands.player.Join;
+import me.synapz.paintball.commands.player.LeaveArena;
+import me.synapz.paintball.commands.player.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CommandManager implements CommandExecutor{
 
@@ -21,7 +21,7 @@ public class CommandManager implements CommandExecutor{
 
     private static final String NO_CONSOLE_PERMS = "Console does not have access to that command!";
     private static final String COMMAND_NOT_FOUND = "Unknown Command! Type /paintball for a list of commands.";
-    private static final String HELP_TITLE = ChatColor.DARK_GRAY + "*********************" + ChatColor.GRAY + "" + ChatColor.BOLD + "{- " + Message.SUFFIX + ChatColor.GRAY + "" + ChatColor.BOLD + " -}" + ChatColor.DARK_GRAY + "*********************";
+    private static final String HELP_TITLE = ChatColor.DARK_GRAY + "*********************" + ChatColor.GRAY + "" + ChatColor.BOLD + "{- " + ChatColor.DARK_GRAY + "[" + Message.THEME + "Paintball" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "" + ChatColor.BOLD + " -}" + ChatColor.DARK_GRAY + "*********************";
 
 
     public void init() {
@@ -37,6 +37,7 @@ public class CommandManager implements CommandExecutor{
         commands.add(new SetSpawn());
         commands.add(new SetMin());
         commands.add(new SetMax());
+        commands.add(new Reload());
         commands.add(new Admin(Command.CommandType.ADMIN)); // used so it gets displayed in /paintball admin
     }
 
@@ -60,7 +61,7 @@ public class CommandManager implements CommandExecutor{
             }
 
             else if (args.length >= 1) {
-                Command command = stringToCommand(args[0], player);
+                Command command = stringToCommand(args[0]);
 
                 if (nullCheck(command, player)) {
                     return true;
@@ -71,7 +72,7 @@ public class CommandManager implements CommandExecutor{
                         dispatchCommand(command, player, args);
                     }
                     else {
-                        Command command1 = stringToCommand(args[1], player);
+                        Command command1 = stringToCommand(args[1]);
                         if (nullCheck(command1, player)) {
                             return true;
                         }
@@ -85,7 +86,7 @@ public class CommandManager implements CommandExecutor{
         return false;
     }
 
-    private Command stringToCommand(String commandString, Player player) {
+    private Command stringToCommand(String commandString) {
         Command command = null;
         for (Command cmd : commands) {
             if (cmd.getName().equalsIgnoreCase(commandString))
@@ -108,7 +109,7 @@ public class CommandManager implements CommandExecutor{
     public static void displayHelp(Player player, Command.CommandType type) {
         player.sendMessage(HELP_TITLE);
 
-        String beginning = type == Command.CommandType.ADMIN ? ChatColor.DARK_AQUA + "/paintball " + "admin " : ChatColor.DARK_AQUA + "/paintball ";
+        String beginning = type == Command.CommandType.ADMIN ? Message.THEME + "/paintball " + "admin " : Message.THEME + "/paintball ";
         for (Command command : commands) {
             String name = command.getName().equals("admin") && type == Command.CommandType.ADMIN ? "" : command.getName();
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();

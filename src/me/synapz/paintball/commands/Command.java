@@ -1,7 +1,7 @@
-package me.synapz.paint.commands;
+package me.synapz.paintball.commands;
 
 
-import me.synapz.paint.arenas.ArenaManager;
+import me.synapz.paintball.arenas.ArenaManager;
 import org.bukkit.entity.Player;
 
 public abstract class Command {

@@ -1,11 +1,10 @@
-package me.synapz.paint.commands.admin;
+package me.synapz.paintball.commands.admin;
 
 
-import me.synapz.paint.Settings;
-import me.synapz.paint.arenas.Arena;
-import me.synapz.paint.arenas.ArenaManager;
-import me.synapz.paint.Message;
-import me.synapz.paint.commands.Command;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.Message;
+import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
