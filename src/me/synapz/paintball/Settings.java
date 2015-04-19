@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,7 @@ public class Settings {
 
     private static Settings settings = new Settings();
 
+    private Paintball pb;
     private FileConfiguration config, arena;
     private File cFile, aFile;
 
@@ -25,6 +27,7 @@ public class Settings {
     }
 
     public void init(Paintball pb) {
+        this.pb = pb;
         config = pb.getConfig();
         config.options().copyDefaults(true);
         cFile = new File(pb.getDataFolder(), "config.yml");
@@ -39,7 +42,7 @@ public class Settings {
                 aFile.createNewFile();
             }
             catch (IOException e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "", "Stack trace: ");
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "", "Could not create arenas.yml. Stack trace: ");
                 e.printStackTrace();
             }
         }
@@ -50,7 +53,7 @@ public class Settings {
         prefix = config.getString("prefix");
         theme = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
 
-        saveConfig();
+        //saveConfig();
     }
 
     public void saveConfig() {
@@ -62,9 +65,18 @@ public class Settings {
         }
     }
 
+    /**
+     * DOES NOT WORK
+     */
     public void reloadConfig() {
         config = YamlConfiguration.loadConfiguration(cFile);
         arena = YamlConfiguration.loadConfiguration(aFile);
+        try {
+            config.save(cFile);
+        }catch (Exception e) {
+            Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Could not save config.yml. Stack trace:");
+            e.printStackTrace();
+        }
     }
 
     public void saveArenaFile() {

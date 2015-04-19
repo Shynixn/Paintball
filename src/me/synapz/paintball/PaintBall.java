@@ -17,11 +17,9 @@ public class Paintball extends JavaPlugin{
         commandManager.init();
 
         getCommand("paintball").setExecutor(commandManager);
-
     }
 
     @Override
     public void onDisable() {
-
     }
 }
