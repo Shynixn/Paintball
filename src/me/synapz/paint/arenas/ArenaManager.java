@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class ArenaManager {
@@ -16,9 +17,7 @@ public class ArenaManager {
         RED,
         BLUE;
     }
-    private ArenaManager() {
-
-    }
+    private ArenaManager() {}
 
     private static ArenaManager instance = new ArenaManager();
     private ArrayList<Arena> arenas = new ArrayList<Arena>();
@@ -29,20 +28,16 @@ public class ArenaManager {
     }
 
     public void setup() {
-
-        try {
-            arenasList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-        }catch (ClassCastException e) {
-            Settings.getSettings().getArenaFile().set("Arena-List", "");
-            return;
-        }
+        arenasList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
 
         for (String arenaName : arenasList) {
+            // add each arena to the server
             Arena a = new Arena(arenaName);
-            arenas.add(new Arena(a.getName()));
-            initValues(a);
+            arenas.add(a);
+            // set the value of that arena
+            a.loadValues(Settings.getSettings().getArenaFile());
         }
-        Settings.getSettings().saveArenaFile();
+        // save.
     }
 
     public Arena getArena(String name) {
@@ -66,19 +61,15 @@ public class ArenaManager {
         return arenas;
     }
 
-    public void addArena(Arena arena) {
-        arenas.add(arena);
-        arenasList.add(arena.getName());
+    public void addNewArenaToConfig(Arena arena) {
         String[] steps = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players"};
 
         for (String value : steps) {
             Settings.getSettings().getArenaFile().set("Arenas." + arena.getName() + "." + value, "not_set");
         }
+        arenas.add(arena);
+        arenasList.add(arena.getName());
         Settings.getSettings().getArenaFile().set("Arena-List", arenasList);
         Settings.getSettings().saveArenaFile();
-    }
-
-    private void initValues(Arena a ){
-
     }
 }

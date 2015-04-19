@@ -30,9 +30,13 @@ public class SetLobbySpawn extends Command{
         }
 
 
-        if (arena.getLobbySpawn(team) != null) {
-            Message.getMessenger().msg(player, ChatColor.RED, "Lobby spawn for " + team + " was already set.");
+        // see the class 'SetSpawn' for an explanation on this
+        try {
+            arena.getLobbySpawn(team);
+            Message.getMessenger().msg(player, ChatColor.RED, "Lobby for " + team + " was already set.");
             return;
+        }catch (ClassCastException e) {
+            // continue, config cannot turn 'not_set' into a location, proving it isn't a location & was never set
         }
 
         arena.setLobbySpawn(spawn, team);

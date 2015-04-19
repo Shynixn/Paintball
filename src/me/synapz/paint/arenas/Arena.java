@@ -22,18 +22,21 @@ public class Arena {
 
     private boolean inProgress;
 
-    private int max;
-    private int min;
-
     private String name;
 
     private HashMap<String, ArenaManager.Team> players = new HashMap<String, ArenaManager.Team>();
     private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<String, ArenaManager.Team>();
     private FileConfiguration file = Settings.getSettings().getArenaFile();
 
+    String maxPath = "Max-Players";
+    String minPath = "Min-Players";
+    String redSpawnPath = "Red-Spawn";
+    String redLobbyPath = "Red-Lobby";
+    String blueSpawnPath = "Blue-Spawn";
+    String blueLobbyPath = "Blue-Lobby";
+
     public Arena(String name) {
         this.name = name;
-        ArenaManager.getArenaManager().addArena(this);
     }
 
     public String getName() {
@@ -41,49 +44,74 @@ public class Arena {
     }
 
     public Location getSpawn(ArenaManager.Team team) {
-        String value = team == ArenaManager.Team.BLUE ? "Blue-Spawn" : "Red-Spawn";
-        return (Location) file.get(value);
+        String value = team == ArenaManager.Team.BLUE ? blueSpawnPath : redSpawnPath;
+        return (Location) file.get(getPath() + value);
     }
 
     public void setArenaSpawn(Location location, ArenaManager.Team team) {
-        String value = team == ArenaManager.Team.BLUE ? "Blue-Spawn" : "Red-Spawn";
-        file.set("Arenas." + this.getName() + "." + value, location);
+        String value = "";
+        switch (team) {
+            case BLUE:
+                value = blueSpawnPath;
+                isBlueSpawnSet = true;
+                break;
+            case RED:
+                value = redSpawnPath;
+                isRedSpawnSet = true;
+                break;
+        }
+
+        file.set(getPath() + value, location);
         Settings.getSettings().saveArenaFile();
     }
 
     public void setLobbySpawn(Location location, ArenaManager.Team team) {
-        String value = team == ArenaManager.Team.BLUE ? "Blue-Lobby" : "Red-Lobby";
-        file.set("Arenas." + this.getName() + "." + value, location);
+        String value = "";
+        switch (team) {
+            case BLUE:
+                value = blueLobbyPath;
+                isBlueLobbySet = true;
+                break;
+            case RED:
+                value = redLobbyPath;
+                isRedLobbySet = true;
+                break;
+        }
+
+        file.set(getPath() + value, location);
         Settings.getSettings().saveArenaFile();
     }
 
     public Location getLobbySpawn(ArenaManager.Team team) {
-        String value = team == ArenaManager.Team.BLUE ? "Blue-Lobby" : "Red-Lobby";
-        return (Location) file.get(value);
+        String value = team == ArenaManager.Team.BLUE ? blueLobbyPath : redLobbyPath;
+        return (Location) file.get(getPath() + value);
     }
 
     public void setMaxPlayers(int max) {
-        file.set("Arenas." + this.getName() + ".Max-Players", max);
+        isMaxSet = true;
+        file.set(getPath() + maxPath, max);
         Settings.getSettings().saveArenaFile();
     }
 
     public void setMinPlayers(int min) {
-        file.set("Arenas." + this.getName() + ".Min-Players", min);
+        isMinSet = true;
+        file.set(getPath() + minPath, min);
         Settings.getSettings().saveArenaFile();
     }
 
     public int getMax() {
-        return file.getInt("Arenas." + this.getName() + ".Max-Players");
+        return file.getInt(getPath() + maxPath);
     }
 
     public int getMin() {
-        return file.getInt("Arenas." + this.getName() + ".Min-Players");
+        return file.getInt(getPath() + minPath);
     }
 
     public String getSteps() {
         String finalString = "";
         ChatColor done = ChatColor.STRIKETHROUGH;
         String end = ChatColor.RESET + "" + ChatColor.GRAY;
+        String suffix = ChatColor.BLUE + "Steps: ";
 
         String max = isMaxSet ? done + "setMax"+end : "setMax";
         String min = isMinSet ? done + "setMin"+end : "setMin";
@@ -97,7 +125,7 @@ public class Arena {
             finalString = finalString + ", " + ChatColor.GRAY + step;
         }
 
-        return isSetup() ? "Complete. Arena is now open!" : ChatColor.BLUE + "Steps: " + finalString.subSequence(2, finalString.length());
+        return isSetup() ? suffix + ChatColor.GRAY + "Complete. Arena is now open!" : suffix + finalString.subSequence(2, finalString.length());
     }
 
     public void startGame(Player sender) {
@@ -172,8 +200,43 @@ public class Arena {
             return ArenaManager.Team.RED;
     }
 
-    private void loadVaules() {
+    public void loadValues(FileConfiguration file) {
 
+        String[] paths = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players"};
+        int pathValue = 0;
+        boolean isSet = false;
+
+        for (String value : paths) {
+            if (!file.getString(getPath() + value).equals("not_set")) {
+                isSet = true;
+            }
+
+            switch (pathValue) {
+                case 0:
+                    isRedLobbySet = isSet;
+                    break;
+                case 1:
+                    isRedSpawnSet = isSet;
+                    break;
+                case 2:
+                    isBlueLobbySet = isSet;
+                    break;
+                case 3:
+                    isBlueSpawnSet = isSet;
+                    break;
+                case 4:
+                    isMaxSet = isSet;
+                    break;
+                case 5:
+                    isMinSet = isSet;
+                    break;
+            }
+            pathValue++;
+        }
+    }
+
+    private String getPath() {
+        return "Arenas." + this.getName() + ".";
     }
 
 

@@ -43,4 +43,6 @@ public abstract class Command {
         PLAYER;
     }
 
+    // TODO: use private methods instead of doing the same thing multiple times in classes that extend command
+
 }
