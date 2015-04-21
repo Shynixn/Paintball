@@ -8,3 +8,4 @@ database: false
 commands:
    paintball:
       description: Open the Paintbal command menu.
+      aliases: [pb]

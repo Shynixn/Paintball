@@ -1,7 +1,9 @@
 package me.synapz.paintball.arenas;
 
 
+import me.synapz.paintball.Message;
 import me.synapz.paintball.Settings;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -58,14 +60,41 @@ public class ArenaManager {
     }
 
     public void addNewArenaToConfig(Arena arena) {
-        String[] steps = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players"};
+        String[] steps = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
 
         for (String value : steps) {
+            if (value.equals(steps[6])) {
+                Settings.getSettings().getArenaFile().set("Arenas." + arena.getName() + "." + value, false);
+                break;
+            }
             Settings.getSettings().getArenaFile().set("Arenas." + arena.getName() + "." + value, "not_set");
         }
         arenas.add(arena);
         arenasList.add(arena.getName());
         Settings.getSettings().getArenaFile().set("Arena-List", arenasList);
         Settings.getSettings().saveArenaFile();
+    }
+
+    public void getList(Player player) {
+        String arenas = "";
+        String name = "";
+
+        for (Arena a : ArenaManager.getArenaManager().getArenas()) {
+            if (!a.isSetup()) {
+                name = ChatColor.STRIKETHROUGH + a.getName() + ChatColor.RESET + ChatColor.GRAY;
+            } else {
+                name = a.getName();
+            }
+
+            arenas = arenas + ", " + name;
+        }
+
+        if (arenas.equals("")) {
+            arenas = "There are currently no arenas.";
+            Message.getMessenger().msg(player, ChatColor.BLUE, arenas);
+            return;
+        }
+
+        Message.getMessenger().msg(player, ChatColor.BLUE, "Arenas: " + ChatColor.GRAY + arenas.substring(2, arenas.length()));
     }
 }

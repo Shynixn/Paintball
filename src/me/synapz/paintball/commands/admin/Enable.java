@@ -8,18 +8,18 @@ import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class Disable extends Command{
+public class Enable extends Command{
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
-        if (!args[1].equalsIgnoreCase("disable")) {
+        if (!args[1].equalsIgnoreCase("enable")) {
             Message.getMessenger().msg(player, ChatColor.RED, args[1] + " is an invalid choice. Use either enable/disable");
             return;
         }
 
         if (nullCheck(args[2], arena, player)) {
-            arena.setEnabled(false, player);
+            arena.setEnabled(true, player);
         }
     }
 
@@ -29,15 +29,15 @@ public class Disable extends Command{
     }
 
     public String getPermission() {
-        return "paintball.admin.disable";
-    }
+        return "paintball.admin.enable";
+    } // gives access to enable + disable
 
     public String getName() {
-        return "disable";
+        return "enable";
     }
 
     public String getInfo() {
-        return "Disable an arena";
+        return "Enable an arena";
     }
 
     public Command.CommandType getCommandType() {

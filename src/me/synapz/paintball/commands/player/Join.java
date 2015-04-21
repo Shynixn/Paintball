@@ -14,8 +14,8 @@ public class Join extends Command {
         Arena arena = ArenaManager.getArenaManager().getArena(args[1]);
         ArenaManager.Team team = null;
 
-        if (args.length == 3) {
-            team = stringToTeam(player, args[2]);
+        if (args.length == 3 && teamCheck(args[2], player)) {
+            team = stringToTeam(args[2]);
         }
         if (arena == null) {
             Message.getMessenger().msg(player, ChatColor.RED, "Invalid arena.");
@@ -31,7 +31,7 @@ public class Join extends Command {
             arena.joinArena(player, team);
             // sendMessage, p.getname + joined 1/max players!
         } else {
-            Message.getMessenger().msg(player, ChatColor.RED, "That arena has not been fully setup.");
+            Message.getMessenger().msg(player, ChatColor.RED, "That arena has not been fully setup or is not enabled.");
         }
     }
 

@@ -17,30 +17,13 @@ public class SetLobbySpawn extends Command{
         String teamString = args[3];
         ArenaManager.Team team;
 
-        if (arena == null) {
-            Message.getMessenger().msg(player, ChatColor.RED, args[2] + " is an invalid arena.");
-            return;
-        }
-
-        if (teamString.equalsIgnoreCase("blue") || teamString.equalsIgnoreCase("red")) {
-            team = teamString.equalsIgnoreCase("blue") ? ArenaManager.Team.BLUE : ArenaManager.Team.RED;
+        if (nullCheck(args[2], arena, player) && teamCheck(teamString, player)) {
+            team = stringToTeam(teamString);
+            arena.setLobbySpawn(spawn, team);
+            Message.getMessenger().msg(player, ChatColor.GREEN, team + " lobby spawn for " + arena.getName() + " set!", arena.getSteps());
         } else {
-            Message.getMessenger().msg(player, ChatColor.RED, args[3] + " is an invalid team. Choose either red/blue");
             return;
         }
-
-
-        // see the class 'SetSpawn' for an explanation on this
-        try {
-            arena.getLobbySpawn(team);
-            Message.getMessenger().msg(player, ChatColor.RED, "Lobby for " + team + " was already set.");
-            return;
-        }catch (ClassCastException e) {
-            // continue, config cannot turn 'not_set' into a location, proving it isn't a location & was never set
-        }
-
-        arena.setLobbySpawn(spawn, team);
-        Message.getMessenger().msg(player, ChatColor.GREEN, team + " lobby spawn for " + arena.getName() + " set!", arena.getSteps());
     }
 
     public String getArgs() {

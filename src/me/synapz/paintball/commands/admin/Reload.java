@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class Reload extends Command {
 
     public void onCommand(Player player, String[] args) {
-        Settings.getSettings().reloadConfig(player);
+        Settings.getSettings().reloadConfig();
         Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully reloaded configuration files.");
     }
 

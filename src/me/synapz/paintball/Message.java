@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 public class Message {
 
     // config values
-    public static final String PREFIX = ChatColor.translateAlternateColorCodes('&', Settings.getSettings().prefix + " ");
-    public static final String THEME = Settings.getSettings().theme;
+    public static final String PREFIX = Settings.getSettings().prefix == null ? ChatColor.DARK_GRAY + "[" + ChatColor.AQUA + "Paintball" + ChatColor.DARK_GRAY + "] " : Settings.getSettings().prefix + " ";
+    public static final String THEME = Settings.getSettings().theme == null ? ChatColor.translateAlternateColorCodes('&', "&3") : Settings.getSettings().theme;
 
     // determined default values
     public static final String NO_PERMS = "You don't have access to that command!";

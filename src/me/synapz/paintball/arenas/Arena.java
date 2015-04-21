@@ -19,8 +19,8 @@ public class Arena {
     private boolean isBlueSpawnSet;
     private boolean isBlueLobbySet;
     private boolean isRedLobbySet;
-
     private boolean inProgress;
+    private boolean isEnabled;
 
     private String name;
 
@@ -34,6 +34,7 @@ public class Arena {
     String redLobbyPath = "Red-Lobby";
     String blueSpawnPath = "Blue-Spawn";
     String blueLobbyPath = "Blue-Lobby";
+    String enabledPath = "Is-Enabled";
 
     public Arena(String name) {
         this.name = name;
@@ -108,6 +109,8 @@ public class Arena {
     }
 
     public String getSteps() {
+        // TODO: make finished arenas green (and if disabled green with a strikethrough)
+        // TODO: make unfinished arenas gray with strikethrough
         String finalString = "";
         ChatColor done = ChatColor.STRIKETHROUGH;
         String end = ChatColor.RESET + "" + ChatColor.GRAY;
@@ -128,20 +131,40 @@ public class Arena {
         return isSetup() ? suffix + ChatColor.GRAY + "Complete. Arena is now open!" : suffix + finalString.subSequence(2, finalString.length());
     }
 
-    public void startGame(Player sender) {
-        if (lobbyPlayers.keySet().size() <= this.getMax() && lobbyPlayers.keySet().size() >= this.getMin()) {
-            for (String p : lobbyPlayers.keySet()) {
-                Player player = Bukkit.getPlayer(p);
-                this.addPlayerToArena(player);
+    public void setEnabled(boolean setEnabled, Player sender) {
+        String message = "";
+        ChatColor color = null;
+
+        if (setEnabled) {
+            if (!isEnabled) {
+                isEnabled = true;
+                color = ChatColor.GREEN;
+                message = "has been enabled!";
+            } else {
+                color = ChatColor.RED;
+                message = "is already enabled.";
             }
-            inProgress = true;
         } else {
-            Message.getMessenger().msg(sender, ChatColor.RED, "There are not enough players in the lobby to start.");
+            if (isEnabled) {
+                isEnabled = false;
+                color = ChatColor.GREEN;
+                message = "has been disabled!";
+            } else {
+                color = ChatColor.RED;
+                message = "is already disabled.";
+            }
         }
+        file.set(getPath() + enabledPath, isEnabled);
+        Settings.getSettings().saveArenaFile();
+        Message.getMessenger().msg(sender, color, "Arena " + this.getName() + " " + message);
+    }
+
+    public void startGame(Player sender) {
+        this.addPlayersToArena();
     }
 
     public boolean isSetup() {
-        return isMinSet && isMaxSet && isRedLobbySet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet;
+        return isMinSet && isMaxSet && isRedLobbySet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet && isEnabled;
     }
 
 
@@ -165,21 +188,14 @@ public class Arena {
         } else {
             lobbyPlayers.put(player.getName(), team);
         }
+
         player.teleport(getLobbySpawn(getTeam(player)));
         Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully joined arena " + this.getName() + "'s lobby.");
+        // Message.getMessenger.broadcast(name + "joined arena! 3/MAX players");
 
         if (lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax()) {
             this.startGame(player);
         }
-    }
-
-    private void addPlayerToArena(Player player) {
-        ArenaManager.Team team = this.getTeam(player);
-
-        players.put(player.getName(), team);
-        player.teleport(getSpawn(team));
-
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + this.getName() + " starting!");
     }
 
     public boolean containsPlayer(Player player) {
@@ -202,7 +218,7 @@ public class Arena {
 
     public void loadValues(FileConfiguration file) {
 
-        String[] paths = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players"};
+        String[] paths = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
         int pathValue = 0;
         boolean isSet = false;
 
@@ -230,13 +246,85 @@ public class Arena {
                 case 5:
                     isMinSet = isSet;
                     break;
+                case 6:
+                    isEnabled = file.getBoolean(getPath() + value);
+                    break;
             }
             pathValue++;
         }
     }
 
+    public void forceStart(Player sender) {
+        String reason;
+        String name = "Arena " + this.getName();
+
+        if (isSetup()) {
+            if (lobbyPlayers.keySet().size() > getMin()) {
+                if (!inProgress) {
+                    addPlayersToArena();
+                    return;
+                }
+                reason = name + " is already in progress";
+            } else {
+                reason = name + " does not have enough players.";
+            }
+        } else {
+            reason = name + " has not been setup or enabled.";
+        }
+        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force start that arena.", "Error: " + reason);
+    }
+
+    public void forceStop(Player sender) {
+        String reason;
+        String name = "Arena " + this.getName();
+
+        if (this.inProgress) {
+            this.removePlayersInArena();
+            return;
+        } else {
+            reason = "is not in progress!";
+        }
+        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop that arena.", "Error: " + reason);
+    }
+
+
     private String getPath() {
         return "Arenas." + this.getName() + ".";
+    }
+
+    private void addPlayersToArena() {
+        for (String p : lobbyPlayers.keySet()) {
+            Player player = Bukkit.getPlayer(p);
+            this.addPlayerToArena(player);
+        }
+        inProgress = true;
+    }
+
+    private void removePlayersInArena() {
+        // broadcast "Arena has been force stopped
+        for (String p : lobbyPlayers.keySet()) {
+            Player player = Bukkit.getPlayer(p);
+            this.removePlayerFromArena(player);
+            Message.getMessenger().msg(player, ChatColor.RED, "Left Arena!");
+        }
+        inProgress = true;
+    }
+
+    private void addPlayerToArena(Player player) {
+        ArenaManager.Team team = this.getTeam(player);
+
+        players.put(player.getName(), team);
+        player.teleport(getSpawn(team));
+
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Joined Arena!");
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + this.getName() + " starting!");
+        // broadcast 'Arena Starting'
+    }
+
+    private void removePlayerFromArena(Player player) {
+
+        players.remove(player);
+        // player.teleport(last location);
     }
 
 

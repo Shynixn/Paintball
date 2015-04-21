@@ -29,18 +29,6 @@ public class SetSpawn extends Command {
             return;
         }
 
-        /**
-         * Gets the spawn, if the spawn is 'not_set' it throws a ClassCastException
-         * because a String (not_set) cannot be cast to location.
-         * This checks to see if it throws this exception, because if it does the spawn was not set.
-         */
-        try {
-            arena.getSpawn(team);
-            Message.getMessenger().msg(player, ChatColor.RED, "Spawn for " + team + " was already set.");
-            return;
-        }catch (ClassCastException e) {
-            // continue, config cannot turn 'not_set' into a location
-        }
 
         arena.setArenaSpawn(spawn, team);
         Message.getMessenger().msg(player, ChatColor.GREEN, team + " spawn for " + arena.getName() + " set!", arena.getSteps());

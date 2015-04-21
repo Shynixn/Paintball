@@ -2,7 +2,6 @@ package me.synapz.paintball.commands;
 
 
 import me.synapz.paintball.Message;
-import me.synapz.paintball.Settings;
 import me.synapz.paintball.commands.admin.*;
 import me.synapz.paintball.commands.player.Join;
 import me.synapz.paintball.commands.player.LeaveArena;
@@ -37,6 +36,10 @@ public class CommandManager implements CommandExecutor{
         commands.add(new SetSpawn());
         commands.add(new SetMin());
         commands.add(new SetMax());
+        commands.add(new ForceStart());
+        commands.add(new ForceStop());
+        commands.add(new Enable());
+        commands.add(new Disable());
         commands.add(new Reload());
         commands.add(new Admin(Command.CommandType.ADMIN)); // used so it gets displayed in /paintball admin
     }
@@ -109,7 +112,7 @@ public class CommandManager implements CommandExecutor{
     public static void displayHelp(Player player, Command.CommandType type) {
         player.sendMessage(HELP_TITLE);
 
-        String beginning = type == Command.CommandType.ADMIN ? Message.THEME + "/paintball " + "admin " : Message.THEME + "/paintball ";
+        String beginning = type == Command.CommandType.ADMIN ? Message.THEME + "/pb " + "admin " : Message.THEME + "/pb ";
         for (Command command : commands) {
             String name = command.getName().equals("admin") && type == Command.CommandType.ADMIN ? "" : command.getName();
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
