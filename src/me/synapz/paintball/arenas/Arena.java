@@ -36,6 +36,21 @@ public class Arena {
     String blueLobbyPath = "Blue-Lobby";
     String enabledPath = "Is-Enabled";
 
+    private enum ArenaState {
+        NOT_SETUP,
+        // List color gray with a strike through
+        SET_UP,
+        // List color green
+        ENABLED,
+        // List color green
+        DISABLED,
+        // List color green with strike through
+        IN_PROGRESS,
+        // List color red
+        IN_LOBBY;
+        // List color green
+    }
+
     public Arena(String name) {
         this.name = name;
     }
@@ -132,8 +147,8 @@ public class Arena {
     }
 
     public void setEnabled(boolean setEnabled, Player sender) {
-        String message = "";
-        ChatColor color = null;
+        String message;
+        ChatColor color;
 
         if (setEnabled) {
             if (!isEnabled) {

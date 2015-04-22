@@ -26,14 +26,15 @@ public class Settings {
     }
 
     public void init(Paintball pb) {
-        this.pb = pb;
-        config = pb.getConfig();
-        config.options().copyDefaults(true);
-        cFile = new File(pb.getDataFolder(), "config.yml");
-
         if (!pb.getDataFolder().exists()) {
             pb.getDataFolder().mkdir();
         }
+
+        this.pb = pb;
+        config = pb.getConfig();
+        config.options().copyDefaults(true);
+        pb.saveConfig();
+
         aFile = new File(pb.getDataFolder(), "arenas.yml");
 
         if (!aFile.exists()) {
@@ -54,27 +55,9 @@ public class Settings {
 
     }
 
-    public void saveConfig() {
-        try {
-            config.save(cFile);
-        }catch (Exception e) {
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Could not save config.yml. Stack trace:");
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * DOES NOT WORK
-     */
     public void reloadConfig() {
-        config = YamlConfiguration.loadConfiguration(cFile);
-        arena = YamlConfiguration.loadConfiguration(aFile);
-        try {
-            config.save(cFile);
-        }catch (Exception e) {
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Could not save config.yml. Stack trace:");
-            e.printStackTrace();
-        }
+        pb.reloadConfig();
+        pb.saveConfig();
     }
 
     public void saveArenaFile() {
