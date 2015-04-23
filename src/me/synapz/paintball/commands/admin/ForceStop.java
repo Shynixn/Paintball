@@ -12,7 +12,7 @@ public class ForceStop extends Command{
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
         if (nullCheck(args[2], arena, player)) {
-            arena.forceStart(player);
+            arena.forceStop(player);
         }
     }
 

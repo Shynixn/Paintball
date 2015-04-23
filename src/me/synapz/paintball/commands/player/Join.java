@@ -28,7 +28,7 @@ public class Join extends Command {
         }
 
         if (arena.isSetup()) {
-            arena.joinArena(player, team);
+            arena.joinLobby(player, team);
             // sendMessage, p.getname + joined 1/max players!
         } else {
             Message.getMessenger().msg(player, ChatColor.RED, "That arena has not been fully setup or is not enabled.");

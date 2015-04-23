@@ -75,18 +75,30 @@ public class ArenaManager {
         Settings.getSettings().saveArenaFile();
     }
 
-    public void getList(Player player) {
+    public void getList(Player player, int page) {
         String arenas = "";
-        String name = "";
 
-        for (Arena a : ArenaManager.getArenaManager().getArenas()) {
-            if (!a.isSetup()) {
-                name = ChatColor.STRIKETHROUGH + a.getName() + ChatColor.RESET + ChatColor.GRAY;
-            } else {
-                name = a.getName();
+        for (Arena a : getArenas()) {
+            String color = "";
+
+            switch (a.getState()) {
+                case IN_PROGRESS:
+                    color += ChatColor.RED;
+                    break;
+                case DISABLED:
+                    color += ChatColor.GRAY;
+                    break;
+                case IN_LOBBY:
+                    color += ChatColor.GREEN;
+                    break;
+                case STOPPED:
+                    color += ChatColor.GREEN;
+                    break;
+                case NOT_SETUP:
+                    color += ChatColor.STRIKETHROUGH + "" + ChatColor.GRAY;
+                    break;
             }
-
-            arenas = arenas + ", " + name;
+            arenas = arenas + ", " + color + a.getName();
         }
 
         if (arenas.equals("")) {
@@ -95,6 +107,8 @@ public class ArenaManager {
             return;
         }
 
-        Message.getMessenger().msg(player, ChatColor.BLUE, "Arenas: " + ChatColor.GRAY + arenas.substring(2, arenas.length()));
+        arenas = arenas.substring(2, arenas.length());
+        // arenas = arenas.substring(page * 10, page * 10 + 10); can't figure out the correct way
+        Message.getMessenger().msg(player, ChatColor.GRAY, "Page: " + Message.getMessenger().THEME + page + "/" + Math.round(getArenas().size() / 10), ChatColor.BLUE + "Arenas: " + arenas);
     }
 }

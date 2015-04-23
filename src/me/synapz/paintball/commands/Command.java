@@ -30,7 +30,7 @@ public abstract class Command {
     public String getCorrectUsage(Command command) {
         String type = command.getCommandType() == CommandType.ADMIN ? "admin " : "";
         String name = command.getName().equals("admin") ? "" : command.getName();
-        return "/paintball " + type + name + " " + command.getArgs();
+        return "Usage: /paintball " + type + name + " " + command.getArgs();
     }
 
 

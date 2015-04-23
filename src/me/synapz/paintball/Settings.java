@@ -1,6 +1,7 @@
 package me.synapz.paintball;
 
 
+import me.synapz.paintball.arenas.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,9 +34,9 @@ public class Settings {
         this.pb = pb;
         config = pb.getConfig();
         config.options().copyDefaults(true);
-        pb.saveConfig();
 
         aFile = new File(pb.getDataFolder(), "arenas.yml");
+        cFile = new File(pb.getDataFolder(), "config.yml");
 
         if (!aFile.exists()) {
             try {
@@ -48,6 +49,7 @@ public class Settings {
         }
 
         arena = YamlConfiguration.loadConfiguration(aFile);
+        config = YamlConfiguration.loadConfiguration(cFile);
 
         version = pb.getDescription().getVersion();
         prefix = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
@@ -56,8 +58,7 @@ public class Settings {
     }
 
     public void reloadConfig() {
-        pb.reloadConfig();
-        pb.saveConfig();
+        init(pb);
     }
 
     public void saveArenaFile() {

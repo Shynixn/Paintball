@@ -40,9 +40,9 @@ public class Message {
 
     public void wrongUsage(Command command, Player player, Usage usage) {
         if (usage.equals(Usage.TO_MANY_ARGS)) {
-            Message.getMessenger().msg(player, ChatColor.RED, "To many arguments!", "Usage: " + command.getCorrectUsage(command));
+            Message.getMessenger().msg(player, ChatColor.RED, "To many arguments!", command.getCorrectUsage(command));
         } else {
-            Message.getMessenger().msg(player, ChatColor.RED, "Not enough arguments!", "Usage: " + command.getCorrectUsage(command));
+            Message.getMessenger().msg(player, ChatColor.RED, "Not enough arguments!", command.getCorrectUsage(command));
         }
     }
 

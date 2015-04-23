@@ -13,14 +13,7 @@ import java.util.HashMap;
 
 public class Arena {
 
-    private boolean isMaxSet;
-    private boolean isMinSet;
-    private boolean isRedSpawnSet;
-    private boolean isBlueSpawnSet;
-    private boolean isBlueLobbySet;
-    private boolean isRedLobbySet;
-    private boolean inProgress;
-    private boolean isEnabled;
+    private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isBlueLobbySet, isRedLobbySet, isEnabled;
 
     private String name;
 
@@ -35,13 +28,12 @@ public class Arena {
     String blueSpawnPath = "Blue-Spawn";
     String blueLobbyPath = "Blue-Lobby";
     String enabledPath = "Is-Enabled";
+    ArenaState state = ArenaState.NOT_SETUP;
 
-    private enum ArenaState {
+    protected enum ArenaState {
         NOT_SETUP,
         // List color gray with a strike through
-        SET_UP,
-        // List color green
-        ENABLED,
+        STOPPED,
         // List color green
         DISABLED,
         // List color green with strike through
@@ -78,7 +70,7 @@ public class Arena {
         }
 
         file.set(getPath() + value, location);
-        Settings.getSettings().saveArenaFile();
+        advSave();
     }
 
     public void setLobbySpawn(Location location, ArenaManager.Team team) {
@@ -95,7 +87,7 @@ public class Arena {
         }
 
         file.set(getPath() + value, location);
-        Settings.getSettings().saveArenaFile();
+        advSave();
     }
 
     public Location getLobbySpawn(ArenaManager.Team team) {
@@ -106,13 +98,13 @@ public class Arena {
     public void setMaxPlayers(int max) {
         isMaxSet = true;
         file.set(getPath() + maxPath, max);
-        Settings.getSettings().saveArenaFile();
+        advSave();
     }
 
     public void setMinPlayers(int min) {
         isMinSet = true;
         file.set(getPath() + minPath, min);
-        Settings.getSettings().saveArenaFile();
+        advSave();
     }
 
     public int getMax() {
@@ -124,8 +116,6 @@ public class Arena {
     }
 
     public String getSteps() {
-        // TODO: make finished arenas green (and if disabled green with a strikethrough)
-        // TODO: make unfinished arenas gray with strikethrough
         String finalString = "";
         ChatColor done = ChatColor.STRIKETHROUGH;
         String end = ChatColor.RESET + "" + ChatColor.GRAY;
@@ -153,6 +143,7 @@ public class Arena {
         if (setEnabled) {
             if (!isEnabled) {
                 isEnabled = true;
+                state = ArenaState.STOPPED;
                 color = ChatColor.GREEN;
                 message = "has been enabled!";
             } else {
@@ -162,6 +153,7 @@ public class Arena {
         } else {
             if (isEnabled) {
                 isEnabled = false;
+                state = ArenaState.DISABLED;
                 color = ChatColor.GREEN;
                 message = "has been disabled!";
             } else {
@@ -170,16 +162,16 @@ public class Arena {
             }
         }
         file.set(getPath() + enabledPath, isEnabled);
-        Settings.getSettings().saveArenaFile();
+        advSave();
         Message.getMessenger().msg(sender, color, "Arena " + this.getName() + " " + message);
     }
 
-    public void startGame(Player sender) {
-        this.addPlayersToArena();
+    public void startGame() {
+        putPlayersIntoArena();
     }
 
     public boolean isSetup() {
-        return isMinSet && isMaxSet && isRedLobbySet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet && isEnabled;
+        return isMaxSet && isMinSet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet && isRedLobbySet && isEnabled;
     }
 
 
@@ -193,8 +185,8 @@ public class Arena {
         return lobbyPlayers.get(player.getName());
     }
 
-    public void joinArena(Player player, ArenaManager.Team team) {
-        if (this.inProgress) {
+    public void joinLobby(Player player, ArenaManager.Team team) {
+        if (state == ArenaState.IN_PROGRESS) {
             Message.getMessenger().msg(player, ChatColor.RED, "That arena is currently in progress!");
             return;
         }
@@ -205,30 +197,15 @@ public class Arena {
         }
 
         player.teleport(getLobbySpawn(getTeam(player)));
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully joined arena " + this.getName() + "'s lobby.");
-        // Message.getMessenger.broadcast(name + "joined arena! 3/MAX players");
+        broadcastMessage(ChatColor.GREEN, player.getName() + " has joined the arena! " + ChatColor.GRAY + this.lobbyPlayers.keySet().size() + "/" + this.getMax());
 
         if (lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax()) {
-            this.startGame(player);
+            this.startGame();
         }
     }
 
     public boolean containsPlayer(Player player) {
         return lobbyPlayers.keySet().contains(player.getName()) || players.keySet().contains(player.getName());
-    }
-
-    private ArenaManager.Team getTeamWithLessPlayers() {
-        int red = 0, blue = 0;
-        for (String p : players.keySet()) {
-            if (players.get(p) == ArenaManager.Team.RED)
-                red++;
-            else
-                blue++;
-        }
-        if (red > blue)
-            return ArenaManager.Team.BLUE;
-        else
-            return ArenaManager.Team.RED;
     }
 
     public void loadValues(FileConfiguration file) {
@@ -263,9 +240,15 @@ public class Arena {
                     break;
                 case 6:
                     isEnabled = file.getBoolean(getPath() + value);
+                    if (!isEnabled) {
+                        state = ArenaState.DISABLED;
+                    }
                     break;
             }
             pathValue++;
+        }
+        if (isSetup()) {
+            state = ArenaState.STOPPED;
         }
     }
 
@@ -275,8 +258,8 @@ public class Arena {
 
         if (isSetup()) {
             if (lobbyPlayers.keySet().size() > getMin()) {
-                if (!inProgress) {
-                    addPlayersToArena();
+                if (state != ArenaState.IN_PROGRESS) {
+                    putPlayersIntoArena();
                     return;
                 }
                 reason = name + " is already in progress";
@@ -290,16 +273,11 @@ public class Arena {
     }
 
     public void forceStop(Player sender) {
-        String reason;
-        String name = "Arena " + this.getName();
-
-        if (this.inProgress) {
+        if (state == ArenaState.IN_PROGRESS) {
             this.removePlayersInArena();
             return;
-        } else {
-            reason = "is not in progress!";
         }
-        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop that arena.", "Error: " + reason);
+        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop that arena.", "Error: " + this.getName() + " is not in progress.");
     }
 
 
@@ -307,12 +285,14 @@ public class Arena {
         return "Arenas." + this.getName() + ".";
     }
 
-    private void addPlayersToArena() {
+    private void putPlayersIntoArena() {
         for (String p : lobbyPlayers.keySet()) {
             Player player = Bukkit.getPlayer(p);
             this.addPlayerToArena(player);
         }
-        inProgress = true;
+        state = ArenaState.IN_PROGRESS;
+        // TODO: make a timer & add configurable time
+        this.broadcastMessage(ChatColor.GREEN, "Arena starting in " + "15 seconds");
     }
 
     private void removePlayersInArena() {
@@ -322,7 +302,7 @@ public class Arena {
             this.removePlayerFromArena(player);
             Message.getMessenger().msg(player, ChatColor.RED, "Left Arena!");
         }
-        inProgress = true;
+        state = ArenaState.STOPPED;
     }
 
     private void addPlayerToArena(Player player) {
@@ -337,9 +317,51 @@ public class Arena {
     }
 
     private void removePlayerFromArena(Player player) {
-
         players.remove(player);
         // player.teleport(last location);
+    }
+
+    private void broadcastMessage(ChatColor color, String...messages) {
+        for (String name : players.keySet()) {
+            for (String message : messages) {
+                Bukkit.getServer().getPlayer(name).sendMessage(color + message);
+            }
+        }
+        for (String name : lobbyPlayers.keySet()) {
+            for (String message : messages) {
+                Bukkit.getServer().getPlayer(name).sendMessage(color + message);
+            }
+        }
+    }
+
+    private ArenaManager.Team getTeamWithLessPlayers() {
+        int red = 0, blue = 0;
+        for (String p : players.keySet()) {
+            if (players.get(p) == ArenaManager.Team.RED)
+                red++;
+            else
+                blue++;
+        }
+        if (red > blue)
+            return ArenaManager.Team.BLUE;
+        else
+            return ArenaManager.Team.RED;
+    }
+
+    protected ArenaState getState() {
+        return state;
+    }
+
+    private void advSave() {
+        Settings.getSettings().saveArenaFile();
+        /**
+         * Because the saveArenaFile() method gets called every time a value is changed,
+         * we also want to see if the arena is setup because if it is, Arena.NOT_SETUP should
+         * be replaced with Arena.STOPPED because the setup is complete.
+         */
+        if (isSetup()) {
+            state = ArenaState.STOPPED;
+        }
     }
 
 
