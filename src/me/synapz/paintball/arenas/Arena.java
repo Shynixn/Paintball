@@ -13,6 +13,8 @@ import java.util.HashMap;
 
 public class Arena {
 
+    // TODO: In case a reload or retart happens, make it so ArenaState gets saved in Cache file.
+
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isBlueLobbySet, isRedLobbySet, isEnabled;
 
     private String name;
@@ -34,8 +36,8 @@ public class Arena {
         NOT_SETUP,
         STOPPED,
         DISABLED,
-        IN_LOBBY,
-        IN_PROGRESS;
+        IN_PROGRESS,
+        IN_LOBBY;
     }
 
     public Arena(String name) {
@@ -130,6 +132,7 @@ public class Arena {
         }
 
         return isSetup() && isEnabled ? prefix + ChatColor.GRAY + "Complete. Arena is open!" : prefix + finalString.subSequence(2, finalString.length());
+
     }
 
     public void setEnabled(boolean setEnabled, Player sender) {
@@ -319,13 +322,8 @@ public class Arena {
 
     private void addPlayerToArena(Player player) {
         ArenaManager.Team team = this.getTeam(player);
-
         players.put(player.getName(), team);
         player.teleport(getSpawn(team));
-
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Joined Arena!");
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + this.getName() + " starting!");
-        // broadcast 'Arena Starting'
     }
 
     private void removePlayerFromArena(Player player) {
