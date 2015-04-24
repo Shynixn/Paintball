@@ -12,7 +12,7 @@ public class SetMax extends Command{
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
         String maxString = args[3];
-        int max = 0;
+        int max;
 
         if (arena == null) {
             Message.getMessenger().msg(player, ChatColor.RED, args[2] + " is an invalid arena.");
@@ -35,11 +35,11 @@ public class SetMax extends Command{
     }
 
     public String getInfo() {
-        return "Set the maximum amount of players";
+        return "Set the max number of players";
     }
 
     public String getArgs() {
-        return "<name> <int>";
+        return "<arena> <int>";
     }
 
     public String getPermission() {

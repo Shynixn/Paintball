@@ -17,7 +17,7 @@ public class ForceStop extends Command{
     }
 
     public String getArgs() {
-        String args = "<name>";
+        String args = "<arena>";
         return args;
     }
 
@@ -30,7 +30,7 @@ public class ForceStop extends Command{
     }
 
     public String getInfo() {
-        return "Force stop an arena";
+        return "Force stop an Arena";
     }
 
     public Command.CommandType getCommandType() {

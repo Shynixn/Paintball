@@ -32,15 +32,10 @@ public class Arena {
 
     protected enum ArenaState {
         NOT_SETUP,
-        // List color gray with a strike through
         STOPPED,
-        // List color green
         DISABLED,
-        // List color green with strike through
-        IN_PROGRESS,
-        // List color red
-        IN_LOBBY;
-        // List color green
+        IN_LOBBY,
+        IN_PROGRESS;
     }
 
     public Arena(String name) {
@@ -119,7 +114,7 @@ public class Arena {
         String finalString = "";
         ChatColor done = ChatColor.STRIKETHROUGH;
         String end = ChatColor.RESET + "" + ChatColor.GRAY;
-        String suffix = ChatColor.BLUE + "Steps: ";
+        String prefix = ChatColor.BLUE + "Steps: ";
 
         String max = isMaxSet ? done + "setMax"+end : "setMax";
         String min = isMinSet ? done + "setMin"+end : "setMin";
@@ -127,13 +122,14 @@ public class Arena {
         String blueSpawn = isBlueSpawnSet ? done + "blueSpawn"+end : "blueSpawn";
         String redLobbySpawn = isRedLobbySet ? done + "redLobby"+end : "redLobby";
         String blueLobbySpawn = isBlueLobbySet ? done + "blueLobby"+end : "blueLobby";
-        String[] steps = {max, min, redSpawn, blueSpawn, redLobbySpawn, blueLobbySpawn};
+        String enabled = isEnabled ? done+"enabled"+end : "enabled";
+        String[] steps = {max, min, redSpawn, blueSpawn, redLobbySpawn, blueLobbySpawn, enabled};
 
         for (String step : steps) {
             finalString = finalString + ", " + ChatColor.GRAY + step;
         }
 
-        return isSetup() ? suffix + ChatColor.GRAY + "Complete. Arena is now open!" : suffix + finalString.subSequence(2, finalString.length());
+        return isSetup() && isEnabled ? prefix + ChatColor.GRAY + "Complete. Arena is open!" : prefix + finalString.subSequence(2, finalString.length());
     }
 
     public void setEnabled(boolean setEnabled, Player sender) {
@@ -141,14 +137,20 @@ public class Arena {
         ChatColor color;
 
         if (setEnabled) {
-            if (!isEnabled) {
-                isEnabled = true;
-                state = ArenaState.STOPPED;
-                color = ChatColor.GREEN;
-                message = "has been enabled!";
-            } else {
+            if (!isSetup()) {
                 color = ChatColor.RED;
-                message = "is already enabled.";
+                message = "has not been setup.";
+                isEnabled = false;
+            } else {
+                if (!isEnabled) {
+                    isEnabled = true;
+                    state = ArenaState.STOPPED;
+                    color = ChatColor.GREEN;
+                    message = "has been enabled!";
+                } else {
+                    color = ChatColor.RED;
+                    message = "is already enabled.";
+                }
             }
         } else {
             if (isEnabled) {
@@ -171,7 +173,7 @@ public class Arena {
     }
 
     public boolean isSetup() {
-        return isMaxSet && isMinSet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet && isRedLobbySet && isEnabled;
+        return isMaxSet && isMinSet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet && isRedLobbySet;
     }
 
 
@@ -186,10 +188,18 @@ public class Arena {
     }
 
     public void joinLobby(Player player, ArenaManager.Team team) {
-        if (state == ArenaState.IN_PROGRESS) {
-            Message.getMessenger().msg(player, ChatColor.RED, "That arena is currently in progress!");
-            return;
+        switch (getState()) {
+            case IN_PROGRESS:
+                Message.getMessenger().msg(player, ChatColor.RED, "That arena is currently in progress.");
+                return;
+            case NOT_SETUP:
+                Message.getMessenger().msg(player, ChatColor.RED, "That arena has not been fully setup.");
+                return;
+            case DISABLED:
+                Message.getMessenger().msg(player, ChatColor.RED, "That arena is disabled.");
+                return;
         }
+
         if (team == null) {
             lobbyPlayers.put(player.getName(), getTeamWithLessPlayers());
         } else {
@@ -240,29 +250,31 @@ public class Arena {
                     break;
                 case 6:
                     isEnabled = file.getBoolean(getPath() + value);
-                    if (!isEnabled) {
-                        state = ArenaState.DISABLED;
-                    }
                     break;
             }
             pathValue++;
         }
-        if (isSetup()) {
+        if (isSetup() && isEnabled) {
             state = ArenaState.STOPPED;
+        } else {
+            if (!isEnabled && isSetup()) {
+                state = ArenaState.DISABLED;
+            }
         }
     }
 
     public void forceStart(Player sender) {
-        String reason;
+        String reason = "";
         String name = "Arena " + this.getName();
 
         if (isSetup()) {
             if (lobbyPlayers.keySet().size() > getMin()) {
-                if (state != ArenaState.IN_PROGRESS) {
+                if (state == ArenaState.STOPPED) {
                     putPlayersIntoArena();
                     return;
+                } else if (state == ArenaState.IN_PROGRESS) {
+                    reason = name + " is already in progress";
                 }
-                reason = name + " is already in progress";
             } else {
                 reason = name + " does not have enough players.";
             }
@@ -359,7 +371,7 @@ public class Arena {
          * we also want to see if the arena is setup because if it is, Arena.NOT_SETUP should
          * be replaced with Arena.STOPPED because the setup is complete.
          */
-        if (isSetup()) {
+        if (isSetup() && isEnabled) {
             state = ArenaState.STOPPED;
         }
     }

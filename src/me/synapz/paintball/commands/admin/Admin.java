@@ -31,7 +31,7 @@ public class Admin extends Command{
     }
 
     public String getInfo() {
-        return "Display Paintball Admin commands";
+        return "Display all Paintball Admin commands";
     }
 
     public Command.CommandType getCommandType() {

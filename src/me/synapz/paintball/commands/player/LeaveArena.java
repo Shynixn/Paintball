@@ -40,7 +40,7 @@ public class LeaveArena extends Command {
     }
 
     public String getInfo() {
-        return "Leave a Paintball Arena";
+        return "Leave an Arena";
     }
 
     public CommandType getCommandType() {

@@ -20,7 +20,7 @@ public class ForceStart extends Command{
     }
 
     public String getArgs() {
-        String args = "<name>";
+        String args = "<arena>";
         return args;
     }
 
@@ -33,7 +33,7 @@ public class ForceStart extends Command{
     }
 
     public String getInfo() {
-        return "Force start an arena";
+        return "Force start an Arena";
     }
 
     public CommandType getCommandType() {

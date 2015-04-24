@@ -75,7 +75,8 @@ public class ArenaManager {
         Settings.getSettings().saveArenaFile();
     }
 
-    public void getList(Player player, int page) {
+    public void getList(Player player) {
+        ChatColor gr = ChatColor.GRAY;
         String arenas = "";
 
         for (Arena a : getArenas()) {
@@ -95,20 +96,19 @@ public class ArenaManager {
                     color += ChatColor.GREEN;
                     break;
                 case NOT_SETUP:
-                    color += ChatColor.STRIKETHROUGH + "" + ChatColor.GRAY;
+                    color += ChatColor.STRIKETHROUGH;
                     break;
             }
-            arenas = arenas + ", " + color + a.getName();
+            arenas += ChatColor.GRAY + ", " + color + a.getName();
         }
 
         if (arenas.equals("")) {
-            arenas = "There are currently no arenas.";
-            Message.getMessenger().msg(player, ChatColor.BLUE, arenas);
+            Message.getMessenger().msg(player, ChatColor.BLUE, "There are currently no arenas.");
             return;
         }
+        arenas = arenas.substring(4, arenas.length());
 
-        arenas = arenas.substring(2, arenas.length());
-        // arenas = arenas.substring(page * 10, page * 10 + 10); can't figure out the correct way
-        Message.getMessenger().msg(player, ChatColor.GRAY, "Page: " + Message.getMessenger().THEME + page + "/" + Math.round(getArenas().size() / 10), ChatColor.BLUE + "Arenas: " + arenas);
+        Message.getMessenger().msg(player, ChatColor.GRAY, ChatColor.BLUE + "Arenas: " + ChatColor.GRAY + arenas,
+                ChatColor.GREEN + "█-" + gr + "Joinable " + ChatColor.RED + "█-" + gr + "InProgress " + gr + "█-" + gr + "Disabled/Not-Setup");
     }
 }

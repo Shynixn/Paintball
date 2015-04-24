@@ -40,6 +40,7 @@ public class CommandManager implements CommandExecutor{
         commands.add(new ForceStop());
         commands.add(new Enable());
         commands.add(new Disable());
+        commands.add(new Steps());
         commands.add(new Reload());
         commands.add(new Admin(Command.CommandType.ADMIN)); // used so it gets displayed in /paintball admin
     }

@@ -27,7 +27,7 @@ public class SetLobbySpawn extends Command{
     }
 
     public String getArgs() {
-        String args = "<name> <red/blue>";
+        String args = "<arena> <red/blue>";
         return args;
     }
 
@@ -40,7 +40,7 @@ public class SetLobbySpawn extends Command{
     }
 
     public String getInfo() {
-        return "Set lobby of a Paintball Arena";
+        return "Set lobby of an Arena";
     }
 
     public CommandType getCommandType() {

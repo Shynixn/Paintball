@@ -36,7 +36,7 @@ public class Join extends Command {
     }
 
     public String getArgs() {
-        String args = "<name> [red/blue]";
+        String args = "<arena> [red/blue]";
         return args;
     }
 
@@ -49,7 +49,7 @@ public class Join extends Command {
     }
 
     public String getInfo() {
-        return "Join a Paintball Arena";
+        return "Join an Arena";
     }
 
     public CommandType getCommandType() {

@@ -28,11 +28,11 @@ public class CreateArena extends Command{
     }
 
     public String getInfo() {
-        return "Create a new Paintball Arena";
+        return "Create a new Arena";
     }
 
     public String getArgs() {
-        return "<name>";
+        return "<arena>";
     }
 
     public String getPermission() {

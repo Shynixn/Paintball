@@ -35,7 +35,7 @@ public class SetSpawn extends Command {
     }
 
     public String getArgs() {
-        String args = "<name> <red/blue>";
+        String args = "<arena> <red/blue>";
         return args;
     }
 
@@ -48,7 +48,7 @@ public class SetSpawn extends Command {
     }
 
     public String getInfo() {
-        return "Set spawn of a Paintball Arena";
+        return "Set spawn of an Arena";
     }
 
     public CommandType getCommandType() {

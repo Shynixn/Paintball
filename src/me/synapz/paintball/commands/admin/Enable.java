@@ -24,7 +24,7 @@ public class Enable extends Command{
     }
 
     public String getArgs() {
-        String args = "<name>";
+        String args = "<arena>";
         return args;
     }
 
@@ -37,7 +37,7 @@ public class Enable extends Command{
     }
 
     public String getInfo() {
-        return "Enable an arena";
+        return "Enable an Arena";
     }
 
     public Command.CommandType getCommandType() {
