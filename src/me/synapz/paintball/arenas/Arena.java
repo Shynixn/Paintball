@@ -13,6 +13,8 @@ import java.util.HashMap;
 
 public class Arena {
 
+    // TODO: In case a reload or retart happens, make it so ArenaState gets saved in Cache file.
+
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isBlueLobbySet, isRedLobbySet, isEnabled;
 
     private String name;
@@ -32,15 +34,10 @@ public class Arena {
 
     protected enum ArenaState {
         NOT_SETUP,
-        // List color gray with a strike through
         STOPPED,
-        // List color green
         DISABLED,
-        // List color green with strike through
         IN_PROGRESS,
-        // List color red
         IN_LOBBY;
-        // List color green
     }
 
     public Arena(String name) {
@@ -119,7 +116,7 @@ public class Arena {
         String finalString = "";
         ChatColor done = ChatColor.STRIKETHROUGH;
         String end = ChatColor.RESET + "" + ChatColor.GRAY;
-        String suffix = ChatColor.BLUE + "Steps: ";
+        String prefix = ChatColor.BLUE + "Steps: ";
 
         String max = isMaxSet ? done + "setMax"+end : "setMax";
         String min = isMinSet ? done + "setMin"+end : "setMin";
@@ -133,7 +130,7 @@ public class Arena {
             finalString = finalString + ", " + ChatColor.GRAY + step;
         }
 
-        return isSetup() ? suffix + ChatColor.GRAY + "Complete. Arena is now open!" : suffix + finalString.subSequence(2, finalString.length());
+        return isSetup() ? suffix + ChatColor.GRAY + "Complete. Arena is now open!" : prefix + finalString.subSequence(2, finalString.length());
     }
 
     public void setEnabled(boolean setEnabled, Player sender) {
@@ -307,13 +304,8 @@ public class Arena {
 
     private void addPlayerToArena(Player player) {
         ArenaManager.Team team = this.getTeam(player);
-
         players.put(player.getName(), team);
         player.teleport(getSpawn(team));
-
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Joined Arena!");
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + this.getName() + " starting!");
-        // broadcast 'Arena Starting'
     }
 
     private void removePlayerFromArena(Player player) {
