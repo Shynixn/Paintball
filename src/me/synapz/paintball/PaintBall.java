@@ -6,9 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Paintball extends JavaPlugin{
+public class Paintball extends JavaPlugin{ 
 
-    // TODO: sign to leave red arena and go to blue arena?
     @Override
     public void onEnable() {
         Settings.getSettings().init(this);
