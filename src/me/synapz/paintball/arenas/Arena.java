@@ -3,6 +3,7 @@ package me.synapz.paintball.arenas;
 
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Settings;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -50,13 +51,14 @@ public class Arena {
     }
 
     public void removeArena() {
+    	// remove arena from arena.yml
         file.set("Arenas." + this.getName(), null);
-        List<String> list = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-        list.remove(this.getName());
-        Settings.getSettings().getArenaFile().set("Arena-List", list);
+    	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
+    	newList.remove(this.getName());
+        Settings.getSettings().getArenaFile().set("Arena-List", newList);
+        // remove arena from memory then save config
+        ArenaManager.getArenaManager().getArenas().remove(this);
         advSave();
-        // reload not working...
-        Settings.getSettings().reloadConfig();
     }
 
     public Location getSpawn(ArenaManager.Team team) {
@@ -212,6 +214,8 @@ public class Arena {
             case DISABLED:
                 Message.getMessenger().msg(player, ChatColor.RED, "That arena is disabled.");
                 return;
+            default:
+            	break;
         }
 
         if (team == null) {
@@ -384,6 +388,4 @@ public class Arena {
             state = ArenaState.STOPPED;
         }
     }
-
-
 }

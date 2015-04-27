@@ -3,6 +3,7 @@ package me.synapz.paintball.arenas;
 
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Settings;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -35,7 +36,6 @@ public class ArenaManager {
             // set the value of that arena
             a.loadValues(Settings.getSettings().getArenaFile());
         }
-        // save.
     }
 
     public Arena getArena(String name) {

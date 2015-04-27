@@ -1,7 +1,6 @@
 package me.synapz.paintball.commands.admin;
 
 
-import me.synapz.paintball.Settings;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.Message;

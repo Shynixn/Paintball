@@ -57,7 +57,10 @@ public class Settings {
     }
 
     public void reloadConfig() {
-        init(pb);
+        cFile = new File(pb.getDataFolder(), "arenas.yml");
+        aFile = new File(pb.getDataFolder(), "config.yml");
+        arena = YamlConfiguration.loadConfiguration(aFile);
+        config = YamlConfiguration.loadConfiguration(cFile);
     }
 
     public void saveArenaFile() {
