@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class Arena {
 
@@ -46,6 +47,16 @@ public class Arena {
 
     public String getName() {
         return name;
+    }
+
+    public void removeArena() {
+        file.set("Arenas." + this.getName(), null);
+        List<String> list = Settings.getSettings().getArenaFile().getStringList("Arena-List");
+        list.remove(this.getName());
+        Settings.getSettings().getArenaFile().set("Arena-List", list);
+        advSave();
+        // reload not working...
+        Settings.getSettings().reloadConfig();
     }
 
     public Location getSpawn(ArenaManager.Team team) {
