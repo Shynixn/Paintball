@@ -31,8 +31,8 @@ public class Settings {
         }
 
         this.pb = pb;
+        pb.saveDefaultConfig();
         config = pb.getConfig();
-        config.options().copyDefaults(true);
 
         aFile = new File(pb.getDataFolder(), "arenas.yml");
         cFile = new File(pb.getDataFolder(), "config.yml");

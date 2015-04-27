@@ -24,28 +24,14 @@ public class CommandManager implements CommandExecutor{
 
 
     public void init() {
-        // player menu
-        commands.add(new Join());
-        commands.add(new LeaveArena());
-        commands.add(new List());
-        commands.add(new Admin(Command.CommandType.PLAYER));
-
-        // admin menu
-        commands.add(new CreateArena());
-        commands.add(new RemoveArena());
-        commands.add(new SetLobbySpawn());
-        commands.add(new SetSpawn());
-        commands.add(new SetMin());
-        commands.add(new SetMax());
-        commands.add(new ForceStart());
-        commands.add(new ForceStop());
-        commands.add(new Enable());
-        commands.add(new Disable());
-        commands.add(new Steps());
-        commands.add(new Reload());
-        commands.add(new Admin(Command.CommandType.ADMIN)); // used so it gets displayed in /paintball admin
+    	addCommands(new Join(), new LeaveArena(), new List(), new Admin(Command.CommandType.PLAYER),
+    			new CreateArena(), new RemoveArena(), new SetLobbySpawn(), new SetSpawn(), new SetMin(),
+    			new SetMax(), new ForceStart(), new ForceStop(), new Rename(), new Enable(), new Disable(),
+    			new Steps(), new Reload(), new Admin(Command.CommandType.ADMIN));
     }
 
+
+    
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String commandLabel, String[] args) {
 
         if (cmd.getName().equalsIgnoreCase("paintball")) {
@@ -153,5 +139,11 @@ public class CommandManager implements CommandExecutor{
             }
         }
         return true;
+    }
+    
+    private void addCommands(Command...cmds) {
+    	for (Command cmd : cmds) {
+    		commands.add(cmd);
+    	}
     }
 }

@@ -49,16 +49,29 @@ public class Arena {
     public String getName() {
         return name;
     }
+    
+    private void setName(String newName) {
+    	this.name = newName;
+    }
 
     public void removeArena() {
-    	// remove arena from arena.yml
-        file.set("Arenas." + this.getName(), null);
+        file.set("Arenas." + name, null);
+        
     	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
     	newList.remove(this.getName());
         Settings.getSettings().getArenaFile().set("Arena-List", newList);
-        // remove arena from memory then save config
+
         ArenaManager.getArenaManager().getArenas().remove(this);
         advSave();
+    }
+    
+    public void rename(String newName) {
+    	file.getString("Arenas").replaceAll(name, newName);
+    	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
+    	int index = newList.indexOf(name);
+    	newList.set(index, newName);
+    	this.setName(name);
+    	advSave();
     }
 
     public Location getSpawn(ArenaManager.Team team) {
