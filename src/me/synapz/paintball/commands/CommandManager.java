@@ -32,6 +32,7 @@ public class CommandManager implements CommandExecutor{
 
         // admin menu
         commands.add(new CreateArena());
+        commands.add(new RemoveArena());
         commands.add(new SetLobbySpawn());
         commands.add(new SetSpawn());
         commands.add(new SetMin());
@@ -46,10 +47,6 @@ public class CommandManager implements CommandExecutor{
     }
 
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String commandLabel, String[] args) {
-
-
-
-
 
         if (cmd.getName().equalsIgnoreCase("paintball")) {
             if (!(sender instanceof Player)) {

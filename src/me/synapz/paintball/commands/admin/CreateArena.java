@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands.admin;
 
 
+import me.synapz.paintball.Settings;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.Message;
@@ -13,13 +14,17 @@ public class CreateArena extends Command{
     public void onCommand(Player player, String[] args) {
         String arenaName = args[2];
 
-        if (ArenaManager.getArenaManager().getArenas().contains(new Arena(arenaName))) {
+        try {
+            Arena a = ArenaManager.getArenaManager().getArena(arenaName);
+            a.getName(); // test to see if the arena exists by getting its name
             Message.getMessenger().msg(player, ChatColor.RED, "An arena named " + arenaName + " already exists!");
+            return;
+        }catch (NullPointerException e) {
+            // Arena doesn't except in the list of arenas therefore you can make it...
         }
 
         Arena a = new Arena(arenaName);
-
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + a.getName() + " successfully created.", a.getSteps());
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + a.getName() + " successfully created!");
         ArenaManager.getArenaManager().addNewArenaToConfig(a);
     }
 

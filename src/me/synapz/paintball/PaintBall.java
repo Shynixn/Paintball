@@ -1,12 +1,13 @@
 package me.synapz.paintball;
 
+import me.synapz.paintball.Settings;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.commands.CommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Paintball extends JavaPlugin{ 
+public class Paintball extends JavaPlugin{
 
     @Override
     public void onEnable() {
