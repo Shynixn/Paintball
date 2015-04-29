@@ -396,12 +396,12 @@ public class Arena {
     private void broadcastMessage(ChatColor color, String...messages) {
         for (String name : players.keySet()) {
             for (String message : messages) {
-                Bukkit.getServer().getPlayer(name).sendMessage(color + message);
+                Bukkit.getServer().getPlayer(name).sendMessage(Message.PREFIX + color + message);
             }
         }
         for (String name : lobbyPlayers.keySet()) {
             for (String message : messages) {
-                Bukkit.getServer().getPlayer(name).sendMessage(color + message);
+                Bukkit.getServer().getPlayer(name).sendMessage(Message.PREFIX + color + message);
             }
         }
     }
@@ -429,10 +429,12 @@ public class Arena {
         /**
          * Because the saveArenaFile() method gets called every time a value is changed,
          * we also want to see if the arena is setup because if it is, Arena.NOT_SETUP should
-         * be replaced with Arena.STOPPED because the setup is complete.
+         * be replaced with ArenaState.STOPPED (or ArenaState.DISABLED) because the setup is complete.
          */
         if (isSetup() && isEnabled) {
             state = ArenaState.STOPPED;
+        } else if (isSetup() && !isEnabled) {
+            state = ArenaState.DISABLED;
         }
     }
 }
