@@ -22,9 +22,11 @@ public class Join extends Command {
             return;
         }
 
-        if (arena.containsPlayer(player)) {
-            Message.getMessenger().msg(player, ChatColor.RED, "You are already in " + arena.toString() + ".");
-            return;
+        for (Arena a : ArenaManager.getArenaManager().getArenas()) {
+            if (a.containsPlayer(player)) {
+                Message.getMessenger().msg(player, ChatColor.RED, "You are already in " + a.toString() + ".");
+                return;
+            }
         }
         arena.joinLobby(player, team);
     }
