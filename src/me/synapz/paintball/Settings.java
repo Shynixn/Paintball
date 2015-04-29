@@ -76,5 +76,3 @@ public class Settings {
         return arena;
     }
 }
-
-

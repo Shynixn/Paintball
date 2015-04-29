@@ -17,7 +17,7 @@ public class Arena {
 
     // TODO: In case a reload or retart happens, make it so ArenaState gets saved in Cache file.
 
-    private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isBlueLobbySet, isRedLobbySet, isEnabled;
+    private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
 
     private String name;
 
@@ -32,6 +32,7 @@ public class Arena {
     String blueSpawnPath = "Blue-Spawn";
     String blueLobbyPath = "Blue-Lobby";
     String enabledPath = "Is-Enabled";
+    String spectatePath = "Spectate-Loc";
     ArenaState state = ArenaState.NOT_SETUP;
 
     protected enum ArenaState {
@@ -74,7 +75,7 @@ public class Arena {
     	advSave();
     }
 
-    public Location getSpawn(ArenaManager.Team team) {
+    private Location getSpawn(ArenaManager.Team team) {
         String value = team == ArenaManager.Team.BLUE ? blueSpawnPath : redSpawnPath;
         return (Location) file.get(getPath() + value);
     }
@@ -118,6 +119,31 @@ public class Arena {
         return (Location) file.get(getPath() + value);
     }
 
+    public void setSpectateLoc(Location loc) {
+        isSpectateSet = true;
+        file.set(getPath() + spectatePath, loc);
+        advSave();
+    }
+
+    private Location getSpectateLoc() {
+        return (Location) file.get(getPath() + spectatePath);
+    }
+
+    public void addToSpectate(Player player) {
+        switch (getState()) {
+            case IN_PROGRESS:
+                Message.getMessenger().msg(player, ChatColor.RED, "Joining " + this.toString() + ChatColor.RED + " spectate zone.");
+            case NOT_SETUP:
+                Message.getMessenger().msg(player, ChatColor.RED, "That arena has not been fully setup.");
+                return;
+            case DISABLED:
+                Message.getMessenger().msg(player, ChatColor.RED, "That arena is disabled.");
+                return;
+            default:
+                break;
+        }
+        player.teleport(getSpectateLoc());
+    }
     public void setMaxPlayers(int max) {
         isMaxSet = true;
         file.set(getPath() + maxPath, max);
@@ -150,8 +176,9 @@ public class Arena {
         String blueSpawn = isBlueSpawnSet ? done + "blueSpawn"+end : "blueSpawn";
         String redLobbySpawn = isRedLobbySet ? done + "redLobby"+end : "redLobby";
         String blueLobbySpawn = isBlueLobbySet ? done + "blueLobby"+end : "blueLobby";
+        String spectate = isSpectateSet ? done + "spectate"+end : "spectate";
         String enabled = isEnabled ? done+"enabled"+end : "enabled";
-        String[] steps = {max, min, redSpawn, blueSpawn, redLobbySpawn, blueLobbySpawn, enabled};
+        String[] steps = {max, min, spectate, redSpawn, blueSpawn, redLobbySpawn, blueLobbySpawn, enabled};
 
         for (String step : steps) {
             finalString = finalString + ", " + ChatColor.GRAY + step;
@@ -202,7 +229,7 @@ public class Arena {
     }
 
     public boolean isSetup() {
-        return isMaxSet && isMinSet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet && isRedLobbySet;
+        return isMaxSet && isMinSet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet && isRedLobbySet && isSpectateSet;
     }
 
 
@@ -251,11 +278,11 @@ public class Arena {
 
     public void loadValues(FileConfiguration file) {
 
-        String[] paths = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
+        String[] paths = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled", "Spectate-Loc"};
         int pathValue = 0;
-        boolean isSet = false;
 
         for (String value : paths) {
+            boolean isSet = false;
             if (!file.getString(getPath() + value).equals("not_set")) {
                 isSet = true;
             }
@@ -281,6 +308,9 @@ public class Arena {
                     break;
                 case 6:
                     isEnabled = file.getBoolean(getPath() + value);
+                    break;
+                case 7:
+                    isSpectateSet = isSet;
                     break;
             }
             pathValue++;
@@ -321,6 +351,10 @@ public class Arena {
             return;
         }
         Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop that arena.", "Error: " + this.getName() + " is not in progress.");
+    }
+
+    public String toString() {
+        return "Arena " + ChatColor.GRAY + this.getName();
     }
 
 

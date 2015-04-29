@@ -48,7 +48,7 @@ public class SetSpawn extends Command {
     }
 
     public String getInfo() {
-        return "Set spawn of an Arena";
+        return "Set spawnpoint";
     }
 
     public CommandType getCommandType() {

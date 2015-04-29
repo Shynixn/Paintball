@@ -23,16 +23,10 @@ public class Join extends Command {
         }
 
         if (arena.containsPlayer(player)) {
-            Message.getMessenger().msg(player, ChatColor.RED, "You already joined that arena.");
+            Message.getMessenger().msg(player, ChatColor.RED, "You are already in " + arena.toString() + ".");
             return;
         }
-
-        if (arena.isSetup()) {
-            arena.joinLobby(player, team);
-            // sendMessage, p.getname + joined 1/max players!
-        } else {
-            Message.getMessenger().msg(player, ChatColor.RED, "That arena has not been fully setup or is not enabled.");
-        }
+        arena.joinLobby(player, team);
     }
 
     public String getArgs() {

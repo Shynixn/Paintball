@@ -1,30 +1,34 @@
 package me.synapz.paintball.commands.player;
 
-
+import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.entity.Player;
 
-public class List extends Command{
+public class Spectate extends Command{
 
     public void onCommand(Player player, String[] args) {
-        ArenaManager.getArenaManager().getList(player);
+        Arena arena = ArenaManager.getArenaManager().getArena(args[1]);
+
+        if (nullCheck(args[1], arena, player)) {
+            arena.addToSpectate(player);
+        }
     }
 
     public String getName() {
-        return "list";
+        return "spectate";
     }
 
     public String getInfo() {
-        return "List of all arenas";
+        return "Spectate an arena.";
     }
 
     public String getArgs() {
-        return "";
+        return "<arena>";
     }
 
     public String getPermission() {
-        return "paintball.list";
+        return "panintball.spectate";
     }
 
     public CommandType getCommandType() {
@@ -32,11 +36,10 @@ public class List extends Command{
     }
 
     public int getMaxArgs() {
-        return 1;
+        return 2;
     }
 
     public int getMinArgs() {
-        return 1;
+        return 2;
     }
-
 }

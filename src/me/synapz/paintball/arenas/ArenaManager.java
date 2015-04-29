@@ -60,10 +60,10 @@ public class ArenaManager {
     }
 
     public void addNewArenaToConfig(Arena arena) {
-        String[] steps = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
+        String[] steps = {"Spectate-Loc", "Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
 
         for (String value : steps) {
-            if (value.equals(steps[6])) {
+            if (value.equals(steps[7])) {
                 Settings.getSettings().getArenaFile().set("Arenas." + arena.getName() + "." + value, false);
                 break;
             }

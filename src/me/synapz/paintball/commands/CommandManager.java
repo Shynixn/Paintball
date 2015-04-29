@@ -6,6 +6,7 @@ import me.synapz.paintball.commands.admin.*;
 import me.synapz.paintball.commands.player.Join;
 import me.synapz.paintball.commands.player.LeaveArena;
 import me.synapz.paintball.commands.player.List;
+import me.synapz.paintball.commands.player.Spectate;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,8 +25,8 @@ public class CommandManager implements CommandExecutor{
 
 
     public void init() {
-    	addCommands(new Join(), new LeaveArena(), new List(), new Admin(Command.CommandType.PLAYER),
-    			new CreateArena(), new RemoveArena(), new SetLobbySpawn(), new SetSpawn(), new SetMin(),
+    	addCommands(new Join(), new LeaveArena(), new Spectate(), new List(), new Admin(Command.CommandType.PLAYER),
+    			new CreateArena(), new RemoveArena(), new SetLobbySpawn(), new SetSpawn(), new SetSpectate(), new SetMin(),
     			new SetMax(), new ForceStart(), new ForceStop(), new Rename(), new Enable(), new Disable(),
     			new Steps(), new Reload(), new Admin(Command.CommandType.ADMIN));
     }

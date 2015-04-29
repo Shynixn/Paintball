@@ -6,41 +6,34 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class SetLobbySpawn extends Command{
+public class SetSpectate extends Command {
 
     public void onCommand(Player player, String[] args) {
-        Location spawn = player.getLocation();
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
-        String teamString = args[3];
-        ArenaManager.Team team;
 
-        if (nullCheck(args[2], arena, player) && teamCheck(teamString, player)) {
-            team = stringToTeam(teamString);
-            arena.setLobbySpawn(spawn, team);
-            Message.getMessenger().msg(player, ChatColor.GREEN, team + " lobby spawn for " + arena.getName() + " set!", arena.getSteps());
-        } else {
-            return;
+        if (nullCheck(args[2], arena, player)) {
+            arena.setSpectateLoc(player.getLocation());
+            Message.getMessenger().msg(player, ChatColor.GREEN, arena.toString() + ChatColor.GREEN + "'s spectate location set.");
         }
     }
 
     public String getArgs() {
-        String args = "<arena> <red/blue>";
+        String args = "<arena>";
         return args;
     }
 
     public String getPermission() {
-        return "paintball.admin.setlobby";
+        return "paintball.admin.setspectate";
     }
 
     public String getName() {
-        return "setlobby";
+        return "setspec";
     }
 
     public String getInfo() {
-        return "Set lobby spawn";
+        return "Set Arena spectate loc";
     }
 
     public CommandType getCommandType() {
@@ -48,11 +41,10 @@ public class SetLobbySpawn extends Command{
     }
 
     public int getMaxArgs() {
-        return 4;
+        return 3;
     }
 
     public int getMinArgs() {
-        return 4;
+        return 3;
     }
-
 }
