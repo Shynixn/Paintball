@@ -27,7 +27,7 @@ public class SetMin extends Command{
         }
 
         arena.setMinPlayers(min);
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Min players for " + arena.getName() + " set to " + min, arena.getSteps());
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Min players for " + arena.toString() + " set to " + ChatColor.GRAY + min, arena.getSteps());
     }
 
     public String getName() {

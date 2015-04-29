@@ -26,7 +26,7 @@ public class Rename extends Command{
 		        }
 		        
 	            arena.rename(newName);
-	            Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully renamed " + arena.getName() + " to " + newName);
+	            Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully renamed " + arena.toString() + " to " + ChatColor.GRAY + newName);
 	        }
 	    }
 

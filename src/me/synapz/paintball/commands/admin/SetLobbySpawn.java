@@ -20,7 +20,7 @@ public class SetLobbySpawn extends Command{
         if (nullCheck(args[2], arena, player) && teamCheck(teamString, player)) {
             team = stringToTeam(teamString);
             arena.setLobbySpawn(spawn, team);
-            Message.getMessenger().msg(player, ChatColor.GREEN, team + " lobby spawn for " + arena.getName() + " set!", arena.getSteps());
+            Message.getMessenger().msg(player, ChatColor.GREEN, team + " lobby spawn for " + arena.toString() + " set!", arena.getSteps());
         } else {
             return;
         }

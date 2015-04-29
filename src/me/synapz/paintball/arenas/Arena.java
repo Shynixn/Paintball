@@ -134,10 +134,10 @@ public class Arena {
             case IN_PROGRESS:
                 Message.getMessenger().msg(player, ChatColor.RED, "Joining " + this.toString() + ChatColor.RED + " spectate zone.");
             case NOT_SETUP:
-                Message.getMessenger().msg(player, ChatColor.RED, "That arena has not been fully setup.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + "has not been fully setup.");
                 return;
             case DISABLED:
-                Message.getMessenger().msg(player, ChatColor.RED, "That arena is disabled.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + " is disabled.");
                 return;
             default:
                 break;
@@ -221,7 +221,7 @@ public class Arena {
         }
         file.set(getPath() + enabledPath, isEnabled);
         advSave();
-        Message.getMessenger().msg(sender, color, "Arena " + this.getName() + " " + message);
+        Message.getMessenger().msg(sender, color, "Arena " + this.toString() + " " + message);
     }
 
     public void startGame() {
@@ -246,13 +246,13 @@ public class Arena {
     public void joinLobby(Player player, ArenaManager.Team team) {
         switch (getState()) {
             case IN_PROGRESS:
-                Message.getMessenger().msg(player, ChatColor.RED, "That arena is currently in progress.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + " is currently in progress.");
                 return;
             case NOT_SETUP:
-                Message.getMessenger().msg(player, ChatColor.RED, "That arena has not been fully setup.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + " has not been fully setup.");
                 return;
             case DISABLED:
-                Message.getMessenger().msg(player, ChatColor.RED, "That arena is disabled.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + " is disabled.");
                 return;
             default:
             	break;
@@ -326,7 +326,7 @@ public class Arena {
 
     public void forceStart(Player sender) {
         String reason = "";
-        String name = "Arena " + this.getName();
+        String name = "Arena " + this.toString();
 
         if (isSetup()) {
             if (lobbyPlayers.keySet().size() > getMin()) {
@@ -342,7 +342,7 @@ public class Arena {
         } else {
             reason = name + " has not been setup or enabled.";
         }
-        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force start that arena.", "Error: " + reason);
+        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force start " + name, "Error: " + reason);
     }
 
     public void forceStop(Player sender) {
@@ -350,7 +350,7 @@ public class Arena {
             this.removePlayersInArena();
             return;
         }
-        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop that arena.", "Error: " + this.getName() + " is not in progress.");
+        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop " + this.toString(), "Error: " + this.toString() + " is not in progress.");
     }
 
     public String toString() {

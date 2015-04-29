@@ -17,7 +17,7 @@ public class RemoveArena extends Command{
 
         if (nullCheck(arenaName, arena, player)) {
             arena.removeArena();
-            Message.getMessenger().msg(player, ChatColor.GREEN, "Arena " + arenaName + " successfully removed!");
+            Message.getMessenger().msg(player, ChatColor.GREEN, arena.toString() + " successfully removed!");
         }
     }
 
