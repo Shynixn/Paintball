@@ -132,12 +132,12 @@ public class Arena {
     public void addToSpectate(Player player) {
         switch (getState()) {
             case IN_PROGRESS:
-                Message.getMessenger().msg(player, ChatColor.RED, "Joining " + this.toString() + ChatColor.RED + " spectate zone.");
+                Message.getMessenger().msg(player, ChatColor.GREEN, "Joining " + this.toString() + " spectate zone.");
             case NOT_SETUP:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + "has not been fully setup.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + "has not been fully setup.");
                 return;
             case DISABLED:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + " is disabled.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is disabled.");
                 return;
             default:
                 break;
@@ -195,7 +195,7 @@ public class Arena {
         if (setEnabled) {
             if (!isSetup()) {
                 color = ChatColor.RED;
-                message = "has not been setup.";
+                message = ChatColor.RED + "has not been setup.";
                 isEnabled = false;
             } else {
                 if (!isEnabled) {
@@ -205,7 +205,7 @@ public class Arena {
                     message = "has been enabled!";
                 } else {
                     color = ChatColor.RED;
-                    message = "is already enabled.";
+                    message = ChatColor.RED + "is already enabled.";
                 }
             }
         } else {
@@ -216,12 +216,12 @@ public class Arena {
                 message = "has been disabled!";
             } else {
                 color = ChatColor.RED;
-                message = "is already disabled.";
+                message = ChatColor.RED + "is already disabled.";
             }
         }
         file.set(getPath() + enabledPath, isEnabled);
         advSave();
-        Message.getMessenger().msg(sender, color, "Arena " + this.toString() + " " + message);
+        Message.getMessenger().msg(sender, color, this.toString() + " " + message);
     }
 
     public void startGame() {
@@ -246,13 +246,13 @@ public class Arena {
     public void joinLobby(Player player, ArenaManager.Team team) {
         switch (getState()) {
             case IN_PROGRESS:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + " is currently in progress.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is currently in progress.");
                 return;
             case NOT_SETUP:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + " has not been fully setup.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " has not been fully setup.");
                 return;
             case DISABLED:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + " is disabled.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is disabled.");
                 return;
             default:
             	break;
@@ -334,13 +334,13 @@ public class Arena {
                     putPlayersIntoArena();
                     return;
                 } else if (state == ArenaState.IN_PROGRESS) {
-                    reason = name + " is already in progress";
+                    reason = name + ChatColor.RED + " is already in progress";
                 }
             } else {
-                reason = name + " does not have enough players.";
+                reason = name + ChatColor.RED + " does not have enough players.";
             }
         } else {
-            reason = name + " has not been setup or enabled.";
+            reason = name + ChatColor.RED + " has not been setup or enabled.";
         }
         Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force start " + name, "Error: " + reason);
     }
@@ -354,7 +354,7 @@ public class Arena {
     }
 
     public String toString() {
-        return "Arena " + ChatColor.GRAY + this.getName();
+        return "Arena " + ChatColor.GRAY + this.getName() + ChatColor.GREEN;
     }
 
 

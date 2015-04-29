@@ -15,7 +15,7 @@ public class SetSpectate extends Command {
 
         if (nullCheck(args[2], arena, player)) {
             arena.setSpectateLoc(player.getLocation());
-            Message.getMessenger().msg(player, ChatColor.GREEN, arena.toString() + ChatColor.GREEN + " spectate location set.", arena.getSteps());
+            Message.getMessenger().msg(player, ChatColor.GREEN, arena.toString() + ChatColor.GREEN + " spectate location set!", arena.getSteps());
         }
     }
 
