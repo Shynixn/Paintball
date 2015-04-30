@@ -19,6 +19,7 @@ public class Rename extends Command{
 	        	
 		        try {
 		            Arena a = ArenaManager.getArenaManager().getArena(args[3]);
+                    a.getName();
 		            Message.getMessenger().msg(player, ChatColor.RED, "An arena named " + newName + " already exists!");
 		            return;
 		        }catch (NullPointerException e) {
@@ -26,7 +27,7 @@ public class Rename extends Command{
 		        }
 		        
 	            arena.rename(newName);
-	            Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully renamed " + arena.toString() + " to " + ChatColor.GRAY + newName);
+	            Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully renamed Arena " + ChatColor.GRAY + args[2] + ChatColor.GREEN + " to " + ChatColor.GRAY + newName);
 	        }
 	    }
 

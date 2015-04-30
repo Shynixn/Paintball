@@ -16,6 +16,7 @@ import java.util.List;
 public class Arena {
 
     // TODO: In case a reload or retart happens, make it so ArenaState gets saved in Cache file.
+    // TODO: add spectate leave
 
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
 
@@ -67,12 +68,12 @@ public class Arena {
     }
     
     public void rename(String newName) {
-    	file.getString("Arenas").replaceAll(name, newName);
     	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-    	int index = newList.indexOf(name);
-    	newList.set(index, newName);
-    	this.setName(name);
+        newList.set(newList.indexOf(name), newName);
+        Settings.getSettings().getArenaFile().set("Arena-List", newList);
+    	this.setName(newName);
     	advSave();
+
     }
 
     private Location getSpawn(ArenaManager.Team team) {

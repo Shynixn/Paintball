@@ -4,6 +4,7 @@ package me.synapz.paintball.arenas;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Settings;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -34,7 +35,16 @@ public class ArenaManager {
             Arena a = new Arena(arenaName);
             arenas.add(a);
             // set the value of that arena
-            a.loadValues(Settings.getSettings().getArenaFile());
+            try {
+                a.loadValues(Settings.getSettings().getArenaFile());
+            }catch (NullPointerException e) {
+                /**
+                 * An arena in 'Arenas' is not found in 'Arena-List'
+                 * So it throws an error, just warn console instead of breaking the
+                 * whole plugin =)
+                 */
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Corrupted arenas.yml file.", "One of your arenas in 'Arena-List' (in arenas.yml) is not found in 'Arenas' (in arenas.yml).");
+            }
         }
     }
 
