@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class Arena {
 
     private HashMap<String, ArenaManager.Team> players = new HashMap<String, ArenaManager.Team>();
     private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<String, ArenaManager.Team>();
+    private ArrayList<String> spectators = new ArrayList<String>();
     private FileConfiguration file = Settings.getSettings().getArenaFile();
 
     String maxPath = "Max-Players";
@@ -144,6 +146,7 @@ public class Arena {
                 break;
         }
         player.teleport(getSpectateLoc());
+        spectators.add(player.getName());
     }
     public void setMaxPlayers(int max) {
         isMaxSet = true;
@@ -237,6 +240,7 @@ public class Arena {
     public void removePlayer(Player player) {
         lobbyPlayers.keySet().remove(player.getName());
         players.keySet().remove(player.getName());
+        spectators.remove(player.getName());
         // player.teleport <getbacklocation from config>
     }
 
