@@ -17,7 +17,7 @@ public class Settings {
     private FileConfiguration config, arena;
     private File cFile, aFile;
 
-    public String prefix, version, theme;
+    private String prefix, version, theme, website, author;
 
     private Settings() {}
 
@@ -51,6 +51,8 @@ public class Settings {
         config = YamlConfiguration.loadConfiguration(cFile);
 
         version = pb.getDescription().getVersion();
+        website = pb.getDescription().getWebsite();
+        author = pb.getDescription().getAuthors().toString();
         prefix = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
         theme = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
 
@@ -75,4 +77,27 @@ public class Settings {
     public FileConfiguration getArenaFile() {
         return arena;
     }
+
+    public String getPrefix() {
+        String output = prefix == null ? ChatColor.DARK_GRAY + "[" + ChatColor.AQUA + "Paintball" + ChatColor.DARK_GRAY + "] " : prefix + " ";
+        return output;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public String getTheme() {
+        String code = theme == null ? "&3" : theme;
+        return ChatColor.translateAlternateColorCodes('&', code);
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
 }

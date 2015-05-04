@@ -2,6 +2,7 @@ package me.synapz.paintball.commands;
 
 
 import me.synapz.paintball.Message;
+import me.synapz.paintball.Settings;
 import me.synapz.paintball.commands.admin.*;
 import me.synapz.paintball.commands.player.Join;
 import me.synapz.paintball.commands.player.LeaveArena;
@@ -21,14 +22,13 @@ public class CommandManager implements CommandExecutor{
 
     private static final String NO_CONSOLE_PERMS = "Console does not have access to that command!";
     private static final String COMMAND_NOT_FOUND = "Unknown Command! Type /paintball for a list of commands.";
-    private static final String HELP_TITLE = ChatColor.DARK_GRAY + "*********************" + ChatColor.GRAY + "" + ChatColor.BOLD + "{- " + ChatColor.DARK_GRAY + "[" + Message.THEME + "Paintball" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "" + ChatColor.BOLD + " -}" + ChatColor.DARK_GRAY + "*********************";
 
 
     public void init() {
     	addCommands(new Join(), new LeaveArena(), new Spectate(), new List(), new Admin(Command.CommandType.PLAYER),
     			new CreateArena(), new RemoveArena(), new SetLobbySpawn(), new SetSpawn(), new SetSpectate(), new SetMin(),
     			new SetMax(), new ForceStart(), new ForceStop(), new Rename(), new Enable(), new Disable(),
-    			new Steps(), new Reload(), new Admin(Command.CommandType.ADMIN));
+    			new Steps(),  new Info(), new Reload(), new Admin(Command.CommandType.ADMIN));
     }
 
 
@@ -95,9 +95,10 @@ public class CommandManager implements CommandExecutor{
 
 
     public static void displayHelp(Player player, Command.CommandType type) {
-        player.sendMessage(HELP_TITLE);
+        boolean isPlayerType = type == Command.CommandType.PLAYER ? true : false;
+        player.sendMessage(Message.getMessenger().getHelpTitle(isPlayerType));
 
-        String beginning = type == Command.CommandType.ADMIN ? Message.THEME + "/pb " + "admin " : Message.THEME + "/pb ";
+        String beginning = isPlayerType ? Message.THEME + "/pb ": Message.THEME + "/pb admin ";
         for (Command command : commands) {
             String name = command.getName().equals("admin") && type == Command.CommandType.ADMIN ? "" : command.getName();
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();

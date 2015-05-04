@@ -28,6 +28,7 @@ public class ArenaManager {
     }
 
     public void setup() {
+        int errors = 0;
         arenasList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
 
         for (String arenaName : arenasList) {
@@ -43,8 +44,12 @@ public class ArenaManager {
                  * So it throws an error, just warn console instead of breaking the
                  * whole plugin =)
                  */
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Corrupted arenas.yml file.", "One of your arenas in 'Arena-List' (in arenas.yml) is not found in 'Arenas' (in arenas.yml).");
+                errors++;
             }
+        }
+        if (errors > 1) { // Used to prevent spamming to console by keeping the message out of the for loop
+            Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, errors + (errors > 1 ? " errors. ": " error. ") + "Corrupted arenas.yml file.", "Reason: An arena found in the 'Arena-List' path is not " +
+                    "found in 'Arenas' path.");
         }
     }
 
