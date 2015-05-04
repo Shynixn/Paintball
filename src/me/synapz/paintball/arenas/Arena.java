@@ -181,7 +181,7 @@ public class Arena {
         String redLobbySpawn = isRedLobbySet ? done + "redLobby"+end : "redLobby";
         String blueLobbySpawn = isBlueLobbySet ? done + "blueLobby"+end : "blueLobby";
         String spectate = isSpectateSet ? done + "spectate"+end : "spectate";
-        String enabled = isEnabled ? done+"enabled"+end : "enabled";
+        String enabled = isEnabled ? done+"enable"+end : "enable";
         String[] steps = {max, min, spectate, redSpawn, blueSpawn, redLobbySpawn, blueLobbySpawn, enabled};
 
         for (String step : steps) {
