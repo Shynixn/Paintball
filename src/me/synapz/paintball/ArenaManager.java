@@ -74,6 +74,13 @@ public class ArenaManager {
         return arenas;
     }
 
+    public void stopArenas() {
+        for (Arena a : getArenas()) {
+            a.removePlayersInArena();
+            // a.broadcastMessage("Paintball has been disabled.");
+        }
+    }
+    
     public void addNewArenaToConfig(Arena arena) {
         String[] steps = {"Spectate-Loc", "Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
 
