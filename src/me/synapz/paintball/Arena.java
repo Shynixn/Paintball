@@ -378,16 +378,17 @@ public class Arena {
     }
 
     private void removePlayersInArena() {
-        // broadcast "Arena has been force stopped
+        // broadcast "Arena has been force stopped"
         for (String p : lobbyPlayers.keySet()) {
             Player player = Bukkit.getPlayer(p);
             this.removePlayerFromArena(player);
-            Message.getMessenger().msg(player, ChatColor.RED, "Left Arena!");
+            Message.getMessenger().msg(player, ChatColor.RED, "");
         }
         state = ArenaState.STOPPED;
     }
 
     private void addPlayerToArena(Player player) {
+        // add inventory + location to cache.yml
         ArenaManager.Team team = this.getTeam(player);
         players.put(player.getName(), team);
         player.teleport(getSpawn(team));
@@ -396,6 +397,7 @@ public class Arena {
     private void removePlayerFromArena(Player player) {
         players.remove(player);
         // player.teleport(last location);
+        // player.getOldInventory();
     }
 
     private void broadcastMessage(ChatColor color, String...messages) {
