@@ -17,7 +17,7 @@ public class Arena {
     // TODO: add spectate leave
 
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
-
+    private int id;
     private String name;
 
     private HashMap<String, ArenaManager.Team> players = new HashMap<String, ArenaManager.Team>();
@@ -44,19 +44,31 @@ public class Arena {
     }
 
     public Arena(String name) {
+        try {
+            id = file.getInt("Total-Arenas")+1;
+        }catch(NullPointerException e) {
+            // No place named 'Total-Arenas' so set it
+            file.set("Total-Arenas", 1);
+            id = 1;
+        }
         this.name = name;
     }
 
     public String getName() {
         return name;
     }
-    
+
     private void setName(String newName) {
-    	this.name = newName;
+        file.set(getPath() + "Name", newName);
+        name = newName;
+    }
+
+    public int getID() {
+        return id;
     }
 
     public void removeArena() {
-        file.set("Arenas." + name, null);
+        file.set("Arenas." + id, null);
         
     	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
     	newList.remove(this.getName());
@@ -67,12 +79,15 @@ public class Arena {
     }
     
     public void rename(String newName) {
+        // Rename the file in 'Arena-List' path
     	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
         newList.set(newList.indexOf(name), newName);
         Settings.getSettings().getArenaFile().set("Arena-List", newList);
-    	this.setName(newName);
-    	advSave();
 
+        // Rename the Name: path under it's id
+        setName(newName);
+
+    	advSave();
     }
 
     private Location getSpawn(ArenaManager.Team team) {
@@ -280,7 +295,7 @@ public class Arena {
 
     public void loadValues(FileConfiguration file) {
 
-        String[] paths = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled", "Spectate-Loc"};
+        String[] paths = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled", "Spectate-Loc", "Name"};
         int pathValue = 0;
 
         for (String value : paths) {
@@ -314,6 +329,8 @@ public class Arena {
                 case 7:
                     isSpectateSet = isSet;
                     break;
+                case 8:
+                    name = getPath() + value;
             }
             pathValue++;
         }
@@ -361,7 +378,7 @@ public class Arena {
 
 
     private String getPath() {
-        return "Arenas." + this.getName() + ".";
+        return "Arenas." + id + ".";
     }
 
     private void putPlayersIntoArena() {

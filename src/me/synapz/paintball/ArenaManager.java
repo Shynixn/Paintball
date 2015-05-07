@@ -73,20 +73,25 @@ public class ArenaManager {
 
     public void stopArenas() {
         for (Arena a : getArenas()) {
-            a.removePlayersInArena();
+            // a.removePlayersInArena();
             // a.broadcastMessage("Paintball has been disabled.");
         }
     }
     
     public void addNewArenaToConfig(Arena arena) {
-        String[] steps = {"Spectate-Loc", "Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
+        String[] steps = {"Name", "Spectate-Loc", "Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
+        int id = arena.getID();
 
         for (String value : steps) {
-            if (value.equals(steps[7])) {
-                Settings.getSettings().getArenaFile().set("Arenas." + arena.getName() + "." + value, false);
+            if (value.equals("Name")) {
+                Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, arena.getName());
                 break;
             }
-            Settings.getSettings().getArenaFile().set("Arenas." + arena.getName() + "." + value, "not_set");
+            if (value.equals("Is-Enabled")) {
+                Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, false);
+                break;
+            }
+            Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, "not_set");
         }
         arenas.add(arena);
         arenasList.add(arena.getName());
