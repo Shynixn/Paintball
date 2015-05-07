@@ -1,6 +1,5 @@
 package me.synapz.paintball;
 
-import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.commands.CommandManager;
 
 import org.bukkit.plugin.java.JavaPlugin;

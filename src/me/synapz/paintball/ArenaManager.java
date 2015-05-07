@@ -1,8 +1,5 @@
-package me.synapz.paintball.arenas;
+package me.synapz.paintball;
 
-
-import me.synapz.paintball.Message;
-import me.synapz.paintball.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
