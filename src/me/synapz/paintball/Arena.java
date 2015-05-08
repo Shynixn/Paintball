@@ -17,8 +17,7 @@ public class Arena {
     // TODO: add spectate leave...
 
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
-    private int id;
-    private String name;
+    private String name, currentName;
 
     private HashMap<String, ArenaManager.Team> players = new HashMap<String, ArenaManager.Team>();
     private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<String, ArenaManager.Team>();
@@ -43,29 +42,29 @@ public class Arena {
         IN_LOBBY;
     }
 
-    public Arena(String name) {
-        id = ArenaManager.getArenaManager().getTotalAmountOfArenas()+1;
+    public Arena(String name, String currentName) {
+        this.currentName = currentName;
         this.name = name;
     }
 
     public String getName() {
+        return currentName;
+    }
+
+    public String getDefaultName() {
         return name;
     }
 
     private void setName(String newName) {
         file.set(getPath() + "Name", newName);
-        name = newName;
-    }
-
-    public int getID() {
-        return id;
+        currentName = newName;
     }
 
     public void removeArena() {
-        file.set("Arenas." + id, null);
+        file.set("Arenas." + name, null);
         
     	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-    	newList.remove(this.getName());
+    	newList.remove(this.name+ ":" + this.currentName);
         Settings.getSettings().getArenaFile().set("Arena-List", newList);
 
         ArenaManager.getArenaManager().getArenas().remove(this);
@@ -75,7 +74,7 @@ public class Arena {
     public void rename(String newName) {
         // Rename the file in 'Arena-List' path
     	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-        newList.set(newList.indexOf(name), newName);
+        newList.set(newList.lastIndexOf(name), name + ":" + newName);
         Settings.getSettings().getArenaFile().set("Arena-List", newList);
 
         // Rename the Name: path under it's id
@@ -289,7 +288,7 @@ public class Arena {
 
     public void loadValues(FileConfiguration file) {
 
-        String[] paths = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled", "Spectate-Loc", "Name"};
+        String[] paths = {"Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled", "Spectate-Loc"};
         int pathValue = 0;
 
         for (String value : paths) {
@@ -323,8 +322,6 @@ public class Arena {
                 case 7:
                     isSpectateSet = isSet;
                     break;
-                case 8:
-                    name = getPath() + value;
             }
             pathValue++;
         }
@@ -372,7 +369,7 @@ public class Arena {
 
 
     private String getPath() {
-        return "Arenas." + id + ".";
+        return "Arenas." + name + ".";
     }
 
     private void putPlayersIntoArena() {
@@ -386,11 +383,11 @@ public class Arena {
     }
 
     private void removePlayersInArena() {
-        broadcastMessage(ChatColor.RED, this.getName() + ChatColor.RED + " has been force stopped.");
+        broadcastMessage(ChatColor.RED, this.toString() + ChatColor.RED + " has been force stopped.");
         for (String p : lobbyPlayers.keySet()) {
             Player player = Bukkit.getPlayer(p);
             this.removePlayerFromArena(player);
-            Message.getMessenger().msg(player, ChatColor.RED, "You left " + this.getName());
+            Message.getMessenger().msg(player, ChatColor.RED, "You left " + this.toString());
         }
         state = ArenaState.STOPPED;
     }
