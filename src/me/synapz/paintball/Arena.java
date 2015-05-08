@@ -14,7 +14,7 @@ import java.util.List;
 public class Arena {
 
     // TODO: In case a reload or retart happens, make it so ArenaState gets saved in Cache file.
-    // TODO: add spectate leave
+    // TODO: add spectate leave...
 
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
     private int id;
@@ -392,11 +392,11 @@ public class Arena {
     }
 
     private void removePlayersInArena() {
-        // broadcast "Arena has been force stopped"
+        broadcastMessage(ChatColor.RED, this.getName() + ChatColor.RED + " has been force stopped.");
         for (String p : lobbyPlayers.keySet()) {
             Player player = Bukkit.getPlayer(p);
             this.removePlayerFromArena(player);
-            Message.getMessenger().msg(player, ChatColor.RED, "");
+            Message.getMessenger().msg(player, ChatColor.RED, "You left " + this.getName());
         }
         state = ArenaState.STOPPED;
     }
