@@ -25,29 +25,7 @@ public class ArenaManager {
     }
 
     public void setup() {
-        int errors = 0;
-        arenasList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-
-        for (String arenaName : arenasList) {
-            // add each arena to the server
-            Arena a = new Arena(arenaName);
-            arenas.add(a);
-            // set the value of that arena
-            try {
-                a.loadValues(Settings.getSettings().getArenaFile());
-            }catch (NullPointerException e) {
-                /**
-                 * An arena in 'Arenas' is not found in 'Arena-List'
-                 * So it throws an error, just warn console instead of breaking the
-                 * whole plugin =)
-                 */
-                errors++;
-            }
-        }
-        if (errors > 1) { // Used to prevent spamming to console by keeping the message out of the for loop
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, errors + (errors > 1 ? " errors. ": " error. ") + "Corrupted arenas.yml file.", "Reason: An arena found in the 'Arena-List' path is not " +
-                    "found in 'Arenas' path.");
-        }
+        loadArenas();
     }
 
     public Arena getArena(String name) {
@@ -134,5 +112,34 @@ public class ArenaManager {
 
         Message.getMessenger().msg(player, ChatColor.GRAY, ChatColor.BLUE + "Arenas: " + ChatColor.GRAY + arenas,
                 ChatColor.GREEN + "█-" + gr + "Joinable " + ChatColor.RED + "█-" + gr + "InProgress " + gr + "█-" + gr + "Disabled/Not-Setup");
+    }
+
+    public int getTotalAmountOfArenas() {
+        return arenas.size();
+    }
+
+    private void loadArenas() {
+        arenasList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
+
+        for (String arenaName : arenasList) {
+            // add each arena to the server
+            Arena a = new Arena(arenaName);
+            try {
+                // set the value of that arena
+                a.loadValues(Settings.getSettings().getArenaFile());
+            }catch (NullPointerException e) {
+                /**
+                 * An arena in 'Arena-List' is not found in 'Arenas'
+                 * handle the error instead of breaking the whole plugin =).
+                 * This Removes the arena that cant be loaded from 'Arena-List'
+                 */
+                arenasList.remove(arenaName);
+                Settings.getSettings().getArenaFile().set("Arena-List", arenasList);
+            }catch (Exception e) {
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Error loading arenas.yml. Stacktrace: ");
+                e.printStackTrace();
+            }
+            arenas.add(a);
+        }
     }
 }

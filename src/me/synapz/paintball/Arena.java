@@ -44,13 +44,7 @@ public class Arena {
     }
 
     public Arena(String name) {
-        try {
-            id = file.getInt("Total-Arenas")+1;
-        }catch(NullPointerException e) {
-            // No place named 'Total-Arenas' so set it
-            file.set("Total-Arenas", 1);
-            id = 1;
-        }
+        id = ArenaManager.getArenaManager().getTotalAmountOfArenas()+1;
         this.name = name;
     }
 
