@@ -18,7 +18,7 @@ public class ArenaManager {
 
     private static ArenaManager instance = new ArenaManager();
     private ArrayList<Arena> arenas = new ArrayList<Arena>();
-    List<String> arenasList = null;
+    private List<String> arenasList = null;
 
     public static ArenaManager getArenaManager() {
         return instance;
@@ -51,28 +51,25 @@ public class ArenaManager {
 
     public void stopArenas() {
         for (Arena a : getArenas()) {
-            // a.removePlayersInArena();
-            // a.broadcastMessage("Paintball has been disabled.");
+            a.removePlayersInArena();
         }
     }
     
     public void addNewArenaToConfig(Arena arena) {
         String[] steps = {"Name", "Spectate-Loc", "Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
-        int id = arena.getID();
+        String id = arena.getDefaultName();
 
         for (String value : steps) {
             if (value.equals("Name")) {
                 Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, arena.getName());
-                break;
-            }
-            if (value.equals("Is-Enabled")) {
+            } else if (value.equals("Is-Enabled")) {
                 Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, false);
-                break;
+            }else {
+                Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, "not_set");
             }
-            Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, "not_set");
         }
         arenas.add(arena);
-        arenasList.add(arena.getName());
+        arenasList.add(id + ":" + id);
         Settings.getSettings().getArenaFile().set("Arena-List", arenasList);
         Settings.getSettings().saveArenaFile();
     }
@@ -114,27 +111,20 @@ public class ArenaManager {
                 ChatColor.GREEN + "█-" + gr + "Joinable " + ChatColor.RED + "█-" + gr + "InProgress " + gr + "█-" + gr + "Disabled/Not-Setup");
     }
 
-    public int getTotalAmountOfArenas() {
-        return arenas.size();
-    }
-
     private void loadArenas() {
         arenasList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
+        Arena a = null;
+
 
         for (String arenaName : arenasList) {
-            // add each arena to the server
-            Arena a = new Arena(arenaName);
+            String defaultName = arenaName.substring(0, arenaName.lastIndexOf(":"));
+            String name = arenaName.substring(arenaName.lastIndexOf(":")+1, arenaName.length());
             try {
+                // add each arena to the server
+                a = new Arena(defaultName, name);
+
                 // set the value of that arena
                 a.loadValues(Settings.getSettings().getArenaFile());
-            }catch (NullPointerException e) {
-                /**
-                 * An arena in 'Arena-List' is not found in 'Arenas'
-                 * handle the error instead of breaking the whole plugin =).
-                 * This Removes the arena that cant be loaded from 'Arena-List'
-                 */
-                arenasList.remove(arenaName);
-                Settings.getSettings().getArenaFile().set("Arena-List", arenasList);
             }catch (Exception e) {
                 Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Error loading arenas.yml. Stacktrace: ");
                 e.printStackTrace();

@@ -22,7 +22,7 @@ public class CreateArena extends Command{
             // Arena doesn't except in the list of arenas therefore you can make it...
         }
 
-        Arena a = new Arena(arenaName);
+        Arena a = new Arena(arenaName, arenaName);
         Message.getMessenger().msg(player, ChatColor.GREEN, a.toString() + " successfully created!");
         ArenaManager.getArenaManager().addNewArenaToConfig(a);
     }

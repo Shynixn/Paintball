@@ -74,7 +74,7 @@ public class Arena {
     public void rename(String newName) {
         // Rename the file in 'Arena-List' path
     	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-        newList.set(newList.lastIndexOf(name), name + ":" + newName);
+        newList.set(newList.lastIndexOf(name) == -1 ? 0 : newList.lastIndexOf(name)+1, name + ":" + newName);
         Settings.getSettings().getArenaFile().set("Arena-List", newList);
 
         // Rename the Name: path under it's id
@@ -274,6 +274,7 @@ public class Arena {
             lobbyPlayers.put(player.getName(), team);
         }
 
+        // maybe change their name based on the team they are on
         player.teleport(getLobbySpawn(getTeam(player)));
         broadcastMessage(ChatColor.GREEN, player.getName() + " has joined the arena! " + ChatColor.GRAY + this.lobbyPlayers.keySet().size() + "/" + this.getMax());
 
@@ -380,9 +381,10 @@ public class Arena {
         state = ArenaState.IN_PROGRESS;
         // TODO: make a timer & add configurable time
         this.broadcastMessage(ChatColor.GREEN, "Arena starting in " + "15 seconds");
+        // put info into cache file
     }
 
-    private void removePlayersInArena() {
+    public void removePlayersInArena() {
         broadcastMessage(ChatColor.RED, this.toString() + ChatColor.RED + " has been force stopped.");
         for (String p : lobbyPlayers.keySet()) {
             Player player = Bukkit.getPlayer(p);
