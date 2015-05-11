@@ -337,31 +337,32 @@ public class Arena {
 
     public void forceStart(Player sender) {
         String reason = "";
-        String name = "Arena " + this.toString();
 
         if (isSetup()) {
             if (lobbyPlayers.keySet().size() > getMin()) {
                 if (state == ArenaState.STOPPED) {
                     putPlayersIntoArena();
+                    Message.getMessenger().msg(sender, ChatColor.GREEN, "Successfully started " + this.toString());
                     return;
                 } else if (state == ArenaState.IN_PROGRESS) {
-                    reason = name + ChatColor.RED + " is already in progress";
+                    reason = " is already in progress";
                 }
             } else {
-                reason = name + ChatColor.RED + " does not have enough players.";
+                reason = " does not have enough players.";
             }
         } else {
-            reason = name + ChatColor.RED + " has not been setup or enabled.";
+            reason = " has not been setup or enabled.";
         }
-        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force start " + name, "Error: " + reason);
+        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force start " + name, "Error: " + this.toString() + ChatColor.RED + reason);
     }
 
     public void forceStop(Player sender) {
         if (state == ArenaState.IN_PROGRESS) {
             this.removePlayersInArena();
+            Message.getMessenger().msg(sender, ChatColor.GREEN, "Successfully stopped " + this.toString());
             return;
         }
-        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop " + this.toString(), "Error: " + this.toString() + " is not in progress.");
+        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop " + this.toString(), "Error: " + this.toString() + ChatColor.RED + " is not in progress.");
     }
 
     public String toString() {

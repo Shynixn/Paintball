@@ -15,7 +15,7 @@ public class Settings {
 
     private Paintball pb;
     private FileConfiguration config, arena;
-    private File cFile, aFile;
+    private File aFile;
 
     private String prefix, version, theme, website, author;
 
@@ -35,7 +35,6 @@ public class Settings {
         config = pb.getConfig();
 
         aFile = new File(pb.getDataFolder(), "arenas.yml");
-        cFile = new File(pb.getDataFolder(), "config.yml");
 
         if (!aFile.exists()) {
             try {
@@ -48,21 +47,14 @@ public class Settings {
         }
 
         arena = YamlConfiguration.loadConfiguration(aFile);
-        config = YamlConfiguration.loadConfiguration(cFile);
-
-        version = pb.getDescription().getVersion();
-        website = pb.getDescription().getWebsite();
-        author = pb.getDescription().getAuthors().toString();
-        prefix = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
-        theme = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
-
+        loadValues();
     }
 
     public void reloadConfig() {
-        cFile = new File(pb.getDataFolder(), "arenas.yml");
-        aFile = new File(pb.getDataFolder(), "config.yml");
         arena = YamlConfiguration.loadConfiguration(aFile);
-        config = YamlConfiguration.loadConfiguration(cFile);
+        pb.reloadConfig();
+        config = pb.getConfig();
+        loadValues();
     }
 
     public void saveArenaFile() {
@@ -73,6 +65,15 @@ public class Settings {
             e.printStackTrace();
         }
     }
+
+    private void loadValues() {
+        version = pb.getDescription().getVersion();
+        website = pb.getDescription().getWebsite();
+        author = pb.getDescription().getAuthors().toString();
+        prefix = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
+        theme = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
+    }
+
 
     public FileConfiguration getArenaFile() {
         return arena;
