@@ -19,9 +19,9 @@ public class Arena {
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
     private String name, currentName;
 
-    private HashMap<String, ArenaManager.Team> players = new HashMap<String, ArenaManager.Team>();
-    private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<String, ArenaManager.Team>();
-    private ArrayList<String> spectators = new ArrayList<String>();
+    private HashMap<String, ArenaManager.Team> players = new HashMap<>();
+    private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<>();
+    private ArrayList<String> spectators = new ArrayList<>();
     private FileConfiguration file = Settings.getSettings().getArenaFile();
 
     String maxPath = "Max-Players";
@@ -61,7 +61,7 @@ public class Arena {
     }
 
     public void removeArena() {
-        file.set("Arenas." + name, null);
+        file.set("Arenas." + this.getDefaultName(), null);
         
     	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
     	newList.remove(this.name+ ":" + this.currentName);
@@ -74,10 +74,10 @@ public class Arena {
     public void rename(String newName) {
         // Rename the file in 'Arena-List' path
     	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-        newList.set(newList.lastIndexOf(name) == -1 ? 0 : newList.lastIndexOf(name)+1, name + ":" + newName);
+        newList.set(newList.indexOf(this.getDefaultName() + ":" + this.getName()), this.getDefaultName() + ":" + newName);
         Settings.getSettings().getArenaFile().set("Arena-List", newList);
 
-        // Rename the Name: path under it's id
+        // Rename the Name: path under it's default name & rename the name in memory
         setName(newName);
 
     	advSave();
