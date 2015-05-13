@@ -17,7 +17,7 @@ public class Settings {
     private FileConfiguration config, arena;
     private File aFile;
 
-    private String prefix, version, theme, website, author;
+    private String prefix, version, theme, website, author, secondary;
 
     private Settings() {}
 
@@ -72,6 +72,7 @@ public class Settings {
         author = pb.getDescription().getAuthors().toString();
         prefix = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
         theme = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
+        secondary = ChatColor.translateAlternateColorCodes('&', config.getString("secondary-color"));
     }
 
 
@@ -99,6 +100,10 @@ public class Settings {
 
     public String getAuthor() {
         return author;
+    }
+
+    public String getSecondaryColor() { 
+        return secondary;
     }
 
 }
