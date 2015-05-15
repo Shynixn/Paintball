@@ -126,7 +126,7 @@ public class ArenaManager {
                 // set the value of that arena
                 a.loadValues(Settings.getSettings().getArenaFile());
             }catch (Exception e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Error loading arenas.yml. Stacktrace: ");
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Error loading " + arenaName + " in.         arenas.yml. Stacktrace: ");
                 e.printStackTrace();
             }
             arenas.add(a);
