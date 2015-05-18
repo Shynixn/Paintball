@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Settings {
-
+    
     private static Settings settings = new Settings();
 
     private Paintball pb;
@@ -102,8 +102,8 @@ public class Settings {
         return author;
     }
 
-    public String getSecondaryColor() { 
-        return secondary;
+    public String getSecondaryColor() {
+        String code = secondary == null ? "&7" : secondary;
+        return ChatColor.translateAlternateColorCodes('&', code);
     }
-
 }

@@ -103,7 +103,7 @@ public class CommandManager implements CommandExecutor{
             String name = command.getName().equals("admin") && type == Command.CommandType.ADMIN ? "" : command.getName();
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
             if (command.getCommandType() == type) {
-                player.sendMessage(beginning + name + args + ChatColor.WHITE + " - " + ChatColor.GRAY + command.getInfo());
+                player.sendMessage(beginning + name + args + ChatColor.WHITE + " - " + Message.SECONDARY_COLOR + command.getInfo());
             }
         }
     }
