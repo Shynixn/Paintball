@@ -378,6 +378,7 @@ public class Arena {
         for (String p : lobbyPlayers.keySet()) {
             Player player = Bukkit.getPlayer(p);
             this.addPlayerToArena(player);
+            PbPlayer pbPlayer = new PbPlayer(player, getTeam(player), this);
         }
         state = ArenaState.IN_PROGRESS;
         // TODO: make a timer & add configurable time
