@@ -18,6 +18,7 @@ public class Settings {
     private File aFile;
 
     private String prefix, version, theme, website, author, secondary;
+    public static boolean SPLASH_PAINTBALLS, COLORED_TITLE, WOOL_HELMET;
 
     private Settings() {}
 
@@ -67,12 +68,18 @@ public class Settings {
     }
 
     private void loadValues() {
+        // regular values
         version = pb.getDescription().getVersion();
         website = pb.getDescription().getWebsite();
         author = pb.getDescription().getAuthors().toString();
         prefix = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
         theme = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
         secondary = ChatColor.translateAlternateColorCodes('&', config.getString("secondary-color"));
+
+        // arena values
+        SPLASH_PAINTBALLS   = arena.getBoolean("paintball-splash");
+        COLORED_TITLE       = arena.getBoolean("color-title");
+        WOOL_HELMET         = arena.getBoolean("wool-helmet");
     }
 
 

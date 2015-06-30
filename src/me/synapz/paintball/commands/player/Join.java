@@ -29,7 +29,7 @@ public class Join extends Command {
 
         for (Arena a : ArenaManager.getArenaManager().getArenas()) {
             if (a.containsPlayer(player)) {
-                Message.getMessenger().msg(player, ChatColor.RED, "You are already in " + a.toString() + ".");
+                Message.getMessenger().msg(player, ChatColor.RED, "You are already in " + a.toString() + ChatColor.RED + ".");
                 return;
             }
         }

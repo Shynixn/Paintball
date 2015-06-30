@@ -19,7 +19,7 @@ public class Arena {
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
     private String name, currentName;
 
-    private HashMap<String, ArenaManager.Team> players = new HashMap<>();
+    private HashMap<PbPlayer, ArenaManager.Team> players = new HashMap<>();
     private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<>();
     private ArrayList<String> spectators = new ArrayList<>();
     private FileConfiguration file = Settings.getSettings().getArenaFile();
@@ -378,7 +378,6 @@ public class Arena {
         for (String p : lobbyPlayers.keySet()) {
             Player player = Bukkit.getPlayer(p);
             this.addPlayerToArena(player);
-            PbPlayer pbPlayer = new PbPlayer(player, getTeam(player), this);
         }
         state = ArenaState.IN_PROGRESS;
         // TODO: make a timer & add configurable time
@@ -396,13 +395,24 @@ public class Arena {
         state = ArenaState.STOPPED;
     }
 
+    public PbPlayer getPbPlayer(Player player) {
+        for (PbPlayer pbPlayer : players.keySet()) {
+            if (pbPlayer.getName().equals(player.getName())) {
+                return pbPlayer;
+            }
+        }
+        return null;
+    }
+
     private void addPlayerToArena(Player player) {
         // add inventory + location to cache.yml
+        PbPlayer pbPlayer = new PbPlayer(player, getTeam(player), this);
         ArenaManager.Team team = this.getTeam(player);
-        players.put(player.getName(), team);
+        players.put(pbPlayer, team);
         player.teleport(getSpawn(team));
     }
 
+    // todo: make a file to store this information
     private void removePlayerFromArena(Player player) {
         players.remove(player);
         // player.teleport(last location);
@@ -410,9 +420,9 @@ public class Arena {
     }
 
     private void broadcastMessage(ChatColor color, String...messages) {
-        for (String name : players.keySet()) {
+        for (PbPlayer pbPlayer : players.keySet()) {
             for (String message : messages) {
-                Bukkit.getServer().getPlayer(name).sendMessage(Message.PREFIX + color + message);
+                Bukkit.getServer().getPlayer(pbPlayer.getName()).sendMessage(Message.PREFIX + color + message);
             }
         }
         for (String name : lobbyPlayers.keySet()) {
@@ -424,7 +434,7 @@ public class Arena {
 
     private ArenaManager.Team getTeamWithLessPlayers() {
         int red = 0, blue = 0;
-        for (String p : players.keySet()) {
+        for (PbPlayer p : players.keySet()) {
             if (players.get(p) == ArenaManager.Team.RED)
                 red++;
             else
