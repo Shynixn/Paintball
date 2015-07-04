@@ -98,12 +98,12 @@ public class CommandManager implements CommandExecutor{
         boolean isPlayerType = type == Command.CommandType.PLAYER ? true : false;
         player.sendMessage(Message.getMessenger().getHelpTitle(isPlayerType));
 
-        String beginning = isPlayerType ? Message.THEME + "/pb ": Message.THEME + "/pb admin ";
+        String beginning = isPlayerType ? Settings.getSettings().getTheme() + "/pb ": Settings.getSettings().getTheme() + "/pb admin ";
         for (Command command : commands) {
             String name = command.getName().equals("admin") && type == Command.CommandType.ADMIN ? "" : command.getName();
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
             if (command.getCommandType() == type) {
-                player.sendMessage(beginning + name + args + ChatColor.WHITE + " - " + Message.SECONDARY_COLOR + command.getInfo());
+                player.sendMessage(beginning + name + args + ChatColor.WHITE + " - " + Settings.getSettings().getSecondaryColor() + command.getInfo());
             }
         }
     }

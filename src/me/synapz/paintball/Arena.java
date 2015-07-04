@@ -382,14 +382,13 @@ public class Arena {
         state = ArenaState.IN_PROGRESS;
         // TODO: make a timer & add configurable time
         this.broadcastMessage(ChatColor.GREEN, "Arena starting in " + "15 seconds");
-        // put info into cache file
     }
 
     public void removePlayersInArena() {
         broadcastMessage(ChatColor.RED, this.toString() + ChatColor.RED + " has been force stopped.");
         for (String p : lobbyPlayers.keySet()) {
             Player player = Bukkit.getPlayer(p);
-            this.removePlayerFromArena(player);
+            getPbPlayer(player).leaveArena();
             Message.getMessenger().msg(player, ChatColor.RED, "You left " + this.toString());
         }
         state = ArenaState.STOPPED;
@@ -405,29 +404,21 @@ public class Arena {
     }
 
     private void addPlayerToArena(Player player) {
-        // add inventory + location to cache.yml
         PbPlayer pbPlayer = new PbPlayer(player, getTeam(player), this);
         ArenaManager.Team team = this.getTeam(player);
         players.put(pbPlayer, team);
         player.teleport(getSpawn(team));
     }
 
-    // todo: make a file to store this information
-    private void removePlayerFromArena(Player player) {
-        players.remove(player);
-        // player.teleport(last location);
-        // player.getOldInventory();
-    }
-
     private void broadcastMessage(ChatColor color, String...messages) {
         for (PbPlayer pbPlayer : players.keySet()) {
             for (String message : messages) {
-                Bukkit.getServer().getPlayer(pbPlayer.getName()).sendMessage(Message.PREFIX + color + message);
+                Bukkit.getServer().getPlayer(pbPlayer.getName()).sendMessage(Settings.getSettings().getPrefix() + color + message);
             }
         }
         for (String name : lobbyPlayers.keySet()) {
             for (String message : messages) {
-                Bukkit.getServer().getPlayer(name).sendMessage(Message.PREFIX + color + message);
+                Bukkit.getServer().getPlayer(name).sendMessage(Settings.getSettings().getPrefix() + color + message);
             }
         }
     }

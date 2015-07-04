@@ -55,7 +55,7 @@ public class PbPlayer {
     public void giveItems() {
         removeItemsToCache();
 
-        // give them snowballs/rifle that is properly named from config
+        // todo: give custom config items
     }
 
     // todo: make a list of projectiles to pick from, rile, snowball etc and put paramters here
@@ -64,16 +64,29 @@ public class PbPlayer {
         player.launchProjectile(Snowball.class, player.getVelocity());
     }
 
+    public void leaveArena() {
+        addItemsToPlayerFromCache();
+        // todo: teleport back to last location from cache file
+    }
+
     private void initPlayer() {
         addHelmet();
         giveItems();
     }
 
-    private void removeItemsToCache() {
+    private void colorPlayerTitle() {
+        if (!Settings.COLOR_PLAYER_TITLE) {
+            return;
+        }
 
+        // todo: color their hud
+    }
+
+    private void removeItemsToCache() {
+        // todo: store player's inventory contains in cache file
     }
 
     private void addItemsToPlayerFromCache() {
-
+        // todo: restore items from cache file
     }
 }

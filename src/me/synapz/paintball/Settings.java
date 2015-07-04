@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,11 +15,11 @@ public class Settings {
     private static Settings settings = new Settings();
 
     private Paintball pb;
-    private FileConfiguration config, arena;
+    private FileConfiguration arena;
     private File aFile;
 
     private String prefix, version, theme, website, author, secondary;
-    public static boolean SPLASH_PAINTBALLS, COLORED_TITLE, WOOL_HELMET;
+    public static boolean SPLASH_PAINTBALLS, COLOR_PLAYER_TITLE, WOOL_HELMET;
 
     private Settings() {}
 
@@ -32,8 +33,7 @@ public class Settings {
         }
 
         this.pb = pb;
-        pb.saveDefaultConfig();
-        config = pb.getConfig();
+        pb.saveResource("config.yml", false);
 
         aFile = new File(pb.getDataFolder(), "arenas.yml");
 
@@ -48,14 +48,13 @@ public class Settings {
         }
 
         arena = YamlConfiguration.loadConfiguration(aFile);
-        loadValues();
+        loadValues(pb.getConfig(), pb.getDescription());
     }
 
     public void reloadConfig() {
         arena = YamlConfiguration.loadConfiguration(aFile);
         pb.reloadConfig();
-        config = pb.getConfig();
-        loadValues();
+        loadValues(pb.getConfig(), pb.getDescription());
     }
 
     public void saveArenaFile() {
@@ -67,19 +66,19 @@ public class Settings {
         }
     }
 
-    private void loadValues() {
+    private void loadValues(FileConfiguration configFile, PluginDescriptionFile pluginYML) {
         // regular values
-        version = pb.getDescription().getVersion();
-        website = pb.getDescription().getWebsite();
-        author = pb.getDescription().getAuthors().toString();
-        prefix = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
-        theme = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
-        secondary = ChatColor.translateAlternateColorCodes('&', config.getString("secondary-color"));
+        version     = pluginYML.getVersion();
+        website     = pluginYML.getWebsite();
+        author      = pluginYML.getAuthors().toString();
+        prefix      = ChatColor.translateAlternateColorCodes('&', configFile.getString("prefix"));
+        theme       = ChatColor.translateAlternateColorCodes('&', configFile.getString("theme-color"));
+        secondary   = ChatColor.translateAlternateColorCodes('&', configFile.getString("secondary-color"));
 
         // arena values
-        SPLASH_PAINTBALLS   = arena.getBoolean("paintball-splash");
-        COLORED_TITLE       = arena.getBoolean("color-title");
-        WOOL_HELMET         = arena.getBoolean("wool-helmet");
+        SPLASH_PAINTBALLS   = configFile.getBoolean("paintball-splash");
+        COLOR_PLAYER_TITLE       = configFile.getBoolean("color-player-title");
+        WOOL_HELMET         = configFile.getBoolean("wool-helmet");
     }
 
 

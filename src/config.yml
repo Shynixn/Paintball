@@ -8,7 +8,7 @@ secondary-color: '&7'
 give-wool-helmet: true
 
 # Make title red/blue based on their team
-color-title: true
+color-player-title: true
 
 # This will make paintballs slash (turns surrounding blocks red/blue clay)
 paintball-splash: true

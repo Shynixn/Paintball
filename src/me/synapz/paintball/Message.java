@@ -8,10 +8,6 @@ import org.bukkit.entity.Player;
 
 public class Message {
 
-    // config values
-    public static final String PREFIX = Settings.getSettings().getPrefix();
-    public static final String THEME = Settings.getSettings().getTheme();
-    public static final String SECONDARY_COLOR = Settings.getSettings().getSecondaryColor();
 
     // determined default values
     public static final String NO_PERMS = "You don't have access to that command!";
@@ -26,7 +22,7 @@ public class Message {
         String[] messages = msg;
 
         for (String string : messages) {
-            sender.sendMessage(PREFIX + color + string);
+            sender.sendMessage(Settings.getSettings().getPrefix() + color + string);
         }
     }
 
