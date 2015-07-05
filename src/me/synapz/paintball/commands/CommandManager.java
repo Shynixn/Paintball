@@ -2,7 +2,7 @@ package me.synapz.paintball.commands;
 
 
 import me.synapz.paintball.Message;
-import me.synapz.paintball.Settings;
+import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.commands.admin.*;
 import me.synapz.paintball.commands.player.Join;
 import me.synapz.paintball.commands.player.LeaveArena;

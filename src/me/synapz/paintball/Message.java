@@ -2,6 +2,7 @@ package me.synapz.paintball;
 
 
 import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

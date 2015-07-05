@@ -1,8 +1,10 @@
 package me.synapz.paintball;
 
 
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -14,7 +16,7 @@ import java.util.List;
 public class Arena {
 
     // TODO: In case a reload or retart happens, make it so ArenaState gets saved in Cache file.
-    // TODO: add spectate leave...
+    // todo: set back values after leaving
 
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
     private String name, currentName;
@@ -139,10 +141,8 @@ public class Arena {
 
     public void addToSpectate(Player player) {
         switch (getState()) {
-            case IN_PROGRESS:
-                Message.getMessenger().msg(player, ChatColor.GREEN, "Joining " + this.toString() + " spectate zone.");
             case NOT_SETUP:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + "has not been fully setup.");
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " has not been fully setup.");
                 return;
             case DISABLED:
                 Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is disabled.");
@@ -150,9 +150,12 @@ public class Arena {
             default:
                 break;
         }
+        Message.getMessenger().msg(player, ChatColor.GREEN, "Joining " + this.toString() + " spectate zone.");
+        Settings.getSettings().getCache().savePlayerInformation(player);
         player.teleport(getSpectateLoc());
         spectators.add(player.getName());
     }
+
     public void setMaxPlayers(int max) {
         isMaxSet = true;
         file.set(getPath() + maxPath, max);
@@ -233,58 +236,16 @@ public class Arena {
         Message.getMessenger().msg(sender, color, this.toString() + " " + message);
     }
 
-    public void startGame() {
-        putPlayersIntoArena();
-    }
-
     public boolean isSetup() {
         return isMaxSet && isMinSet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet && isRedLobbySet && isSpectateSet;
-    }
-
-
-    public void removePlayer(Player player) {
-        lobbyPlayers.keySet().remove(player.getName());
-        players.keySet().remove(player.getName());
-        spectators.remove(player.getName());
-        // player.teleport <getbacklocation from config>
     }
 
     public ArenaManager.Team getTeam(Player player) {
         return lobbyPlayers.get(player.getName());
     }
 
-    public void joinLobby(Player player, ArenaManager.Team team) {
-        switch (getState()) {
-            case IN_PROGRESS:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is currently in progress.");
-                return;
-            case NOT_SETUP:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " has not been fully setup.");
-                return;
-            case DISABLED:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is disabled.");
-                return;
-            default:
-            	break;
-        }
-
-        if (team == null) {
-            lobbyPlayers.put(player.getName(), getTeamWithLessPlayers());
-        } else {
-            lobbyPlayers.put(player.getName(), team);
-        }
-
-        // maybe change their name based on the team they are on
-        player.teleport(getLobbySpawn(getTeam(player)));
-        broadcastMessage(ChatColor.GREEN, player.getName() + " has joined the arena! " + ChatColor.GRAY + this.lobbyPlayers.keySet().size() + "/" + this.getMax());
-
-        if (lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax()) {
-            this.startGame();
-        }
-    }
-
     public boolean containsPlayer(Player player) {
-        return lobbyPlayers.keySet().contains(player.getName()) || players.keySet().contains(player.getName());
+        return lobbyPlayers.keySet().contains(player.getName()) || players.keySet().contains(player.getName()) || spectators.contains(player.getName());
     }
 
     public void loadValues(FileConfiguration file) {
@@ -353,16 +314,16 @@ public class Arena {
         } else {
             reason = " has not been setup or enabled.";
         }
-        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force start " + name, "Error: " + this.toString() + ChatColor.RED + reason);
+        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force start " + name, this.toString() + ChatColor.RED + reason);
     }
 
     public void forceStop(Player sender) {
         if (state == ArenaState.IN_PROGRESS) {
-            this.removePlayersInArena();
-            Message.getMessenger().msg(sender, ChatColor.GREEN, "Successfully stopped " + this.toString());
+            this.removePlayers();
+            broadcastMessage(ChatColor.RED, this.toString() + ChatColor.RED + " has been force stopped.");
             return;
         }
-        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop " + this.toString(), "Error: " + this.toString() + ChatColor.RED + " is not in progress.");
+        Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop " + this.toString(), this.toString() + ChatColor.RED + " is not in progress.");
     }
 
     public String toString() {
@@ -372,6 +333,47 @@ public class Arena {
 
     private String getPath() {
         return "Arenas." + name + ".";
+    }
+
+
+    public void joinLobby(Player player, ArenaManager.Team team) {
+        switch (getState()) {
+            case IN_PROGRESS:
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is currently in progress.");
+                return;
+            case NOT_SETUP:
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " has not been fully setup.");
+                return;
+            case DISABLED:
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is disabled.");
+                return;
+            default:
+                break;
+        }
+
+        if (team == null) {
+            lobbyPlayers.put(player.getName(), getTeamWithLessPlayers());
+        } else {
+            lobbyPlayers.put(player.getName(), team);
+        }
+
+        // todo: maybe change their name based on the team they are on\
+        Settings.getSettings().getCache().savePlayerInformation(player);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setFlying(false);
+        player.setFoodLevel(20);
+        player.setHealth(20);
+        player.setFireTicks(0);
+        player.teleport(getLobbySpawn(getTeam(player)));
+        broadcastMessage(ChatColor.GREEN, player.getName() + " has joined the arena! " + ChatColor.GRAY + this.lobbyPlayers.keySet().size() + "/" + this.getMax());
+
+        if (lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax()) {
+            this.startGame();
+        }
+    }
+
+    public void startGame() {
+        putPlayersIntoArena();
     }
 
     private void putPlayersIntoArena() {
@@ -384,14 +386,21 @@ public class Arena {
         this.broadcastMessage(ChatColor.GREEN, "Arena starting in " + "15 seconds");
     }
 
-    public void removePlayersInArena() {
-        broadcastMessage(ChatColor.RED, this.toString() + ChatColor.RED + " has been force stopped.");
+    public void removePlayers() {
         for (String p : lobbyPlayers.keySet()) {
             Player player = Bukkit.getPlayer(p);
-            getPbPlayer(player).leaveArena();
             Message.getMessenger().msg(player, ChatColor.RED, "You left " + this.toString());
         }
         state = ArenaState.STOPPED;
+    }
+
+    public void removePlayer(Player player) {
+        players.keySet().remove(player.getName());
+        lobbyPlayers.keySet().remove(player.getName());
+        spectators.remove(player.getName());
+        Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
+
+        // todo: shut off arena if everyone left
     }
 
     public PbPlayer getPbPlayer(Player player) {

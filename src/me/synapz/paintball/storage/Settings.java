@@ -1,6 +1,8 @@
-package me.synapz.paintball;
+package me.synapz.paintball.storage;
 
 
+import me.synapz.paintball.Message;
+import me.synapz.paintball.Paintball;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,6 +18,7 @@ public class Settings {
 
     private Paintball pb;
     private FileConfiguration arena;
+    private CacheFile cache;
     private File aFile;
 
     private String prefix, version, theme, website, author, secondary;
@@ -47,7 +50,10 @@ public class Settings {
             }
         }
 
+
         arena = YamlConfiguration.loadConfiguration(aFile);
+        cache = new CacheFile(pb);
+
         loadValues(pb.getConfig(), pb.getDescription());
     }
 
@@ -64,6 +70,10 @@ public class Settings {
             Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Could not save arenas.yml.", "", "Stack trace" );
             e.printStackTrace();
         }
+    }
+
+    public CacheFile getCache() {
+        return cache;
     }
 
     private void loadValues(FileConfiguration configFile, PluginDescriptionFile pluginYML) {

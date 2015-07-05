@@ -22,8 +22,6 @@ public class LeaveArena extends Command {
 
         a.removePlayer(player);
         Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully left arena.");
-
-
     }
 
     public String getArgs() {

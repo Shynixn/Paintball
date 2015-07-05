@@ -1,6 +1,7 @@
 package me.synapz.paintball;
 
 
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -51,7 +52,7 @@ public class ArenaManager {
 
     public void stopArenas() {
         for (Arena a : getArenas()) {
-            a.removePlayersInArena();
+            a.removePlayers();
         }
     }
     

@@ -3,6 +3,7 @@ package me.synapz.paintball;
 import me.synapz.paintball.commands.CommandManager;
 
 import me.synapz.paintball.events.PaintballShoot;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

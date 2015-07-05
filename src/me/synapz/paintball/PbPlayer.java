@@ -1,9 +1,9 @@
 package me.synapz.paintball;
 
 
+import me.synapz.paintball.storage.Settings;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.DyeColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.inventory.ItemStack;
@@ -53,8 +53,6 @@ public class PbPlayer {
     }
 
     public void giveItems() {
-        removeItemsToCache();
-
         // todo: give custom config items
     }
 
@@ -62,11 +60,6 @@ public class PbPlayer {
     public void launchProjectile() {
         // todo:make spawn faster
         player.launchProjectile(Snowball.class, player.getVelocity());
-    }
-
-    public void leaveArena() {
-        addItemsToPlayerFromCache();
-        // todo: teleport back to last location from cache file
     }
 
     private void initPlayer() {
@@ -80,13 +73,5 @@ public class PbPlayer {
         }
 
         // todo: color their hud
-    }
-
-    private void removeItemsToCache() {
-        // todo: store player's inventory contains in cache file
-    }
-
-    private void addItemsToPlayerFromCache() {
-        // todo: restore items from cache file
     }
 }
