@@ -3,6 +3,8 @@ package me.synapz.paintball;
 
 import me.synapz.paintball.commands.Command;
 import me.synapz.paintball.storage.Settings;
+import static org.bukkit.ChatColor.*;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,16 +33,16 @@ public class Message {
         if (player.hasPermission(permission)) {
             return true;
         } else {
-            msg(player, ChatColor.RED, NO_PERMS);
+            msg(player, RED, NO_PERMS);
             return false;
         }
     }
 
     public void wrongUsage(Command command, Player player, Usage usage) {
         if (usage.equals(Usage.TO_MANY_ARGS)) {
-            Message.getMessenger().msg(player, ChatColor.RED, "To many arguments!", command.getCorrectUsage(command));
+            Message.getMessenger().msg(player, RED, "To many arguments!", command.getCorrectUsage(command));
         } else {
-            Message.getMessenger().msg(player, ChatColor.RED, "Not enough arguments!", command.getCorrectUsage(command));
+            Message.getMessenger().msg(player, RED, "Not enough arguments!", command.getCorrectUsage(command));
         }
     }
 
@@ -49,7 +51,7 @@ public class Message {
         if (!playerMenu) {
             title += " Admin";
         }
-        return ChatColor.DARK_GRAY + "*******" + ChatColor.GRAY + "" + ChatColor.BOLD + "{- " + ChatColor.DARK_GRAY + "[" + Settings.getSettings().getTheme() + title + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY + "" + ChatColor.BOLD + " -}" + ChatColor.DARK_GRAY + "*******";
+        return Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "               " + RESET + Settings.getSettings().getTheme() + " " + title + " " + Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "               ";
     }
 
     public enum Usage {
