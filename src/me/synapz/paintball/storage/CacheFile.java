@@ -5,6 +5,7 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.Paintball;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -48,8 +49,11 @@ public class CacheFile {
     public void savePlayerInformation(Player player) {
         UUID id = player.getUniqueId();
         cache.set(id + ".Name", player.getName());
-        cache.set(id + ".Inventory", player.getInventory());
+        cache.set(id + ".Inventory", player.getInventory().getContents());
         cache.set(id + ".Location", player.getLocation());
+        cache.set(id + ".Gamemode", player.getGameMode());
+        cache.set(id + ".FoodLevel", player.getFoodLevel());
+        cache.set(id + ".Health", player.getHealth());
         saveCacheFile();
     }
 

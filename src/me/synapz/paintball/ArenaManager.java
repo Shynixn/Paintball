@@ -89,10 +89,7 @@ public class ArenaManager {
                 case DISABLED:
                     color += ChatColor.GRAY;
                     break;
-                case IN_LOBBY:
-                    color += ChatColor.GREEN;
-                    break;
-                case STOPPED:
+                case WAITING:
                     color += ChatColor.GREEN;
                     break;
                 case NOT_SETUP:

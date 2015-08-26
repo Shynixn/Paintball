@@ -33,6 +33,20 @@ public class Join extends Command {
                 return;
             }
         }
+        switch (arena.getState()) {
+            case IN_PROGRESS:
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is currently in progress.");
+                return;
+            case NOT_SETUP:
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " has not been fully setup.");
+                return;
+            case DISABLED:
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is disabled.");
+                return;
+            default:
+                break;
+        }
+
         arena.joinLobby(player, team);
     }
 

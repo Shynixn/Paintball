@@ -2,7 +2,7 @@ package me.synapz.paintball;
 
 
 import me.synapz.paintball.storage.Settings;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;

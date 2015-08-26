@@ -21,9 +21,9 @@ public class Arena {
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
     private String name, currentName;
 
-    private HashMap<PbPlayer, ArenaManager.Team> players = new HashMap<>();
-    private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<>();
-    private ArrayList<String> spectators = new ArrayList<>();
+    private HashMap<PbPlayer, ArenaManager.Team> players = new HashMap<PbPlayer, ArenaManager.Team>();
+    private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<String, ArenaManager.Team>();
+    private ArrayList<String> spectators = new ArrayList<String>();
     private FileConfiguration file = Settings.getSettings().getArenaFile();
 
     String maxPath = "Max-Players";
@@ -36,12 +36,11 @@ public class Arena {
     String spectatePath = "Spectate-Loc";
     ArenaState state = ArenaState.NOT_SETUP;
 
-    protected enum ArenaState {
+    public enum ArenaState {
         NOT_SETUP,
-        STOPPED,
+        WAITING,
         DISABLED,
         IN_PROGRESS,
-        IN_LOBBY;
     }
 
     public Arena(String name, String currentName) {
@@ -86,47 +85,39 @@ public class Arena {
     }
 
     private Location getSpawn(ArenaManager.Team team) {
-        String value = team == ArenaManager.Team.BLUE ? blueSpawnPath : redSpawnPath;
-        return (Location) file.get(getPath() + value);
+        return (Location) file.get(getPath() + (team == ArenaManager.Team.BLUE ? blueSpawnPath : redSpawnPath));
     }
 
     public void setArenaSpawn(Location location, ArenaManager.Team team) {
-        String value = "";
         switch (team) {
             case BLUE:
-                value = blueSpawnPath;
                 isBlueSpawnSet = true;
                 break;
             case RED:
-                value = redSpawnPath;
                 isRedSpawnSet = true;
                 break;
         }
 
-        file.set(getPath() + value, location);
+        file.set(getPath() + (team == ArenaManager.Team.BLUE ? blueSpawnPath : redSpawnPath), location);
         advSave();
     }
 
     public void setLobbySpawn(Location location, ArenaManager.Team team) {
-        String value = "";
         switch (team) {
             case BLUE:
-                value = blueLobbyPath;
                 isBlueLobbySet = true;
                 break;
             case RED:
-                value = redLobbyPath;
                 isRedLobbySet = true;
                 break;
         }
 
-        file.set(getPath() + value, location);
+        file.set(getPath() + (team == ArenaManager.Team.BLUE ? blueLobbyPath : redLobbyPath), location);
         advSave();
     }
 
     public Location getLobbySpawn(ArenaManager.Team team) {
-        String value = team == ArenaManager.Team.BLUE ? blueLobbyPath : redLobbyPath;
-        return (Location) file.get(getPath() + value);
+        return (Location) file.get(getPath() + (team == ArenaManager.Team.BLUE ? blueLobbyPath : redLobbyPath));
     }
 
     public void setSpectateLoc(Location loc) {
@@ -139,18 +130,7 @@ public class Arena {
         return (Location) file.get(getPath() + spectatePath);
     }
 
-    public void addToSpectate(Player player) {
-        switch (getState()) {
-            case NOT_SETUP:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " has not been fully setup.");
-                return;
-            case DISABLED:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is disabled.");
-                return;
-            default:
-                break;
-        }
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Joining " + this.toString() + " spectate zone.");
+    public void joinSpectate(Player player) {
         Settings.getSettings().getCache().savePlayerInformation(player);
         player.teleport(getSpectateLoc());
         spectators.add(player.getName());
@@ -182,12 +162,12 @@ public class Arena {
         String end = ChatColor.RESET + "" + ChatColor.GRAY;
         String prefix = ChatColor.BLUE + "Steps: ";
 
-        String max = isMaxSet ? done + "setMax"+end : "setMax";
-        String min = isMinSet ? done + "setMin"+end : "setMin";
-        String redSpawn = isRedSpawnSet ? done + "redSpawn"+end : "redSpawn";
-        String blueSpawn = isBlueSpawnSet ? done + "blueSpawn"+end : "blueSpawn";
-        String redLobbySpawn = isRedLobbySet ? done + "redLobby"+end : "redLobby";
-        String blueLobbySpawn = isBlueLobbySet ? done + "blueLobby"+end : "blueLobby";
+        String max = isMaxSet ? done + "max"+end : "max";
+        String min = isMinSet ? done + "min"+end : "min";
+        String redSpawn = isRedSpawnSet ? done + "red-spawn"+end : "red-spawn";
+        String blueSpawn = isBlueSpawnSet ? done + "blue-spawn"+end : "blue-spawn";
+        String redLobbySpawn = isRedLobbySet ? done + "red-lobby"+end : "red-lobby";
+        String blueLobbySpawn = isBlueLobbySet ? done + "blue-lobby"+end : "blue-lobby";
         String spectate = isSpectateSet ? done + "spectate"+end : "spectate";
         String enabled = isEnabled ? done+"enable"+end : "enable";
         String[] steps = {max, min, spectate, redSpawn, blueSpawn, redLobbySpawn, blueLobbySpawn, enabled};
@@ -212,7 +192,7 @@ public class Arena {
             } else {
                 if (!isEnabled) {
                     isEnabled = true;
-                    state = ArenaState.STOPPED;
+                    state = ArenaState.WAITING;
                     color = ChatColor.GREEN;
                     message = "has been enabled!";
                 } else {
@@ -288,7 +268,7 @@ public class Arena {
             pathValue++;
         }
         if (isSetup() && isEnabled) {
-            state = ArenaState.STOPPED;
+            state = ArenaState.WAITING;
         } else {
             if (!isEnabled && isSetup()) {
                 state = ArenaState.DISABLED;
@@ -300,9 +280,9 @@ public class Arena {
         String reason = "";
 
         if (isSetup()) {
-            if (lobbyPlayers.keySet().size() > getMin()) {
-                if (state == ArenaState.STOPPED) {
-                    putPlayersIntoArena();
+            if (lobbyPlayers.keySet().size() >= getMin()) {
+                if (state == ArenaState.WAITING) {
+                    startGame();
                     Message.getMessenger().msg(sender, ChatColor.GREEN, "Successfully started " + this.toString());
                     return;
                 } else if (state == ArenaState.IN_PROGRESS) {
@@ -337,27 +317,8 @@ public class Arena {
 
 
     public void joinLobby(Player player, ArenaManager.Team team) {
-        switch (getState()) {
-            case IN_PROGRESS:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is currently in progress.");
-                return;
-            case NOT_SETUP:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " has not been fully setup.");
-                return;
-            case DISABLED:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is disabled.");
-                return;
-            default:
-                break;
-        }
+        lobbyPlayers.put(player.getName(), team == null ? getTeamWithLessPlayers() : team);
 
-        if (team == null) {
-            lobbyPlayers.put(player.getName(), getTeamWithLessPlayers());
-        } else {
-            lobbyPlayers.put(player.getName(), team);
-        }
-
-        // todo: maybe change their name based on the team they are on\
         Settings.getSettings().getCache().savePlayerInformation(player);
         player.setGameMode(GameMode.SURVIVAL);
         player.setFlying(false);
@@ -372,11 +333,7 @@ public class Arena {
         }
     }
 
-    public void startGame() {
-        putPlayersIntoArena();
-    }
-
-    private void putPlayersIntoArena() {
+    private void startGame() {
         for (String p : lobbyPlayers.keySet()) {
             Player player = Bukkit.getPlayer(p);
             this.addPlayerToArena(player);
@@ -391,16 +348,18 @@ public class Arena {
             Player player = Bukkit.getPlayer(p);
             Message.getMessenger().msg(player, ChatColor.RED, "You left " + this.toString());
         }
-        state = ArenaState.STOPPED;
+        state = ArenaState.WAITING;
     }
 
-    public void removePlayer(Player player) {
+    public void leave(Player player) {
         players.keySet().remove(player.getName());
         lobbyPlayers.keySet().remove(player.getName());
         spectators.remove(player.getName());
         Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
 
-        // todo: shut off arena if everyone left
+        if (players.keySet().size() == 1) {
+            // todo send last player message saying they won
+        }
     }
 
     public PbPlayer getPbPlayer(Player player) {
@@ -446,7 +405,7 @@ public class Arena {
             return ArenaManager.Team.RED;
     }
 
-    protected ArenaState getState() {
+    public ArenaState getState() {
         return state;
     }
 
@@ -455,10 +414,10 @@ public class Arena {
         /**
          * Because the saveArenaFile() method gets called every time a value is changed,
          * we also want to see if the arena is setup because if it is, Arena.NOT_SETUP should
-         * be replaced with ArenaState.STOPPED (or ArenaState.DISABLED) because the setup is complete.
+         * be replaced with ArenaState.WAITING (or ArenaState.DISABLED) because the setup is complete.
          */
         if (isSetup() && isEnabled) {
-            state = ArenaState.STOPPED;
+            state = ArenaState.WAITING;
         } else if (isSetup() && !isEnabled) {
             state = ArenaState.DISABLED;
         }
