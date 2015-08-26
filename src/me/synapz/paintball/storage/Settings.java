@@ -88,7 +88,7 @@ public class Settings {
         // arena values
         SPLASH_PAINTBALLS   = configFile.getBoolean("paintball-splash");
         COLOR_PLAYER_TITLE       = configFile.getBoolean("color-player-title");
-        WOOL_HELMET         = configFile.getBoolean("wool-helmet");
+        WOOL_HELMET         = configFile.getBoolean("give-wool-helmet");
     }
 
 

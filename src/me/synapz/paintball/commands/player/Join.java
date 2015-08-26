@@ -35,13 +35,13 @@ public class Join extends Command {
         }
         switch (arena.getState()) {
             case IN_PROGRESS:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is currently in progress.");
+                Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently in progress.");
                 return;
             case NOT_SETUP:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " has not been fully setup.");
+                Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been fully setup.");
                 return;
             case DISABLED:
-                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is disabled.");
+                Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " is disabled.");
                 return;
             default:
                 break;

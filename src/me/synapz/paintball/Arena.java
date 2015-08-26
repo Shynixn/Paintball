@@ -328,6 +328,7 @@ public class Arena {
         player.teleport(getLobbySpawn(getTeam(player)));
         broadcastMessage(ChatColor.GREEN, player.getName() + " has joined the arena! " + ChatColor.GRAY + this.lobbyPlayers.keySet().size() + "/" + this.getMax());
 
+        // player.getInventory().removeItem(player.getInventory().getContents());
         if (lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax()) {
             this.startGame();
         }
@@ -352,14 +353,24 @@ public class Arena {
     }
 
     public void leave(Player player) {
-        players.keySet().remove(player.getName());
+        players.keySet().remove(getPbPlayer(player));
         lobbyPlayers.keySet().remove(player.getName());
         spectators.remove(player.getName());
         Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
 
         if (players.keySet().size() == 1) {
-            // todo send last player message saying they won
+            PbPlayer pbPlayer = (PbPlayer) players.keySet().toArray()[0];
+            win(getTeam((pbPlayer.getPlayer())));
+            players.keySet().remove(pbPlayer);
+            state = ArenaState.WAITING;
         }
+
+    }
+
+    public void win(ArenaManager.Team team) {
+        // TODO doesnt tp back to spawn
+        String winner = team == ArenaManager.Team.RED ? ChatColor.RED + "Red Team" : ChatColor.BLUE + "Blue Team";
+        broadcastMessage(ChatColor.GREEN, "The " + winner + ChatColor.GREEN + " has won!");
     }
 
     public PbPlayer getPbPlayer(Player player) {
@@ -374,6 +385,7 @@ public class Arena {
     private void addPlayerToArena(Player player) {
         PbPlayer pbPlayer = new PbPlayer(player, getTeam(player), this);
         ArenaManager.Team team = this.getTeam(player);
+        lobbyPlayers.remove(player.getName());
         players.put(pbPlayer, team);
         player.teleport(getSpawn(team));
     }
@@ -393,8 +405,8 @@ public class Arena {
 
     private ArenaManager.Team getTeamWithLessPlayers() {
         int red = 0, blue = 0;
-        for (PbPlayer p : players.keySet()) {
-            if (players.get(p) == ArenaManager.Team.RED)
+        for (String p : lobbyPlayers.keySet()) {
+            if (lobbyPlayers.get(p) == ArenaManager.Team.RED)
                 red++;
             else
                 blue++;

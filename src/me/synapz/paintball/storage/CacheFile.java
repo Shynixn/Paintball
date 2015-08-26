@@ -11,9 +11,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class CacheFile {
@@ -54,6 +58,7 @@ public class CacheFile {
         cache.set(id + ".Gamemode", player.getGameMode());
         cache.set(id + ".FoodLevel", player.getFoodLevel());
         cache.set(id + ".Health", player.getHealth());
+
         saveCacheFile();
     }
 
@@ -61,7 +66,13 @@ public class CacheFile {
         Player player = Bukkit.getServer().getPlayer(id);
 
         player.teleport(getPlayerLastLocation(id));
-        player.getInventory().setContents(getPlayerLastInventory(id).getContents());
+        for (ItemStack item : getPlayerLastInventory(id)) {
+            player.getInventory().addItem(item);
+        }
+        player.setFoodLevel(cache.getInt(id + ".FoodLevel"));
+        player.setHealth(cache.getInt(id + ".Health"));
+        player.setGameMode((GameMode) cache.get(id + ".Gamemode"));
+        // player.getInventory().setContents(getPlayerLastInventory(id).toArray(new ItemStack[getPlayerLastInventory(id).size()]));
         // todo: set fly mode, gamemode, everything from last time
         cache.set(id + "", null);
         saveCacheFile();
@@ -71,7 +82,7 @@ public class CacheFile {
         return (Location) cache.get(id + ".Location");
     }
 
-    private Inventory getPlayerLastInventory(UUID id) {
-        return (Inventory) cache.get(id + ".Inventory");
+    private List<ItemStack> getPlayerLastInventory(UUID id) {
+        return (List<ItemStack>) cache.getList(id + ".Inventory");
     }
 }
