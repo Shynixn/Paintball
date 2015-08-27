@@ -1,10 +1,12 @@
 package me.synapz.paintball;
 
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,12 +54,23 @@ public class Utils {
     }
 
     public static void countdown(final Arena a, final int seconds) {
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("Paintball"), new Runnable() {
-            int i = seconds;
+        final Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            int counter = seconds;
+            @Override
             public void run() {
-                a.broadcastMessage(ChatColor.GREEN, "Game starting in " + i + " seconds!");
-                i--;
+                if (counter == 0) {
+                    // TODO get better message
+                    a.broadcastMessage(ChatColor.GREEN, "Paintball Arena Started!");
+                } else if (counter < 0) {
+                    Bukkit.getScheduler().cancelTasks(plugin);
+                } else {
+                    if (counter <= Settings.NO_INTERVAL || counter % Settings.INTERVAL == 0 || seconds == counter) {
+                        a.broadcastMessage(ChatColor.GREEN, "Paintball starting in " + ChatColor.GRAY + counter + ChatColor.GREEN + " seconds!");
+                    }
+                }
+                counter--;
             }
-        }, 10*20L);
+        }, 0L, 20L);
     }
 }

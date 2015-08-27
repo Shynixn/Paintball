@@ -88,10 +88,13 @@ public class Settings {
 
         // arena values
         SPLASH_PAINTBALLS   = configFile.getBoolean("paintball-splash");
-        COLOR_PLAYER_TITLE       = configFile.getBoolean("color-player-title");
+        COLOR_PLAYER_TITLE  = configFile.getBoolean("color-player-title");
         WOOL_HELMET         = configFile.getBoolean("give-wool-helmet");
         DEBUG               = configFile.getBoolean("debug-messages");
         COUNTDOWN           = configFile.getInt("countdown.time");
+        INTERVAL            = configFile.getInt("countdown.interval");
+        NO_INTERVAL         = configFile.getInt("countdown.no-interval");
+
     }
 
 
