@@ -21,6 +21,7 @@ public class Settings {
     private CacheFile cache;
     private File aFile;
 
+    public static int COUNTDOWN, INTERVAL, NO_INTERVAL;
     private String prefix, version, theme, website, author, secondary;
     public static boolean SPLASH_PAINTBALLS, COLOR_PLAYER_TITLE, WOOL_HELMET, DEBUG;
 
@@ -90,6 +91,7 @@ public class Settings {
         COLOR_PLAYER_TITLE       = configFile.getBoolean("color-player-title");
         WOOL_HELMET         = configFile.getBoolean("give-wool-helmet");
         DEBUG               = configFile.getBoolean("debug-messages");
+        COUNTDOWN           = configFile.getInt("countdown.time");
     }
 
 

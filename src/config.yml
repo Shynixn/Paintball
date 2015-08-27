@@ -12,3 +12,14 @@ color-player-title: true
 
 # This will make paintballs slash (turns surrounding blocks red/blue clay)
 paintball-splash: true
+
+countdown:
+   # Time in seconds for the round to start
+   time: 15
+   # The delay when showing numbers. Ex. 15...10...5...
+   interval: 5
+   # The number at which there will be no delay in showing numbers. Ex. 15...10...5...4...3...2...1...
+   no-interval: 4
+
+
+

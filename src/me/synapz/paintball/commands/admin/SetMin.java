@@ -39,7 +39,7 @@ public class SetMin extends Command{
     }
 
     public String getArgs() {
-        return "<name> <int>";
+        return "<name> <number>";
     }
 
     public String getPermission() {

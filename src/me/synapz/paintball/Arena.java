@@ -8,6 +8,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import sun.misc.Cache;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class Arena {
     private FileConfiguration file = Settings.getSettings().getArenaFile();
 
     private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
-    private boolean canStart = lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax();
+
     private String name, currentName;
 
     String maxPath = "Max-Players";
@@ -329,25 +330,28 @@ public class Arena {
         player.teleport(getLobbySpawn(getTeam(player)));
         broadcastMessage(ChatColor.GREEN, player.getName() + " has joined the arena! " + ChatColor.GRAY + this.lobbyPlayers.keySet().size() + "/" + this.getMax());
 
-        if (canStart) {
+        if (canStart()) {
             this.startGame();
         }
     }
 
     private void startGame() {
+        Utils.countdown(this, Settings.COUNTDOWN);
         for (String p : lobbyPlayers.keySet()) {
-            Player player = Bukkit.getPlayer(p);
-            this.addPlayerToArena(player);
+            this.addPlayerToArena(Bukkit.getPlayer(p));
         }
         state = ArenaState.IN_PROGRESS;
-        // TODO: make a timer & add configurable time
-        this.broadcastMessage(ChatColor.GREEN, "Arena starting in " + "15 seconds");
     }
 
     public void removePlayers() {
         for (String p : lobbyPlayers.keySet()) {
-            Player player = Bukkit.getPlayer(p);
-            Message.getMessenger().msg(player, ChatColor.RED, "You left " + this.toString());
+            leave(Bukkit.getPlayer(p));
+        }
+        for (String p : spectators) {
+            leave(Bukkit.getPlayer(p));
+        }
+        for (PbPlayer p : players.keySet()) {
+            leave(p.getPlayer());
         }
         state = ArenaState.WAITING;
     }
@@ -387,22 +391,22 @@ public class Arena {
     private void addPlayerToArena(Player player) {
         PbPlayer pbPlayer = new PbPlayer(player, getTeam(player), this);
         ArenaManager.Team team = this.getTeam(player);
-        lobbyPlayers.remove(player.getName());
         players.put(pbPlayer, team);
         player.teleport(getSpawn(team));
+        // lobbyPlayers.keySet().remove(player.getName());
     }
 
-    private void broadcastMessage(ChatColor color, String...messages) {
+    public void broadcastMessage(ChatColor color, String...messages) {
         for (PbPlayer pbPlayer : players.keySet()) {
             for (String message : messages) {
                 Bukkit.getServer().getPlayer(pbPlayer.getName()).sendMessage(Settings.getSettings().getPrefix() + color + message);
             }
         }
-        for (String name : lobbyPlayers.keySet()) {
-            for (String message : messages) {
-                Bukkit.getServer().getPlayer(name).sendMessage(Settings.getSettings().getPrefix() + color + message);
-            }
-        }
+        //for (String name : lobbyPlayers.keySet()) {
+          //  for (String message : messages) {
+            //    Bukkit.getServer().getPlayer(name).sendMessage(Settings.getSettings().getPrefix() + color + message);
+            //}
+        //}
     }
 
     private ArenaManager.Team getTeamWithLessPlayers() {
@@ -417,6 +421,10 @@ public class Arena {
             return ArenaManager.Team.BLUE;
         else
             return ArenaManager.Team.RED;
+    }
+
+    private boolean canStart() {
+        return lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax();
     }
 
     public ArenaState getState() {

@@ -25,7 +25,7 @@ public class Paintball extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // todo: add ArenaManager.getArenaManager().stopArenas() here
+        ArenaManager.getArenaManager().stopArenas();
     }
     
 }

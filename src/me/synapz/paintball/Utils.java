@@ -1,5 +1,7 @@
 package me.synapz.paintball;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,6 +12,7 @@ import java.util.List;
 public class Utils {
 
     public static void removePlayerSettings(Player player) {
+        // todo: exp saves
         player.getInventory().clear();
         player.getInventory().setHelmet(null);
         player.getInventory().setChestplate(null);
@@ -34,7 +37,6 @@ public class Utils {
     }
 
     public static GameMode getLastGameMode(int gamemodeValue) {
-        System.out.println(gamemodeValue);
         switch (gamemodeValue) {
             case 0:
                 return GameMode.SURVIVAL;
@@ -47,5 +49,15 @@ public class Utils {
             default:
                 return GameMode.SURVIVAL;
         }
+    }
+
+    public static void countdown(final Arena a, final int seconds) {
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("Paintball"), new Runnable() {
+            int i = seconds;
+            public void run() {
+                a.broadcastMessage(ChatColor.GREEN, "Game starting in " + i + " seconds!");
+                i--;
+            }
+        }, 10*20L);
     }
 }
