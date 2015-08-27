@@ -5,9 +5,13 @@ import me.synapz.paintball.commands.Command;
 import me.synapz.paintball.storage.Settings;
 import static org.bukkit.ChatColor.*;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Set;
+import java.util.logging.Level;
 
 public class Message {
 
@@ -26,6 +30,14 @@ public class Message {
 
         for (String string : messages) {
             sender.sendMessage(Settings.getSettings().getPrefix() + color + string);
+        }
+    }
+
+    public void debug(String... msg) {
+        if (Settings.DEBUG) {
+            for (String string : msg) {
+                Bukkit.getPluginManager().getPlugin("Paintball").getLogger().log(Level.INFO, string);
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 prefix: '&8[&3Paintball&8]'
 theme-color: '&3'
 secondary-color: '&7'
-
+debug-messages: false
 # Arena Settings
 
 # True will give players a blue/red wool helmet on join, false will ignore this

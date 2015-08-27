@@ -22,7 +22,7 @@ public class Settings {
     private File aFile;
 
     private String prefix, version, theme, website, author, secondary;
-    public static boolean SPLASH_PAINTBALLS, COLOR_PLAYER_TITLE, WOOL_HELMET;
+    public static boolean SPLASH_PAINTBALLS, COLOR_PLAYER_TITLE, WOOL_HELMET, DEBUG;
 
     private Settings() {}
 
@@ -89,6 +89,7 @@ public class Settings {
         SPLASH_PAINTBALLS   = configFile.getBoolean("paintball-splash");
         COLOR_PLAYER_TITLE       = configFile.getBoolean("color-player-title");
         WOOL_HELMET         = configFile.getBoolean("give-wool-helmet");
+        DEBUG               = configFile.getBoolean("debug-messages");
     }
 
 

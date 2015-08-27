@@ -17,14 +17,14 @@ public class Arena {
 
     // TODO: In case a reload or retart happens, make it so ArenaState gets saved in Cache file.
     // todo: set back values after leaving
-
-    private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
-    private String name, currentName;
-
     private HashMap<PbPlayer, ArenaManager.Team> players = new HashMap<PbPlayer, ArenaManager.Team>();
     private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<String, ArenaManager.Team>();
     private ArrayList<String> spectators = new ArrayList<String>();
     private FileConfiguration file = Settings.getSettings().getArenaFile();
+
+    private boolean isMaxSet, isMinSet, isRedSpawnSet, isBlueSpawnSet, isSpectateSet, isBlueLobbySet, isRedLobbySet, isEnabled;
+    private boolean canStart = lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax();
+    private String name, currentName;
 
     String maxPath = "Max-Players";
     String minPath = "Min-Players";
@@ -225,7 +225,7 @@ public class Arena {
     }
 
     public boolean containsPlayer(Player player) {
-        return lobbyPlayers.keySet().contains(player.getName()) || players.keySet().contains(player.getName()) || spectators.contains(player.getName());
+        return lobbyPlayers.keySet().contains(player.getName()) || getPbPlayer(player) != null && players.containsKey(getPbPlayer(player)) || spectators.contains(player.getName());
     }
 
     public void loadValues(FileConfiguration file) {
@@ -301,6 +301,10 @@ public class Arena {
         if (state == ArenaState.IN_PROGRESS) {
             this.removePlayers();
             broadcastMessage(ChatColor.RED, this.toString() + ChatColor.RED + " has been force stopped.");
+            // todo make config value to compleelty block all commands
+            if (!this.containsPlayer(sender)) {
+                Message.getMessenger().msg(sender, ChatColor.GREEN, this.toString() + " has been force stopped.");
+            }
             return;
         }
         Message.getMessenger().msg(sender, ChatColor.RED, "Cannot force stop " + this.toString(), this.toString() + ChatColor.RED + " is not in progress.");
@@ -320,16 +324,12 @@ public class Arena {
         lobbyPlayers.put(player.getName(), team == null ? getTeamWithLessPlayers() : team);
 
         Settings.getSettings().getCache().savePlayerInformation(player);
-        player.setGameMode(GameMode.SURVIVAL);
-        player.setFlying(false);
-        player.setFoodLevel(20);
-        player.setHealth(20);
-        player.setFireTicks(0);
+        Utils.removePlayerSettings(player);
+
         player.teleport(getLobbySpawn(getTeam(player)));
         broadcastMessage(ChatColor.GREEN, player.getName() + " has joined the arena! " + ChatColor.GRAY + this.lobbyPlayers.keySet().size() + "/" + this.getMax());
 
-        // player.getInventory().removeItem(player.getInventory().getContents());
-        if (lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax()) {
+        if (canStart) {
             this.startGame();
         }
     }
@@ -360,15 +360,17 @@ public class Arena {
 
         if (players.keySet().size() == 1) {
             PbPlayer pbPlayer = (PbPlayer) players.keySet().toArray()[0];
+            Settings.getSettings().getCache().restorePlayerInformation(pbPlayer.getPlayer().getUniqueId());
             win(getTeam((pbPlayer.getPlayer())));
             players.keySet().remove(pbPlayer);
             state = ArenaState.WAITING;
+        } else if (players.keySet().isEmpty()) {
+            // in case min players is set to 0, when a player leaves arena doesn't get reset
+            state = ArenaState.WAITING;
         }
-
     }
 
     public void win(ArenaManager.Team team) {
-        // TODO doesnt tp back to spawn
         String winner = team == ArenaManager.Team.RED ? ChatColor.RED + "Red Team" : ChatColor.BLUE + "Blue Team";
         broadcastMessage(ChatColor.GREEN, "The " + winner + ChatColor.GREEN + " has won!");
     }
