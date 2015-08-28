@@ -17,12 +17,11 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 public class PbPlayer {
 
     Player player;
-    ArenaManager.Team team;
+    Team team;
     Arena arena;
 
     /**
@@ -32,7 +31,7 @@ public class PbPlayer {
      * @param t Team of the Player
      * @param a Arena they are joining
      */
-    public PbPlayer(Player p, ArenaManager.Team t, Arena a) {
+    public PbPlayer(Player p, Team t, Arena a) {
         this.player = p;
         this.team = t;
         this.arena = a;
@@ -51,16 +50,16 @@ public class PbPlayer {
         }
 
         player.sendMessage("Adding Wool Helmet...");
-        DyeColor color = team == ArenaManager.Team.BLUE ? DyeColor.BLUE : DyeColor.RED;
-        String name = color == DyeColor.BLUE ? BLUE + "Blue Helmet": RED + "Red Helmet";
+        // DyeColor color = team == ArenaManager.Team.BLUE ? DyeColor.BLUE : DyeColor.RED;
+        // String name = color == DyeColor.BLUE ? BLUE + "Blue Helmet": RED + "Red Helmet";
 
         // Set the name of the helmet
-        ItemStack wool = new Wool(color).toItemStack(1);
-        ItemMeta woolMeta = wool.getItemMeta();
-        woolMeta.setDisplayName(name);
-        wool.setItemMeta(woolMeta);
+        // ItemStack wool = new Wool(color).toItemStack(1);
+        // ItemMeta woolMeta = wool.getItemMeta();
+        // woolMeta.setDisplayName(name);
+        // wool.setItemMeta(woolMeta);
 
-        player.getInventory().setHelmet(wool);
+        // player.getInventory().setHelmet(wool);
     }
 
     public Player getPlayer() {
@@ -88,7 +87,7 @@ public class PbPlayer {
         // colorPlayerTitle();
     }
 
-    private void colorPlayerTitle() {
+    /*private void colorPlayerTitle() {
         if (!Settings.COLOR_PLAYER_TITLE) {
             return;
         }
@@ -104,18 +103,17 @@ public class PbPlayer {
         final Team playerTeam = sb.getTeam(team.toString());
         playerTeam.setPrefix(color + "ttt");
 
-    }
+    }*/
 
     private ItemStack[] colorLeatherItems(ItemStack... items) {
         int location = 0;
         ItemStack[] editedItems = new ItemStack[items.length];
-        Color color = team == ArenaManager.Team.RED ? Color.RED : Color.BLUE;
-        String itemName = team == ArenaManager.Team.RED ? ChatColor.RED + "Red Team" : ChatColor.BLUE + "Blue Team";
+        // String itemName = team == ArenaManager.Team.RED ? ChatColor.RED + "Red Team" : ChatColor.BLUE + "Blue Team";
         for (ItemStack item : items) {
             ItemStack armour = new ItemStack(item.getType(), 1);
             LeatherArmorMeta lam = (LeatherArmorMeta)armour.getItemMeta();
-            lam.setColor(color);
-            lam.setDisplayName(itemName);
+            //lam.setColor(color);
+            //lam.setDisplayName(itemName);
             armour.setItemMeta(lam);
             editedItems[location] = armour; location++;
         }

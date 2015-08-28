@@ -4,6 +4,7 @@ package me.synapz.paintball.commands.player;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.Team;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,7 +13,7 @@ public class Join extends Command {
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[1]);
-        ArenaManager.Team team = null;
+        Team team = null;
 
         if (args.length == 3) {
             if (teamCheck(args[2], player)) {
@@ -51,7 +52,13 @@ public class Join extends Command {
     }
 
     public String getArgs() {
-        String args = "<arena> [red/blue]";
+        String enabledTeams = "";
+        for (Team team : Team.getEnabledTeams()) {
+            enabledTeams += team.getTitleName() + " ";
+        }
+        enabledTeams = enabledTeams.substring(0, enabledTeams.lastIndexOf(" "));
+        enabledTeams = enabledTeams.replaceAll(" ", "/").toLowerCase();
+        String args = "<arena> [" + enabledTeams + "]";
         return args;
     }
 

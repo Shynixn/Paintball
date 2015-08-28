@@ -3,6 +3,7 @@ package me.synapz.paintball.storage;
 
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Paintball;
+import me.synapz.paintball.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -95,6 +96,13 @@ public class Settings {
         INTERVAL            = configFile.getInt("countdown.interval");
         NO_INTERVAL         = configFile.getInt("countdown.no-interval");
 
+        // Load teams. Set their ChatColor and set if they are set or not.
+        for (Team team : Team.values()) {
+            if (configFile.getString(team.getPath()) != null) {
+                team.setChatColor(ChatColor.translateAlternateColorCodes('&', configFile.getString(team.getPath())));
+                team.setIsSet(true);
+            }
+        }
     }
 
 

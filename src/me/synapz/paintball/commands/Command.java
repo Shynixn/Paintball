@@ -4,6 +4,7 @@ package me.synapz.paintball.commands;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -49,21 +50,29 @@ public abstract class Command {
     }
 
     public boolean teamCheck(String teamString, Player sender) {
-        ArenaManager.Team team = stringToTeam(teamString);
+        String validTeams = "";
+        boolean containsTeam = false;
+        for (Team team : Team.getEnabledTeams()) {
+            validTeams += ChatColor.stripColor(team.getTitleName().toLowerCase() + " ");
+        }
+        // remove last space and replace spaces with /. So it should be <red/blue/green>
+        validTeams.substring(0, validTeams.lastIndexOf(" "));
+        validTeams = validTeams.replaceAll(" ", "/").toLowerCase();
 
-        if (team == null) {
-            Message.getMessenger().msg(sender, ChatColor.RED, teamString + " is an invalid team. Choose either red/blue");
+        if (!validTeams.contains(teamString)) {
+            Message.getMessenger().msg(sender, ChatColor.RED, teamString + " is an invalid team. Choose either <" + validTeams + ">");
             return false;
         } else {
             return true;
         }
     }
 
-    public ArenaManager.Team stringToTeam(String teamString) {
-        ArenaManager.Team team = null;
-        if (teamString.equalsIgnoreCase("blue") || teamString.equalsIgnoreCase("red")) {
-            team = teamString.equalsIgnoreCase("blue") ? ArenaManager.Team.BLUE : ArenaManager.Team.RED;
+    public Team stringToTeam(String team) {
+        for (Team t : Team.getEnabledTeams()) {
+            if (t.getTitleName().toLowerCase().equals(team)) {
+                return t;
+            }
         }
-        return team;
+        return null;
     }
 }

@@ -11,13 +11,12 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class Arena {
 
-    // TODO: In case a reload or retart happens, make it so ArenaState gets saved in Cache file.
-    // todo: set back values after leaving
-    private HashMap<PbPlayer, ArenaManager.Team> players = new HashMap<PbPlayer, ArenaManager.Team>();
-    private HashMap<String, ArenaManager.Team> lobbyPlayers = new HashMap<String, ArenaManager.Team>();
+    private HashMap<PbPlayer, Team> players = new HashMap<PbPlayer, Team>();
+    private HashMap<String, Team> lobbyPlayers = new HashMap<String, Team>();
     private ArrayList<String> spectators = new ArrayList<String>();
     private FileConfiguration file = Settings.getSettings().getArenaFile();
 
@@ -83,40 +82,22 @@ public class Arena {
     	advSave();
     }
 
-    private Location getSpawn(ArenaManager.Team team) {
-        return (Location) file.get(getPath() + (team == ArenaManager.Team.BLUE ? blueSpawnPath : redSpawnPath));
+    private Location getSpawn(Team team) {
+        return (Location) file.get(getPath() + team.toString() + ".Spawn");
     }
 
-    public void setArenaSpawn(Location location, ArenaManager.Team team) {
-        switch (team) {
-            case BLUE:
-                isBlueSpawnSet = true;
-                break;
-            case RED:
-                isRedSpawnSet = true;
-                break;
-        }
-
-        file.set(getPath() + (team == ArenaManager.Team.BLUE ? blueSpawnPath : redSpawnPath), location);
+    public void setArenaSpawn(Location location, Team team) {
+        file.set(getPath() + team.toString() + ".Spawn", location);
         advSave();
     }
 
-    public void setLobbySpawn(Location location, ArenaManager.Team team) {
-        switch (team) {
-            case BLUE:
-                isBlueLobbySet = true;
-                break;
-            case RED:
-                isRedLobbySet = true;
-                break;
-        }
-
-        file.set(getPath() + (team == ArenaManager.Team.BLUE ? blueLobbyPath : redLobbyPath), location);
+    public void setLobbySpawn(Location location, Team team) {
+        file.set(getPath() + team.toString() + ".Lobby", location);
         advSave();
     }
 
-    public Location getLobbySpawn(ArenaManager.Team team) {
-        return (Location) file.get(getPath() + (team == ArenaManager.Team.BLUE ? blueLobbyPath : redLobbyPath));
+    public Location getLobbySpawn(Team team) {
+        return (Location) file.get(getPath() + team.toString() + ".Lobby");
     }
 
     public void setSpectateLoc(Location loc) {
@@ -219,7 +200,7 @@ public class Arena {
         return isMaxSet && isMinSet && isRedSpawnSet && isBlueSpawnSet && isBlueLobbySet && isRedLobbySet && isSpectateSet;
     }
 
-    public ArenaManager.Team getTeam(Player player) {
+    public Team getTeam(Player player) {
         return lobbyPlayers.get(player.getName());
     }
 
@@ -319,14 +300,14 @@ public class Arena {
     }
 
 
-    public void joinLobby(Player player, ArenaManager.Team team) {
+    public void joinLobby(Player player, Team team) {
         lobbyPlayers.put(player.getName(), team == null ? getTeamWithLessPlayers() : team);
 
         Settings.getSettings().getCache().savePlayerInformation(player);
         Utils.removePlayerSettings(player);
 
         player.teleport(getLobbySpawn(getTeam(player)));
-        broadcastMessage(ChatColor.GREEN, player.getName() + " has joined the arena! " + ChatColor.GRAY + this.lobbyPlayers.keySet().size() + "/" + this.getMax());
+        broadcastMessage(ChatColor.GREEN, getTeam(player).getChatColor() + player.getName() + ChatColor.GREEN + " has joined the arena! " + ChatColor.GRAY + this.lobbyPlayers.keySet().size() + "/" + this.getMax());
 
         if (canStart()) {
             this.startGame();
@@ -334,23 +315,30 @@ public class Arena {
     }
 
     private void startGame() {
-        Utils.countdown(this, Settings.COUNTDOWN);
+        // Set all the player's walk speed, swim speed, and fly speed tpo 0
+
+        Utils.countdown(this, Settings.COUNTDOWN, players.keySet());
+        state = ArenaState.IN_PROGRESS;
         for (String p : lobbyPlayers.keySet()) {
             this.addPlayerToArena(Bukkit.getPlayer(p));
         }
-        state = ArenaState.IN_PROGRESS;
+        lobbyPlayers.keySet().removeAll(lobbyPlayers.keySet());
     }
 
+    // Used for server reload and forcestops, so no messages will be sent
     public void removePlayers() {
         for (String p : lobbyPlayers.keySet()) {
-            leave(Bukkit.getPlayer(p));
+            Settings.getSettings().getCache().restorePlayerInformation(Bukkit.getPlayer(p).getUniqueId());
         }
         for (String p : spectators) {
-            leave(Bukkit.getPlayer(p));
+            Settings.getSettings().getCache().restorePlayerInformation(Bukkit.getPlayer(p).getUniqueId());
         }
         for (PbPlayer p : players.keySet()) {
-            leave(p.getPlayer());
+            Settings.getSettings().getCache().restorePlayerInformation(p.getPlayer().getUniqueId());
         }
+        lobbyPlayers.keySet().removeAll(lobbyPlayers.keySet());
+        spectators.removeAll(spectators);
+        players.keySet().removeAll(players.keySet());
         state = ArenaState.WAITING;
     }
 
@@ -366,15 +354,15 @@ public class Arena {
             win(getTeam((pbPlayer.getPlayer())));
             players.keySet().remove(pbPlayer);
             state = ArenaState.WAITING;
-        } else if (players.keySet().isEmpty()) {
+        }
+        if (players.keySet().isEmpty()) {
             // in case min players is set to 0, when a player leaves arena doesn't get reset
             state = ArenaState.WAITING;
         }
     }
 
-    public void win(ArenaManager.Team team) {
-        String winner = team == ArenaManager.Team.RED ? ChatColor.RED + "Red Team" : ChatColor.BLUE + "Blue Team";
-        broadcastMessage(ChatColor.GREEN, "The " + winner + ChatColor.GREEN + " has won!");
+    public void win(Team team) {
+        broadcastMessage(ChatColor.GREEN, "The " + team.getTitleName() + ChatColor.GREEN + " has won!");
     }
 
     public PbPlayer getPbPlayer(Player player) {
@@ -387,11 +375,10 @@ public class Arena {
     }
 
     private void addPlayerToArena(Player player) {
-        PbPlayer pbPlayer = new PbPlayer(player, getTeam(player), this);
-        ArenaManager.Team team = this.getTeam(player);
+        Team team = getTeam(player);
+        PbPlayer pbPlayer = new PbPlayer(player, team, this);
         players.put(pbPlayer, team);
         player.teleport(getSpawn(team));
-        // lobbyPlayers.keySet().remove(player.getName());
     }
 
     public void broadcastMessage(ChatColor color, String...messages) {
@@ -400,25 +387,32 @@ public class Arena {
                 Bukkit.getServer().getPlayer(pbPlayer.getName()).sendMessage(Settings.getSettings().getPrefix() + color + message);
             }
         }
-        //for (String name : lobbyPlayers.keySet()) {
-          //  for (String message : messages) {
-            //    Bukkit.getServer().getPlayer(name).sendMessage(Settings.getSettings().getPrefix() + color + message);
-            //}
-        //}
+        for (String name : lobbyPlayers.keySet()) {
+            for (String message : messages) {
+                Bukkit.getServer().getPlayer(name).sendMessage(Settings.getSettings().getPrefix() + color + message);
+            }
+        }
     }
 
-    private ArenaManager.Team getTeamWithLessPlayers() {
-        int red = 0, blue = 0;
+    private Team getTeamWithLessPlayers() {
+        int team1 = 0, team2 = 0, team3 = 0, team4 = 0;
         for (String p : lobbyPlayers.keySet()) {
-            if (lobbyPlayers.get(p) == ArenaManager.Team.RED)
-                red++;
-            else
-                blue++;
+            switch (lobbyPlayers.get(p)) {
+                case Team1:
+                    team1++;
+                    break;
+                case Team2:
+                    team2++;
+                    break;
+                case Team3:
+                    team3++;
+                    break;
+                case Team4:
+                    team4++;
+                    break;
+            }
         }
-        if (red > blue)
-            return ArenaManager.Team.BLUE;
-        else
-            return ArenaManager.Team.RED;
+        return Utils.max(team1, team2, team3, team4);
     }
 
     private boolean canStart() {

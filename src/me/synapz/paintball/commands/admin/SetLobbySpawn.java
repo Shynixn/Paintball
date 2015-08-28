@@ -4,6 +4,7 @@ package me.synapz.paintball.commands.admin;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.Team;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,12 +16,12 @@ public class SetLobbySpawn extends Command{
         Location spawn = player.getLocation();
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
         String teamString = args[3];
-        ArenaManager.Team team;
+        Team team;
 
         if (nullCheck(args[2], arena, player) && teamCheck(teamString, player)) {
             team = stringToTeam(teamString);
             arena.setLobbySpawn(spawn, team);
-            Message.getMessenger().msg(player, ChatColor.GREEN, team + " lobby spawn for " + arena.toString() + " set!", arena.getSteps());
+            Message.getMessenger().msg(player, ChatColor.GREEN, team.getTitleName() + " lobby spawn for " + arena.toString() + " set!", arena.getSteps());
         } else {
             return;
         }

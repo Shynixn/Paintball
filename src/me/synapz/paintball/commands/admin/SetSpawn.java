@@ -1,9 +1,7 @@
 package me.synapz.paintball.commands.admin;
 
 
-import me.synapz.paintball.Message;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.*;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,23 +13,17 @@ public class SetSpawn extends Command {
         Location spawn = player.getLocation();
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
         String teamString = args[3];
-        ArenaManager.Team team;
+        Team team = stringToTeam(teamString);
 
         if (arena == null) {
             Message.getMessenger().msg(player, ChatColor.RED, args[2] + " is an invalid arena.");
             return;
         }
 
-        if (teamString.equalsIgnoreCase("blue") || teamString.equalsIgnoreCase("red")) {
-            team = teamString.equalsIgnoreCase("blue") ? ArenaManager.Team.BLUE : ArenaManager.Team.RED;
-        } else {
-            Message.getMessenger().msg(player, ChatColor.RED, args[3] + " is an invalid team. Choose either red/blue");
-            return;
+        if (teamCheck(teamString, player)) {
+            arena.setArenaSpawn(spawn, team);
+            Message.getMessenger().msg(player, ChatColor.GREEN, team.getTitleName() + " spawn for " + arena.toString() + " set!", arena.getSteps());
         }
-
-
-        arena.setArenaSpawn(spawn, team);
-        Message.getMessenger().msg(player, ChatColor.GREEN, team + " spawn for " + arena.toString() + " set!", arena.getSteps());
     }
 
     public String getArgs() {

@@ -21,5 +21,13 @@ countdown:
    # The number at which there will be no delay in showing numbers. Ex. 15...10...5...4...3...2...1...
    no-interval: 4
 
-
+# Team colors, max number of teams is 4. You can change the team colors here. Default 2 teams, Red and Blue
+# Avaiable colors are based on chat formatting. Ex: &a,&b,&c, &1, etc.
+# Armour, wool helmet, and paintball splash, and chat colors will be based off these values to match the team they are on.
+# If you wish to enable a 3rd of 4th team, remove the # from in front of it like this, #team3: '&2' -> team3: '&c'
+Teams:
+  team1: '&1'
+  team2: '&4'
+  #team3: '&2'
+  #team4: '&e'
 

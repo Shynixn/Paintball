@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Utils {
 
@@ -48,20 +49,31 @@ public class Utils {
                 return GameMode.ADVENTURE;
             case 3:
                 return GameMode.SPECTATOR;
-            default:
+            default: // in case Minecraft adds new GameMode, don't want errors in console.
                 return GameMode.SURVIVAL;
         }
     }
 
-    public static void countdown(final Arena a, final int seconds) {
+    public static void setAllSpeeds(Player p, float speed) {
+        p.setWalkSpeed(speed);
+        p.setFlySpeed(speed);
+    }
+
+
+    public static void countdown(final Arena a, final int seconds, final Set<PbPlayer> pbPlayers) {
         final Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
+        for (PbPlayer pb : pbPlayers) {
+            setAllSpeeds(pb.getPlayer(), 0.0F);
+        }
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int counter = seconds;
-            @Override
             public void run() {
                 if (counter == 0) {
                     // TODO get better message
                     a.broadcastMessage(ChatColor.GREEN, "Paintball Arena Started!");
+                    for (PbPlayer pb : pbPlayers) {
+                        Utils.setAllSpeeds(pb.getPlayer(), 0.5F);
+                    }
                 } else if (counter < 0) {
                     Bukkit.getScheduler().cancelTasks(plugin);
                 } else {
@@ -72,5 +84,28 @@ public class Utils {
                 counter--;
             }
         }, 0L, 20L);
+    }
+
+    public static Team max(int...numbers) {
+        //assign first element of an array to largest and smallest
+        int smallest = numbers[0];
+        int largetst = numbers[0];
+
+        for(int i=1; i< numbers.length; i++)
+        {
+            if(numbers[i] > largetst)
+                largetst = numbers[i];
+            else if (numbers[i] < smallest)
+                smallest = numbers[i];
+        }
+        if (largetst == numbers[0]) {
+            return Team.Team1;
+        } else if (largetst == 1) {
+            return Team.Team2;
+        } else if (largetst == numbers[2]) {
+            return Team.Team3;
+        } else {
+            return  Team.Team4;
+        }
     }
 }

@@ -11,10 +11,6 @@ import java.util.List;
 
 public class ArenaManager {
 
-    public enum Team {
-        RED,
-        BLUE;
-    }
     private ArenaManager() {}
 
     private static ArenaManager instance = new ArenaManager();
