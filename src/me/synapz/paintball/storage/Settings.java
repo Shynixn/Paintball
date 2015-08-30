@@ -58,7 +58,6 @@ public class Settings {
     }
 
     public void reloadConfig() {
-        Team.removeAllTeamsForReload();
         pb.reloadConfig();
         loadValues(pb.getConfig(), pb.getDescription());
         arena = YamlConfiguration.loadConfiguration(aFile);
@@ -94,12 +93,6 @@ public class Settings {
         COUNTDOWN           = configFile.getInt("countdown.time");
         INTERVAL            = configFile.getInt("countdown.interval");
         NO_INTERVAL         = configFile.getInt("countdown.no-interval");
-
-        for (int i = 0; i < 16; i++) {
-            if (configFile.getString("Teams.Team" + i) != null) {
-                Team.addNewTeam(new Team("Teams.Team"+1, i, configFile.getString("Teams.Team"+i)));
-            }
-        }
     }
 
 

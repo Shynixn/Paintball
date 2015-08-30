@@ -1,10 +1,7 @@
 package me.synapz.paintball.commands.player;
 
 
-import me.synapz.paintball.Message;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Team;
+import me.synapz.paintball.*;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,17 +12,17 @@ public class Join extends Command {
         Arena arena = ArenaManager.getArenaManager().getArena(args[1]);
         Team team = null;
 
-        if (args.length == 3) {
-            if (teamCheck(args[2], player)) {
-                team = stringToTeam(args[2]);
-            } else {
-                return;
-            }
-        }
-
         if (arena == null) {
             Message.getMessenger().msg(player, ChatColor.RED, "Invalid arena.");
             return;
+        }
+
+        if (args.length == 3) {
+            if (teamCheck(arena, args[2], player)) {
+                team = Utils.stringToTeam(arena, args[2]);
+            } else {
+                return;
+            }
         }
 
         for (Arena a : ArenaManager.getArenaManager().getArenas()) {

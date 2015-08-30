@@ -49,9 +49,9 @@ public abstract class Command {
         }
     }
 
-    public boolean teamCheck(String teamString, Player sender) {
+    public boolean teamCheck(Arena a, String teamString, Player sender) {
         String validTeams = "";
-        for (Team team : Team.TEAMS) {
+        for (Team team : a.getArenaTeamList()) {
             validTeams += ChatColor.stripColor(team.getTitleName().toLowerCase() + " ");
         }
         // remove last space and replace spaces with /. So it should be <red/blue/green>
@@ -64,14 +64,5 @@ public abstract class Command {
         } else {
             return true;
         }
-    }
-
-    public Team stringToTeam(String team) {
-        for (Team t : Team.TEAMS) {
-            if (t.getTitleName().toLowerCase().equals(team.toLowerCase())) {
-                return t;
-            }
-        }
-        return null;
     }
 }

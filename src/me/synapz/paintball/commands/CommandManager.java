@@ -27,7 +27,7 @@ public class CommandManager implements CommandExecutor{
     public void init() {
     	addCommands(new Join(), new LeaveArena(), new Spectate(), new List(), new Admin(Command.CommandType.PLAYER),
     			new CreateArena(), new RemoveArena(), new SetLobbySpawn(), new SetSpawn(), new SetSpectate(), new SetMin(),
-    			new SetMax(), new ForceStart(), new ForceStop(), new Rename(), new Enable(), new Disable(),
+    			new SetMax(), new SetTeams(), new ForceStart(), new ForceStop(), new Rename(), new Enable(), new Disable(),
     			new Steps(),  new Info(), new Reload(), new Admin(Command.CommandType.ADMIN));
     }
 

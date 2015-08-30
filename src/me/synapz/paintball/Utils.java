@@ -13,7 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class Utils {
+public class
+        Utils {
 
     public static void removePlayerSettings(Player player) {
         // todo: exp saves
@@ -40,6 +41,15 @@ public class Utils {
         return returnList;
     }
 
+    public static Team stringToTeam(Arena a, String team) {
+        for (Team t : a.getArenaTeamList()) {
+            if (t.getTitleName().equalsIgnoreCase(team.toLowerCase())) {
+                return t;
+            }
+        }
+        return null;
+    }
+
     public static GameMode getLastGameMode(int gamemodeValue) {
         switch (gamemodeValue) {
             case 0:
@@ -61,7 +71,7 @@ public class Utils {
     }
 
 
-    public static void countdown(final Arena a, final int seconds, final ArrayList<PbPlayer> pbPlayers) {
+    public static void countdown(final Arena a, final int seconds, final Set<PbPlayer> pbPlayers) {
         final Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
         for (PbPlayer pb : pbPlayers) {
             setAllSpeeds(pb.getPlayer(), 0.0F);
@@ -89,7 +99,9 @@ public class Utils {
 
     public static ArrayList<String> addItemsToArray(ArrayList<String> array, String... s) {
         for (String str : s) {
-            array.add(str);
+            if (str != "") {
+                array.add(str);
+            }
         }
         return array;
     }
@@ -116,8 +128,10 @@ public class Utils {
         }
         // check each team in the keySet until you find the one that matches the largest, then return it as it is the greatest.
         for (Team t : size.keySet()) {
-            if (t.getLobbyPlayers().size() == largetst) {
-                return t;
+            for (Integer teamSize : size.values()) {
+                if (size.get(t) == teamSize) {
+                    return t;
+                }
             }
         }
         return null;

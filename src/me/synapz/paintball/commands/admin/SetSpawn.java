@@ -13,16 +13,16 @@ public class SetSpawn extends Command {
         Location spawn = player.getLocation();
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
         String teamString = args[3];
-        Team team = stringToTeam(teamString);
 
         if (arena == null) {
             Message.getMessenger().msg(player, ChatColor.RED, args[2] + " is an invalid arena.");
             return;
         }
+        Team team = Utils.stringToTeam(arena, teamString);
 
-        if (teamCheck(teamString, player)) {
+        if (teamCheck(arena, teamString, player)) {
             arena.setArenaSpawn(spawn, team);
-            Message.getMessenger().msg(player, ChatColor.GREEN, team.getTitleName() + " spawn for " + arena.toString() + " set!", arena.getSteps());
+            Message.getMessenger().msg(player, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " spawn for " + arena.toString() + " set!", arena.getSteps());
         }
     }
 

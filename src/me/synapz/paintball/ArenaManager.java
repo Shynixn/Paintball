@@ -51,9 +51,17 @@ public class ArenaManager {
             a.removePlayers();
         }
     }
+
+    public List<Team> getTeamsList(Arena a) {
+        List<Team> teamList = new ArrayList<Team>();
+        for (String s : Settings.getSettings().getArenaFile().getStringList("Arenas." + a.getDefaultName() + ".Teams")) {
+            teamList.add(new Team(a, s));
+        }
+        return teamList;
+    }
     
     public void addNewArenaToConfig(Arena arena) {
-        String[] steps = {"Name", "Spectate-Loc", "Max-Players", "Min-Players", "Is-Enabled"};
+        String[] steps = {"Name", "Spectate-Loc", "Max-Players", "Min-Players", "Is-Enabled", "Teams"};
         String id = arena.getDefaultName();
 
         for (String value : steps) {
@@ -120,7 +128,7 @@ public class ArenaManager {
                 // set the value of that arena
                 a.loadValues(Settings.getSettings().getArenaFile());
             }catch (Exception e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Error loading " + arenaName + " in.         arenas.yml. Stacktrace: ");
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
                 e.printStackTrace();
             }
             arenas.add(a);
