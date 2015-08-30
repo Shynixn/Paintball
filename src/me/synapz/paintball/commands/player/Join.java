@@ -52,13 +52,7 @@ public class Join extends Command {
     }
 
     public String getArgs() {
-        String enabledTeams = "";
-        for (Team team : Team.getEnabledTeams()) {
-            enabledTeams += team.getTitleName() + " ";
-        }
-        enabledTeams = enabledTeams.substring(0, enabledTeams.lastIndexOf(" "));
-        enabledTeams = enabledTeams.replaceAll(" ", "/").toLowerCase();
-        String args = "<arena> [" + enabledTeams + "]";
+        String args = "<arena> [team]";
         return args;
     }
 

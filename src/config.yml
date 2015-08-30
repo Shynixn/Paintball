@@ -25,9 +25,10 @@ countdown:
 # Avaiable colors are based on chat formatting. Ex: &a,&b,&c, &1, etc.
 # Armour, wool helmet, and paintball splash, and chat colors will be based off these values to match the team they are on.
 # If you wish to enable a 3rd of 4th team, remove the # from in front of it like this, #team3: '&2' -> team3: '&c'
+# When adding a new Team please note, if an Arena was setp without that team, the arena will be disabled until that team's spawn and lobby are set.
 Teams:
-  team1: '&1'
-  team2: '&4'
-  #team3: '&2'
-  #team4: '&e'
+  Team1: '&1'
+  Team2: '&4'
+  #Team3: '&2'
+  #Team4: '&e'
 

@@ -1,72 +1,86 @@
 package me.synapz.paintball;
 
-import org.bukkit.ChatColor;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
-public enum Team {
+public class Team {
 
-    Team1("Teams.team1", "Team1"),
-    Team2("Teams.team2", "Team2"),
-    Team3("Teams.team3", "Team3"),
-    Team4("Teams.team4", "Team4");
+    public static ArrayList<Team> TEAMS = new ArrayList<Team>();
 
-    private String color, path, name;
-    private boolean isSet;
+    private String color, path;
+    private int id;
+    private ArrayList<PbPlayer> playersInArena = new ArrayList<PbPlayer>();
+    private ArrayList<String> lobbyPlayers = new ArrayList<String>();
 
-    Team (String path, String name) {
+    public Team (String path, int id, String color) {
         this.path = path;
-        this.name = name;
+        this.id = id;
+        this.color = color;
+    }
+
+    public static void removeAllTeamsForReload() {
+        TEAMS.removeAll(TEAMS);
     }
 
     public String getPath() {
         return path;
     }
 
-    public void setChatColor(String color) {
-        this.color = color;
-    }
-
     public String getChatColor() {
         return color;
     }
 
-    public boolean isSet() {
-        return isSet;
+    public ArrayList<PbPlayer> getPlayersInArena() {
+        return playersInArena;
     }
 
-    public void setIsSet(boolean set) {
-        this.isSet = set;
-    }
-
-    public static Team[] getEnabledTeams() {
-        ArrayList<Team> teams = new ArrayList<Team>();
-        for (Team team : values()) {
-            if (team.isSet()) {
-                teams.add(team);
-            }
+    public void removePlayerInArena(PbPlayer... pb) {
+        for (PbPlayer p : pb) {
+            playersInArena.remove(p);
         }
-        Team[] list = new Team[teams.size()];
-        int i = 0;
-        for (Team t : teams) {
-            list[i] = t;
-            i++;
-        }
-        return list;
     }
 
-    @Override
-    public String toString() {
-        return name;
+    public void addPlayerInArena(PbPlayer... pb) {
+        for (PbPlayer p : pb) {
+            playersInArena.add(p);
+        }
+    }
+
+    public ArrayList<String> getLobbyPlayers() {
+        return lobbyPlayers;
+    }
+
+    public void removeLobbyPlayers(String... p) {
+        for (String pl : p) {
+            lobbyPlayers.remove(pl);
+        }
+    }
+
+    public void addPlayerToLobby(String... p) {
+        for (String pl : p) {
+            lobbyPlayers.add(pl);
+        }
+    }
+
+    public void removeAllPlayers() {
+        playersInArena.removeAll(playersInArena);
+    }
+
+    public void removeAllLobbyPlayers() {
+        lobbyPlayers.removeAll(lobbyPlayers);
+    }
+
+    public static void addNewTeam(Team t) {
+        TEAMS.add(t);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitleName() {
         String color = "error";
         String[] list = new String[] {"§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§0", "§a", "§b", "§c", "§d", "§e", "§f"};
-        String[] names = new String[] {"Blue", "Green", "Cyan", "Red", "Purple", "Yellow", "Gray", "Gray", "Blue", "Black", "Green", "Blue", "Red", "Purple", "Yellow"};
+        String[] names = new String[] {"Blue", "Green", "Aqua", "Red", "Purple", "Yellow", "LightGray", "Gray", "LightBlue", "Black", "LightGreen", "LightAqua", "LightRed", "LightPurple", "LightYellow"};
         int i = 0;
         for (String s : list) {
             if (s.toCharArray()[1] == getChatColor().toCharArray()[1]) {

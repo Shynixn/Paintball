@@ -53,7 +53,7 @@ public class ArenaManager {
     }
     
     public void addNewArenaToConfig(Arena arena) {
-        String[] steps = {"Name", "Spectate-Loc", "Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
+        String[] steps = {"Name", "Spectate-Loc", "Max-Players", "Min-Players", "Is-Enabled"};
         String id = arena.getDefaultName();
 
         for (String value : steps) {

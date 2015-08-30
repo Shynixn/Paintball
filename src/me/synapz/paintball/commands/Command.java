@@ -51,13 +51,12 @@ public abstract class Command {
 
     public boolean teamCheck(String teamString, Player sender) {
         String validTeams = "";
-        boolean containsTeam = false;
-        for (Team team : Team.getEnabledTeams()) {
+        for (Team team : Team.TEAMS) {
             validTeams += ChatColor.stripColor(team.getTitleName().toLowerCase() + " ");
         }
         // remove last space and replace spaces with /. So it should be <red/blue/green>
-        validTeams.substring(0, validTeams.lastIndexOf(" "));
-        validTeams = validTeams.replaceAll(" ", "/").toLowerCase();
+        validTeams = validTeams.substring(0, validTeams.lastIndexOf(" "));
+        validTeams = validTeams.replaceAll(" ", "/");
 
         if (!validTeams.contains(teamString)) {
             Message.getMessenger().msg(sender, ChatColor.RED, teamString + " is an invalid team. Choose either <" + validTeams + ">");
@@ -68,8 +67,8 @@ public abstract class Command {
     }
 
     public Team stringToTeam(String team) {
-        for (Team t : Team.getEnabledTeams()) {
-            if (t.getTitleName().toLowerCase().equals(team)) {
+        for (Team t : Team.TEAMS) {
+            if (t.getTitleName().toLowerCase().equals(team.toLowerCase())) {
                 return t;
             }
         }

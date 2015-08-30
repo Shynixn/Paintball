@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -60,7 +61,7 @@ public class Utils {
     }
 
 
-    public static void countdown(final Arena a, final int seconds, final Set<PbPlayer> pbPlayers) {
+    public static void countdown(final Arena a, final int seconds, final ArrayList<PbPlayer> pbPlayers) {
         final Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
         for (PbPlayer pb : pbPlayers) {
             setAllSpeeds(pb.getPlayer(), 0.0F);
@@ -86,8 +87,23 @@ public class Utils {
         }, 0L, 20L);
     }
 
-    public static Team max(int...numbers) {
-        //assign first element of an array to largest and smallest
+    public static ArrayList<String> addItemsToArray(ArrayList<String> array, String... s) {
+        for (String str : s) {
+            array.add(str);
+        }
+        return array;
+    }
+
+    public static Team max(HashMap<Team, Integer> size) {
+        // Get all the sizes of each Team and assign it to numbers array
+        int[] numbers = new int[size.keySet().size()];
+        int count = 0;
+        for (Team t : size.keySet()) {
+            numbers[count] = size.get(t);
+            count++;
+        }
+
+        // calculate the largest number and assign it to largetst
         int smallest = numbers[0];
         int largetst = numbers[0];
 
@@ -98,14 +114,12 @@ public class Utils {
             else if (numbers[i] < smallest)
                 smallest = numbers[i];
         }
-        if (largetst == numbers[0]) {
-            return Team.Team1;
-        } else if (largetst == 1) {
-            return Team.Team2;
-        } else if (largetst == numbers[2]) {
-            return Team.Team3;
-        } else {
-            return  Team.Team4;
+        // check each team in the keySet until you find the one that matches the largest, then return it as it is the greatest.
+        for (Team t : size.keySet()) {
+            if (t.getLobbyPlayers().size() == largetst) {
+                return t;
+            }
         }
+        return null;
     }
 }

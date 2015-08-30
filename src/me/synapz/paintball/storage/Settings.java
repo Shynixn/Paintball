@@ -1,9 +1,7 @@
 package me.synapz.paintball.storage;
 
 
-import me.synapz.paintball.Message;
-import me.synapz.paintball.Paintball;
-import me.synapz.paintball.Team;
+import me.synapz.paintball.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -60,9 +58,10 @@ public class Settings {
     }
 
     public void reloadConfig() {
-        arena = YamlConfiguration.loadConfiguration(aFile);
+        Team.removeAllTeamsForReload();
         pb.reloadConfig();
         loadValues(pb.getConfig(), pb.getDescription());
+        arena = YamlConfiguration.loadConfiguration(aFile);
     }
 
     public void saveArenaFile() {
@@ -96,11 +95,9 @@ public class Settings {
         INTERVAL            = configFile.getInt("countdown.interval");
         NO_INTERVAL         = configFile.getInt("countdown.no-interval");
 
-        // Load teams. Set their ChatColor and set if they are set or not.
-        for (Team team : Team.values()) {
-            if (configFile.getString(team.getPath()) != null) {
-                team.setChatColor(ChatColor.translateAlternateColorCodes('&', configFile.getString(team.getPath())));
-                team.setIsSet(true);
+        for (int i = 0; i < 16; i++) {
+            if (configFile.getString("Teams.Team" + i) != null) {
+                Team.addNewTeam(new Team("Teams.Team"+1, i, configFile.getString("Teams.Team"+i)));
             }
         }
     }
