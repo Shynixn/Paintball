@@ -5,6 +5,7 @@ import me.synapz.paintball.storage.Settings;
 import static org.bukkit.ChatColor.*;
 
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.inventory.ItemStack;
@@ -50,70 +51,63 @@ public class PbPlayer {
         }
 
         player.sendMessage("Adding Wool Helmet...");
-        // DyeColor color = team == ArenaManager.Team.BLUE ? DyeColor.BLUE : DyeColor.RED;
-        // String name = color == DyeColor.BLUE ? BLUE + "Blue Helmet": RED + "Red Helmet";
+        System.out.println(team.getDyeColor());
+        ItemStack wool = new Wool(team.getDyeColor()).toItemStack(1);
+        ItemMeta woolMeta = wool.getItemMeta();
+        woolMeta.setDisplayName(team.getChatColor() + team.getTitleName() + " Team");
+        wool.setItemMeta(woolMeta);
 
-        // Set the name of the helmet
-        // ItemStack wool = new Wool(color).toItemStack(1);
-        // ItemMeta woolMeta = wool.getItemMeta();
-        // woolMeta.setDisplayName(name);
-        // wool.setItemMeta(woolMeta);
-
-        // player.getInventory().setHelmet(wool);
+        player.getInventory().setHelmet(wool);
     }
 
     public Player getPlayer() {
         return player;
     }
+
     public void giveItems() {
         // TODO add event for when hit to change the color based on how many times they were hit
         player.sendMessage("Adding Armour...");
         PlayerInventory inv = player.getInventory();
-        // TODO add blue/red armour
-        // helmet maybe overridden with a wool helmet
         inv.setArmorContents(colorLeatherItems(new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_HELMET)));
-        // todo: give custom config items
     }
 
     // todo: make a list of projectiles to pick from, rile, snowball etc and put paramters here
     public void launchProjectile() {
         // todo:make spawn faster
-        player.launchProjectile(Snowball.class, player.getVelocity());
+        player.launchProjectile(Snowball.class).setVelocity(player.getLocation().getDirection().multiply(3));
     }
 
     private void initPlayer() {
         giveItems();
         addHelmet();
-        // colorPlayerTitle();
+        colorPlayerTitle();
     }
 
-    /*private void colorPlayerTitle() {
+    private void colorPlayerTitle() {
         if (!Settings.COLOR_PLAYER_TITLE) {
             return;
         }
 
-        ChatColor color = team == ArenaManager.Team.RED ? ChatColor.RED : ChatColor.BLUE;
         final Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-        sb.registerNewTeam(ArenaManager.Team.RED.toString());
-        sb.registerNewTeam(ArenaManager.Team.BLUE.toString());
+        for (Team t : arena.getArenaTeamList()) {
+            sb.registerNewTeam(t.getTitleName());
+        }
         // Make the Scoreboard information for the player
         Objective ob = sb.registerNewObjective("Prefixs", "dummy");
         ob.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        sb.registerNewTeam(team.toString());
-        final Team playerTeam = sb.getTeam(team.toString());
-        playerTeam.setPrefix(color + "ttt");
-
-    }*/
+        final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
+        playerTeam.setPrefix(team.getChatColor() + "ttt");
+        player.setScoreboard(sb);
+    }
 
     private ItemStack[] colorLeatherItems(ItemStack... items) {
         int location = 0;
         ItemStack[] editedItems = new ItemStack[items.length];
-        // String itemName = team == ArenaManager.Team.RED ? ChatColor.RED + "Red Team" : ChatColor.BLUE + "Blue Team";
         for (ItemStack item : items) {
             ItemStack armour = new ItemStack(item.getType(), 1);
             LeatherArmorMeta lam = (LeatherArmorMeta)armour.getItemMeta();
-            //lam.setColor(color);
-            //lam.setDisplayName(itemName);
+            lam.setColor(team.getColor());
+            lam.setDisplayName(team.getChatColor() + team.getTitleName() + " Team");
             armour.setItemMeta(lam);
             editedItems[location] = armour; location++;
         }

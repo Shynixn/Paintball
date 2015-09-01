@@ -2,6 +2,8 @@ package me.synapz.paintball;
 
 import me.synapz.paintball.commands.CommandManager;
 
+import me.synapz.paintball.events.ChatSystem;
+import me.synapz.paintball.events.JoinSigns;
 import me.synapz.paintball.events.Listeners;
 import me.synapz.paintball.events.PaintballShoot;
 import me.synapz.paintball.storage.Settings;
@@ -19,6 +21,8 @@ public class Paintball extends JavaPlugin {
 
         Bukkit.getServer().getPluginManager().registerEvents(new PaintballShoot(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ChatSystem(), this);
 
         getCommand("paintball").setExecutor(commandManager);
     }

@@ -22,6 +22,7 @@ public class Settings {
 
     public static int COUNTDOWN, INTERVAL, NO_INTERVAL;
     private String prefix, version, theme, website, author, secondary;
+    public static String ARENA_CHAT, SPEC_CHAT;
     public static boolean SPLASH_PAINTBALLS, COLOR_PLAYER_TITLE, WOOL_HELMET, DEBUG;
 
     private Settings() {}
@@ -93,6 +94,10 @@ public class Settings {
         COUNTDOWN           = configFile.getInt("countdown.time");
         INTERVAL            = configFile.getInt("countdown.interval");
         NO_INTERVAL         = configFile.getInt("countdown.no-interval");
+
+        // TODO: add stats tag to config.yml chts
+        SPEC_CHAT   = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.spectator-chat"));
+        ARENA_CHAT  = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.arena-chat"));
     }
 
 

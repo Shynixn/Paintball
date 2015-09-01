@@ -40,29 +40,22 @@ public abstract class Command {
         PLAYER;
     }
 
-    public boolean nullCheck(String arenaName, Arena arena, Player sender) {
-        if (arena == null) {
-            Message.getMessenger().msg(sender, ChatColor.RED, arenaName + " is an invalid arena.");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public boolean teamCheck(Arena a, String teamString, Player sender) {
-        String validTeams = "";
+        String validTeams = " ";
         for (Team team : a.getArenaTeamList()) {
             validTeams += ChatColor.stripColor(team.getTitleName().toLowerCase() + " ");
         }
-        // remove last space and replace spaces with /. So it should be <red/blue/green>
-        validTeams = validTeams.substring(0, validTeams.lastIndexOf(" "));
-        validTeams = validTeams.replaceAll(" ", "/");
-
-        if (!validTeams.contains(teamString)) {
+        if (!validTeams.contains(" " + teamString + " ")) {
+            // remove last space and replace spaces with /. So it should be <red/blue/green>
+            validTeams = validTeams.substring(1, validTeams.lastIndexOf(" "));
+            validTeams = validTeams.replaceAll(" ", "/");
             Message.getMessenger().msg(sender, ChatColor.RED, teamString + " is an invalid team. Choose either <" + validTeams + ">");
             return false;
         } else {
             return true;
         }
+
+
+
     }
 }

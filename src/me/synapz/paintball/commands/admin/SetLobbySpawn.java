@@ -15,7 +15,7 @@ public class SetLobbySpawn extends Command{
         String teamString = args[3];
         Team team;
 
-        if (nullCheck(args[2], arena, player) && teamCheck(arena, teamString, player)) {
+        if (Utils.nullCheck(args[2], arena, player) && teamCheck(arena, teamString, player)) {
             team = Utils.stringToTeam(arena, teamString);
             arena.setLobbySpawn(spawn, team);
             Message.getMessenger().msg(player, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " lobby spawn for " + arena.toString() + " set!", arena.getSteps());
@@ -25,7 +25,7 @@ public class SetLobbySpawn extends Command{
     }
 
     public String getArgs() {
-        String args = "<arena> <red/blue>";
+        String args = "<arena> <team>";
         return args;
     }
 

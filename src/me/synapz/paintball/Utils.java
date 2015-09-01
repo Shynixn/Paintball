@@ -4,6 +4,7 @@ import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -43,11 +44,20 @@ public class
 
     public static Team stringToTeam(Arena a, String team) {
         for (Team t : a.getArenaTeamList()) {
-            if (t.getTitleName().equalsIgnoreCase(team.toLowerCase())) {
+            if (t.getTitleName().equalsIgnoreCase(team)) {
                 return t;
             }
         }
         return null;
+    }
+
+    public static boolean nullCheck(String arenaName, Arena arena, Player sender) {
+        if (arena == null) {
+            Message.getMessenger().msg(sender, ChatColor.RED, arenaName + " is an invalid arena.");
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public static GameMode getLastGameMode(int gamemodeValue) {
@@ -106,8 +116,20 @@ public class
         return array;
     }
 
-    public static Team max(HashMap<Team, Integer> size) {
+    public static Team max(Arena a , HashMap<Team, Integer> size) {
         // Get all the sizes of each Team and assign it to numbers array
+        // in case there aren't any players in the arena
+        if (size.keySet().size() == 0){
+            for (Team t : a.getArenaTeamList()) {
+                return t;
+            }
+        }
+        for (Team t : size.keySet()) {
+            if (size.get(t) == 0) {
+                return t;
+            }
+        }
+
         int[] numbers = new int[size.keySet().size()];
         int count = 0;
         for (Team t : size.keySet()) {

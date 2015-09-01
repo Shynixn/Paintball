@@ -14,7 +14,7 @@ public class SetTeams extends Command {
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
-        if (nullCheck(args[2], arena, player)) {
+        if (Utils.nullCheck(args[2], arena, player)) {
             ArrayList<Team> teamsToAdd = new ArrayList<Team>();
             List<String> colors = Arrays.asList(args[3].split(","));
             List<String> allColors = Arrays.asList(Team.availableColors());
@@ -45,6 +45,8 @@ public class SetTeams extends Command {
                 added.add(color);
             }
             arena.setArenaTeamList(teamsToAdd);
+        } else {
+            return;
         }
         // generate the message to be send back to the sender
         String out = "";
@@ -69,7 +71,7 @@ public class SetTeams extends Command {
     }
 
     public String getInfo() {
-        return "Set team colors via ChatColors.";
+        return "Set teams via ChatColors.";
     }
 
     public CommandType getCommandType() {

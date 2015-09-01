@@ -4,7 +4,7 @@ secondary-color: '&7'
 debug-messages: false
 # Arena Settings
 
-# True will give players a blue/red wool helmet on join, false will ignore this
+# True will give players a wool helmet based on their team when they join the arena, false will ignore this
 give-wool-helmet: true
 
 # Make title red/blue based on their team
@@ -21,14 +21,14 @@ countdown:
    # The number at which there will be no delay in showing numbers. Ex. 15...10...5...4...3...2...1...
    no-interval: 4
 
-# Team colors, max number of teams is 4. You can change the team colors here. Default 2 teams, Red and Blue
-# Avaiable colors are based on chat formatting. Ex: &a,&b,&c, &1, etc.
-# Armour, wool helmet, and paintball splash, and chat colors will be based off these values to match the team they are on.
-# If you wish to enable a 3rd of 4th team, remove the # from in front of it like this, #team3: '&2' -> team3: '&c'
-# When adding a new Team please note, if an Arena was setp without that team, the arena will be disabled until that team's spawn and lobby are set.
-Teams:
-  Team1: '&1'
-  Team2: '&4'
-  #Team3: '&2'
-  #Team4: '&e'
+# broadcastwinner
+
+Chat:
+   # Will broadcast winning team to all players on the server.
+   broadcast-winner: false
+   # Chat format for specators. Tags: %ARENA%, %PLAYER%, %MSG%, %PREFIX%, %STATS%??
+   spectator-chat: "&7[Spectator] %PLAYER%: %MSG%"
+   # Chat format for lobby players and in game players. Tags: %ARENA%, %PLAYER%, %MSG%, %TEAMCOLOR%, %TEAMNAME%, %PREFIX%
+   arena-chat: "%PREFIX%&8-%TEAMCOLOR%%TEAMNAME%&8- &a%PLAYER%&7: %MSG%"
+
 
