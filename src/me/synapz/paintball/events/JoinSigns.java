@@ -9,15 +9,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 public class JoinSigns implements Listener {
 
     // TODO: MAJOR, add permissions for adding signs
     @EventHandler
     public void onSignCreate(SignChangeEvent e) {
+        // paintball.sign.use
         if (e.getLines().length == 0 || e.getLines().length >= 1 && !e.getLine(0).contains("pb")) return;
 
         if (e.getLine(1).equalsIgnoreCase("autojoin") == false && e.getLine(1).equalsIgnoreCase("join") == false) {
@@ -46,6 +49,7 @@ public class JoinSigns implements Listener {
                 e.setLine(2, a.getStateAsString());
                 e.setLine(3, "");
                 Message.getMessenger().msg(e.getPlayer(), ChatColor.GREEN, a.toString() + " join sign successfully created!");
+                ArenaManager.getArenaManager().storeSignLocation(e.getBlock().getLocation(), a);
             } else {
                 e.getBlock().breakNaturally();
                 return;
@@ -55,11 +59,13 @@ public class JoinSigns implements Listener {
 
     @EventHandler
     public void onArenaTryToJoinOnClick(PlayerInteractEvent e) {
+        // paintball.sign.create
         if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || !(e.getClickedBlock().getType() == Material.SIGN) && !(e.getClickedBlock().getType() != Material.SIGN_POST)) return;
+        if (!(e.getClickedBlock().getState() instanceof Sign)) return;
         Sign sign = (Sign) e.getClickedBlock().getState();
         Player player = e.getPlayer();
 
-        if (!sign.getLine(0).contains("Paintball")) return;
+        if (!sign.getLine(0).contains("Paintball") || sign.getLine(1) == null) return;
 
         if (sign.getLine(1).equals(ChatColor.GREEN + "Auto Join")) {
             for (Arena a : ArenaManager.getArenaManager().getArenas()) {
@@ -82,7 +88,36 @@ public class JoinSigns implements Listener {
                 }
             }
         }
+    }
 
+    @EventHandler
+    public void onLobbySignBreak(BlockBreakEvent e) {
+        // paintball.sign.destroy
+        if (!(e.getBlock().getType() == Material.SIGN) && !(e.getBlock().getType() == Material.SIGN_POST)) return;
+        Sign sign = (Sign) e.getBlock().getState();
 
+        if (!(sign.getLine(0).contains("Paintball"))) return;
+        if (!(e.getPlayer().hasPermission("paintball.sign.destroy"))) Message.getMessenger().msg(e.getPlayer(), ChatColor.RED, "You do not have permission to destroy Paintball signs!");
+        // make sure it is a join sign and not a auto-join sign by making sure it has an Arena state
+        boolean joinSign = false;
+        for (Arena.ArenaState state : Arena.ArenaState.values()) {
+            if (sign.getLine(2).contains(state.toString())) {
+                joinSign = true;
+            }
+        }
+
+        if (joinSign) {
+            Arena a = ArenaManager.getArenaManager().getArena(sign.getLine(1));
+            ArenaManager.getArenaManager().removeSignLocation(sign.getLocation(), a);
+            Message.getMessenger().msg(e.getPlayer(), ChatColor.GREEN, a.toString() + "'s join sign has been successfully removed!");
+        }
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent e) {
+        for (Arena a : ArenaManager.getArenaManager().getArenas()) {
+            System.out.println(a.getName());
+            a.updateAllSigns();
+        }
     }
 }

@@ -4,6 +4,7 @@ import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -26,8 +27,9 @@ public class
         player.getInventory().setBoots(null);
         player.setGameMode(GameMode.SURVIVAL);
         player.setFlying(false);
+        player.setAllowFlight(false);
         player.setFoodLevel(20);
-        player.setHealth(20);
+        player.setHealth(player.getMaxHealth());
         player.setFireTicks(0);
     }
 
@@ -88,6 +90,7 @@ public class
         }
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int counter = seconds;
+
             public void run() {
                 if (counter == 0) {
                     // TODO get better message

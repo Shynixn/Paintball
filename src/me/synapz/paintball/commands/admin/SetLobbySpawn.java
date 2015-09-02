@@ -15,7 +15,20 @@ public class SetLobbySpawn extends Command{
         String teamString = args[3];
         Team team;
 
-        if (Utils.nullCheck(args[2], arena, player) && teamCheck(arena, teamString, player)) {
+        if (!Utils.nullCheck(args[2], arena, player)) return;
+
+        if (args[3].equalsIgnoreCase("all")) {
+            if (arena.getArenaTeamList().isEmpty()) {
+                Message.getMessenger().msg(player, ChatColor.RED, arena.getName() + " does not have any teams set!");
+                return;
+            }
+            for (Team t : arena.getArenaTeamList()) {
+                arena.setLobbySpawn(spawn, t);
+            }
+            Message.getMessenger().msg(player, ChatColor.GREEN, "Set " + arena.getName() + "'s all lobby spawns to your location.", arena.getSteps());
+            return;
+        }
+        if (teamCheck(arena, teamString, player)) {
             team = Utils.stringToTeam(arena, teamString);
             arena.setLobbySpawn(spawn, team);
             Message.getMessenger().msg(player, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " lobby spawn for " + arena.toString() + " set!", arena.getSteps());
@@ -25,7 +38,7 @@ public class SetLobbySpawn extends Command{
     }
 
     public String getArgs() {
-        String args = "<arena> <team>";
+        String args = "<arena> <team/all>";
         return args;
     }
 

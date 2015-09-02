@@ -17,7 +17,7 @@ public class SetTeams extends Command {
         if (Utils.nullCheck(args[2], arena, player)) {
             ArrayList<Team> teamsToAdd = new ArrayList<Team>();
             List<String> colors = Arrays.asList(args[3].split(","));
-            List<String> allColors = Arrays.asList(Team.availableColors());
+            List<String> allColors = Arrays.asList(Team.LIST);
             // used to make sure a team isn't added two times
             List<String> added = new ArrayList<String>();
 

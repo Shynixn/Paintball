@@ -25,19 +25,11 @@ public class PbPlayer {
     Team team;
     Arena arena;
 
-    /**
-     * This will get called everytime a player is added into arena, we create a PbPlayer and
-     * add checks on their join based on config settings and values.
-     * @param p Player to make a PbPlayer
-     * @param t Team of the Player
-     * @param a Arena they are joining
-     */
     public PbPlayer(Player p, Team t, Arena a) {
         this.player = p;
         this.team = t;
         this.arena = a;
 
-        p.sendMessage("Initializing...");
         initPlayer();
     }
 
@@ -50,8 +42,6 @@ public class PbPlayer {
             return;
         }
 
-        player.sendMessage("Adding Wool Helmet...");
-        System.out.println(team.getDyeColor());
         ItemStack wool = new Wool(team.getDyeColor()).toItemStack(1);
         ItemMeta woolMeta = wool.getItemMeta();
         woolMeta.setDisplayName(team.getChatColor() + team.getTitleName() + " Team");
@@ -66,7 +56,6 @@ public class PbPlayer {
 
     public void giveItems() {
         // TODO add event for when hit to change the color based on how many times they were hit
-        player.sendMessage("Adding Armour...");
         PlayerInventory inv = player.getInventory();
         inv.setArmorContents(colorLeatherItems(new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_HELMET)));
     }
@@ -87,16 +76,10 @@ public class PbPlayer {
         if (!Settings.COLOR_PLAYER_TITLE) {
             return;
         }
+        Scoreboard sb = Team.getPluginScoreboard();
 
-        final Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-        for (Team t : arena.getArenaTeamList()) {
-            sb.registerNewTeam(t.getTitleName());
-        }
-        // Make the Scoreboard information for the player
-        Objective ob = sb.registerNewObjective("Prefixs", "dummy");
-        ob.setDisplaySlot(DisplaySlot.BELOW_NAME);
         final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
-        playerTeam.setPrefix(team.getChatColor() + "ttt");
+        playerTeam.addPlayer(player); // TODO: try player.
         player.setScoreboard(sb);
     }
 

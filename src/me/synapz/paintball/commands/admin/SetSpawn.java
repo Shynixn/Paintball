@@ -19,6 +19,7 @@ public class SetSpawn extends Command {
         }
         Team team = Utils.stringToTeam(arena, args[3]);
 
+
         if (teamCheck(arena, args[3], player)) {
             arena.setArenaSpawn(spawn, team);
             Message.getMessenger().msg(player, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " spawn for " + arena.toString() + " set!", arena.getSteps());

@@ -5,6 +5,8 @@ import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -14,7 +16,6 @@ import java.util.List;
 
 public class Arena {
 
-    // Make Team chats
     private ArrayList<String> spectators = new ArrayList<String>();
     private FileConfiguration file = Settings.getSettings().getArenaFile();
     private HashMap<String, Team> lobby = new HashMap<String, Team>();
@@ -110,6 +111,7 @@ public class Arena {
     }
 
     public void joinSpectate(Player player) {
+        // TODO: set name color to gray
         if (this.containsPlayer(player)) {
             Message.getMessenger().msg(player, ChatColor.RED, "You are already in an arena!");
             return;
@@ -304,7 +306,7 @@ public class Arena {
     }
 
 
-    private String getPath() {
+    public String getPath() {
         return "Arenas." + name + ".";
     }
 
@@ -359,13 +361,20 @@ public class Arena {
 
     // Used for server reload and forcestops, so no messages will be sent
     public void removePlayers() {
+        if (inGame.keySet().isEmpty() && lobby.keySet().isEmpty() && spectators.isEmpty()) {
+            state = ArenaState.WAITING;
+            return;
+        }
         for (PbPlayer pb : inGame.keySet()) {
+            Team.getPluginScoreboard().getTeam(getTeam(pb.getPlayer()).getTitleName()).removePlayer(pb.getPlayer());
             Settings.getSettings().getCache().restorePlayerInformation(pb.getPlayer().getUniqueId());
         }
         for (String p : lobby.keySet()) {
+            Team.getPluginScoreboard().getTeam(getTeam(Bukkit.getPlayer(p)).getTitleName()).removePlayer(Bukkit.getPlayer(p));
             Settings.getSettings().getCache().restorePlayerInformation(Bukkit.getPlayer(p).getUniqueId());
         }
         for (String p : spectators) {
+            Team.getPluginScoreboard().getTeam(getTeam(Bukkit.getPlayer(p)).getTitleName()).removePlayer(Bukkit.getPlayer(p));
             Settings.getSettings().getCache().restorePlayerInformation(Bukkit.getPlayer(p).getUniqueId());
         }
         lobby.keySet().removeAll(lobby.keySet());
@@ -375,13 +384,22 @@ public class Arena {
     }
 
     public void leave(Player player) {
-        lobby.keySet().remove(player.getName());
-        inGame.keySet().remove(getPbPlayer(player));
-        spectators.remove(player.getName());
-        Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
+        try {
+            Team.getPluginScoreboard().getTeam(getTeam(player).getTitleName()).removePlayer(player);
+
+        } catch (NullPointerException ex) {
+            // team not found...
+        } finally {
+            lobby.keySet().remove(player.getName());
+            inGame.keySet().remove(getPbPlayer(player));
+            spectators.remove(player.getName());
+            Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
+        }
+
 
         if (inGame.keySet().size() == 1) {
             PbPlayer pbPlayer = (PbPlayer) inGame.keySet().toArray()[0];
+            Team.getPluginScoreboard().getTeam(inGame.get(pbPlayer).getTitleName()).removePlayer(player);
             Settings.getSettings().getCache().restorePlayerInformation(pbPlayer.getPlayer().getUniqueId());
             win(getTeam((pbPlayer.getPlayer())));
             inGame.keySet().remove(getPbPlayer(player));
@@ -471,6 +489,25 @@ public class Arena {
                 break;
         }
         return color + state.toString();
+    }
+
+    public void updateAllSigns() {
+        List<String> signLocs = Settings.getSettings().getArenaFile().getStringList(getPath() + "Sign-Locs");
+        if (signLocs == null) return;
+
+        for (String s : signLocs) {
+            String[] locStr = s.split(",");
+            Location loc = new Location(Bukkit.getWorld(locStr[0]), Integer.parseInt(locStr[1]), Integer.parseInt(locStr[2]), Integer.parseInt(locStr[3]));
+            if (loc.getBlock().getState() instanceof Sign) {
+                Sign sign = (Sign) loc.getBlock().getState();
+                sign.setLine(1, this.getName()); // in case they rename it
+                sign.setLine(2, this.getStateAsString());
+                sign.setLine(3, this.inGame.keySet().size() + this.lobby.keySet().size() + "/" + this.getMax());
+                sign.update();
+            } else {
+                ArenaManager.getArenaManager().removeSignLocation(loc, this);
+            }
+        }
     }
 
     private void advSave() {

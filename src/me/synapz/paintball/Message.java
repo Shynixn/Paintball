@@ -10,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
 import java.util.logging.Level;
 
 public class Message {
@@ -63,13 +62,11 @@ public class Message {
         if (!playerMenu) {
             title += " Admin";
         }
-        return Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "               " + RESET + Settings.getSettings().getTheme() + " " + title + " " + Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "               ";
+        return Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "                    " + RESET + Settings.getSettings().getTheme() + " " + title + " " + Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "                    ";
     }
 
     public enum Usage {
         TO_MANY_ARGS,
         NOT_ENOUGH_ARGS;
     }
-
-
 }

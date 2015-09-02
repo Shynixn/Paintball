@@ -1,9 +1,9 @@
 package me.synapz.paintball;
 
-
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import static org.bukkit.ChatColor.*;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -80,7 +80,6 @@ public class ArenaManager {
     }
 
     public void getList(Player player) {
-        ChatColor gr = ChatColor.GRAY;
         String arenas = "";
 
         for (Arena a : getArenas()) {
@@ -88,35 +87,34 @@ public class ArenaManager {
 
             switch (a.getState()) {
                 case IN_PROGRESS:
-                    color += ChatColor.RED;
+                    color += RED;
                     break;
                 case DISABLED:
-                    color += ChatColor.GRAY;
+                    color += GRAY;
                     break;
                 case WAITING:
-                    color += ChatColor.GREEN;
+                    color += GREEN;
                     break;
                 case NOT_SETUP:
-                    color += ChatColor.STRIKETHROUGH;
+                    color += STRIKETHROUGH;
                     break;
             }
-            arenas += ChatColor.GRAY + ", " + color + a.getName();
+            arenas += GRAY + ", " + color + a.getName();
         }
 
         if (arenas.equals("")) {
-            Message.getMessenger().msg(player, ChatColor.BLUE, "There are currently no arenas.");
+            Message.getMessenger().msg(player, BLUE, "There are currently no arenas.");
             return;
         }
         arenas = arenas.substring(4, arenas.length());
 
-        Message.getMessenger().msg(player, ChatColor.GRAY, ChatColor.BLUE + "Arenas: " + ChatColor.GRAY + arenas,
-                ChatColor.GREEN + "█-" + gr + "Joinable " + ChatColor.RED + "█-" + gr + "InProgress " + gr + "█-" + gr + "Disabled/Not-Setup");
+        Message.getMessenger().msg(player, GRAY, BLUE + "Arenas: " + GRAY + arenas,
+                GREEN + "█-" + GRAY + "Joinable " + RED + "█-" + GRAY + "InProgress " + GRAY + "█-" + GRAY + "Disabled/Not-Setup");
     }
 
     private void loadArenas() {
         arenasList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
         Arena a = null;
-
 
         for (String arenaName : arenasList) {
             String defaultName = arenaName.substring(0, arenaName.lastIndexOf(":"));
@@ -128,10 +126,32 @@ public class ArenaManager {
                 // set the value of that arena
                 a.loadValues(Settings.getSettings().getArenaFile());
             }catch (Exception e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
                 e.printStackTrace();
             }
             arenas.add(a);
         }
+    }
+
+    public void storeSignLocation(Location loc, Arena a) {
+        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(a.getPath() + "Sign-Locs");
+        String locString = loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();
+        if (signsList == null)
+            signsList = new ArrayList<String>();
+        if (signsList.contains(locString)) return;
+        signsList.add(locString);
+        Settings.getSettings().getArenaFile().set(a.getPath() + "Sign-Locs", signsList);
+        Settings.getSettings().saveArenaFile();
+    }
+
+    public void removeSignLocation(Location loc, Arena a) {
+        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(a.getPath() + "Sign-Locs");
+        String locString = loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();
+        if (signsList == null || !(signsList.contains(locString))) {
+            return;
+        }
+        signsList.remove(locString);
+        Settings.getSettings().getArenaFile().set(a.getPath() + "Sign-Locs", signsList);
+        Settings.getSettings().saveArenaFile();
     }
 }
