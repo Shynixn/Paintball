@@ -1,8 +1,11 @@
 package me.synapz.paintball;
 
+import com.google.common.base.Joiner;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import static org.bukkit.ChatColor.*;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -14,6 +17,7 @@ public class ArenaManager {
     private ArenaManager() {}
 
     private static ArenaManager instance = new ArenaManager();
+
     private ArrayList<Arena> arenas = new ArrayList<Arena>();
     private List<String> arenasList = null;
 
@@ -80,35 +84,38 @@ public class ArenaManager {
     }
 
     public void getList(Player player) {
-        String arenas = "";
+        List<String> list = new ArrayList<String>();
+
+        if (getArenas().size() == 0) {
+            Message.getMessenger().msg(player, BLUE, "There are currently no arenas.");
+            return;
+        }
 
         for (Arena a : getArenas()) {
             String color = "";
 
             switch (a.getState()) {
+                case WAITING:
+                    color += GREEN;
+                    break;
                 case IN_PROGRESS:
                     color += RED;
                     break;
                 case DISABLED:
                     color += GRAY;
                     break;
-                case WAITING:
-                    color += GREEN;
-                    break;
                 case NOT_SETUP:
-                    color += STRIKETHROUGH;
+                    color += STRIKETHROUGH + "" + GRAY;
+                    break;
+                default:
+                    color += RED;
                     break;
             }
-            arenas += GRAY + ", " + color + a.getName();
+            list.add(ChatColor.RESET + "" + color + a.getName());
         }
 
-        if (arenas.equals("")) {
-            Message.getMessenger().msg(player, BLUE, "There are currently no arenas.");
-            return;
-        }
-        arenas = arenas.substring(4, arenas.length());
-
-        Message.getMessenger().msg(player, GRAY, BLUE + "Arenas: " + GRAY + arenas,
+        String out = Joiner.on(GRAY + ", ").join(list);
+        Message.getMessenger().msg(player, GRAY, BLUE + "Arenas: " + out,
                 GREEN + "█-" + GRAY + "Joinable " + RED + "█-" + GRAY + "InProgress " + GRAY + "█-" + GRAY + "Disabled/Not-Setup");
     }
 

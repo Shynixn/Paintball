@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class CacheFile {
     FileConfiguration cache;
     File cacheFile;
 
-    public CacheFile(Paintball pb) {
+    public CacheFile(Plugin pb) {
         cacheFile = new File(pb.getDataFolder(), "cache.yml");
 
         if (!cacheFile.exists()) {

@@ -14,11 +14,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CommandManager implements CommandExecutor{
 
 
-    private static ArrayList<Command> commands = new ArrayList<Command>();
+    private static Map<String, Command> commands = new HashMap<String, Command>();
 
     private static final String NO_CONSOLE_PERMS = "Console does not have access to that command!";
     private static final String COMMAND_NOT_FOUND = "Unknown Command! Type /paintball for a list of commands.";
@@ -49,7 +51,7 @@ public class CommandManager implements CommandExecutor{
             }
 
             else if (args.length >= 1) {
-                Command command = stringToCommand(args[0]);
+                Command command = commands.get(args[0]);
 
                 if (nullCheck(command, player)) {
                     return true;
@@ -60,7 +62,7 @@ public class CommandManager implements CommandExecutor{
                         dispatchCommand(command, player, args);
                     }
                     else {
-                        Command command1 = stringToCommand(args[1]);
+                        Command command1 = commands.get(args[1]);
                         if (nullCheck(command1, player)) {
                             return true;
                         }
@@ -72,15 +74,6 @@ public class CommandManager implements CommandExecutor{
             }
         }
         return false;
-    }
-
-    private Command stringToCommand(String commandString) {
-        Command command = null;
-        for (Command cmd : commands) {
-            if (cmd.getName().equalsIgnoreCase(commandString))
-                command = cmd;
-        }
-        return command;
     }
 
     private boolean nullCheck(Command command, CommandSender sender) {
@@ -99,7 +92,7 @@ public class CommandManager implements CommandExecutor{
         player.sendMessage(Message.getMessenger().getHelpTitle(isPlayerType));
 
         String beginning = isPlayerType ? Settings.getSettings().getTheme() + "/pb ": Settings.getSettings().getTheme() + "/pb admin ";
-        for (Command command : commands) {
+        for (Command command : commands.values()) {
             String name = command.getName().equals("admin") && type == Command.CommandType.ADMIN ? "" : command.getName();
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
             if (command.getCommandType() == type) {
@@ -145,7 +138,7 @@ public class CommandManager implements CommandExecutor{
     
     private void addCommands(Command...cmds) {
     	for (Command cmd : cmds) {
-    		commands.add(cmd);
+    		commands.put(cmd.getName(), cmd);
     	}
     }
 }

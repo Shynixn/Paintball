@@ -10,11 +10,13 @@ import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Set;
+
 public class Paintball extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Settings.getSettings().init(this);
+        new Settings(this);
         ArenaManager.getArenaManager().setup();
         CommandManager commandManager = new CommandManager();
         commandManager.init();

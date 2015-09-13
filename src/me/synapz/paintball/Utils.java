@@ -9,14 +9,17 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class
-        Utils {
+public class Utils {
 
     public static void removePlayerSettings(Player player) {
         // todo: exp saves
@@ -85,29 +88,12 @@ public class
 
     public static void countdown(final Arena a, final int seconds, final Set<PbPlayer> pbPlayers) {
         final Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
+
+        new CountdownTask(seconds, a, pbPlayers).runTaskTimer(plugin, 0, 20);
+
         for (PbPlayer pb : pbPlayers) {
             setAllSpeeds(pb.getPlayer(), 0.0F);
         }
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            int counter = seconds;
-
-            public void run() {
-                if (counter == 0) {
-                    // TODO get better message
-                    a.broadcastMessage(ChatColor.GREEN, "Paintball Arena Started!");
-                    for (PbPlayer pb : pbPlayers) {
-                        Utils.setAllSpeeds(pb.getPlayer(), 0.5F);
-                    }
-                } else if (counter < 0) {
-                    Bukkit.getScheduler().cancelTasks(plugin);
-                } else {
-                    if (counter <= Settings.NO_INTERVAL || counter % Settings.INTERVAL == 0 || seconds == counter) {
-                        a.broadcastMessage(ChatColor.GREEN, "Paintball starting in " + ChatColor.GRAY + counter + ChatColor.GREEN + " seconds!");
-                    }
-                }
-                counter--;
-            }
-        }, 0L, 20L);
     }
 
     public static ArrayList<String> addItemsToArray(ArrayList<String> array, String... s) {

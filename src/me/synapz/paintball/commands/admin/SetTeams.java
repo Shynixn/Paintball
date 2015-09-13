@@ -28,7 +28,7 @@ public class SetTeams extends Command {
             for (String color : colors) {
                 color = ChatColor.translateAlternateColorCodes('&', color);
                 if (!allColors.contains(color)) {
-                    Message.getMessenger().msg(player, ChatColor.RED, "Error parsing ChatColors. For exmaple use,", "Usage: /pb admin setteam " + arena.getName() + " &1,&2,&6,&a");
+                    Message.getMessenger().msg(player, ChatColor.RED, "Error parsing ChatColors. For example use,", "Usage: /pb admin setteam " + arena.getName() + " &1,&2,&6,&a");
                     return;
                 }
                 // make sure no teams are duplicated

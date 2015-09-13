@@ -6,16 +6,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 
 public class Settings {
     
-    private static Settings settings = new Settings();
+    private static Settings settings;
 
-    private Paintball pb;
+    private Plugin pb;
     private FileConfiguration arena;
     private CacheFile cache;
     private File aFile;
@@ -25,13 +27,24 @@ public class Settings {
     public static String ARENA_CHAT, SPEC_CHAT;
     public static boolean SPLASH_PAINTBALLS, COLOR_PLAYER_TITLE, WOOL_HELMET, DEBUG;
 
-    private Settings() {}
+    public Settings(Plugin plugin) {
+        if (settings == null) {
+            settings = this;
+            init(plugin);
+        }
+        this.pb = plugin;
+    }
 
     public static Settings getSettings() {
+        if (settings == null) {
+            settings = new Settings(Paintball.getProvidingPlugin(Paintball.class));
+            settings.pb = Paintball.getProvidingPlugin(Paintball.class);
+            settings.init(settings.pb);
+        }
         return settings;
     }
 
-    public void init(Paintball pb) {
+    public void init(Plugin pb) {
         if (!pb.getDataFolder().exists()) {
             pb.getDataFolder().mkdir();
         }
