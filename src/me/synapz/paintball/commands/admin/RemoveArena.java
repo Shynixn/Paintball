@@ -4,6 +4,7 @@ package me.synapz.paintball.commands.admin;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.Utils;
 import me.synapz.paintball.commands.Command;
 
 import org.bukkit.ChatColor;
@@ -15,7 +16,7 @@ public class RemoveArena extends Command{
         String arenaName = args[2];
         Arena arena = ArenaManager.getArenaManager().getArena(arenaName);
 
-        if (nullCheck(arenaName, arena, player)) {
+        if (Utils.nullCheck(arenaName, arena, player)) {
             arena.removeArena();
             Message.getMessenger().msg(player, ChatColor.GREEN, arena.toString() + " successfully removed!");
         }

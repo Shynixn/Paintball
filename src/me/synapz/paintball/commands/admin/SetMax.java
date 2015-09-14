@@ -39,7 +39,7 @@ public class SetMax extends Command{
     }
 
     public String getArgs() {
-        return "<arena> <int>";
+        return "<arena> <number>";
     }
 
     public String getPermission() {

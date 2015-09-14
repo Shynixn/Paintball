@@ -1,10 +1,9 @@
 prefix: '&8[&3Paintball&8]'
 theme-color: '&3'
 secondary-color: '&7'
-
 # Arena Settings
 
-# True will give players a blue/red wool helmet on join, false will ignore this
+# True will give players a wool helmet based on their team when they join the arena, false will ignore this
 give-wool-helmet: true
 
 # Make title red/blue based on their team
@@ -13,5 +12,20 @@ color-player-title: true
 # This will make paintballs slash (turns surrounding blocks red/blue clay)
 paintball-splash: true
 
-# Will create a line of potion effects behind paintball (red/blue) depending on team
-paintball-potion-effects: true
+countdown:
+   # Time in seconds for the round to start
+   time: 15
+   # The delay when showing numbers. Ex. 15...10...5...
+   interval: 5
+   # The number at which there will be no delay in showing numbers. Ex. 15...10...5...4...3...2...1...
+   no-interval: 4
+
+# broadcastwinner
+
+Chat:
+   # Will broadcast winning team to all players on the server.
+   broadcast-winner: false
+   # Chat format for specators. Tags: %ARENA%, %PLAYER%, %MSG%, %PREFIX%, %STATS%??
+   spectator-chat: "&7[Spectator] %PLAYER%: %MSG%"
+   # Chat format for lobby players and in game players. Tags: %ARENA%, %PLAYER%, %MSG%, %TEAMCOLOR%, %TEAMNAME%, %PREFIX%
+   arena-chat: "%PREFIX%&8-%TEAMCOLOR%%TEAMNAME%&8- &a%PLAYER%&7: %MSG%"

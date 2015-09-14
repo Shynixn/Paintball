@@ -1,9 +1,7 @@
 package me.synapz.paintball.commands.player;
 
 
-import me.synapz.paintball.Message;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.*;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,19 +10,19 @@ public class Join extends Command {
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[1]);
-        ArenaManager.Team team = null;
-
-        if (args.length == 3) {
-            if (teamCheck(args[2], player)) {
-                team = stringToTeam(args[2]);
-            } else {
-                return;
-            }
-        }
+        Team team = null;
 
         if (arena == null) {
             Message.getMessenger().msg(player, ChatColor.RED, "Invalid arena.");
             return;
+        }
+
+        if (args.length == 3) {
+            if (teamCheck(arena, args[2], player)) {
+                team = Utils.stringToTeam(arena, args[2]);
+            } else {
+                return;
+            }
         }
 
         for (Arena a : ArenaManager.getArenaManager().getArenas()) {
@@ -33,11 +31,25 @@ public class Join extends Command {
                 return;
             }
         }
+        switch (arena.getState()) {
+            case IN_PROGRESS:
+                Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently in progress.");
+                return;
+            case NOT_SETUP:
+                Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been fully setup.");
+                return;
+            case DISABLED:
+                Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " is disabled.");
+                return;
+            default:
+                break;
+        }
+
         arena.joinLobby(player, team);
     }
 
     public String getArgs() {
-        String args = "<arena> [red/blue]";
+        String args = "<arena> [team]";
         return args;
     }
 

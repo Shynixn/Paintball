@@ -1,25 +1,26 @@
 package me.synapz.paintball;
 
-
+import com.google.common.base.Joiner;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
+import static org.bukkit.ChatColor.*;
+
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ArenaManager {
 
-    public enum Team {
-        RED,
-        BLUE;
-    }
     private ArenaManager() {}
 
     private static ArenaManager instance = new ArenaManager();
+
     private ArrayList<Arena> arenas = new ArrayList<Arena>();
-    private List<String> arenasList = null;
 
     public static ArenaManager getArenaManager() {
         return instance;
@@ -55,9 +56,17 @@ public class ArenaManager {
             a.removePlayers();
         }
     }
+
+    public List<Team> getTeamsList(Arena a) {
+        List<Team> teamList = new ArrayList<Team>();
+        for (String s : Settings.getSettings().getArenaFile().getStringList(a.getPath() + ".Teams")) {
+            teamList.add(new Team(a, s));
+        }
+        return teamList;
+    }
     
     public void addNewArenaToConfig(Arena arena) {
-        String[] steps = {"Name", "Spectate-Loc", "Red-Lobby", "Red-Spawn", "Blue-Lobby", "Blue-Spawn", "Max-Players", "Min-Players", "Is-Enabled"};
+        String[] steps = {"Name", "Spectate-Loc", "Max-Players", "Min-Players", "Is-Enabled", "Teams"};
         String id = arena.getDefaultName();
 
         for (String value : steps) {
@@ -70,67 +79,88 @@ public class ArenaManager {
             }
         }
         arenas.add(arena);
-        arenasList.add(id + ":" + id);
-        Settings.getSettings().getArenaFile().set("Arena-List", arenasList);
         Settings.getSettings().saveArenaFile();
     }
 
     public void getList(Player player) {
-        ChatColor gr = ChatColor.GRAY;
-        String arenas = "";
+        List<String> list = new ArrayList<String>();
+
+        if (getArenas().size() == 0) {
+            Message.getMessenger().msg(player, BLUE, "There are currently no arenas.");
+            return;
+        }
 
         for (Arena a : getArenas()) {
             String color = "";
 
             switch (a.getState()) {
+                case WAITING:
+                    color += GREEN;
+                    break;
                 case IN_PROGRESS:
-                    color += ChatColor.RED;
+                    color += RED;
                     break;
                 case DISABLED:
-                    color += ChatColor.GRAY;
-                    break;
-                case IN_LOBBY:
-                    color += ChatColor.GREEN;
-                    break;
-                case STOPPED:
-                    color += ChatColor.GREEN;
+                    color += GRAY;
                     break;
                 case NOT_SETUP:
-                    color += ChatColor.STRIKETHROUGH;
+                    color += STRIKETHROUGH + "" + GRAY;
+                    break;
+                default:
+                    color += RED;
                     break;
             }
-            arenas += ChatColor.GRAY + ", " + color + a.getName();
+            list.add(ChatColor.RESET + "" + color + a.getName());
         }
 
-        if (arenas.equals("")) {
-            Message.getMessenger().msg(player, ChatColor.BLUE, "There are currently no arenas.");
-            return;
-        }
-        arenas = arenas.substring(4, arenas.length());
-
-        Message.getMessenger().msg(player, ChatColor.GRAY, ChatColor.BLUE + "Arenas: " + ChatColor.GRAY + arenas,
-                ChatColor.GREEN + "█-" + gr + "Joinable " + ChatColor.RED + "█-" + gr + "InProgress " + gr + "█-" + gr + "Disabled/Not-Setup");
+        String out = Joiner.on(GRAY + ", ").join(list);
+        Message.getMessenger().msg(player, GRAY, BLUE + "Arenas: " + out,
+                GREEN + "█-" + GRAY + "Joinable " + RED + "█-" + GRAY + "InProgress " + GRAY + "█-" + GRAY + "Disabled/Not-Setup");
     }
 
     private void loadArenas() {
-        arenasList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-        Arena a = null;
+        FileConfiguration file = Settings.getSettings().getArenaFile();
+        Set<String> rawArenas = file.getConfigurationSection("Arenas") == null ? null : file.getConfigurationSection("Arenas").getKeys(false);
 
+        if (rawArenas == null) {
+            return;
+        }
 
-        for (String arenaName : arenasList) {
-            String defaultName = arenaName.substring(0, arenaName.lastIndexOf(":"));
-            String name = arenaName.substring(arenaName.lastIndexOf(":")+1, arenaName.length());
+        for (String arenaName : rawArenas) {
+            Arena a = null;
+            String name = file.getString("Arenas." + arenaName + ".Name");
             try {
                 // add each arena to the server
-                a = new Arena(defaultName, name);
-
+                a = new Arena(arenaName, name);
                 // set the value of that arena
-                a.loadValues(Settings.getSettings().getArenaFile());
+                a.loadValues(file);
             }catch (Exception e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Error loading " + arenaName + " in.         arenas.yml. Stacktrace: ");
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
                 e.printStackTrace();
             }
             arenas.add(a);
         }
+    }
+
+    public void storeSignLocation(Location loc, Arena a) {
+        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(a.getPath() + "Sign-Locs");
+        String locString = loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();
+        if (signsList == null)
+            signsList = new ArrayList<String>();
+        if (signsList.contains(locString)) return;
+        signsList.add(locString);
+        Settings.getSettings().getArenaFile().set(a.getPath() + "Sign-Locs", signsList);
+        Settings.getSettings().saveArenaFile();
+    }
+
+    public void removeSignLocation(Location loc, Arena a) {
+        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(a.getPath() + "Sign-Locs");
+        String locString = loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();
+        if (signsList == null || !(signsList.contains(locString))) {
+            return;
+        }
+        signsList.remove(locString);
+        Settings.getSettings().getArenaFile().set(a.getPath() + "Sign-Locs", signsList);
+        Settings.getSettings().saveArenaFile();
     }
 }
