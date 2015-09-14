@@ -16,7 +16,7 @@ public class Paintball extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        new Settings(this);
+        Settings.getSettings();
         ArenaManager.getArenaManager().setup();
         CommandManager commandManager = new CommandManager();
         commandManager.init();

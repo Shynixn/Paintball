@@ -7,10 +7,12 @@ import static org.bukkit.ChatColor.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ArenaManager {
 
@@ -19,7 +21,6 @@ public class ArenaManager {
     private static ArenaManager instance = new ArenaManager();
 
     private ArrayList<Arena> arenas = new ArrayList<Arena>();
-    private List<String> arenasList = null;
 
     public static ArenaManager getArenaManager() {
         return instance;
@@ -58,7 +59,7 @@ public class ArenaManager {
 
     public List<Team> getTeamsList(Arena a) {
         List<Team> teamList = new ArrayList<Team>();
-        for (String s : Settings.getSettings().getArenaFile().getStringList("Arenas." + a.getDefaultName() + ".Teams")) {
+        for (String s : Settings.getSettings().getArenaFile().getStringList(a.getPath() + ".Teams")) {
             teamList.add(new Team(a, s));
         }
         return teamList;
@@ -78,8 +79,6 @@ public class ArenaManager {
             }
         }
         arenas.add(arena);
-        arenasList.add(id + ":" + id);
-        Settings.getSettings().getArenaFile().set("Arena-List", arenasList);
         Settings.getSettings().saveArenaFile();
     }
 
@@ -120,18 +119,21 @@ public class ArenaManager {
     }
 
     private void loadArenas() {
-        arenasList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-        Arena a = null;
+        FileConfiguration file = Settings.getSettings().getArenaFile();
+        Set<String> rawArenas = file.getConfigurationSection("Arenas") == null ? null : file.getConfigurationSection("Arenas").getKeys(false);
 
-        for (String arenaName : arenasList) {
-            String defaultName = arenaName.substring(0, arenaName.lastIndexOf(":"));
-            String name = arenaName.substring(arenaName.lastIndexOf(":")+1, arenaName.length());
+        if (rawArenas == null) {
+            return;
+        }
+
+        for (String arenaName : rawArenas) {
+            Arena a = null;
+            String name = file.getString("Arenas." + arenaName + ".Name");
             try {
                 // add each arena to the server
-                a = new Arena(defaultName, name);
-
+                a = new Arena(arenaName, name);
                 // set the value of that arena
-                a.loadValues(Settings.getSettings().getArenaFile());
+                a.loadValues(file);
             }catch (Exception e) {
                 Message.getMessenger().msg(Bukkit.getConsoleSender(), RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
                 e.printStackTrace();

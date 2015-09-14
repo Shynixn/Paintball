@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands.admin;
 
+import com.google.common.base.Joiner;
 import me.synapz.paintball.*;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.bukkit.ChatColor.GRAY;
+
 public class SetTeams extends Command {
 
     public void onCommand(Player player, String[] args) {
@@ -17,7 +20,6 @@ public class SetTeams extends Command {
         if (Utils.nullCheck(args[2], arena, player)) {
             ArrayList<Team> teamsToAdd = new ArrayList<Team>();
             List<String> colors = Arrays.asList(args[3].split(","));
-            List<String> allColors = Arrays.asList(Team.LIST);
             // used to make sure a team isn't added two times
             List<String> added = new ArrayList<String>();
 
@@ -27,7 +29,7 @@ public class SetTeams extends Command {
             }
             for (String color : colors) {
                 color = ChatColor.translateAlternateColorCodes('&', color);
-                if (!allColors.contains(color)) {
+                if (!Team.LIST.contains(color)) {
                     Message.getMessenger().msg(player, ChatColor.RED, "Error parsing ChatColors. For example use,", "Usage: /pb admin setteam " + arena.getName() + " &1,&2,&6,&a");
                     return;
                 }

@@ -63,22 +63,15 @@ public class Arena {
 
     public void removeArena() {
         FILE.set("Arenas." + this.getDefaultName(), null);
-        
-    	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-    	newList.remove(this.name + ":" + this.currentName);
-        Settings.getSettings().getArenaFile().set("Arena-List", newList);
-
         ArenaManager.getArenaManager().getArenas().remove(this);
         advSave();
     }
     
     public void rename(String newName) {
-        // Rename the FILE in 'Arena-List' path
-    	List<String> newList = Settings.getSettings().getArenaFile().getStringList("Arena-List");
-        newList.set(newList.indexOf(this.getDefaultName() + ":" + this.getName()), this.getDefaultName() + ":" + newName);
-        Settings.getSettings().getArenaFile().set("Arena-List", newList);
+        // Rename .Name to arenas new name
+        FILE.set(getPath() + "Name", newName);
 
-        // Rename the Name: path under it's default name & rename the name in memory
+        // Rename the name in memory
         setName(newName);
     	advSave();
     }
@@ -171,7 +164,7 @@ public class Arena {
         Utils.addItemsToArray(steps, isSpectateSet ? done + "spectate" + end : "spectate", isEnabled ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "set-teams" : "");
         finalString = GRAY + Joiner.on(", ").join(steps);
 
-        return isSetup() && isEnabled ? prefix + GRAY + "Complete. Arena is open!" : prefix + finalString.substring(0, finalString.lastIndexOf(","));
+        return isSetup() && isEnabled ? prefix + GRAY + "Complete. Arena is open!" : prefix + finalString;
 
     }
 
@@ -311,7 +304,6 @@ public class Arena {
 
 
     public void joinLobby(Player player, Team team) {
-        // TODO: Add wool helmet on join lobby and give wool blocks to choose team
         team = team == null ? getTeamWithLessPlayers() : team;
         lobby.put(player, team);
         Settings.getSettings().getCache().savePlayerInformation(player);

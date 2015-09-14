@@ -8,23 +8,80 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public class Team {
 
-    public static String[] LIST = new String[] {"§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§0", "§a", "§b", "§c", "§d", "§e", "§f"};
+    private static Map<ChatColor, DyeColor> dyeColors = new EnumMap<ChatColor, DyeColor>(ChatColor.class){{
+        put(ChatColor.DARK_BLUE, DyeColor.BLUE);
+        put(ChatColor.DARK_GREEN, DyeColor.GREEN);
+        put(ChatColor.DARK_AQUA, DyeColor.CYAN);
+        put(ChatColor.DARK_RED, DyeColor.RED);
+        put(ChatColor.DARK_PURPLE, DyeColor.PURPLE);
+        put(ChatColor.GOLD, DyeColor.ORANGE);
+        put(ChatColor.GRAY, DyeColor.SILVER);
+        put(ChatColor.DARK_GRAY, DyeColor.GRAY);
+        put(ChatColor.BLUE, DyeColor.LIGHT_BLUE);
+        put(ChatColor.BLACK, DyeColor.BLACK);
+        put(ChatColor.GREEN, DyeColor.LIME);
+        put(ChatColor.AQUA, DyeColor.CYAN);
+        put(ChatColor.RED, DyeColor.RED);
+        put(ChatColor.LIGHT_PURPLE, DyeColor.MAGENTA);
+        put(ChatColor.YELLOW, DyeColor.YELLOW);
+        put(ChatColor.WHITE, DyeColor.WHITE);
+    }};
+
+    private static Map<ChatColor, Color> colors = new EnumMap<ChatColor, Color>(ChatColor.class) {{
+        put(ChatColor.DARK_BLUE, NAVY);
+        put(ChatColor.DARK_GREEN, GREEN);
+        put(ChatColor.DARK_AQUA, TEAL);
+        put(ChatColor.DARK_RED, MAROON);
+        put(ChatColor.DARK_PURPLE, PURPLE);
+        put(ChatColor.GOLD, ORANGE);
+        put(ChatColor.GRAY, SILVER);
+        put(ChatColor.DARK_GRAY, GRAY);
+        put(ChatColor.BLUE, BLUE);
+        put(ChatColor.BLACK, BLACK);
+        put(ChatColor.GREEN, LIME);
+        put(ChatColor.AQUA, AQUA);
+        put(ChatColor.RED, RED);
+        put(ChatColor.LIGHT_PURPLE, FUCHSIA);
+        put(ChatColor.YELLOW, YELLOW);
+        put(ChatColor.WHITE, WHITE);
+    }};
+
+    private static Map<ChatColor, String> colorNames = new EnumMap<ChatColor, String>(ChatColor.class){{
+        put(ChatColor.DARK_BLUE, "Navy Blue");
+        put(ChatColor.DARK_GREEN, "Green");
+        put(ChatColor.DARK_AQUA, "Cyan");
+        put(ChatColor.DARK_RED, "Red");
+        put(ChatColor.DARK_PURPLE, "Purple");
+        put(ChatColor.GOLD, "Orange");
+        put(ChatColor.GRAY, "Silver");
+        put(ChatColor.DARK_GRAY, "Gray");
+        put(ChatColor.BLUE, "Blue");
+        put(ChatColor.BLACK, "Black");
+        put(ChatColor.GREEN, "Green");
+        put(ChatColor.AQUA, "Aqua");
+        put(ChatColor.RED, "light Red");
+        put(ChatColor.LIGHT_PURPLE, "Magenta");
+        put(ChatColor.YELLOW, "Yellow");
+        put(ChatColor.WHITE, "White");
+    }};
+
+
+    public static List<String> LIST = Arrays.asList("§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§0", "§a", "§b", "§c", "§d", "§e", "§f");
     private static Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
 
-    private String color;
+    private ChatColor color;
     private Arena arena;
 
-    public Team (Arena a, String color) {
+    public Team (Arena a, String colorCode) {
         this.arena = a;
-        this.color = color;
+        this.color = ChatColor.getByChar(colorCode.charAt(1));
 
         if (sb.getTeam(this.getTitleName()) == null) {
-            sb.registerNewTeam(this.getTitleName()).setPrefix(this.getChatColor());
+            sb.registerNewTeam(this.getTitleName()).setPrefix(color + "");
         }
     }
 
@@ -36,47 +93,19 @@ public class Team {
         return "Arenas." + arena.getDefaultName() + ".Team-Locations." + this.getTitleName();
     }
 
-    public String getChatColor() {
+    public ChatColor getChatColor() {
         return color;
     }
 
     public Color getColor() {
-        Color[] colors = new Color[] {Color.NAVY, GREEN, TEAL, MAROON, PURPLE, ORANGE, SILVER, GRAY, BLUE, BLACK, LIME, AQUA, RED, FUCHSIA, YELLOW, WHITE};
-        Color color = null;
-        int i = 0;
-        for (String s : LIST) {
-            if (s.toCharArray()[1] == getChatColor().toCharArray()[1]) {
-                color = colors[i];
-            }
-            i++;
-        }
-        return color;
+        return colors.get(color);
     }
 
     public String getTitleName() {
-        String color = "error";
-        String[] names = new String[] {"Navy", "Green", "Teal", "Red", "Purple", "Orange", "Silver", "Gray", "Blue", "Black", "Lime", "Aqua", "LightRed", "Magenta", "Yellow", "White"};
-        int i = 0;
-        for (String s : LIST) {
-            if (s.toCharArray()[1] == getChatColor().toCharArray()[1]) {
-                color = names[i];
-                break;
-            }
-            i++;
-        }
-        return color;
+        return colorNames.get(color);
     }
 
     public DyeColor getDyeColor() {
-        DyeColor[] colors = new DyeColor[] {DyeColor.BLUE, DyeColor.GREEN, DyeColor.CYAN, DyeColor.RED, DyeColor.PURPLE, DyeColor.ORANGE, DyeColor.SILVER, DyeColor.GRAY, DyeColor.LIGHT_BLUE, DyeColor.BLACK, DyeColor.LIME, DyeColor.CYAN, DyeColor.RED, DyeColor.MAGENTA, DyeColor.YELLOW, DyeColor.WHITE};
-        DyeColor color = null;
-        int i = 0;
-        for (String s : LIST) {
-            if (s.toCharArray()[1] == getChatColor().toCharArray()[1]) {
-                color = colors[i];
-            }
-            i++;
-        }
-        return color;
+        return dyeColors.get(color);
     }
 }

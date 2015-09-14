@@ -1,7 +1,7 @@
 package me.synapz.paintball;
 
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.ChatColor;
+import static org.bukkit.ChatColor.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Set;
@@ -20,17 +20,16 @@ public class CountdownTask extends BukkitRunnable {
     }
 
     public void run() {
+        /*
+        // TODO: If player leaves and joins fast they will get the countdown two times.
         if (counter == 0) {
-            a.broadcastMessage(ChatColor.GREEN, "Paintball Arena Started!");
-            for (PbPlayer pb : players) {
-                Utils.setAllSpeeds(pb.getPlayer(), 0.5F);
-            }
+            a.broadcastMessage(GREEN, "Paintball Arena Started!");
             this.cancel();
         } else {
             if (counter <= Settings.NO_INTERVAL || counter % Settings.INTERVAL == 0) {
-                a.broadcastMessage(ChatColor.GREEN, "Paintball starting in " + ChatColor.GRAY + counter + ChatColor.GREEN + " seconds!");
+                a.broadcastMessage(GREEN, "Paintball starting in " + GRAY + counter + GREEN + " seconds!");
             }
         }
-        counter--;
+        counter--;*/
     }
 }

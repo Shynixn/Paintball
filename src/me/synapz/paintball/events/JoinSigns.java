@@ -78,6 +78,10 @@ public class JoinSigns implements Listener {
             return;
         }
 
+        if (ArenaManager.getArenaManager().getArena(sign.getLine(1)) == null) {
+            Message.getMessenger().msg(player, ChatColor.RED, "No arena named " + sign.getLine(1) + " found.");
+            return;
+        }
         for (Arena a : ArenaManager.getArenaManager().getArenas()) {
             if (sign.getLine(1).contains(a.getName())) {
                 if (a.getStateAsString().contains("WAITING")) {
