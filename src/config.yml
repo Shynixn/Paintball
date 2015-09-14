@@ -12,7 +12,6 @@ color-player-title: true
 # This will make paintballs slash (turns surrounding blocks red/blue clay)
 paintball-splash: true
 
-<<<<<<< HEAD
 countdown:
    # Time in seconds for the round to start
    time: 15
@@ -30,9 +29,3 @@ Chat:
    spectator-chat: "&7[Spectator] %PLAYER%: %MSG%"
    # Chat format for lobby players and in game players. Tags: %ARENA%, %PLAYER%, %MSG%, %TEAMCOLOR%, %TEAMNAME%, %PREFIX%
    arena-chat: "%PREFIX%&8-%TEAMCOLOR%%TEAMNAME%&8- &a%PLAYER%&7: %MSG%"
-
-
-=======
-# Will create a line of potion effects behind paintball (red/blue) depending on team
-paintball-potion-effects: true
->>>>>>> master
