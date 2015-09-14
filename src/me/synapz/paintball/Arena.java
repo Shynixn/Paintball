@@ -23,7 +23,6 @@ public class Arena {
     private HashMap<PbPlayer, Team> inGame = new HashMap<PbPlayer, Team>();
 
     private boolean isMaxSet, isMinSet, isSpectateSet, isEnabled;
-
     private String name, currentName;
 
     String maxPath = "Max-Players";
@@ -262,11 +261,20 @@ public class Arena {
 
     public void forceStart(Player sender) {
         String reason = "";
+<<<<<<< HEAD
         if (isSetup()) {
             if (lobby.keySet().size() >= getMin()) {
                 if (state == ArenaState.WAITING) {
                     startGame();
                     Message.getMessenger().msg(sender, GREEN, "Successfully started " + this.toString());
+=======
+
+        if (isSetup() && isEnabled) {
+            if (lobbyPlayers.keySet().size() >= getMin()) {
+                if (state == ArenaState.STOPPED) {
+                    startGame();
+                    Message.getMessenger().msg(sender, ChatColor.GREEN, "Successfully started " + this.toString());
+>>>>>>> master
                     return;
                 } else if (state == ArenaState.IN_PROGRESS) {
                     reason = " is already in progress";
@@ -282,12 +290,16 @@ public class Arena {
 
     public void forceStop(Player sender) {
         if (state == ArenaState.IN_PROGRESS) {
+            state = ArenaState.STOPPED;
             this.removePlayers();
+<<<<<<< HEAD
             broadcastMessage(RED, this.toString() + RED + " has been force stopped.");
             // todo make config value to compleelty block all commands
             if (!this.containsPlayer(sender)) {
                 Message.getMessenger().msg(sender, GREEN, this.toString() + " has been force stopped.");
             }
+=======
+>>>>>>> master
             return;
         }
         Message.getMessenger().msg(sender, RED, "Cannot force stop " + this.toString(), this.toString() + RED + " is not in progress.");
@@ -303,6 +315,7 @@ public class Arena {
     }
 
 
+<<<<<<< HEAD
     public void joinLobby(Player player, Team team) {
         team = team == null ? getTeamWithLessPlayers() : team;
         lobby.put(player, team);
@@ -313,10 +326,43 @@ public class Arena {
         broadcastMessage(GREEN, team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + lobby.keySet().size() + "/" + this.getMax());
 
         if (canStart()) {
+=======
+    public void joinLobby(Player player, ArenaManager.Team team) {
+        switch (getState()) {
+            case IN_PROGRESS:
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is currently in progress.");
+                return;
+            case NOT_SETUP:
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " has not been fully setup.");
+                return;
+            case DISABLED:
+                Message.getMessenger().msg(player, ChatColor.RED, this.toString() + ChatColor.RED + " is disabled.");
+                return;
+        }
+
+        if (team == null) {
+            lobbyPlayers.put(player.getName(), getTeamWithLessPlayers());
+        } else {
+            lobbyPlayers.put(player.getName(), team);
+        }
+        ChatColor color = getTeam(player) == ArenaManager.Team.RED ? ChatColor.RED : ChatColor.BLUE;
+        // todo: store all of their past values in config
+        Settings.getSettings().getCache().savePlayerInformation(player);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setFlying(false);
+        player.setFoodLevel(20);
+        player.setHealth(20);
+        player.setFireTicks(0);
+        player.teleport(getLobbySpawn(getTeam(player)));
+        broadcastMessage(ChatColor.GREEN, color + player.getName() + ChatColor.GREEN + " has joined the arena! " + ChatColor.GRAY + this.lobbyPlayers.keySet().size() + "/" + this.getMax());
+
+        if (lobbyPlayers.keySet().size() >= this.getMin() && lobbyPlayers.keySet().size() <= this.getMax()) {
+>>>>>>> master
             this.startGame();
         }
     }
 
+<<<<<<< HEAD
     public void chat(Player player, String message) {
         String chat = Settings.ARENA_CHAT;
         if (spectators.contains(player)) {
@@ -342,6 +388,17 @@ public class Arena {
     private void startGame() {
         // Set all the player's walk speed, swim speed, and fly speed tpo 0
         Utils.countdown(this, Settings.COUNTDOWN, inGame.keySet());
+=======
+    public ArenaState getState() {
+        return state;
+    }
+
+    public void startGame() {
+        for (String p : lobbyPlayers.keySet()) {
+            Player player = Bukkit.getPlayer(p);
+            this.addPlayerToArena(player);
+        }
+>>>>>>> master
         state = ArenaState.IN_PROGRESS;
         for (Player p : lobby.keySet()) {
             this.addPlayerToArena(p);
@@ -363,6 +420,7 @@ public class Arena {
             Team.getPluginScoreboard().getTeam(getTeam(p).getTitleName()).removePlayer(p);
             Settings.getSettings().getCache().restorePlayerInformation(p.getUniqueId());
         }
+<<<<<<< HEAD
         for (Player p : spectators) {
             Team.getPluginScoreboard().getTeam(getTeam(p).getTitleName()).removePlayer(p);
             Settings.getSettings().getCache().restorePlayerInformation(p.getUniqueId());
@@ -399,6 +457,24 @@ public class Arena {
 
     public void win(Team team) {
         broadcastMessage(GREEN, "The " + team.getTitleName() + GREEN + " has won!");
+=======
+    }
+
+    public void removePlayer(Player player) {
+        players.keySet().remove(getPbPlayer(player));
+        lobbyPlayers.keySet().remove(player.getName());
+        spectators.remove(player.getName());
+        Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
+
+        if (players.keySet().size() == 1) {
+            PbPlayer pbPlayer = (PbPlayer) players.keySet().toArray()[0];
+            win(getTeam((pbPlayer.getPlayer())));
+            players.keySet().remove(pbPlayer);
+            state = ArenaState.STOPPED;
+        }
+        // TODO: test if works
+        // todo: shut off arena if everyone left
+>>>>>>> master
     }
 
     public PbPlayer getPbPlayer(Player player) {
@@ -408,6 +484,12 @@ public class Arena {
             }
         }
         return null;
+    }
+
+    public void win(ArenaManager.Team team) {
+        // TODO doesnt tp back to spawn
+        String winner = team == ArenaManager.Team.RED ? ChatColor.RED + "Red Team" : ChatColor.BLUE + "Blue Team";
+        broadcastMessage(ChatColor.GREEN, "The " + winner + ChatColor.GREEN + " has won!");
     }
 
     private void addPlayerToArena(Player player) {
@@ -430,6 +512,7 @@ public class Arena {
         }
     }
 
+<<<<<<< HEAD
     private Team getTeamWithLessPlayers() {
         // Make new HashMap with Team to Size, this way we can easily extract the largest size
         HashMap<Team, Integer> size = new HashMap<Team, Integer>();
@@ -441,11 +524,21 @@ public class Arena {
                     size.put(t, size.get(t)+1);
                 }
             }
+=======
+    private ArenaManager.Team getTeamWithLessPlayers() {
+        int red = 0, blue = 0;
+        for (String p : lobbyPlayers.keySet()) {
+            if (lobbyPlayers.get(p) == ArenaManager.Team.RED)
+                red++;
+            else
+                blue++;
+>>>>>>> master
         }
 
         return Utils.max(this, size);
     }
 
+<<<<<<< HEAD
     private boolean canStart() {
         int size = lobby.keySet().size();
         return size >= this.getMin() && size <= this.getMax();
@@ -496,6 +589,8 @@ public class Arena {
         }
     }
 
+=======
+>>>>>>> master
     private void advSave() {
         Settings.getSettings().saveArenaFile();
         /**

@@ -101,6 +101,7 @@ public class Settings {
 
         // arena values
         SPLASH_PAINTBALLS   = configFile.getBoolean("paintball-splash");
+<<<<<<< HEAD
         COLOR_PLAYER_TITLE  = configFile.getBoolean("color-player-title");
         WOOL_HELMET         = configFile.getBoolean("give-wool-helmet");
         DEBUG               = configFile.getBoolean("debug-messages");
@@ -111,6 +112,10 @@ public class Settings {
         // TODO: add stats tag to config.yml chts
         SPEC_CHAT   = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.spectator-chat"));
         ARENA_CHAT  = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.arena-chat"));
+=======
+        COLOR_PLAYER_TITLE       = configFile.getBoolean("color-player-title");
+        WOOL_HELMET         = configFile.getBoolean("give-wool-helmet");
+>>>>>>> master
     }
 
 

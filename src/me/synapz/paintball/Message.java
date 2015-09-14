@@ -5,7 +5,10 @@ import me.synapz.paintball.commands.Command;
 import me.synapz.paintball.storage.Settings;
 import static org.bukkit.ChatColor.*;
 
+<<<<<<< HEAD
 import org.bukkit.Bukkit;
+=======
+>>>>>>> master
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -62,7 +65,11 @@ public class Message {
         if (!playerMenu) {
             title += " Admin";
         }
+<<<<<<< HEAD
         return Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "                    " + RESET + Settings.getSettings().getTheme() + " " + title + " " + Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "                    ";
+=======
+        return Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "               " + RESET + Settings.getSettings().getTheme() + " " + title + " " + Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "               ";
+>>>>>>> master
     }
 
     public enum Usage {
