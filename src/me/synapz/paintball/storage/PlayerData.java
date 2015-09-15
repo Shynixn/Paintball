@@ -19,34 +19,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class CacheFile {
+public final class PlayerData extends PaintballFile {
 
     FileConfiguration cache;
-    File cacheFile;
 
-    public CacheFile(Plugin pb) {
-        cacheFile = new File(pb.getDataFolder(), "cache.yml");
+    public PlayerData(Plugin pb) {
+        super(pb, "cache.yml");
 
-        if (!cacheFile.exists()) {
-            try {
-                cacheFile.createNewFile();
-            }
-            catch (IOException e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "", "Could not create cache.yml. Stack trace: ");
-                e.printStackTrace();
-            }
-        }
-        cache = YamlConfiguration.loadConfiguration(cacheFile);
-        saveCacheFile();
-    }
-
-    public void saveCacheFile() {
-        try {
-            cache.save(cacheFile);
-        }catch (Exception e) {
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Could not save cache.yml.", "", "Stack trace" );
-            e.printStackTrace();
-        }
+        this.cache = getFileConfig();
     }
 
     public void savePlayerInformation(Player player) {
@@ -59,7 +39,7 @@ public class CacheFile {
         cache.set(id + ".Inventory", Utils.getInventoryList(player, false));
         cache.set(id + ".Armour", Utils.getInventoryList(player, true));
 
-        saveCacheFile();
+        saveFile();
     }
 
     public void restorePlayerInformation(UUID id) {
@@ -73,7 +53,7 @@ public class CacheFile {
         player.setGameMode(Utils.getLastGameMode(cache.getInt(id + ".GameMode")));
 
         cache.set(id.toString(), null);
-        saveCacheFile();
+        saveFile();
     }
 
     private ItemStack[] getLastInventoryContents(UUID id, String path) {

@@ -8,7 +8,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class Settings {
     
     private Plugin pb;
     private FileConfiguration arena;
-    private CacheFile cache;
+    private PlayerData cache;
     private File aFile;
     
     public static int COUNTDOWN, INTERVAL, NO_INTERVAL;
@@ -66,7 +65,7 @@ public class Settings {
         
         
         arena = YamlConfiguration.loadConfiguration(aFile);
-        cache = new CacheFile(pb);
+        cache = new PlayerData(pb);
         
         loadValues(pb.getConfig(), pb.getDescription());
     }
@@ -86,7 +85,7 @@ public class Settings {
         }
     }
     
-    public CacheFile getCache() {
+    public PlayerData getCache() {
         return cache;
     }
     

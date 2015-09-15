@@ -2,11 +2,10 @@ package me.synapz.paintball;
 
 import me.synapz.paintball.commands.CommandManager;
 
-import me.synapz.paintball.events.ChatSystem;
-import me.synapz.paintball.events.JoinSigns;
-import me.synapz.paintball.events.Listeners;
-import me.synapz.paintball.events.PaintballShoot;
+import me.synapz.paintball.events.*;
+import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.storage.Statistics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +15,8 @@ public class Paintball extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        new PlayerData(this);
+        new Statistics(this);
         Settings.getSettings();
         ArenaManager.getArenaManager().setup();
         CommandManager commandManager = new CommandManager();
@@ -23,8 +24,9 @@ public class Paintball extends JavaPlugin {
 
         Bukkit.getServer().getPluginManager().registerEvents(new PaintballShoot(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
+        // Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ChatSystem(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new LeaderboardSigns(), this);
 
         getCommand("paintball").setExecutor(commandManager);
     }

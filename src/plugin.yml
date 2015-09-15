@@ -1,9 +1,8 @@
 name: Paintball
 version: Beta_3
-description: Paintball Minigame.
+description: Paintball Minigame
 author: Synapz_
 main: me.synapz.paintball.Paintball
-database: false
 website: NotAdded2bukkit.yet/sorry
 
 commands:
