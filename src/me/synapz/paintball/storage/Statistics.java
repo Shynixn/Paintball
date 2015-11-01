@@ -2,6 +2,7 @@ package me.synapz.paintball.storage;
 
 import me.synapz.paintball.StatType;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -51,7 +52,11 @@ public final class Statistics extends PaintballFile {
         saveFile();
     }
 
-    public String getPlayerAtRank(int rank, StatType type) {
+    public HashMap<String, String> getPlayerAtRank(int rank, StatType type) {
+        HashMap<String, String> result = new HashMap<String, String>() {{
+            put("Unknown", "");
+        }};
+
         Map<String, Integer> uuidList = new HashMap<String, Integer>();
 
         for (String uuid : getFileConfig().getConfigurationSection("Stats").getKeys(false)) {
@@ -63,20 +68,27 @@ public final class Statistics extends PaintballFile {
         }
         Collections.sort(ints);
         Collections.reverse(ints);
-        if (ints.size() < rank) {
-            return "No player found.";
+        if (ints.size()-1 < rank) {
+            return result;
         }
         for (String uuid : getFileConfig().getConfigurationSection("Stats").getKeys(false)) {
             int i = uuidList.get(uuid);
-            if (ints.get(rank-1) == i) {
+            if (ints.get(rank) == i) {
+                result.clear(); // remove all entries so we know there will only be 1 set of things returning
                 if (Bukkit.getPlayer(uuid) == null) {
-                    return Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
+                    String name = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
+                    String score = getFileConfig().getString(type.getPath(uuid));
+                    result.put(name == null ? "Unknown" : name, score == null ? "" : score);
+                    return result;
                 } else {
-                    return Bukkit.getPlayer(UUID.fromString(uuid)).getName();
+                    String name = Bukkit.getPlayer(UUID.fromString(uuid)).getName();
+                    String score = getFileConfig().getString(type.getPath(uuid));
+                    result.put(name == null ? "Unknown" : name, score == null ? "" : score);
+                    return result;
                 }
             }
         }
-        return "No player found.";
+        return result;
     }
 
     private void checkIfToAdd(UUID id) {

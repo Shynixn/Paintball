@@ -24,7 +24,7 @@ public class Paintball extends JavaPlugin {
 
         Bukkit.getServer().getPluginManager().registerEvents(new PaintballShoot(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
-        // Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ChatSystem(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new LeaderboardSigns(), this);
 

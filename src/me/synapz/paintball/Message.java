@@ -48,6 +48,16 @@ public class Message {
             return false;
         }
     }
+
+    // TODO: make this better!!
+    public boolean signPermissionValidator(Player player, String permission) {
+        if (player.hasPermission(permission)) {
+            return true;
+        } else {
+            msg(player, RED, "You don't have access to create that sign!");
+            return false;
+        }
+    }
     
     public void wrongUsage(Command command, Player player, Usage usage) {
         if (usage.equals(Usage.TO_MANY_ARGS)) {

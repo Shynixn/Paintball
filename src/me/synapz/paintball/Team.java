@@ -63,7 +63,7 @@ public class Team {
         put(ChatColor.BLACK, "Black");
         put(ChatColor.GREEN, "Green");
         put(ChatColor.AQUA, "Aqua");
-        put(ChatColor.RED, "light Red");
+        put(ChatColor.RED, "Light Red");
         put(ChatColor.LIGHT_PURPLE, "Magenta");
         put(ChatColor.YELLOW, "Yellow");
         put(ChatColor.WHITE, "White");

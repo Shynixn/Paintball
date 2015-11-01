@@ -58,7 +58,11 @@ public class Utils {
 
     public static boolean nullCheck(String arenaName, Arena arena, Player sender) {
         if (arena == null) {
-            Message.getMessenger().msg(sender, ChatColor.RED, arenaName + " is an invalid arena.");
+            String error = arenaName + " is an invalid arena.";
+            if (arenaName.isEmpty()) {
+                error = "Enter an arena on line 3.";
+            }
+            Message.getMessenger().msg(sender, ChatColor.RED, error);
             return false;
         } else {
             return true;

@@ -142,6 +142,7 @@ public class ArenaManager {
         }
     }
 
+    // TODO: also store leaderboard signs...
     public void storeSignLocation(Location loc, Arena a) {
         List<String> signsList = Settings.getSettings().getArenaFile().getStringList(a.getPath() + "Sign-Locs");
         String locString = loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();

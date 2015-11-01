@@ -21,9 +21,9 @@ public class JoinSigns implements Listener {
     @EventHandler
     public void onSignCreate(SignChangeEvent e) {
         // paintball.sign.use
-        if (e.getLines().length == 0 || e.getLines().length >= 1 && !e.getLine(0).contains("pb")) return;
+        if (e.getLines().length == 0 || !e.getLine(0).equalsIgnoreCase("pb") || e.getLine(1).equalsIgnoreCase("lb")) return;
 
-        if (e.getLine(1).equalsIgnoreCase("autojoin") == false && e.getLine(1).equalsIgnoreCase("join") == false) {
+        if (!e.getLine(1).equalsIgnoreCase("autojoin") && !e.getLine(1).equalsIgnoreCase("join")) {
             Message.getMessenger().msg(e.getPlayer(), ChatColor.RED, "Wrong syntax for creating Paintball sign.", "For more information: " + Settings.getSettings().getWebsite());
             e.getBlock().breakNaturally();
             return;
@@ -59,12 +59,12 @@ public class JoinSigns implements Listener {
 
     @EventHandler
     public void onArenaTryToJoinOnClick(PlayerInteractEvent e) {
-        // paintball.sign.create
-        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || !(e.getClickedBlock().getType() == Material.SIGN) && !(e.getClickedBlock().getType() != Material.SIGN_POST)) return;
+        System.out.println(e.getClickedBlock().getType());
+        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN) return;
         if (!(e.getClickedBlock().getState() instanceof Sign)) return;
         Sign sign = (Sign) e.getClickedBlock().getState();
         Player player = e.getPlayer();
-
+        System.out.println("testtt");
         if (!sign.getLine(0).contains("Paintball") || sign.getLine(1) == null) return;
 
         if (sign.getLine(1).equals(ChatColor.GREEN + "Auto Join")) {
@@ -101,6 +101,7 @@ public class JoinSigns implements Listener {
         Sign sign = (Sign) e.getBlock().getState();
 
         if (!(sign.getLine(0).contains("Paintball"))) return;
+        // todo: replace with other permission validator
         if (!(e.getPlayer().hasPermission("paintball.sign.destroy"))) Message.getMessenger().msg(e.getPlayer(), ChatColor.RED, "You do not have permission to destroy Paintball signs!");
         // make sure it is a join sign and not a auto-join sign by making sure it has an Arena state
         boolean joinSign = false;
@@ -117,6 +118,7 @@ public class JoinSigns implements Listener {
         }
     }
 
+    // todo: remove this and implement better time check, maybe every time a State
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         for (Arena a : ArenaManager.getArenaManager().getArenas()) {
