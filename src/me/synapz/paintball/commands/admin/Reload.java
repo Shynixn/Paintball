@@ -11,7 +11,7 @@ public class Reload extends Command {
 
     public void onCommand(Player player, String[] args) {
         Settings.getSettings().reloadConfig();
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully reloaded configuration files.");
+        Message.getMessenger().msg(player, false, ChatColor.GREEN, "Successfully reloaded configuration files.");
     }
 
     public String getName() {

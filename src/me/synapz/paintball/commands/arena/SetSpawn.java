@@ -1,7 +1,8 @@
-package me.synapz.paintball.commands.admin;
+package me.synapz.paintball.commands.arena;
 
 
 import me.synapz.paintball.*;
+import me.synapz.paintball.Arena;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -14,7 +15,7 @@ public class SetSpawn extends Command {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
         if (arena == null) {
-            Message.getMessenger().msg(player, ChatColor.RED, args[2] + " is an invalid arena.");
+            Message.getMessenger().msg(player, false, ChatColor.RED, args[2] + " is an invalid arena.");
             return;
         }
         Team team = Utils.stringToTeam(arena, args[3]);
@@ -22,7 +23,7 @@ public class SetSpawn extends Command {
 
         if (teamCheck(arena, args[3], player)) {
             arena.setArenaSpawn(spawn, team);
-            Message.getMessenger().msg(player, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " spawn for " + arena.toString() + " set!", arena.getSteps());
+            Message.getMessenger().msg(player, false, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " spawn for " + arena.toString() + " set!", arena.getSteps());
         }
     }
 
@@ -32,7 +33,7 @@ public class SetSpawn extends Command {
     }
 
     public String getPermission() {
-        return "paintball.admin.setspawn";
+        return "paintball.arena.setspawn";
     }
 
     public String getName() {
@@ -40,11 +41,11 @@ public class SetSpawn extends Command {
     }
 
     public String getInfo() {
-        return "Set spawnpoint";
+        return "Set a team spawnpoint";
     }
 
     public CommandType getCommandType() {
-        return CommandType.ADMIN;
+        return CommandType.ARENA;
     }
 
     public int getMaxArgs() {

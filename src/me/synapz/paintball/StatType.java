@@ -8,8 +8,11 @@ public enum StatType {
     DEATHS("Deaths", ".Deaths", "deaths"),
     HIGEST_KILL_STREAK("Highest Killstreak", ".Highest-Kill-Streak", "killstreak"),
     GAMES_PLAYED("Games Played", ".Games-Played", "gamesplayed"),
-    WON("Won", ".Won", "won"),
-    LOST("Lost", ".Lost", "lost");
+    WINS("Wins", ".Wins", "wins"),
+    DEFEATS("Defeats", ".Defeats", "defeats"),
+    SHOTS("Shots", ".Shots", "shots"),
+    HITS("Hits", ".Hits", "hits"),
+    ACCURACY("Accuracy", ".Accuracy", "accuracy");
 
     private String name;
     private String path;
@@ -35,5 +38,15 @@ public enum StatType {
 
     public String getSignName() {
         return this.sign;
+    }
+
+    public static String getReadableList() {
+        StringBuilder values = new StringBuilder();
+
+        for (StatType stat : StatType.values()) {
+            values.append(stat.getSignName() + ", ");
+        }
+        values.replace(values.lastIndexOf(","), values.length()-1, "");
+        return values.toString();
     }
 }

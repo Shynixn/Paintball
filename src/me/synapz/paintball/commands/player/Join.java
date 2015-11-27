@@ -13,7 +13,7 @@ public class Join extends Command {
         Team team = null;
 
         if (arena == null) {
-            Message.getMessenger().msg(player, ChatColor.RED, "Invalid arena.");
+            Message.getMessenger().msg(player, false, ChatColor.RED, "Invalid arena.");
             return;
         }
 
@@ -27,19 +27,19 @@ public class Join extends Command {
 
         for (Arena a : ArenaManager.getArenaManager().getArenas()) {
             if (a.containsPlayer(player)) {
-                Message.getMessenger().msg(player, ChatColor.RED, "You are already in " + a.toString() + ChatColor.RED + ".");
+                Message.getMessenger().msg(player, false, ChatColor.RED, "You are already in " + a.toString() + ChatColor.RED + ".");
                 return;
             }
         }
         switch (arena.getState()) {
             case IN_PROGRESS:
-                Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently in progress.");
+                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently in progress.");
                 return;
             case NOT_SETUP:
-                Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been fully setup.");
+                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been fully setup.");
                 return;
             case DISABLED:
-                Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " is disabled.");
+                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is disabled.");
                 return;
             default:
                 break;

@@ -16,15 +16,15 @@ public class Spectate extends Command{
         if (Utils.nullCheck(args[1], arena, player)) {
             switch (arena.getState()) {
                 case NOT_SETUP:
-                    Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been fully setup.");
+                    Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been fully setup.");
                     return;
                 case DISABLED:
-                    Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " is disabled.");
+                    Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is disabled.");
                     return;
                 default:
                     break;
             }
-            Message.getMessenger().msg(player, ChatColor.GREEN, "Joining " + arena.toString() + " spectate zone.");
+            Message.getMessenger().msg(player, true, ChatColor.GREEN, "Joining " + arena.toString() + " spectate zone.");
             arena.joinSpectate(player);
         }
     }

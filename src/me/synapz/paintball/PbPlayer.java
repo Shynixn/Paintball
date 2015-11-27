@@ -24,6 +24,10 @@ public class PbPlayer {
     Player player;
     Team team;
     Arena arena;
+
+    boolean won = false;
+    int killstreak = 0;
+    int killcoins = 0;
     
     public PbPlayer(Player p, Team t, Arena a) {
         this.player = p;
@@ -63,7 +67,20 @@ public class PbPlayer {
     // todo: make a list of projectiles to pick from, rile, snowball etc and put paramters here
     public void launchProjectile() {
         // todo:make spawn faster
+        // todo: if hit incriemtn hit
         player.launchProjectile(Snowball.class).setVelocity(player.getLocation().getDirection().multiply(3));
+    }
+
+    public void endMatch() {
+        // todo: check if lost or soemthin
+    }
+
+    public int getKillstreak() {
+        return killstreak;
+    }
+
+    public boolean ifWon() {
+        return won;
     }
     
     private void initPlayer() {

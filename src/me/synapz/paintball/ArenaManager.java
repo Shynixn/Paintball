@@ -86,7 +86,7 @@ public class ArenaManager {
         List<String> list = new ArrayList<String>();
 
         if (getArenas().size() == 0) {
-            Message.getMessenger().msg(player, BLUE, "There are currently no arenas.");
+            Message.getMessenger().msg(player, false, BLUE, "There are currently no arenas.");
             return;
         }
 
@@ -114,7 +114,7 @@ public class ArenaManager {
         }
 
         String out = Joiner.on(GRAY + ", ").join(list);
-        Message.getMessenger().msg(player, GRAY, BLUE + "Arenas: " + out,
+        Message.getMessenger().msg(player, false, GRAY, BLUE + "Arenas: " + out,
                 GREEN + "█-" + GRAY + "Joinable " + RED + "█-" + GRAY + "InProgress " + GRAY + "█-" + GRAY + "Disabled/Not-Setup");
     }
 
@@ -135,7 +135,7 @@ public class ArenaManager {
                 // set the value of that arena
                 a.loadValues(file);
             }catch (Exception e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), false, RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
                 e.printStackTrace();
             }
             arenas.add(a);

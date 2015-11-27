@@ -1,6 +1,7 @@
 package me.synapz.paintball.storage;
 
 
+import com.connorlinfoot.titleapi.TitleAPI;
 import me.synapz.paintball.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,6 +12,8 @@ import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Settings {
     
@@ -23,8 +26,9 @@ public class Settings {
     
     public static int COUNTDOWN, INTERVAL, NO_INTERVAL;
     private String prefix, version, theme, website, author, secondary;
+    private Map<ChatColor, String> teamNames = new HashMap<ChatColor, String>();
     public static String ARENA_CHAT, SPEC_CHAT;
-    public static boolean SPLASH_PAINTBALLS, COLOR_PLAYER_TITLE, WOOL_HELMET, DEBUG;
+    public static boolean SPLASH_PAINTBALLS, COLOR_PLAYER_TITLE, WOOL_HELMET, TITLE_API;
     
     public Settings(Plugin plugin) {
         if (settings == null) {
@@ -49,6 +53,8 @@ public class Settings {
         }
         
         this.pb = pb;
+
+        // TODO: always says error on reload/start
         pb.saveResource("config.yml", false);
         
         aFile = new File(pb.getDataFolder(), "arenas.yml");
@@ -58,7 +64,7 @@ public class Settings {
                 aFile.createNewFile();
             }
             catch (IOException e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "", "Could not create arenas.yml. Stack trace: ");
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "", "Could not create arenas.yml. Stack trace: ");
                 e.printStackTrace();
             }
         }
@@ -80,7 +86,7 @@ public class Settings {
         try {
             arena.save(aFile);
         }catch (Exception e) {
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Could not save arenas.yml.", "", "Stack trace" );
+            Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Could not save arenas.yml.", "", "Stack trace" );
             e.printStackTrace();
         }
     }
@@ -102,11 +108,15 @@ public class Settings {
         SPLASH_PAINTBALLS   = configFile.getBoolean("paintball-splash");
         COLOR_PLAYER_TITLE  = configFile.getBoolean("color-player-title");
         WOOL_HELMET         = configFile.getBoolean("give-wool-helmet");
-        DEBUG               = configFile.getBoolean("debug-messages");
         COUNTDOWN           = configFile.getInt("countdown.time");
         INTERVAL            = configFile.getInt("countdown.interval");
         NO_INTERVAL         = configFile.getInt("countdown.no-interval");
-        
+        TITLE_API           = configFile.getBoolean("title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
+
+        for (String colorcode : configFile.getConfigurationSection("Teams").getKeys(false)) {
+            teamNames.put(ChatColor.getByChar(colorcode), configFile.getString("Teams." + colorcode) + "");
+        }
+
         // TODO: add stats tag to config.yml chts
         SPEC_CHAT   = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.spectator-chat"));
         ARENA_CHAT  = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.arena-chat"));
@@ -121,7 +131,11 @@ public class Settings {
         String output = prefix == null ? ChatColor.DARK_GRAY + "[" + ChatColor.AQUA + "Paintball" + ChatColor.DARK_GRAY + "] " : prefix + " ";
         return output;
     }
-    
+
+    public Map<ChatColor, String> getTeamNames() {
+        return teamNames;
+    }
+
     public String getVersion() {
         return version;
     }

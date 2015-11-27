@@ -14,8 +14,8 @@ public class Info extends Command{
         String version = Settings.getSettings().getVersion();
         String website = Settings.getSettings().getWebsite();
         String author = Settings.getSettings().getAuthor();
-        player.sendMessage(Message.getMessenger().getHelpTitle(false));
-        Message.getMessenger().msg(player, ChatColor.DARK_AQUA, "Version: " + g + version, "Website: " + g + website, "Author: " + g + author);
+        player.sendMessage(Message.getMessenger().getHelpTitle(CommandType.PLAYER));
+        Message.getMessenger().msg(player, false, ChatColor.DARK_AQUA, "Version: " + g + version, "Website: " + g + website, "Author: " + g + author);
     }
 
     public String getArgs() {

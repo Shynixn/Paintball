@@ -26,6 +26,7 @@ public class CountdownTask extends BukkitRunnable {
             a.broadcastMessage(GREEN, "Paintball Arena Started!");
             this.cancel();
         } else {
+            // todo: add title API here too
             if (counter <= Settings.NO_INTERVAL || counter % Settings.INTERVAL == 0) {
                 a.broadcastMessage(GREEN, "Paintball starting in " + GRAY + counter + GREEN + " seconds!");
             }

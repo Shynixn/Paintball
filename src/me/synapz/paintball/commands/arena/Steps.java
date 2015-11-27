@@ -1,4 +1,4 @@
-package me.synapz.paintball.commands.admin;
+package me.synapz.paintball.commands.arena;
 
 
 import me.synapz.paintball.Message;
@@ -15,7 +15,7 @@ public class Steps extends Command{
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
         if (Utils.nullCheck(args[2], arena, player)) {
-            Message.getMessenger().msg(player, ChatColor.GRAY, arena.getSteps());
+            Message.getMessenger().msg(player, false, ChatColor.GRAY, arena.getSteps());
         }
     }
 
@@ -25,7 +25,7 @@ public class Steps extends Command{
     }
 
     public String getPermission() {
-        return "paintball.admin.steps";
+        return "paintball.arena.steps";
     } // gives access to enable + disable
 
     public String getName() {
@@ -37,7 +37,7 @@ public class Steps extends Command{
     }
 
     public Command.CommandType getCommandType() {
-        return Command.CommandType.ADMIN;
+        return Command.CommandType.ARENA;
     }
 
     public int getMaxArgs() {

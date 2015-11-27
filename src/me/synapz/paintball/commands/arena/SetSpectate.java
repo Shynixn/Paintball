@@ -1,4 +1,4 @@
-package me.synapz.paintball.commands.admin;
+package me.synapz.paintball.commands.arena;
 
 
 import me.synapz.paintball.Message;
@@ -16,7 +16,7 @@ public class SetSpectate extends Command {
 
         if (Utils.nullCheck(args[2], arena, player)) {
             arena.setSpectateLoc(player.getLocation());
-            Message.getMessenger().msg(player, ChatColor.GREEN, arena.toString() + ChatColor.GREEN + " spectate location set!", arena.getSteps());
+            Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + ChatColor.GREEN + " spectate location set!", arena.getSteps());
         }
     }
 
@@ -26,7 +26,7 @@ public class SetSpectate extends Command {
     }
 
     public String getPermission() {
-        return "paintball.admin.setspectate";
+        return "paintball.arena.setspectate";
     }
 
     public String getName() {
@@ -38,7 +38,7 @@ public class SetSpectate extends Command {
     }
 
     public CommandType getCommandType() {
-        return CommandType.ADMIN;
+        return CommandType.ARENA;
     }
 
     public int getMaxArgs() {

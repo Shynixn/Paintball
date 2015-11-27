@@ -16,12 +16,12 @@ public class LeaveArena extends Command {
             a = ArenaManager.getArenaManager().getArena(player);
             a.getName(); // used to see if it returns null
         }catch (NullPointerException e) {
-            Message.getMessenger().msg(player, ChatColor.RED, "You are not in an arena.");
+            Message.getMessenger().msg(player, false, ChatColor.RED, "You are not in an arena.");
             return;
         }
 
         a.leave(player);
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully left arena.");
+        Message.getMessenger().msg(player, true, ChatColor.GREEN, "Successfully left arena.");
     }
 
     public String getArgs() {

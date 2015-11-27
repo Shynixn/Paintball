@@ -24,7 +24,7 @@ public class JoinSigns implements Listener {
         if (e.getLines().length == 0 || !e.getLine(0).equalsIgnoreCase("pb") || e.getLine(1).equalsIgnoreCase("lb")) return;
 
         if (!e.getLine(1).equalsIgnoreCase("autojoin") && !e.getLine(1).equalsIgnoreCase("join")) {
-            Message.getMessenger().msg(e.getPlayer(), ChatColor.RED, "Wrong syntax for creating Paintball sign.", "For more information: " + Settings.getSettings().getWebsite());
+            Message.getMessenger().msg(e.getPlayer(), false, ChatColor.RED, "Wrong syntax for creating Paintball sign.", "For more information: " + Settings.getSettings().getWebsite());
             e.getBlock().breakNaturally();
             return;
         }
@@ -32,7 +32,7 @@ public class JoinSigns implements Listener {
         String prefix = ChatColor.DARK_GRAY + "[" + Settings.getSettings().getTheme() + "Paintball" + ChatColor.DARK_GRAY + "]";
         // For Auto joining
         if (e.getLine(1).equalsIgnoreCase("autojoin")) {
-            Message.getMessenger().msg(e.getPlayer(), ChatColor.GREEN, "Auto Join sign successfully created!");
+            Message.getMessenger().msg(e.getPlayer(), false, ChatColor.GREEN, "Auto Join sign successfully created!");
             e.setLine(0, prefix);
             e.setLine(1, ChatColor.GREEN + "Auto Join");
             e.setLine(2, "");
@@ -48,7 +48,7 @@ public class JoinSigns implements Listener {
                 e.setLine(1, a.getName());
                 e.setLine(2, a.getStateAsString());
                 e.setLine(3, "");
-                Message.getMessenger().msg(e.getPlayer(), ChatColor.GREEN, a.toString() + " join sign successfully created!");
+                Message.getMessenger().msg(e.getPlayer(), false, ChatColor.GREEN, a.toString() + " join sign successfully created!");
                 ArenaManager.getArenaManager().storeSignLocation(e.getBlock().getLocation(), a);
             } else {
                 e.getBlock().breakNaturally();
@@ -74,12 +74,12 @@ public class JoinSigns implements Listener {
                     return;
                 }
             }
-            Message.getMessenger().msg(player, ChatColor.RED, "No arenas are currently opened.");
+            Message.getMessenger().msg(player, false, ChatColor.RED, "No arenas are currently opened.");
             return;
         }
 
         if (ArenaManager.getArenaManager().getArena(sign.getLine(1)) == null) {
-            Message.getMessenger().msg(player, ChatColor.RED, "No arena named " + sign.getLine(1) + " found.");
+            Message.getMessenger().msg(player, false, ChatColor.RED, "No arena named " + sign.getLine(1) + " found.");
             return;
         }
         for (Arena a : ArenaManager.getArenaManager().getArenas()) {
@@ -88,7 +88,7 @@ public class JoinSigns implements Listener {
                     a.joinLobby(player, null);
                     return;
                 } else {
-                    Message.getMessenger().msg(player, ChatColor.RED, a.toString() + ChatColor.RED + " is not available to join!");
+                    Message.getMessenger().msg(player, false, ChatColor.RED, a.toString() + ChatColor.RED + " is not available to join!");
                 }
             }
         }
@@ -102,7 +102,7 @@ public class JoinSigns implements Listener {
 
         if (!(sign.getLine(0).contains("Paintball"))) return;
         // todo: replace with other permission validator
-        if (!(e.getPlayer().hasPermission("paintball.sign.destroy"))) Message.getMessenger().msg(e.getPlayer(), ChatColor.RED, "You do not have permission to destroy Paintball signs!");
+        if (!(e.getPlayer().hasPermission("paintball.sign.destroy"))) Message.getMessenger().msg(e.getPlayer(), false, ChatColor.RED, "You do not have permission to destroy Paintball signs!");
         // make sure it is a join sign and not a auto-join sign by making sure it has an Arena state
         boolean joinSign = false;
         for (Arena.ArenaState state : Arena.ArenaState.values()) {
@@ -114,7 +114,7 @@ public class JoinSigns implements Listener {
         if (joinSign) {
             Arena a = ArenaManager.getArenaManager().getArena(sign.getLine(1));
             ArenaManager.getArenaManager().removeSignLocation(sign.getLocation(), a);
-            Message.getMessenger().msg(e.getPlayer(), ChatColor.GREEN, a.toString() + "'s join sign has been successfully removed!");
+            Message.getMessenger().msg(e.getPlayer(), false, ChatColor.GREEN, a.toString() + "'s join sign has been successfully removed!");
         }
     }
 

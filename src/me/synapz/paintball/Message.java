@@ -1,6 +1,7 @@
 package me.synapz.paintball;
 
 
+import com.connorlinfoot.titleapi.TitleAPI;
 import me.synapz.paintball.commands.Command;
 import me.synapz.paintball.storage.Settings;
 import static org.bukkit.ChatColor.*;
@@ -14,7 +15,7 @@ import java.util.logging.Level;
 
 public class Message {
     
-    
+    // TODO remove static, it's really not needed...
     // determined default values
     public static final String NO_PERMS = "You don't have access to that command!";
     
@@ -23,20 +24,29 @@ public class Message {
     public static Message getMessenger() {
         return instance;
     }
-    
-    public void msg(CommandSender sender, ChatColor color, String... msg){
+
+    // TODO: remove duplicated code
+    public void msg(CommandSender sender, boolean titleAPI, ChatColor color, String... msg){
         String[] messages = msg;
         
         for (String string : messages) {
+            if (titleAPI && Settings.TITLE_API && sender instanceof Player) {
+                TitleAPI.sendTitle((Player)sender, 10, 10, 10, Settings.getSettings().getPrefix(), string);
+                TitleAPI.sendTabTitle((Player) sender,"t","t");
+            }
             sender.sendMessage(Settings.getSettings().getPrefix() + color + string);
         }
     }
-    
-    public void debug(String... msg) {
-        if (Settings.DEBUG) {
-            for (String string : msg) {
-                Bukkit.getPluginManager().getPlugin("Paintball").getLogger().log(Level.INFO, string);
+
+    public void msg(CommandSender sender, boolean prefix, boolean titleAPI, String... msg){
+        String[] messages = msg;
+        String strPrefix = prefix ? Settings.getSettings().getPrefix() : "";
+        for (String string : messages) {
+            if (titleAPI && Settings.TITLE_API && sender instanceof Player) {
+                TitleAPI.sendTitle((Player)sender, 10, 10, 10, Settings.getSettings().getPrefix(), string);
+                TitleAPI.sendTabTitle((Player) sender,"t","t");
             }
+            sender.sendMessage(strPrefix + string);
         }
     }
     
@@ -44,7 +54,7 @@ public class Message {
         if (player.hasPermission(permission)) {
             return true;
         } else {
-            msg(player, RED, NO_PERMS);
+            msg(player, false, RED, NO_PERMS);
             return false;
         }
     }
@@ -54,23 +64,25 @@ public class Message {
         if (player.hasPermission(permission)) {
             return true;
         } else {
-            msg(player, RED, "You don't have access to create that sign!");
+            msg(player, false, RED, "You don't have access to create that sign!");
             return false;
         }
     }
     
     public void wrongUsage(Command command, Player player, Usage usage) {
         if (usage.equals(Usage.TO_MANY_ARGS)) {
-            Message.getMessenger().msg(player, RED, "To many arguments!", command.getCorrectUsage(command));
+            Message.getMessenger().msg(player, false, RED, "To many arguments!", command.getCorrectUsage(command));
         } else {
-            Message.getMessenger().msg(player, RED, "Not enough arguments!", command.getCorrectUsage(command));
+            Message.getMessenger().msg(player, false, RED, "Not enough arguments!", command.getCorrectUsage(command));
         }
     }
     
-    public String getHelpTitle(boolean playerMenu) {
+    public String getHelpTitle(Command.CommandType type) {
         String title = "Paintball";
-        if (!playerMenu) {
+        if (type == Command.CommandType.ADMIN) {
             title += " Admin";
+        } else if (type == Command.CommandType.ARENA) {
+            title += " Arena";
         }
         return Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "                    " + RESET + Settings.getSettings().getTheme() + " " + title + " " + Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "                    ";
     }

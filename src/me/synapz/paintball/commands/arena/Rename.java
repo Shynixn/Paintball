@@ -1,4 +1,4 @@
-package me.synapz.paintball.commands.admin;
+package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
@@ -21,14 +21,14 @@ public class Rename extends Command{
 		        try {
 		            Arena a = ArenaManager.getArenaManager().getArena(args[3]);
                     a.getName();
-		            Message.getMessenger().msg(player, ChatColor.RED, "An arena named " + newName + " already exists!");
+		            Message.getMessenger().msg(player, false, ChatColor.RED, "An arena named " + newName + " already exists!");
 		            return;
 		        }catch (NullPointerException e) {
 		            // Arena doesn't exist in the list of arenas therefore you can make it...
 		        }
 		        
 	            arena.rename(newName);
-	            Message.getMessenger().msg(player, ChatColor.GREEN, "Successfully renamed Arena " + ChatColor.GRAY + args[2] + ChatColor.GREEN + " to " + ChatColor.GRAY + newName);
+	            Message.getMessenger().msg(player, false, ChatColor.GREEN, "Successfully renamed Arena " + ChatColor.GRAY + args[2] + ChatColor.GREEN + " to " + ChatColor.GRAY + newName);
 	        }
 	    }
 
@@ -38,7 +38,7 @@ public class Rename extends Command{
 	    }
 
 	    public String getPermission() {
-	        return "paintball.admin.rename";
+	        return "paintball.arena.rename";
 	    }
 
 	    public String getName() {
@@ -50,7 +50,7 @@ public class Rename extends Command{
 	    }
 
 	    public Command.CommandType getCommandType() {
-	        return Command.CommandType.ADMIN;
+	        return Command.CommandType.ARENA;
 	    }
 
 	    public int getMaxArgs() {

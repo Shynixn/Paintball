@@ -49,7 +49,7 @@ public class Utils {
 
     public static Team stringToTeam(Arena a, String team) {
         for (Team t : a.getArenaTeamList()) {
-            if (t.getTitleName().equalsIgnoreCase(team)) {
+            if (t.getTitleName().equalsIgnoreCase(team) || t.getTitleName().replace(" ", "").equalsIgnoreCase(team)) {
                 return t;
             }
         }
@@ -62,7 +62,7 @@ public class Utils {
             if (arenaName.isEmpty()) {
                 error = "Enter an arena on line 3.";
             }
-            Message.getMessenger().msg(sender, ChatColor.RED, error);
+            Message.getMessenger().msg(sender, false, ChatColor.RED, error);
             return false;
         } else {
             return true;

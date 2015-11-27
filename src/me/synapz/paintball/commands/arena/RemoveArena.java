@@ -1,4 +1,4 @@
-package me.synapz.paintball.commands.admin;
+package me.synapz.paintball.commands.arena;
 
 
 import me.synapz.paintball.Message;
@@ -18,7 +18,7 @@ public class RemoveArena extends Command{
 
         if (Utils.nullCheck(arenaName, arena, player)) {
             arena.removeArena();
-            Message.getMessenger().msg(player, ChatColor.GREEN, arena.toString() + " successfully removed!");
+            Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + " successfully removed!");
         }
     }
 
@@ -35,7 +35,7 @@ public class RemoveArena extends Command{
     }
 
     public String getPermission() {
-        return "paintball.admin.remove";
+        return "paintball.arena.remove";
     }
 
     public Command.CommandType getCommandType() {

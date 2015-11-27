@@ -1,7 +1,8 @@
-package me.synapz.paintball.commands.admin;
+package me.synapz.paintball.commands.arena;
 
 
 import me.synapz.paintball.*;
+import me.synapz.paintball.Arena;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,19 +20,19 @@ public class SetLobbySpawn extends Command{
 
         if (args[3].equalsIgnoreCase("all")) {
             if (arena.getArenaTeamList().isEmpty()) {
-                Message.getMessenger().msg(player, ChatColor.RED, arena.getName() + " does not have any teams set!");
+                Message.getMessenger().msg(player, false, ChatColor.RED, arena.getName() + " does not have any teams set!");
                 return;
             }
             for (Team t : arena.getArenaTeamList()) {
                 arena.setLobbySpawn(spawn, t);
             }
-            Message.getMessenger().msg(player, ChatColor.GREEN, "Set " + arena.getName() + "'s all lobby spawns to your location.", arena.getSteps());
+            Message.getMessenger().msg(player, false, ChatColor.GREEN, "Set " + arena.getName() + "'s all lobby spawns to your location.", arena.getSteps());
             return;
         }
         if (teamCheck(arena, teamString, player)) {
             team = Utils.stringToTeam(arena, teamString);
             arena.setLobbySpawn(spawn, team);
-            Message.getMessenger().msg(player, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " lobby spawn for " + arena.toString() + " set!", arena.getSteps());
+            Message.getMessenger().msg(player, false, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " lobby spawn for " + arena.toString() + " set!", arena.getSteps());
         } else {
             return;
         }
@@ -43,7 +44,7 @@ public class SetLobbySpawn extends Command{
     }
 
     public String getPermission() {
-        return "paintball.admin.setlobby";
+        return "paintball.arena.setlobby";
     }
 
     public String getName() {
@@ -55,7 +56,7 @@ public class SetLobbySpawn extends Command{
     }
 
     public CommandType getCommandType() {
-        return CommandType.ADMIN;
+        return CommandType.ARENA;
     }
 
     public int getMaxArgs() {

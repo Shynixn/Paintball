@@ -1,20 +1,19 @@
-package me.synapz.paintball.commands.admin;
-
+package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.commands.Command;
 import me.synapz.paintball.commands.CommandManager;
 import org.bukkit.entity.Player;
 
-public class Admin extends Command{
+public class Arena extends Command {
 
-    private Command.CommandType type = CommandType.PLAYER;
+    private Command.CommandType type = CommandType.ARENA;
 
-    public Admin(Command.CommandType t) {
+    public Arena(Command.CommandType t) {
         this.type = t;
     }
 
     public void onCommand(Player player, String[] args) {
-        CommandManager.displayHelp(player, CommandType.ADMIN);
+        CommandManager.displayHelp(player, CommandType.ARENA);
     }
 
     public String getArgs() {
@@ -23,15 +22,15 @@ public class Admin extends Command{
     }
 
     public String getPermission() {
-        return "paintball.admin";
+        return "paintball.arena";
     }
 
     public String getName() {
-        return "admin";
+        return "arena";
     }
 
     public String getInfo() {
-        return "Display all Paintball Admin commands";
+        return "Display all Paintball Arena setup commands";
     }
 
     public Command.CommandType getCommandType() {
@@ -45,5 +44,4 @@ public class Admin extends Command{
     public int getMinArgs() {
         return 1;
     }
-
 }

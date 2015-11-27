@@ -1,7 +1,8 @@
-package me.synapz.paintball.commands.admin;
+package me.synapz.paintball.commands.arena;
 
 import com.google.common.base.Joiner;
 import me.synapz.paintball.*;
+import me.synapz.paintball.Arena;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -24,20 +25,20 @@ public class SetTeams extends Command {
             List<String> added = new ArrayList<String>();
 
             if (colors.size() == 1) {
-                Message.getMessenger().msg(player, ChatColor.RED, arena.toString() + ChatColor.RED + " cannot have only one team!");
+                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " cannot have only one team!");
                 return;
             }
             for (String color : colors) {
                 color = ChatColor.translateAlternateColorCodes('&', color);
                 if (!Team.LIST.contains(color)) {
-                    Message.getMessenger().msg(player, ChatColor.RED, "Error parsing ChatColors. For example use,", "Usage: /pb admin setteam " + arena.getName() + " &1,&2,&6,&a");
+                    Message.getMessenger().msg(player, false, ChatColor.RED, "Error parsing ChatColors. For example use,", "Usage: /pb admin setteam " + arena.getName() + " &1,&2,&6,&a");
                     return;
                 }
                 // make sure no teams are duplicated
                 if (added.contains(color)) {
                     if (colors.size() == 2) {
                         // when two of the same teams are added as &1,&1
-                        Message.getMessenger().msg(player, ChatColor.RED, "Cannot have two of the same color.");
+                        Message.getMessenger().msg(player, false, ChatColor.RED, "Cannot have two of the same color.");
                         return;
                     }
                     // get out of this iteration of the loop this way the duplicated team doesn't get added
@@ -56,7 +57,7 @@ public class SetTeams extends Command {
             out += t.getTitleName() + ", ";
         }
         out = out.substring(0, out.lastIndexOf(","));
-        Message.getMessenger().msg(player, ChatColor.GREEN, arena.toString() + "'s teams has been set to " + out + "!", arena.getSteps());
+        Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + "'s teams has been set to " + out + "!", arena.getSteps());
     }
 
     public String getArgs() {
@@ -65,7 +66,7 @@ public class SetTeams extends Command {
     }
 
     public String getPermission() {
-        return "paintball.admin.setteam";
+        return "paintball.arena.setteam";
     }
 
     public String getName() {
@@ -77,7 +78,7 @@ public class SetTeams extends Command {
     }
 
     public CommandType getCommandType() {
-        return CommandType.ADMIN;
+        return CommandType.ARENA;
     }
 
     public int getMaxArgs() {

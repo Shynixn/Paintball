@@ -4,6 +4,7 @@ description: Paintball Minigame
 author: Synapz_
 main: me.synapz.paintball.Paintball
 website: NotAdded2bukkit.yet/sorry
+softdepend: [TitleAPI]
 
 commands:
    paintball:

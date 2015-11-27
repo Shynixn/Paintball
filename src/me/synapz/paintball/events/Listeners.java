@@ -37,7 +37,7 @@ public class Listeners implements Listener {
     public void onItemBreakInArena(BlockBreakEvent e) {
         Arena a = ArenaManager.getArenaManager().getArena(e.getPlayer());
         if (a != null) {
-            Message.getMessenger().msg(e.getPlayer(), ChatColor.RED, "You are not allowed to break blocks while in arena!");
+            Message.getMessenger().msg(e.getPlayer(), true, ChatColor.RED, "You are not allowed to break blocks while in arena!");
             e.setCancelled(true);
         }
     }

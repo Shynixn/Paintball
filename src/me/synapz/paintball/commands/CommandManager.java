@@ -2,18 +2,15 @@ package me.synapz.paintball.commands;
 
 
 import me.synapz.paintball.Message;
+import me.synapz.paintball.commands.arena.*;
+import me.synapz.paintball.commands.player.*;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.commands.admin.*;
-import me.synapz.paintball.commands.player.Join;
-import me.synapz.paintball.commands.player.LeaveArena;
-import me.synapz.paintball.commands.player.List;
-import me.synapz.paintball.commands.player.Spectate;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,10 +24,10 @@ public class CommandManager implements CommandExecutor{
 
 
     public void init() {
-    	addCommands(new Join(), new LeaveArena(), new Spectate(), new List(), new Admin(Command.CommandType.PLAYER),
+    	addCommands(new Join(), new LeaveArena(), new Spectate(), new Stats(), new Leaderboard(), new List(), new Admin(Command.CommandType.PLAYER),
     			new CreateArena(), new RemoveArena(), new SetLobbySpawn(), new SetSpawn(), new SetSpectate(), new SetMin(),
     			new SetMax(), new SetTeams(), new ForceStart(), new ForceStop(), new Rename(), new Enable(), new Disable(),
-    			new Steps(),  new Info(), new Reload(), new Admin(Command.CommandType.ADMIN));
+    			new Steps(),  new Info(), new Reload(), new Admin(Command.CommandType.ADMIN), new Arena(Command.CommandType.ARENA));
     }
 
 
@@ -39,7 +36,7 @@ public class CommandManager implements CommandExecutor{
 
         if (cmd.getName().equalsIgnoreCase("paintball")) {
             if (!(sender instanceof Player)) {
-                Message.getMessenger().msg(sender, ChatColor.RED, NO_CONSOLE_PERMS);
+                Message.getMessenger().msg(sender, false, ChatColor.RED, NO_CONSOLE_PERMS);
                 return true;
             }
 
@@ -57,7 +54,7 @@ public class CommandManager implements CommandExecutor{
                     return true;
                 }
 
-                if (command.getName().equalsIgnoreCase("admin")) {
+                if (command.getName().equalsIgnoreCase("admin") || command.getName().equalsIgnoreCase("arena")) {
                     if (args.length == 1) {
                         dispatchCommand(command, player, args);
                     }
@@ -81,19 +78,21 @@ public class CommandManager implements CommandExecutor{
             command.getName();
             return false;
         }catch(Exception e) {
-            Message.getMessenger().msg(sender, ChatColor.RED, COMMAND_NOT_FOUND);
+            Message.getMessenger().msg(sender, false, ChatColor.RED, COMMAND_NOT_FOUND);
             return true;
         }
     }
 
 
+    // TODO: add command ARENA help
     public static void displayHelp(Player player, Command.CommandType type) {
-        boolean isPlayerType = type == Command.CommandType.PLAYER ? true : false;
-        player.sendMessage(Message.getMessenger().getHelpTitle(isPlayerType));
+        boolean isPlayerType = type == Command.CommandType.PLAYER;
+        boolean isArenatype = type == Command.CommandType.ARENA;
+        player.sendMessage(Message.getMessenger().getHelpTitle(type));
 
-        String beginning = isPlayerType ? Settings.getSettings().getTheme() + "/pb ": Settings.getSettings().getTheme() + "/pb admin ";
+        String beginning = isPlayerType ? Settings.getSettings().getTheme() + "/pb ": isArenatype ? Settings.getSettings().getTheme() + "/pb arena " : Settings.getSettings().getTheme() + "/pb admin ";
         for (Command command : commands.values()) {
-            String name = command.getName().equals("admin") && type == Command.CommandType.ADMIN ? "" : command.getName();
+            String name = command.getName().equals("admin") && type == Command.CommandType.ADMIN || command.getName().equals("arena") && type == Command.CommandType.ARENA ? "" : command.getName();
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
             if (command.getCommandType() == type) {
                 player.sendMessage(beginning + name + args + ChatColor.WHITE + " - " + Settings.getSettings().getSecondaryColor() + command.getInfo());
@@ -110,7 +109,7 @@ public class CommandManager implements CommandExecutor{
                 command.onCommand(player, args);
             }
         }catch (Exception e) {
-            Message.getMessenger().msg(player, ChatColor.RED, "An internal error occurred: " + e.getMessage());
+            Message.getMessenger().msg(player, false, ChatColor.RED, "An internal error occurred: " + e.getMessage());
             e.printStackTrace();
         }
     }

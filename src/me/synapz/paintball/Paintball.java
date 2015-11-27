@@ -15,9 +15,12 @@ public class Paintball extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Team.loadTeamColors();
+
         new PlayerData(this);
         new Statistics(this);
         Settings.getSettings();
+
         ArenaManager.getArenaManager().setup();
         CommandManager commandManager = new CommandManager();
         commandManager.init();

@@ -1,6 +1,7 @@
 package me.synapz.paintball;
 
 
+import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
@@ -49,7 +50,7 @@ public class Arena {
     }
     
     public String getName() {
-        return currentName;
+        return this.currentName;
     }
     
     public String getDefaultName() {
@@ -58,7 +59,7 @@ public class Arena {
     
     private void setName(String newName) {
         FILE.set(getPath() + "Name", newName);
-        currentName = newName;
+        this.currentName = newName;
     }
     
     public void removeArena() {
@@ -107,7 +108,7 @@ public class Arena {
     public void joinSpectate(Player player) {
         // TODO: set name color to gray
         if (this.containsPlayer(player)) {
-            Message.getMessenger().msg(player, RED, "You are already in an arena!");
+            Message.getMessenger().msg(player, false, RED, "You are already in an arena!");
             return;
         }
         Settings.getSettings().getCache().savePlayerInformation(player);
@@ -158,8 +159,10 @@ public class Arena {
         
         steps = Utils.addItemsToArray(steps, isMaxSet ? done + "max"+end : "max", isMinSet ? done + "min"+end : "min");
         for (Team t : getArenaTeamList()) {
-            steps.add(FILE.get(t.getPath() + ".Lobby") != null ? done + t.getTitleName().toLowerCase() + "-lobby" + end : t.getTitleName().toLowerCase() + "-lobby");
-            steps.add(FILE.get(t.getPath() + ".Spawn") != null ? done + t.getTitleName().toLowerCase() + "-spawn"+ end : t.getTitleName().toLowerCase() + "-spawn");
+            String lobbyName = t.getTitleName().toLowerCase().replace(" ", "") + "-lobby";
+            String spawnName = t.getTitleName().toLowerCase().replace(" ", "") + "-spawn";
+            steps.add(FILE.get(t.getPath() + ".Lobby") != null ? done + lobbyName + end : lobbyName);
+            steps.add(FILE.get(t.getPath() + ".Spawn") != null ? done + spawnName + end : spawnName);
         }
         Utils.addItemsToArray(steps, isSpectateSet ? done + "spectate" + end : "spectate", isEnabled ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "set-teams" : "");
         finalString = GRAY + Joiner.on(", ").join(steps);
@@ -201,11 +204,14 @@ public class Arena {
         }
         FILE.set(getPath() + enabledPath, isEnabled);
         advSave();
-        Message.getMessenger().msg(sender, color, this.toString() + " " + message);
+        Message.getMessenger().msg(sender, false, color, this.toString() + " " + message);
     }
     
     public boolean isSetup() {
         boolean spawnsSet = true;
+        if (getArenaTeamList().isEmpty()) {
+            spawnsSet = false;
+        }
         for (Team t : getArenaTeamList()) {
             if (FILE.get(t.getPath() + ".Lobby") == null) {
                 spawnsSet = false;
@@ -262,11 +268,11 @@ public class Arena {
     
     public void forceStart(Player sender) {
         String reason = "";
-        if (isSetup()) {
+        if (isSetup() || isEnabled) {
             if (lobby.keySet().size() >= getMin()) {
                 if (state == ArenaState.WAITING) {
                     startGame();
-                    Message.getMessenger().msg(sender, GREEN, "Successfully started " + this.toString());
+                    Message.getMessenger().msg(sender, false, GREEN, "Successfully started " + this.toString());
                     return;
                 } else if (state == ArenaState.IN_PROGRESS) {
                     reason = " is already in progress";
@@ -277,20 +283,20 @@ public class Arena {
         } else {
             reason = " has not been setup or enabled.";
         }
-        Message.getMessenger().msg(sender, RED, "Cannot force start " + name, this.toString() + RED + reason);
+        Message.getMessenger().msg(sender, false, RED, "Cannot force start " + this.toString(), this.toString() + RED + reason);
     }
     
     public void forceStop(Player sender) {
         if (state == ArenaState.IN_PROGRESS) {
             this.removePlayers();
-            broadcastMessage(RED, this.toString() + RED + " has been force stopped.");
+            broadcastMessage(RED, false, this.toString() + RED + " has been force stopped.");
             // todo make config value to compleelty block all commands
             if (!this.containsPlayer(sender)) {
-                Message.getMessenger().msg(sender, GREEN, this.toString() + " has been force stopped.");
+                Message.getMessenger().msg(sender, false, GREEN, this.toString() + " has been force stopped.");
             }
             return;
         }
-        Message.getMessenger().msg(sender, RED, "Cannot force stop " + this.toString(), this.toString() + RED + " is not in progress.");
+        Message.getMessenger().msg(sender, false, RED, "Cannot force stop " + this.toString(), this.toString() + RED + " is not in progress.");
     }
     
     public String toString() {
@@ -310,8 +316,9 @@ public class Arena {
         Utils.removePlayerSettings(player);
         
         player.teleport(getLobbySpawn(team));
-        broadcastMessage(GREEN, team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + lobby.keySet().size() + "/" + this.getMax());
-        
+        broadcastMessage(GREEN, false, team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + lobby.keySet().size() + "/" + this.getMax());
+        Message.getMessenger().msg(player, true, true, GREEN + "You have joined the arena!");
+
         if (canStart()) {
             this.startGame();
         }
@@ -398,7 +405,7 @@ public class Arena {
     }
     
     public void win(Team team) {
-        broadcastMessage(GREEN, "The " + team.getTitleName() + GREEN + " has won!");
+        broadcastMessage(GREEN, true, "The " + team.getTitleName() + GREEN + " has won!");
     }
     
     public PbPlayer getPbPlayer(Player player) {
@@ -417,14 +424,22 @@ public class Arena {
         player.teleport(getSpawn(team));
     }
     
-    public void broadcastMessage(ChatColor color, String...messages) {
+    public void broadcastMessage(ChatColor color, boolean titleAPI, String...messages) {
         for (PbPlayer pb : inGame.keySet()) {
             for (String message : messages) {
+                if (titleAPI && Settings.TITLE_API) {
+                    TitleAPI.sendTitle(pb.getPlayer(), 10, 10, 10, Settings.getSettings().getPrefix(), message);
+                    TitleAPI.sendTabTitle(pb.getPlayer(), "t","t");
+                }
                 Bukkit.getServer().getPlayer(pb.getName()).sendMessage(Settings.getSettings().getPrefix() + color + message);
             }
         }
         for (Player p : lobby.keySet()) {
             for (String message : messages) {
+                if (titleAPI && Settings.TITLE_API) {
+                    TitleAPI.sendTitle(p, 10, 10, 10, Settings.getSettings().getPrefix(), message);
+                    TitleAPI.sendTabTitle(p, "t","t");
+                }
                 p.sendMessage(Settings.getSettings().getPrefix() + color + message);
             }
         }

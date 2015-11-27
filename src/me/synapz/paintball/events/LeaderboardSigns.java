@@ -39,17 +39,19 @@ public class LeaderboardSigns implements Listener {
         }
 
         if (type == null) {
-            String error = e.getLine(2) + " is an invalid leaderboard type.";
+            String error = e.getLine(2) + " is an invalid statistic type.";
             if (e.getLine(2).isEmpty()) {
-                error = "Choose a leaderboaed type on line 3.";
+                error = "Choose a statistic type on line 3.";
             }
-            Message.getMessenger().msg(e.getPlayer(), ChatColor.RED, error, "Choose either kd, kills, deaths, killstreak, gamesplayed, won, or lost.");
+
+
+            Message.getMessenger().msg(e.getPlayer(), false, ChatColor.RED, error, "Choose either " + StatType.getReadableList());
             e.getBlock().breakNaturally();
             return;
         }
 
         if (e.getLine(3).isEmpty()) {
-            Message.getMessenger().msg(e.getPlayer(), ChatColor.RED, "Line 4 cannot be blank.", "Choose a rank number, for example: 3");
+            Message.getMessenger().msg(e.getPlayer(), false, ChatColor.RED, "Line 4 cannot be blank.", "Choose a rank number, for example: 3");
             e.getBlock().breakNaturally();
             return;
         }
@@ -58,12 +60,12 @@ public class LeaderboardSigns implements Listener {
         try {
             i = Integer.parseInt(e.getLine(3));
         } catch (NumberFormatException ex) {
-            Message.getMessenger().msg(e.getPlayer(), ChatColor.RED, "Line 4 must be a valid number.");
+            Message.getMessenger().msg(e.getPlayer(), false, ChatColor.RED, "Line 4 must be a valid number.");
             e.getBlock().breakNaturally();
             return;
         }
 
-        Message.getMessenger().msg(e.getPlayer(), ChatColor.GREEN, "Leaderboard sign successfully created!");
+        Message.getMessenger().msg(e.getPlayer(), false, ChatColor.GREEN, "Leaderboard sign successfully created!");
         HashMap<String, String> playerAndStat = Statistics.instance.getPlayerAtRank(i, type);
         e.setLine(0, ChatColor.DARK_GRAY + "[" + Settings.getSettings().getTheme() + "Leaderboards" + ChatColor.DARK_GRAY + "]");
         e.setLine(1, type.getName());

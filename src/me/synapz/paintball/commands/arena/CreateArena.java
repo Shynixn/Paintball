@@ -1,4 +1,4 @@
-package me.synapz.paintball.commands.admin;
+package me.synapz.paintball.commands.arena;
 
 
 import me.synapz.paintball.Arena;
@@ -16,14 +16,14 @@ public class CreateArena extends Command{
         try {
             Arena a = ArenaManager.getArenaManager().getArena(arenaName);
             a.getName(); // test to see if the arena exists by getting its name
-            Message.getMessenger().msg(player, ChatColor.RED, "An arena named " + arenaName + " already exists!");
+            Message.getMessenger().msg(player, false, ChatColor.RED, "An arena named " + arenaName + " already exists!");
             return;
         }catch (NullPointerException e) {
             // Arena doesn't except in the list of arenas therefore you can make it...
         }
 
         Arena a = new Arena(arenaName, arenaName);
-        Message.getMessenger().msg(player, ChatColor.GREEN, a.toString() + " successfully created!");
+        Message.getMessenger().msg(player, false, ChatColor.GREEN, a.toString() + " successfully created!");
         ArenaManager.getArenaManager().addNewArenaToConfig(a);
     }
 
@@ -40,11 +40,11 @@ public class CreateArena extends Command{
     }
 
     public String getPermission() {
-        return "paintball.admin.create";
+        return "paintball.arena.create";
     }
 
     public CommandType getCommandType() {
-        return CommandType.ADMIN;
+        return CommandType.ARENA;
     }
 
     public int getMaxArgs() {

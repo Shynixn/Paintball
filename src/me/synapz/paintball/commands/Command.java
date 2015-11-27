@@ -29,27 +29,28 @@ public abstract class Command {
 
 
     public String getCorrectUsage(Command command) {
-        String type = command.getCommandType() == CommandType.ADMIN ? "admin " : "";
-        String name = command.getName().equals("admin") ? "" : command.getName();
+        String type = command.getCommandType() == CommandType.ADMIN ? "admin " : command.getCommandType() == CommandType.ARENA ? "arena " : "";
+        String name = command.getName().equals("admin") || command.getName().equals("arena") ? "" : command.getName();
         return "Usage: /paintball " + type + name + " " + command.getArgs();
     }
 
 
     public enum CommandType {
         ADMIN,
+        ARENA,
         PLAYER;
     }
 
     public boolean teamCheck(Arena a, String teamString, Player sender) {
         String validTeams = " ";
         for (Team team : a.getArenaTeamList()) {
-            validTeams += ChatColor.stripColor(team.getTitleName().toLowerCase() + " ");
+            validTeams += ChatColor.stripColor(team.getTitleName().toLowerCase().replace(" ", "") + " ");
         }
-        if (!validTeams.contains(" " + teamString + " ")) {
+        if (!validTeams.contains(" " + teamString.toLowerCase() + " ")) {
             // remove last space and replace spaces with /. So it should be <red/blue/green>
             validTeams = validTeams.substring(1, validTeams.lastIndexOf(" "));
-            validTeams = validTeams.replaceAll(" ", "/");
-            Message.getMessenger().msg(sender, ChatColor.RED, teamString + " is an invalid team. Choose either <" + validTeams + ">");
+            validTeams = validTeams.replace(" ", "/");
+            Message.getMessenger().msg(sender, false, ChatColor.RED, teamString + " is an invalid team. Choose either <" + validTeams + ">");
             return false;
         } else {
             return true;

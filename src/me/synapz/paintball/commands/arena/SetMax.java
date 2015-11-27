@@ -1,4 +1,4 @@
-package me.synapz.paintball.commands.admin;
+package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
@@ -15,19 +15,19 @@ public class SetMax extends Command{
         int max;
 
         if (arena == null) {
-            Message.getMessenger().msg(player, ChatColor.RED, args[2] + " is an invalid arena.");
+            Message.getMessenger().msg(player, false, ChatColor.RED, args[2] + " is an invalid arena.");
             return;
         }
 
         try {
             max = Integer.parseInt(maxString);
         } catch (NumberFormatException e) {
-            Message.getMessenger().msg(player, ChatColor.RED, maxString + " is not a valid number!");
+            Message.getMessenger().msg(player, false, ChatColor.RED, maxString + " is not a valid number!");
             return;
         }
 
         arena.setMaxPlayers(max);
-        Message.getMessenger().msg(player, ChatColor.GREEN, "Max players for " + arena.toString() + " set to " + ChatColor.GRAY + max, arena.getSteps());
+        Message.getMessenger().msg(player, false, ChatColor.GREEN, "Max players for " + arena.toString() + " set to " + ChatColor.GRAY + max, arena.getSteps());
     }
 
     public String getName() {
@@ -43,11 +43,11 @@ public class SetMax extends Command{
     }
 
     public String getPermission() {
-        return "paintball.admin.setmax";
+        return "paintball.arena.setmax";
     }
 
     public CommandType getCommandType() {
-        return CommandType.ADMIN;
+        return CommandType.ARENA;
     }
 
     public int getMaxArgs() {

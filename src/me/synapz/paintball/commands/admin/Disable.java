@@ -15,7 +15,7 @@ public class Disable extends Command{
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
         if (!args[1].equalsIgnoreCase("disable")) {
-            Message.getMessenger().msg(player, ChatColor.RED, args[1] + " is an invalid choice. Use either enable/disable");
+            Message.getMessenger().msg(player, false, ChatColor.RED, args[1] + " is an invalid choice. Use either enable/disable");
             return;
         }
 

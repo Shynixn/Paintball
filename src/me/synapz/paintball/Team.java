@@ -1,5 +1,6 @@
 package me.synapz.paintball;
 
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import static org.bukkit.Color.*;
@@ -50,26 +51,11 @@ public class Team {
         put(ChatColor.WHITE, WHITE);
     }};
 
-    private static Map<ChatColor, String> colorNames = new EnumMap<ChatColor, String>(ChatColor.class){{
-        put(ChatColor.DARK_BLUE, "Navy Blue");
-        put(ChatColor.DARK_GREEN, "Green");
-        put(ChatColor.DARK_AQUA, "Cyan");
-        put(ChatColor.DARK_RED, "Red");
-        put(ChatColor.DARK_PURPLE, "Purple");
-        put(ChatColor.GOLD, "Orange");
-        put(ChatColor.GRAY, "Silver");
-        put(ChatColor.DARK_GRAY, "Gray");
-        put(ChatColor.BLUE, "Blue");
-        put(ChatColor.BLACK, "Black");
-        put(ChatColor.GREEN, "Green");
-        put(ChatColor.AQUA, "Aqua");
-        put(ChatColor.RED, "Light Red");
-        put(ChatColor.LIGHT_PURPLE, "Magenta");
-        put(ChatColor.YELLOW, "Yellow");
-        put(ChatColor.WHITE, "White");
-    }};
+    private static Map<ChatColor, String> colorNames = new EnumMap<ChatColor, String>(ChatColor.class);
 
-
+    public static void loadTeamColors() {
+        colorNames = Settings.getSettings().getTeamNames();
+    }
     public static List<String> LIST = Arrays.asList("§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§0", "§a", "§b", "§c", "§d", "§e", "§f");
     private static Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
 
@@ -77,6 +63,7 @@ public class Team {
     private Arena arena;
 
     public Team (Arena a, String colorCode) {
+
         this.arena = a;
         this.color = ChatColor.getByChar(colorCode.charAt(1));
 

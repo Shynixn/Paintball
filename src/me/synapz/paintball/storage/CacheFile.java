@@ -32,7 +32,7 @@ public class CacheFile {
                 cacheFile.createNewFile();
             }
             catch (IOException e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "", "Could not create cache.yml. Stack trace: ");
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "", "Could not create cache.yml. Stack trace: ");
                 e.printStackTrace();
             }
         }
@@ -44,7 +44,7 @@ public class CacheFile {
         try {
             cache.save(cacheFile);
         }catch (Exception e) {
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), ChatColor.RED, "Could not save cache.yml.", "", "Stack trace" );
+            Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Could not save cache.yml.", "", "Stack trace" );
             e.printStackTrace();
         }
     }
