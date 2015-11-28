@@ -2,12 +2,12 @@ package me.synapz.paintball.commands.player;
 
 
 import me.synapz.paintball.Message;
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.StatType;
 import me.synapz.paintball.commands.Command;
-import me.synapz.paintball.storage.Statistics;
 import org.bukkit.ChatColor;
-import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class Leaderboard extends Command{
 
@@ -33,7 +33,9 @@ public class Leaderboard extends Command{
         }
 
         // calculate the page and set it to the player
-        Statistics.instance.getPage(player, statType, page);
+        // TODO better way of doing this
+        Paintball pb = (Paintball) JavaPlugin.getProvidingPlugin(Paintball.class);
+        pb.getPlayerData().getPage(player, statType, page);
     }
 
     public String getArgs() {

@@ -3,7 +3,6 @@ package me.synapz.paintball.events;
 import me.synapz.paintball.*;
 import me.synapz.paintball.storage.PaintballFile;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.storage.Statistics;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -13,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +66,9 @@ public class LeaderboardSigns implements Listener {
         }
 
         Message.getMessenger().msg(e.getPlayer(), false, ChatColor.GREEN, "Leaderboard sign successfully created!");
-        HashMap<String, String> playerAndStat = Statistics.instance.getPlayerAtRank(i, type);
+        // todo: beter way
+        Paintball pb = (Paintball) JavaPlugin.getProvidingPlugin(Paintball.class);
+        HashMap<String, String> playerAndStat = pb.getPlayerData().getPlayerAtRank(i, type);
         e.setLine(0, ChatColor.DARK_GRAY + "[" + Settings.getSettings().getTheme() + "Leaderboards" + ChatColor.DARK_GRAY + "]");
         e.setLine(1, type.getName());
         e.setLine(2, "#" + i + " " + playerAndStat.keySet().toArray()[0]);

@@ -1,0 +1,51 @@
+prefix: '&8[&3Paintball&8]'
+theme-color: '&3'
+secondary-color: '&7'
+# if TitleAPI is installed and this is true, plugin will display some messages in the middle of the screen to the player
+title-api: true
+
+# Arena Settings
+
+# True will give players a wool helmet based on their team when they join the arena, false will ignore this
+give-wool-helmet: true
+
+# Make title red/blue based on their team
+color-player-title: true
+
+# This will make paintballs slash (turns surrounding blocks red/blue clay)
+paintball-splash: true
+
+countdown:
+   # Time in seconds for the round to start
+   time: 15
+   # The delay when showing numbers. Ex. 15...10...5...
+   interval: 5
+   # The number at which there will be no delay in showing numbers. Ex. 15...10...5...4...3...2...1...
+   no-interval: 4
+
+# broadcastwinner
+Teams:
+   0: "Black"
+   1: "Navy Blue"
+   2: "Green"
+   3: "Cyan"
+   4: "Red"
+   5: "Purple"
+   6: "Orange"
+   7: "Silver"
+   8: "Gray"
+   9: "Blue"
+   a: "Lime"
+   b: "Aqua"
+   c: "Light Red"
+   d: "Magenta"
+   e: "Yellow"
+   f: "White"
+
+Chat:
+   # Will broadcast winning team to all players on the server.
+   broadcast-winner: false
+   # Chat format for specators. Tags: %ARENA%, %PLAYER%, %MSG%, %PREFIX%, %STATS%??
+   spectator-chat: "&7[Spectator] %PLAYER%: %MSG%"
+   # Chat format for lobby players and in game players. Tags: %ARENA%, %PLAYER%, %MSG%, %TEAMCOLOR%, %TEAMNAME%, %PREFIX%
+   arena-chat: "%PREFIX%&8-%TEAMCOLOR%%TEAMNAME%&8- &a%PLAYER%&7: %MSG%"

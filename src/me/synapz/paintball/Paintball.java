@@ -5,20 +5,18 @@ import me.synapz.paintball.commands.CommandManager;
 import me.synapz.paintball.events.*;
 import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.storage.Statistics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Set;
-
 public class Paintball extends JavaPlugin {
+
+    PlayerData data;
 
     @Override
     public void onEnable() {
         Team.loadTeamColors();
 
-        new PlayerData(this);
-        new Statistics(this);
+        data = new PlayerData(this);
         Settings.getSettings();
 
         ArenaManager.getArenaManager().setup();
@@ -38,5 +36,8 @@ public class Paintball extends JavaPlugin {
     public void onDisable() {
         ArenaManager.getArenaManager().stopArenas();
     }
-    
+
+    public PlayerData getPlayerData() {
+        return data;
+    }
 }

@@ -1,12 +1,15 @@
 package me.synapz.paintball.commands.player;
 
 import me.synapz.paintball.Message;
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.StatType;
 import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.storage.Statistics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import static org.bukkit.ChatColor.*;
 
 import java.util.Map;
@@ -17,7 +20,9 @@ public class Stats extends Command {
     // TODO fix stats
     public void onCommand(Player player, String[] args) {
         UUID target = args.length == 1 ? player.getUniqueId() : Bukkit.getPlayer(args[1]) == null ? Bukkit.getOfflinePlayer(args[1]).getUniqueId() : Bukkit.getPlayer(args[1]).getUniqueId();
-        Map<StatType, String> stats = Statistics.instance.getPlayerStats(target);
+        // todo: better way of doing this..
+        Paintball pb = (Paintball) JavaPlugin.getProvidingPlugin(Paintball.class);
+        Map<StatType, String> stats = pb.getPlayerData().getPlayerStats(target);
 
         String theme = Settings.getSettings().getTheme();
         String sec = Settings.getSettings().getSecondaryColor();
