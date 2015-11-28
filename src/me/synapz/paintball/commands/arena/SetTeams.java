@@ -74,7 +74,7 @@ public class SetTeams extends Command {
     }
 
     public String getInfo() {
-        return "Set teams via ChatColors.";
+        return "Set teams via ChatColors seperated by commas ex. &1,&b,&c";
     }
 
     public CommandType getCommandType() {

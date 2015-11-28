@@ -35,7 +35,7 @@ public class SetMax extends Command{
     }
 
     public String getInfo() {
-        return "Set the max number of players";
+        return "Set max number of players";
     }
 
     public String getArgs() {

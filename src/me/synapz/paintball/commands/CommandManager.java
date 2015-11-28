@@ -17,7 +17,7 @@ import java.util.Map;
 public class CommandManager implements CommandExecutor{
 
 
-    private static Map<String, Command> commands = new HashMap<String, Command>();
+    private static Map<String, Command> COMMANDS = new HashMap<String, Command>();
 
     private static final String NO_CONSOLE_PERMS = "Console does not have access to that command!";
     private static final String COMMAND_NOT_FOUND = "Unknown Command! Type /paintball for a list of commands.";
@@ -48,7 +48,7 @@ public class CommandManager implements CommandExecutor{
             }
 
             else if (args.length >= 1) {
-                Command command = commands.get(args[0]);
+                Command command = COMMANDS.get(args[0]);
 
                 if (nullCheck(command, player)) {
                     return true;
@@ -59,7 +59,7 @@ public class CommandManager implements CommandExecutor{
                         dispatchCommand(command, player, args);
                     }
                     else {
-                        Command command1 = commands.get(args[1]);
+                        Command command1 = COMMANDS.get(args[1]);
                         if (nullCheck(command1, player)) {
                             return true;
                         }
@@ -91,11 +91,11 @@ public class CommandManager implements CommandExecutor{
         player.sendMessage(Message.getMessenger().getHelpTitle(type));
 
         String beginning = isPlayerType ? Settings.getSettings().getTheme() + "/pb ": isArenatype ? Settings.getSettings().getTheme() + "/pb arena " : Settings.getSettings().getTheme() + "/pb admin ";
-        for (Command command : commands.values()) {
-            String name = command.getName().equals("admin") && type == Command.CommandType.ADMIN || command.getName().equals("arena") && type == Command.CommandType.ARENA ? "" : command.getName();
+        for (Command command : COMMANDS.values()) {
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
-            if (command.getCommandType() == type) {
-                player.sendMessage(beginning + name + args + ChatColor.WHITE + " - " + Settings.getSettings().getSecondaryColor() + command.getInfo());
+            if (command.getCommandType() == type || command.getName().equals("admin") && player.hasPermission("paintball.admin.help") || command.getName().equals("arena") && player.hasPermission("paintball.arena.help")) {
+                player.sendMessage((command.getName().equals("arena") && type == Command.CommandType.ADMIN ? Settings.getSettings().getTheme() + "/pb arena" : command.getName().equals("admin") && type == Command.CommandType.ARENA ? Settings.getSettings().getTheme() + "/pb admin" : beginning) + ((command.getName().equals("admin") || command.getName().equals("arena")) && type != Command.CommandType.PLAYER ? "" : command.getName()) + args + ChatColor.WHITE + " - " + Settings.getSettings().getSecondaryColor() + command.getInfo());
+
             }
         }
     }
@@ -137,7 +137,7 @@ public class CommandManager implements CommandExecutor{
     
     private void addCommands(Command...cmds) {
     	for (Command cmd : cmds) {
-    		commands.put(cmd.getName(), cmd);
+    		COMMANDS.put(cmd.getName(), cmd);
     	}
     }
 }

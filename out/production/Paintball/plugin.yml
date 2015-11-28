@@ -3,10 +3,55 @@ version: Beta_3
 description: Paintball Minigame
 author: Synapz_
 main: me.synapz.paintball.Paintball
-website: NotAdded2bukkit.yet/sorry
+website: NotAdded2Spigot.yet/sorry
 softdepend: [TitleAPI]
 
 commands:
    paintball:
       description: Open the Paintbal command menu.
       aliases: [pb]
+
+permissions:
+   paintball.*:
+     description: Gives access to all Paintball commands
+     default: op
+     children:
+       paintball.admin: true
+       paintball.arena: true
+       paintball.default: true
+   paintball.admin:
+     description: Gives access to administrative command subsection
+     default: op
+     children:
+       paintball.admin.reload: true
+       paintball.admin.enable: true
+       paintball.admin.disable: true
+       paintball.admin.start: true
+       paintball.admin.stop: true
+       paintball.admin.info: true
+       paintball.admin.help: true
+   paintball.arena:
+     description: Gives access to arena setup command subsection
+     default: op
+     children:
+       paintball.arena.create: true
+       paintball.arena.setspawn: true
+       paintball.arena.setteam: true
+       paintball.arena.setlobby: true
+       paintball.arena.setspectate: true
+       paintball.arena.steps: true
+       paintball.arena.rename: true
+       paintball.arena.remove: true
+       paintball.arena.setmax: true
+       paintball.arena.setmin: true
+       paintball.arena.help: true
+   paintball.default:
+     description: Gives access to player subcommand menu
+     default: not op
+     children:
+       paintball.leaderboard: true
+       paintball.spectate: true
+       paintball.leave: true
+       paintball.join: true
+       paintball.list: true
+       paintball.stats: true

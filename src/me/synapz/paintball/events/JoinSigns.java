@@ -122,11 +122,7 @@ public class JoinSigns implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         for (Arena a : ArenaManager.getArenaManager().getArenas()) {
-
-            for (int i = 0; i < 100; i++) {
-                a.updateAllSigns();
-                System.out.println(a.getName());
-            }
+            a.updateAllSigns();
         }
     }
 }

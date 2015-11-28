@@ -22,7 +22,7 @@ public class Arena extends Command {
     }
 
     public String getPermission() {
-        return "paintball.arena";
+        return "paintball.arena.help";
     }
 
     public String getName() {

@@ -35,11 +35,11 @@ public class SetMin extends Command{
     }
 
     public String getInfo() {
-        return "Set the min amount of players";
+        return "Set min amount of players";
     }
 
     public String getArgs() {
-        return "<name> <number>";
+        return "<arena> <number>";
     }
 
     public String getPermission() {

@@ -2,6 +2,7 @@ package me.synapz.paintball.commands.admin;
 
 
 import me.synapz.paintball.Message;
+import me.synapz.paintball.commands.CommandManager;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
@@ -16,6 +17,7 @@ public class Info extends Command{
         String author = Settings.getSettings().getAuthor();
         player.sendMessage(Message.getMessenger().getHelpTitle(CommandType.PLAYER));
         Message.getMessenger().msg(player, false, ChatColor.DARK_AQUA, "Version: " + g + version, "Website: " + g + website, "Author: " + g + author);
+
     }
 
     public String getArgs() {

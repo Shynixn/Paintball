@@ -23,7 +23,7 @@ public class Admin extends Command{
     }
 
     public String getPermission() {
-        return "paintball.admin";
+        return "paintball.admin.help";
     }
 
     public String getName() {
