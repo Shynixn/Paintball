@@ -89,14 +89,10 @@ public class Utils {
         p.setFlySpeed(speed);
     }
 
-
-    public static void countdown(final Arena a, final int seconds, final Set<PbPlayer> pbPlayers) {
-        final Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
-
-        new CountdownTask(seconds, a, pbPlayers).runTaskTimer(plugin, 0, 20);
-
-        for (PbPlayer pb : pbPlayers) {
-            setAllSpeeds(pb.getPlayer(), 0.0F);
+    public static void countdown(int counter, int interval, int noInterval, Arena a, String chatMessage, String screenMessage, String finishedMessage, boolean isLobbyCountDown) {
+        if (!CountdownTask.hasTaskRunning) {
+            final Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
+            new CountdownTask(counter, interval, noInterval, a, chatMessage, screenMessage, finishedMessage, isLobbyCountDown).runTaskTimer(plugin, 0, 20);
         }
     }
 

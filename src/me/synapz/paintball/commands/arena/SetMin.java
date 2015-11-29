@@ -7,6 +7,9 @@ import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.RED;
+
 public class SetMin extends Command{
 
     public void onCommand(Player player, String[] args) {
@@ -26,7 +29,16 @@ public class SetMin extends Command{
             return;
         }
 
-        arena.setMinPlayers(min);
+        if (arena.getMax() == 0 || min < arena.getMax()) {
+            if (min <= 0) {
+                Message.getMessenger().msg(player, false, RED, "Min must be greater than 0!");
+                return;
+            }
+            arena.setMinPlayers(min);
+        } else {
+            Message.getMessenger().msg(player, false, RED, "Your min (" + GRAY + min + RED + ") must be less than than your max (" + GRAY + arena.getMax() + RED + ") !");
+            return;
+        }
         Message.getMessenger().msg(player, false, ChatColor.GREEN, "Min players for " + arena.toString() + " set to " + ChatColor.GRAY + min, arena.getSteps());
     }
 

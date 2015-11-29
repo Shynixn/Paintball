@@ -24,7 +24,7 @@ public class Settings {
     private PlayerData cache;
     private File aFile;
     
-    public static int COUNTDOWN, INTERVAL, NO_INTERVAL;
+    public static int ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL;
     private String prefix, version, theme, website, author, secondary;
     private Map<ChatColor, String> teamNames = new HashMap<ChatColor, String>();
     public static String ARENA_CHAT, SPEC_CHAT;
@@ -105,13 +105,16 @@ public class Settings {
         secondary   = ChatColor.translateAlternateColorCodes('&', configFile.getString("secondary-color"));
         
         // arena values
-        SPLASH_PAINTBALLS   = configFile.getBoolean("paintball-splash");
-        COLOR_PLAYER_TITLE  = configFile.getBoolean("color-player-title");
-        WOOL_HELMET         = configFile.getBoolean("give-wool-helmet");
-        COUNTDOWN           = configFile.getInt("countdown.time");
-        INTERVAL            = configFile.getInt("countdown.interval");
-        NO_INTERVAL         = configFile.getInt("countdown.no-interval");
-        TITLE_API           = configFile.getBoolean("title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
+        SPLASH_PAINTBALLS       = configFile.getBoolean("paintball-splash");
+        COLOR_PLAYER_TITLE      = configFile.getBoolean("color-player-title");
+        WOOL_HELMET             = configFile.getBoolean("give-wool-helmet");
+        LOBBY_COUNTDOWN         = configFile.getInt("countdown.lobby.countdown");
+        LOBBY_INTERVAL          = configFile.getInt("countdown.lobby.interval");
+        LOBBY_NO_INTERVAL       = configFile.getInt("countdown.lobby.no-interval");
+        ARENA_COUNTDOWN         = configFile.getInt("countdown.arena.countdown");
+        ARENA_INTERVAL          = configFile.getInt("countdown.arena.interval");
+        ARENA_NO_INTERVAL       = configFile.getInt("countdown.arena.no-interval");
+        TITLE_API               = configFile.getBoolean("title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
 
         for (String colorcode : configFile.getConfigurationSection("Teams").getKeys(false)) {
             teamNames.put(ChatColor.getByChar(colorcode), configFile.getString("Teams." + colorcode) + "");

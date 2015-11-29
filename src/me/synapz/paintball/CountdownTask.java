@@ -2,35 +2,55 @@ package me.synapz.paintball;
 
 import me.synapz.paintball.storage.Settings;
 import static org.bukkit.ChatColor.*;
+
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Set;
 
 public class CountdownTask extends BukkitRunnable {
 
+    public static boolean hasTaskRunning;
+
     private final Arena a;
-    private final Set<PbPlayer> players;
+    private final int interval;
+    private final int noInterval;
+    private final String finishedMessage;
+    private final boolean isLobbyCountdown;
+    private String chatMessage;
+    private String screenMessage;
 
     private int counter;
 
-    public CountdownTask(int counter, Arena a, Set<PbPlayer> pbPlayerList) {
+    public CountdownTask(int counter, int interval, int noInterval, Arena a, String chatMessage, String screenMessage, String finishedMessage, boolean isLobbyCountdown) {
         this.a = a;
-        this.players = pbPlayerList;
         this.counter = counter;
+        this.interval = interval;
+        this.noInterval = noInterval;
+        this.chatMessage = chatMessage;
+        this.screenMessage = screenMessage;
+        this.finishedMessage = finishedMessage;
+        this.isLobbyCountdown = isLobbyCountdown;
     }
 
     public void run() {
-        /*
         // TODO: If player leaves and joins fast they will get the countdown two times.
-        if (counter == 0) {
-            a.broadcastMessage(GREEN, "Paintball Arena Started!");
+        hasTaskRunning = true;
+        if (counter <= 0) {
+            hasTaskRunning = false;
+            a.broadcastMessage(GREEN, finishedMessage, finishedMessage);
+            if (isLobbyCountdown)
+                a.startGame();
             this.cancel();
         } else {
-            // todo: add title API here too
-            if (counter <= Settings.NO_INTERVAL || counter % Settings.INTERVAL == 0) {
-                a.broadcastMessage(GREEN, "Paintball starting in " + GRAY + counter + GREEN + " seconds!");
+            if (counter <= noInterval || counter % interval == 0) {
+                chatMessage = chatMessage.replace("%time%", counter+"");
+                screenMessage = screenMessage.replace("%time%", counter+"");
+                a.broadcastMessage(GREEN, chatMessage, screenMessage);
+                chatMessage = chatMessage.replace(counter+"", "%time%");
+                screenMessage = screenMessage.replace(counter+"", "%time%");
             }
         }
-        counter--;*/
+        counter--;
     }
 }

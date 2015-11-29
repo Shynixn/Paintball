@@ -69,9 +69,9 @@ public class LeaderboardSigns implements Listener {
         // todo: beter way
         Paintball pb = (Paintball) JavaPlugin.getProvidingPlugin(Paintball.class);
         HashMap<String, String> playerAndStat = pb.getPlayerData().getPlayerAtRank(i, type);
-        e.setLine(0, ChatColor.DARK_GRAY + "[" + Settings.getSettings().getTheme() + "Leaderboards" + ChatColor.DARK_GRAY + "]");
-        e.setLine(1, type.getName());
-        e.setLine(2, "#" + i + " " + playerAndStat.keySet().toArray()[0]);
+        e.setLine(0, "#" + i);
+        e.setLine(1, playerAndStat.keySet().toArray()[0] + "");
+        e.setLine(2, type.getName());
         e.setLine(3, playerAndStat.values().toArray()[0] + "");
     }
 

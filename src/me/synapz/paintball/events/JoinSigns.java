@@ -59,14 +59,16 @@ public class JoinSigns implements Listener {
 
     @EventHandler
     public void onArenaTryToJoinOnClick(PlayerInteractEvent e) {
-        System.out.println(e.getClickedBlock().getType());
         if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN) return;
         if (!(e.getClickedBlock().getState() instanceof Sign)) return;
         Sign sign = (Sign) e.getClickedBlock().getState();
         Player player = e.getPlayer();
-        System.out.println("testtt");
         if (!sign.getLine(0).contains("Paintball") || sign.getLine(1) == null) return;
 
+        if (ArenaManager.getArenaManager().getArena(player) != null) {
+            Message.getMessenger().msg(player, false, ChatColor.RED, "You are already in an arena!");
+            return;
+        }
         if (sign.getLine(1).equals(ChatColor.GREEN + "Auto Join")) {
             for (Arena a : ArenaManager.getArenaManager().getArenas()) {
                 if (a.getState() == Arena.ArenaState.WAITING) {

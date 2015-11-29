@@ -12,6 +12,8 @@ import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -289,7 +291,7 @@ public class Arena {
     public void forceStop(Player sender) {
         if (state == ArenaState.IN_PROGRESS) {
             this.removePlayers();
-            broadcastMessage(RED, false, this.toString() + RED + " has been force stopped.");
+            broadcastMessage(RED, this.toString() + RED + " has been force stopped.", "");
             // todo make config value to compleelty block all commands
             if (!this.containsPlayer(sender)) {
                 Message.getMessenger().msg(sender, false, GREEN, this.toString() + " has been force stopped.");
@@ -310,17 +312,21 @@ public class Arena {
     
     
     public void joinLobby(Player player, Team team) {
+        if (lobby.keySet().size() == getMax()) {
+            Message.getMessenger().msg(player, false, RED, this.toString() + RED + " is full!");
+            return;
+        }
         team = team == null ? getTeamWithLessPlayers() : team;
         lobby.put(player, team);
         Settings.getSettings().getCache().savePlayerInformation(player);
         Utils.removePlayerSettings(player);
         
         player.teleport(getLobbySpawn(team));
-        broadcastMessage(GREEN, false, team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + lobby.keySet().size() + "/" + this.getMax());
+        broadcastMessage(GREEN, team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + lobby.keySet().size() + "/" + this.getMax(), GREEN + "Joined arena " + GRAY + lobby.keySet().size() + "/" + this.getMax());
         Message.getMessenger().msg(player, true, true, GREEN + "You have joined the arena!");
 
-        if (canStart()) {
-            this.startGame();
+        if (canStartTimer()) {
+            Utils.countdown(Settings.LOBBY_COUNTDOWN, Settings.LOBBY_INTERVAL, Settings.LOBBY_NO_INTERVAL, this, GREEN + "Auto-teleporting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Teleporting" + GRAY + "\n%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
         }
     }
     
@@ -345,15 +351,15 @@ public class Arena {
             pb.getPlayer().sendMessage(chat);
         }
     }
-    
-    private void startGame() {
-        // Set all the player's walk speed, swim speed, and fly speed tpo 0
-        Utils.countdown(this, Settings.COUNTDOWN, inGame.keySet());
+
+    public void startGame() {
+        // TODO: Set all the player's walk speed, swim speed, and fly speed tpo 0
         state = ArenaState.IN_PROGRESS;
         for (Player p : lobby.keySet()) {
             this.addPlayerToArena(p);
         }
         lobby.keySet().removeAll(lobby.keySet());
+        Utils.countdown(Settings.ARENA_COUNTDOWN, Settings.ARENA_INTERVAL, Settings.ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", false);
     }
     
     // Used for server reload and forcestops, so no messages will be sent
@@ -405,7 +411,8 @@ public class Arena {
     }
     
     public void win(Team team) {
-        broadcastMessage(GREEN, true, "The " + team.getTitleName() + GREEN + " has won!");
+        // TODO: add you won!
+        broadcastMessage(GREEN, "The " + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
     }
     
     public PbPlayer getPbPlayer(Player player) {
@@ -424,24 +431,19 @@ public class Arena {
         player.teleport(getSpawn(team));
     }
     
-    public void broadcastMessage(ChatColor color, boolean titleAPI, String...messages) {
-        for (PbPlayer pb : inGame.keySet()) {
-            for (String message : messages) {
-                if (titleAPI && Settings.TITLE_API) {
-                    TitleAPI.sendTitle(pb.getPlayer(), 10, 10, 10, Settings.getSettings().getPrefix(), message);
-                    TitleAPI.sendTabTitle(pb.getPlayer(), "t","t");
-                }
-                Bukkit.getServer().getPlayer(pb.getName()).sendMessage(Settings.getSettings().getPrefix() + color + message);
+    public void broadcastMessage(ChatColor color, String chatMessage, String screenMessage) {
+        List<Player> playersToSendMessageTo = new ArrayList<Player>();
+
+        for (PbPlayer pb : inGame.keySet())
+            playersToSendMessageTo.add(pb.getPlayer());
+        for (Player p : lobby.keySet())
+            playersToSendMessageTo.add(p);
+        for (Player p : playersToSendMessageTo) {
+            if (!screenMessage.equals("") && Settings.TITLE_API) {
+                String[] messages = screenMessage.split("\n");
+                TitleAPI.sendTitle(p, 10, 10, 10, messages.length == 1 ? Settings.getSettings().getPrefix() : messages[0], messages.length == 1 ? screenMessage : messages[1]);
             }
-        }
-        for (Player p : lobby.keySet()) {
-            for (String message : messages) {
-                if (titleAPI && Settings.TITLE_API) {
-                    TitleAPI.sendTitle(p, 10, 10, 10, Settings.getSettings().getPrefix(), message);
-                    TitleAPI.sendTabTitle(p, "t","t");
-                }
-                p.sendMessage(Settings.getSettings().getPrefix() + color + message);
-            }
+            p.sendMessage(Settings.getSettings().getPrefix() + color + chatMessage);
         }
     }
     
@@ -461,7 +463,7 @@ public class Arena {
         return Utils.max(this, size);
     }
     
-    private boolean canStart() {
+    private boolean canStartTimer() {
         int size = lobby.keySet().size();
         return size >= this.getMin() && size <= this.getMax();
     }

@@ -3,7 +3,9 @@ package me.synapz.paintball.storage;
 
 import me.synapz.paintball.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -107,6 +109,32 @@ public final class PlayerData extends PaintballFile {
         return stats;
     }
 
+    public  void paginate(CommandSender sender, StatType type, int page, int pageLength) {
+        SortedMap<String, String> allPlayers = new TreeMap<String, String>(Collections.<String>reverseOrder());
+        for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
+            String name;
+            String score;
+            if (Bukkit.getServer().getPlayer(UUID.fromString(uuid)) == null) {
+                name = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
+                score = getPlayerStats(UUID.fromString(uuid)).get(type);
+            } else {
+                name = Bukkit.getPlayer(UUID.fromString(uuid)).getName();
+                score = getPlayerStats(UUID.fromString(uuid)).get(type);
+            }
+            allPlayers.put(name, score);
+        }
+        sender.sendMessage(ChatColor.YELLOW + "List: Page (" + String.valueOf(page) + " of " + (((allPlayers.size() % pageLength) == 0) ? allPlayers.size() / pageLength : (allPlayers.size() / pageLength) + 1));
+        int i = 0, k = 0;
+        page--;
+        for (final Map.Entry<String, String> e : allPlayers.entrySet()) {
+            k++;
+            if ((((page * pageLength) + i + 1) == k) && (k != ((page * pageLength) + pageLength + 1))) {
+                i++;
+                sender.sendMessage(ChatColor.YELLOW + e.getKey() + " - " + e.getValue());
+            }
+        }
+    }
+
     public void getPage(Player player, StatType type, int page) {
         // int totalPages = getFileConfig().getConfigurationSection("Player-Data").getKeys(false).size() % 8;
         int current = Integer.parseInt(page+""+page);
@@ -171,7 +199,7 @@ public final class PlayerData extends PaintballFile {
     private ItemStack[] getLastInventoryContents(UUID id, String path) {
         ItemStack[] items = new ItemStack[data.getList("Player-Data." + id + path).size()];
         int count = 0;
-        for (Object item : data.getList(id + path).toArray()) {
+        for (Object item : data.getList("Player-Data." + id + path).toArray()) {
             if (item instanceof ItemStack) {
                 items[count] = new ItemStack((ItemStack)item);
                 count++;
