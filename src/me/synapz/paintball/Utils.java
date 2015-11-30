@@ -1,13 +1,13 @@
 package me.synapz.paintball;
 
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.Wool;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -103,6 +103,38 @@ public class Utils {
             }
         }
         return array;
+    }
+
+    public static void addLobbyItems(final Player player, final Arena arena) {
+        player.getInventory().clear();
+        List<ItemStack> items = new ArrayList<ItemStack>() {{
+            for (Team team : arena.getArenaTeamList()) {
+                if (!arena.getTeam(player).getTitleName().equals(team.getTitleName())) {
+                    // quick check to block spawning the wool the player is on
+                    add(makeWool(team.getChatColor() + "Join " + team.getTitleName(), team.getDyeColor()));
+                }
+            }
+        }};
+
+        if (items.size() > 9) {
+            String theme = Settings.getSettings().getTheme();
+            String sec = Settings.getSettings().getSecondaryColor();
+            player.getInventory().setItem(0, makeWool(sec + ">> " + theme + "Click to change team" + sec + " <<", arena.getTeam(player).getDyeColor()));
+            return;
+        }
+
+        for (ItemStack item : items) {
+            int spot = items.indexOf(item);
+            player.getInventory().setItem(spot, items.get(spot));
+        }
+    }
+
+    public static ItemStack makeWool(String name, DyeColor color) {
+        ItemStack wool = new Wool(color).toItemStack(1);
+        ItemMeta woolMeta = wool.getItemMeta();
+        woolMeta.setDisplayName(name);
+        wool.setItemMeta(woolMeta);
+        return wool;
     }
 
     public static Team max(Arena a , HashMap<Team, Integer> size) {

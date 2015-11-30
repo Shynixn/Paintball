@@ -33,8 +33,15 @@ public class CountdownTask extends BukkitRunnable {
         this.isLobbyCountdown = isLobbyCountdown;
     }
 
+    @Override
     public void run() {
         // TODO: If player leaves and joins fast they will get the countdown two times.
+        if (a.getLobbyPlayers().keySet().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
+            // cancel it because people left and it doesnt have enough players
+            hasTaskRunning = false;
+            this.cancel();
+            return;
+        }
         hasTaskRunning = true;
         if (counter <= 0) {
             hasTaskRunning = false;
@@ -42,6 +49,7 @@ public class CountdownTask extends BukkitRunnable {
             if (isLobbyCountdown)
                 a.startGame();
             this.cancel();
+            return;
         } else {
             if (counter <= noInterval || counter % interval == 0) {
                 chatMessage = chatMessage.replace("%time%", counter+"");

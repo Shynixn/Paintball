@@ -45,13 +45,7 @@ public class PbPlayer {
         if (!Settings.WOOL_HELMET) {
             return;
         }
-        
-        ItemStack wool = new Wool(team.getDyeColor()).toItemStack(1);
-        ItemMeta woolMeta = wool.getItemMeta();
-        woolMeta.setDisplayName(team.getChatColor() + team.getTitleName() + " Team");
-        wool.setItemMeta(woolMeta);
-        
-        player.getInventory().setHelmet(wool);
+        player.getInventory().setHelmet(Utils.makeWool(team.getChatColor() + team.getTitleName() + "Team", team.getDyeColor()));
     }
     
     public Player getPlayer() {

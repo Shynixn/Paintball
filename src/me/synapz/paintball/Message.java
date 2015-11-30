@@ -31,7 +31,7 @@ public class Message {
         
         for (String string : messages) {
             if (titleAPI && Settings.TITLE_API && sender instanceof Player) {
-                TitleAPI.sendTitle((Player)sender, 10, 10, 10, Settings.getSettings().getPrefix(), string);
+                TitleAPI.sendTitle((Player)sender, 10, 10, 10, Settings.getSettings().getPrefix(), color + string);
             }
             sender.sendMessage(Settings.getSettings().getPrefix() + color + string);
         }

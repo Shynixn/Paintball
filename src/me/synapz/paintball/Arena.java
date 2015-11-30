@@ -320,7 +320,7 @@ public class Arena {
         lobby.put(player, team);
         Settings.getSettings().getCache().savePlayerInformation(player);
         Utils.removePlayerSettings(player);
-        
+        Utils.addLobbyItems(player, this);
         player.teleport(getLobbySpawn(team));
         broadcastMessage(GREEN, team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + lobby.keySet().size() + "/" + this.getMax(), GREEN + "Joined arena " + GRAY + lobby.keySet().size() + "/" + this.getMax());
         Message.getMessenger().msg(player, true, true, GREEN + "You have joined the arena!");
@@ -402,10 +402,6 @@ public class Arena {
             Settings.getSettings().getCache().restorePlayerInformation(pbPlayer.getPlayer().getUniqueId());
             win(getTeam((pbPlayer.getPlayer())));
             inGame.keySet().remove(getPbPlayer(player));
-            state = ArenaState.WAITING;
-        }
-        if (inGame.keySet().isEmpty()) {
-            // in case min players is set to 0, when a player leaves arena doesn't get reset
             state = ArenaState.WAITING;
         }
     }
@@ -511,6 +507,10 @@ public class Arena {
                 ArenaManager.getArenaManager().removeSignLocation(loc, this);
             }
         }
+    }
+
+    public Map<Player, Team> getLobbyPlayers() {
+        return lobby;
     }
     
     private void advSave() {
