@@ -21,21 +21,6 @@ import java.util.Set;
 
 public class Utils {
 
-    public static void removePlayerSettings(Player player) {
-        // todo: exp saves
-        player.getInventory().clear();
-        player.getInventory().setHelmet(null);
-        player.getInventory().setChestplate(null);
-        player.getInventory().setLeggings(null);
-        player.getInventory().setBoots(null);
-        player.setGameMode(GameMode.SURVIVAL);
-        player.setFlying(false);
-        player.setAllowFlight(false);
-        player.setFoodLevel(20);
-        player.setHealth(player.getMaxHealth());
-        player.setFireTicks(0);
-    }
-
     public static List<ItemStack> getInventoryList(Player p, boolean isArmourList) {
         ItemStack[] list = isArmourList ? p.getInventory().getArmorContents() : p.getInventory().getContents();
         List<ItemStack> returnList = new ArrayList<ItemStack>();
@@ -106,27 +91,7 @@ public class Utils {
     }
 
     public static void addLobbyItems(final Player player, final Arena arena) {
-        player.getInventory().clear();
-        List<ItemStack> items = new ArrayList<ItemStack>() {{
-            for (Team team : arena.getArenaTeamList()) {
-                if (!arena.getTeam(player).getTitleName().equals(team.getTitleName())) {
-                    // quick check to block spawning the wool the player is on
-                    add(makeWool(team.getChatColor() + "Join " + team.getTitleName(), team.getDyeColor()));
-                }
-            }
-        }};
 
-        if (items.size() > 9) {
-            String theme = Settings.getSettings().getTheme();
-            String sec = Settings.getSettings().getSecondaryColor();
-            player.getInventory().setItem(0, makeWool(sec + ">> " + theme + "Click to change team" + sec + " <<", arena.getTeam(player).getDyeColor()));
-            return;
-        }
-
-        for (ItemStack item : items) {
-            int spot = items.indexOf(item);
-            player.getInventory().setItem(spot, items.get(spot));
-        }
     }
 
     public static ItemStack makeWool(String name, DyeColor color) {

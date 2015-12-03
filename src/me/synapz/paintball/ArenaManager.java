@@ -53,7 +53,7 @@ public class ArenaManager {
 
     public void stopArenas() {
         for (Arena a : getArenas()) {
-            a.removePlayers();
+            a.forceRemovePlayers();
         }
     }
 

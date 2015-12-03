@@ -36,7 +36,7 @@ public class CountdownTask extends BukkitRunnable {
     @Override
     public void run() {
         // TODO: If player leaves and joins fast they will get the countdown two times.
-        if (a.getLobbyPlayers().keySet().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
+        if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
             // cancel it because people left and it doesnt have enough players
             hasTaskRunning = false;
             this.cancel();

@@ -6,6 +6,8 @@ import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import static org.bukkit.ChatColor.RED;
+
 public class Join extends Command {
 
     public void onCommand(Player player, String[] args) {
@@ -30,6 +32,10 @@ public class Join extends Command {
                 Message.getMessenger().msg(player, false, ChatColor.RED, "You are already in " + a.toString() + ChatColor.RED + ".");
                 return;
             }
+        }
+        if (arena.getLobbyPlayers().size() == arena.getMax()) {
+            Message.getMessenger().msg(player, false, RED, this.toString() + RED + " is full!");
+            return;
         }
         switch (arena.getState()) {
             case IN_PROGRESS:

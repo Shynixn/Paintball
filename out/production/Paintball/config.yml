@@ -15,13 +15,30 @@ color-player-title: true
 # This will make paintballs slash (turns surrounding blocks red/blue clay)
 paintball-splash: true
 
+# If you have TitleAPI plugin installed and it is true in config, the countdown will be shown in the middle of the screen and chat
 countdown:
-   # Time in seconds for the round to start
-   time: 15
-   # The delay when showing numbers. Ex. 15...10...5...
-   interval: 5
-   # The number at which there will be no delay in showing numbers. Ex. 15...10...5...4...3...2...1...
-   no-interval: 4
+   # Lobby countdown configuration - when the minimum amount of players is reached, a timer will begin on when to move
+   # players from lobby to their team's spawnpoints
+   lobby:
+     # How long it will take until players are teleported to their spawnpoints. The longer the more players may join.
+     # Set 0 for no countdown
+     countdown: 60
+     # The interval when showing the numbers. Ex. 60...50...40...
+     # Set interval the same as the countdown to remove any countdown messages
+     interval: 10
+     # The number at which there will be no delay in showing numbers. Ex. 15...10...5......3...2...1...
+     no-interval: 3
+   # Arena countdown configuration - after players have been set to their team spawnpoints, a countdown
+   # will begin on when to start to match
+   arena:
+     # How long it will take until the game starts.
+     # Set 0 for no countdown
+     countdown: 10
+     # The interval when showing the numbers. Ex. 15...10...5
+     # Set interval the same as the countdown to remove any countdown messages
+     interval: 5
+     # When there will be no delay in showing numbers. Ex. 10...5...4...3...2...1
+     no-interval: 4
 
 # broadcastwinner
 Teams:
@@ -43,6 +60,8 @@ Teams:
    f: "White"
 
 Chat:
+   # chatting: true/false - completly disable chat
+   #lobby chat/arena - disable chat and use global chat
    # Will broadcast winning team to all players on the server.
    broadcast-winner: false
    # Chat format for specators. Tags: %ARENA%, %PLAYER%, %MSG%, %PREFIX%, %STATS%??
