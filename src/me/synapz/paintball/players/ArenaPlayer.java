@@ -16,7 +16,7 @@ import java.util.List;
 import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;
 
-public class ArenaPlayer extends LobbyPlayer {
+public class ArenaPlayer extends PaintballPlayer {
 
     public ArenaPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
@@ -25,27 +25,25 @@ public class ArenaPlayer extends LobbyPlayer {
         initPlayer();
     }
 
-    public void giveArmour() {}
-    @Override
+    public void chat(String message) {
+        String chat = Settings.ARENA_CHAT;
+
+        chat = chat.replace("%TEAMNAME%", team.getTitleName());
+        chat = chat.replace("%TEAMCOLOR%", team.getChatColor() + "");
+        chat = chat.replace("%MSG%", message);
+        chat = chat.replace("%PREFIX%", Settings.getSettings().getPrefix());
+        chat = chat.replace("%PLAYER%", player.getName());
+        for (PaintballPlayer pbPlayer : arena.getAllPlayers().values()) {
+            pbPlayer.getPlayer().sendMessage(chat);
+        }
+    }
+
     protected void initPlayer() {
         player.teleport(arena.getSpawn(team));
-        storeInformation();
-        giveItems();
-        giveWoolHelmet();
-        giveArmour();
+        // TODO: openKit menu, stop from being able to move
     }
 
     public void leaveArena() {
-
-    }
-
-    @Override
-    protected void giveItems() {
-
-    }
-
-    @Override
-    protected void storeInformation() {
-        arena.addLobbyPlayer(this);
+        // TODO: remove player from arena
     }
 }

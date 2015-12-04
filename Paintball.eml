@@ -3,4 +3,8 @@
 	<output-test url="file://$MODULE_DIR$/out/test/Paintball"/>
 	<exclude-output/>
 	<contentEntry url="file://$MODULE_DIR$"/>
+	<levels>
+		<level name="Spigot1881" value="project"/>
+		<level name="TitleAPI1" value="project"/>
+	</levels>
 </component>

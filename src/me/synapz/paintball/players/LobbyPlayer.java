@@ -21,10 +21,6 @@ public class LobbyPlayer extends PaintballPlayer {
         super(a, t, p);
     }
 
-    public void giveWoolHelmet() {
-        player.getInventory().setHelmet(Utils.makeWool(team.getTitleName(), team.getDyeColor()));
-    }
-
     protected void initPlayer() {
         player.teleport(arena.getLobbySpawn(team));
         stripValues();
@@ -47,8 +43,7 @@ public class LobbyPlayer extends PaintballPlayer {
         chat = chat.replace("%PREFIX%", Settings.getSettings().getPrefix());
         chat = chat.replace("%PLAYER%", player.getName());
         for (PaintballPlayer pbPlayer : arena.getAllPlayers().values()) {
-            if (pbPlayer != this)
-                pbPlayer.getPlayer().sendMessage(chat);
+            pbPlayer.getPlayer().sendMessage(chat);
         }
     }
 

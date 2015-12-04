@@ -10,6 +10,7 @@ import java.util.Set;
 
 public class CountdownTask extends BukkitRunnable {
 
+    // TODO: bug... mulitple arenas + static will make it not run two countdown tasks at the same time!!
     public static boolean hasTaskRunning;
 
     private final Arena a;
@@ -36,6 +37,7 @@ public class CountdownTask extends BukkitRunnable {
     @Override
     public void run() {
         // TODO: If player leaves and joins fast they will get the countdown two times.
+        // TODO: check if this part works
         if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
             // cancel it because people left and it doesnt have enough players
             hasTaskRunning = false;
