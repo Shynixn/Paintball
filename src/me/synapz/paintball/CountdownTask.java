@@ -6,7 +6,7 @@ import static org.bukkit.ChatColor.GREEN;
 
 public class CountdownTask extends BukkitRunnable {
 
-    // TODO: bug... mulitple arenas + static will make it not run two countdown tasks at the same time!!
+    // TODO: bug... multiple arenas + static will make it not run two countdown tasks at the same time!!
     public static boolean hasTaskRunning;
 
     private final Arena a;
@@ -30,12 +30,14 @@ public class CountdownTask extends BukkitRunnable {
         this.isLobbyCountdown = isLobbyCountdown;
     }
 
+
+    // TODO: Find out why @Override is not allowed here and how to work around it?
     @Override
     public void run() {
         // TODO: If player leaves and joins fast they will get the countdown two times.
         // TODO: check if this part works
         if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
-            // cancel it because people left and it doesnt have enough players
+            // cancel it because people left and it doesn't have enough players
             hasTaskRunning = false;
             this.cancel();
             return;
