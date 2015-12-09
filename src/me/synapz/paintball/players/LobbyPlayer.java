@@ -1,9 +1,6 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.Message;
-import me.synapz.paintball.Team;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.*;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -11,10 +8,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
 
 public class LobbyPlayer extends PaintballPlayer {
 
@@ -49,7 +48,7 @@ public class LobbyPlayer extends PaintballPlayer {
     }
 
     public void leaveArena() {
-
+        Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
     }
 
     protected void giveItems() {

@@ -1,18 +1,23 @@
 package me.synapz.paintball;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.GameMode;
+import me.synapz.paintball.storage.Settings;
+import org.bukkit.*;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Wool;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class Utils {
 
@@ -70,7 +75,7 @@ public class Utils {
     }
 
     public static void countdown(int counter, int interval, int noInterval, Arena a, String chatMessage, String screenMessage, String finishedMessage, boolean isLobbyCountDown) {
-        if (!CountdownTask.hasTaskRunning) {
+        if (!CountdownTask.arenasRunningTask.contains(a)) {
             final Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
             new CountdownTask(counter, interval, noInterval, a, chatMessage, screenMessage, finishedMessage, isLobbyCountDown).runTaskTimer(plugin, 0, 20);
         }
@@ -85,10 +90,6 @@ public class Utils {
         return array;
     }
 
-    public static void addLobbyItems(final Player player, final Arena arena) {
-
-    }
-
     public static ItemStack makeWool(String name, DyeColor color) {
         ItemStack wool = new Wool(color).toItemStack(1);
         ItemMeta woolMeta = wool.getItemMeta();
@@ -97,10 +98,10 @@ public class Utils {
         return wool;
     }
 
-    public static Team max(Arena a, HashMap<Team, Integer> size) {
+    public static Team max(Arena a , HashMap<Team, Integer> size) {
         // Get all the sizes of each Team and assign it to numbers array
         // in case there aren't any players in the arena
-        if (size.keySet().size() == 0) {
+        if (size.keySet().size() == 0){
             for (Team t : a.getArenaTeamList()) {
                 return t;
             }
@@ -122,8 +123,9 @@ public class Utils {
         int smallest = numbers[0];
         int largetst = numbers[0];
 
-        for (int i = 1; i < numbers.length; i++) {
-            if (numbers[i] > largetst)
+        for(int i=1; i< numbers.length; i++)
+        {
+            if(numbers[i] > largetst)
                 largetst = numbers[i];
             else if (numbers[i] < smallest)
                 smallest = numbers[i];

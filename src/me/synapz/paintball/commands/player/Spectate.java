@@ -8,7 +8,7 @@ import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class Spectate extends Command {
+public class Spectate extends Command{
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[1]);
@@ -21,9 +21,18 @@ public class Spectate extends Command {
                 case DISABLED:
                     Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is disabled.");
                     return;
+                case WAITING:
+                    Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently not in progress, nothing to spectate.");
+                    return;
                 default:
                     break;
             }
+
+            if (arena.getAllPlayers().keySet().contains(player)) {
+                Message.getMessenger().msg(player, false, ChatColor.RED, "You are already in an arena!");
+                return;
+            }
+
             Message.getMessenger().msg(player, true, ChatColor.GREEN, "Joining " + arena.toString() + " spectate zone.");
             arena.joinSpectate(player);
         }

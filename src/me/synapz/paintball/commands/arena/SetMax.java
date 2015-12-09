@@ -1,14 +1,13 @@
 package me.synapz.paintball.commands.arena;
 
+import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Message;
 import me.synapz.paintball.commands.Command;
+import static org.bukkit.ChatColor.*;
 import org.bukkit.entity.Player;
 
-import static org.bukkit.ChatColor.*;
-
-public class SetMax extends Command {
+public class SetMax extends Command{
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);

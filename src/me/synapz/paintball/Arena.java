@@ -9,138 +9,135 @@ import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.players.SpectatorPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
+import static org.bukkit.ChatColor.*;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.bukkit.ChatColor.*;
+import java.util.*;
 
 public class Arena {
+    
+    private FileConfiguration FILE = Settings.getSettings().getArenaFile();
 
+    private Map<Player, PaintballPlayer> allPlayers = new HashMap<Player, PaintballPlayer>();
+    private ArrayList<SpectatorPlayer> spectators = new ArrayList<SpectatorPlayer>();
+    private List<LobbyPlayer> lobby = new ArrayList<LobbyPlayer>();
+    private List<ArenaPlayer> inGame = new ArrayList<ArenaPlayer>();
+    
+    private boolean isMaxSet, isMinSet, isSpectateSet, isEnabled;
+    
+    private String name, currentName;
+    
     String maxPath = "Max-Players";
     String minPath = "Min-Players";
     String enabledPath = "Is-Enabled";
     String spectatePath = "Spectate-Loc";
     ArenaState state = ArenaState.NOT_SETUP;
-    private FileConfiguration FILE = Settings.getSettings().getArenaFile();
-    private Map<Player, PaintballPlayer> allPlayers = new HashMap<Player, PaintballPlayer>();
-    private ArrayList<SpectatorPlayer> spectators = new ArrayList<SpectatorPlayer>();
-    private List<LobbyPlayer> lobby = new ArrayList<LobbyPlayer>();
-    private List<ArenaPlayer> inGame = new ArrayList<ArenaPlayer>();
-    private boolean isMaxSet, isMinSet, isSpectateSet, isEnabled;
-    private String name, currentName;
-
+    
+    public enum ArenaState {
+        NOT_SETUP,
+        WAITING,
+        DISABLED,
+        IN_PROGRESS
+    }
+    
     public Arena(String name, String currentName) {
         this.currentName = currentName;
         this.name = name;
-
+        
         for (Team t : ArenaManager.getArenaManager().getTeamsList(this)) {
             getArenaTeamList().add(t);
         }
     }
-
+    
     public String getName() {
         return this.currentName;
     }
-
+    
+    public String getDefaultName() {
+        return name;
+    }
+    
     private void setName(String newName) {
         FILE.set(getPath() + "Name", newName);
         this.currentName = newName;
     }
-
-    public String getDefaultName() {
-        return name;
-    }
-
+    
     public void removeArena() {
         FILE.set("Arenas." + this.getDefaultName(), null);
         ArenaManager.getArenaManager().getArenas().remove(this);
         advSave();
     }
-
+    
     public void rename(String newName) {
         // Rename .Name to arenas new name
         FILE.set(getPath() + "Name", newName);
-
+        
         // Rename the name in memory
         setName(newName);
         advSave();
     }
-
+    
     public Location getSpawn(Team team) {
         return (Location) FILE.get(team.getPath() + ".Spawn");
     }
-
+    
     public void setArenaSpawn(Location location, Team team) {
         FILE.set(team.getPath() + ".Spawn", location);
         advSave();
     }
-
+    
     public void setLobbySpawn(Location location, Team team) {
         FILE.set(team.getPath() + ".Lobby", location);
         advSave();
     }
-
+    
     public Location getLobbySpawn(Team team) {
         return (Location) FILE.get(team.getPath() + ".Lobby");
     }
-
-    private Location getSpectateLoc() {
-        return (Location) FILE.get(getPath() + spectatePath);
-    }
-
+    
     public void setSpectateLoc(Location loc) {
         isSpectateSet = true;
         FILE.set(getPath() + spectatePath, loc);
         advSave();
     }
-
+    
+    public Location getSpectateSpawn() {
+        return (Location) FILE.get(getPath() + spectatePath);
+    }
+    
     public void joinSpectate(Player player) {
         new SpectatorPlayer(this, player);
-        // TODO: add check to command
-        // TODO: set name color to gray
-        /*if (this.containsPlayer(player)) {
-            Message.getMessenger().msg(player, false, RED, "You are already in an arena!");
-            return;
-        }
-        Settings.getSettings().getCache().savePlayerInformation(player);
-        Utils.removePlayerSettings(player);
-        player.teleport(getSpectateLoc());
-        spectators.add(player);
-        */
     }
-
+    
     public void setMaxPlayers(int max) {
         isMaxSet = true;
         FILE.set(getPath() + maxPath, max);
         advSave();
     }
-
+    
     public void setMinPlayers(int min) {
         isMinSet = true;
         FILE.set(getPath() + minPath, min);
         advSave();
     }
-
+    
     public int getMax() {
         return FILE.getInt(getPath() + maxPath);
     }
-
+    
     public int getMin() {
         return FILE.getInt(getPath() + minPath);
     }
-
+    
     public List<Team> getArenaTeamList() {
         return ArenaManager.getArenaManager().getTeamsList(this);
     }
-
+    
     public void setArenaTeamList(List<Team> teams) {
         List<String> teamColors = new ArrayList<String>();
         for (Team t : teams) {
@@ -149,15 +146,15 @@ public class Arena {
         Settings.getSettings().getArenaFile().set(getPath() + "Teams", teamColors);
         advSave();
     }
-
+    
     public String getSteps() {
         ArrayList<String> steps = new ArrayList<String>();
         String finalString;
         ChatColor done = STRIKETHROUGH;
         String end = RESET + "" + GRAY;
         String prefix = BLUE + "Steps: ";
-
-        steps = Utils.addItemsToArray(steps, isMaxSet ? done + "max" + end : "max", isMinSet ? done + "min" + end : "min");
+        
+        steps = Utils.addItemsToArray(steps, isMaxSet ? done + "max"+end : "max", isMinSet ? done + "min"+end : "min");
         for (Team t : getArenaTeamList()) {
             String lobbyName = t.getTitleName().toLowerCase().replace(" ", "") + "-lobby";
             String spawnName = t.getTitleName().toLowerCase().replace(" ", "") + "-spawn";
@@ -166,15 +163,15 @@ public class Arena {
         }
         Utils.addItemsToArray(steps, isSpectateSet ? done + "spectate" + end : "spectate", isEnabled ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "set-teams" : "");
         finalString = GRAY + Joiner.on(", ").join(steps);
-
+        
         return isSetup() && isEnabled ? prefix + GRAY + "Complete. Arena is open!" : prefix + finalString;
-
+        
     }
-
+    
     public void setEnabled(boolean setEnabled, Player sender) {
         String message;
         ChatColor color;
-
+        
         if (setEnabled) {
             if (!isSetup()) {
                 color = RED;
@@ -206,7 +203,7 @@ public class Arena {
         advSave();
         Message.getMessenger().msg(sender, false, color, this.toString() + " " + message);
     }
-
+    
     public boolean isSetup() {
         boolean spawnsSet = true;
         if (getArenaTeamList().isEmpty()) {
@@ -216,7 +213,7 @@ public class Arena {
             if (FILE.get(t.getPath() + ".Lobby") == null) {
                 spawnsSet = false;
             }
-            if (FILE.get(t.getPath() + ".Spawn") == null) {
+            if (FILE.get(t.getPath() + ".Spawn")== null) {
                 spawnsSet = false;
             }
         }
@@ -224,28 +221,23 @@ public class Arena {
     }
 
     public boolean containsPlayer(Player player) {
-        // TODO: does this even work?
         return allPlayers.keySet().contains(player);
     }
-
-    //public Team getTeam(Player player) {
-    //  return lobby.keySet().contains(player) ? lobby.get(player) : inGame.get(getPbPlayer(player));
-    //}
 
     public PaintballPlayer getPaintballPlayer(Player player) {
         return allPlayers.get(player);
     }
-
+    
     public void loadValues(FileConfiguration file) {
         String[] paths = {"Max-Players", "Min-Players", "Is-Enabled", "Spectate-Loc"};
         int pathValue = 0;
-
+        
         for (String value : paths) {
             boolean isSet = false;
             if (!FILE.getString(getPath() + value).equals("not_set")) {
                 isSet = true;
             }
-
+            
             switch (pathValue) {
                 case 0:
                     isMaxSet = isSet;
@@ -270,7 +262,7 @@ public class Arena {
             }
         }
     }
-
+    
     public void forceStart(Player sender) {
         // TODO: add ifs to command
         String reason = "";
@@ -291,7 +283,7 @@ public class Arena {
         }
         Message.getMessenger().msg(sender, false, RED, "Cannot force start " + this.toString(), this.toString() + RED + reason);
     }
-
+    
     public void forceStop(Player sender) {
         if (state == ArenaState.IN_PROGRESS) {
             this.forceRemovePlayers();
@@ -304,16 +296,16 @@ public class Arena {
         }
         Message.getMessenger().msg(sender, false, RED, "Cannot force stop " + this.toString(), this.toString() + RED + " is not in progress.");
     }
-
+    
     public String toString() {
         return "Arena " + GRAY + this.getName() + GREEN;
     }
-
+    
+    
     public String getPath() {
         return "Arenas." + name + ".";
     }
-
-    // TODO: move getTeamWithLessPlayers to lobby
+    
     public void joinLobby(Player player, Team team) {
         new LobbyPlayer(this, team == null ? getTeamWithLessPlayers() : team, player);
     }
@@ -329,7 +321,7 @@ public class Arena {
         allPlayers.remove(lobby);
         Utils.countdown(Settings.ARENA_COUNTDOWN, Settings.ARENA_INTERVAL, Settings.ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", false);
     }
-
+    
     // Used for server reload and forcestops, so no messages will be sent
     public void forceRemovePlayers() {
         for (PaintballPlayer player : allPlayers.values()) {
@@ -358,18 +350,18 @@ public class Arena {
         spectators.removeAll(spectators);
         state = ArenaState.WAITING; */
     }
-
+    
     public void leave(Player player) {
         /*
         if (Team.getPluginScoreboard().getTeam(getTeam(player).getTitleName()) != null)     {
             Team.getPluginScoreboard().getTeam(getTeam(player).getTitleName()).removePlayer(player);
         }
-
+        
         lobby.keySet().remove(player);
         inGame.keySet().remove(getPbPlayer(player));
         spectators.remove(player);
         Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
-
+        
         if (inGame.keySet().size() == 1) {
             PbPlayer pbPlayer = (PbPlayer) inGame.keySet().toArray()[0];
             Team.getPluginScoreboard().getTeam(inGame.get(pbPlayer).getTitleName()).removePlayer(player);
@@ -380,12 +372,12 @@ public class Arena {
         }
         */
     }
-
+    
     public void win(Team team) {
         // TODO: add you won!
         broadcastMessage(GREEN, "The " + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
     }
-
+    
     public void broadcastMessage(ChatColor color, String chatMessage, String screenMessage) {
         for (PaintballPlayer pbPlayer : allPlayers.values()) {
             if (!screenMessage.equals("") && Settings.TITLE_API) {
@@ -395,7 +387,7 @@ public class Arena {
             pbPlayer.getPlayer().sendMessage(Settings.getSettings().getPrefix() + color + chatMessage);
         }
     }
-
+    
     private Team getTeamWithLessPlayers() {
         // Make new HashMap with Team to Size, this way we can easily extract the largest size
         HashMap<Team, Integer> size = new HashMap<Team, Integer>();
@@ -404,25 +396,25 @@ public class Arena {
             size.put(t, 0);
             for (LobbyPlayer lobbyPlayer : lobby) {
                 if (lobbyPlayer.getTeam().getTitleName().equals(t.getTitleName())) {
-                    size.put(t, size.get(t) + 1);
+                    size.put(t, size.get(t)+1);
                 }
             }
         }
         return Utils.max(this, size);
     }
-
+    
     public boolean canStartTimer() {
         int size = lobby.size();
         return size >= this.getMin() && size <= this.getMax();
     }
-
+    
     public ArenaState getState() {
         if (!isSetup()) {
             state = ArenaState.NOT_SETUP;
         }
         return state;
     }
-
+    
     public String getStateAsString() {
         ChatColor color = RED;
         switch (state) {
@@ -441,11 +433,11 @@ public class Arena {
         }
         return color + state.toString();
     }
-
+    
     public void updateAllSigns() {
         List<String> signLocs = Settings.getSettings().getArenaFile().getStringList(getPath() + "Sign-Locs");
         if (signLocs == null) return;
-
+        
         for (String s : signLocs) {
             String[] locStr = s.split(",");
             Location loc = new Location(Bukkit.getWorld(locStr[0]), Integer.parseInt(locStr[1]), Integer.parseInt(locStr[2]), Integer.parseInt(locStr[3]));
@@ -490,6 +482,9 @@ public class Arena {
         return inGame;
     }
 
+    public List<SpectatorPlayer> getSpectators() {
+        return spectators;
+    }
     public Map<Player, PaintballPlayer> getAllPlayers() {
         return allPlayers;
     }
@@ -506,12 +501,5 @@ public class Arena {
         } else if (isSetup() && !isEnabled) {
             state = ArenaState.DISABLED;
         }
-    }
-
-    public enum ArenaState {
-        NOT_SETUP,
-        WAITING,
-        DISABLED,
-        IN_PROGRESS
     }
 }

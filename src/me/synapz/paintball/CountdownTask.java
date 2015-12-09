@@ -1,13 +1,18 @@
 package me.synapz.paintball;
 
+import me.synapz.paintball.storage.Settings;
+import static org.bukkit.ChatColor.*;
+
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import static org.bukkit.ChatColor.GREEN;
+import java.util.ArrayList;
+import java.util.Set;
 
 public class CountdownTask extends BukkitRunnable {
 
-    // TODO: bug... multiple arenas + static will make it not run two countdown tasks at the same time!!
-    public static boolean hasTaskRunning;
+    // used to check if there is a current instance of CountdownTask running for an arena; we don't want double messages!
+    public static ArrayList<Arena> arenasRunningTask = new ArrayList<Arena>();
 
     private final Arena a;
     private final int interval;
@@ -28,35 +33,33 @@ public class CountdownTask extends BukkitRunnable {
         this.screenMessage = screenMessage;
         this.finishedMessage = finishedMessage;
         this.isLobbyCountdown = isLobbyCountdown;
+
+        arenasRunningTask.add(a);
     }
 
-
-    // TODO: Find out why @Override is not allowed here and how to work around it?
     @Override
     public void run() {
         // TODO: If player leaves and joins fast they will get the countdown two times.
         // TODO: check if this part works
         if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
-            // cancel it because people left and it doesn't have enough players
-            hasTaskRunning = false;
+            // cancel it because people left and it doesnt have enough players
+            arenasRunningTask.remove(a);
             this.cancel();
-            return;
         }
-        hasTaskRunning = true;
         if (counter <= 0) {
-            hasTaskRunning = false;
+            arenasRunningTask.remove(a);
             a.broadcastMessage(GREEN, finishedMessage, finishedMessage);
             if (isLobbyCountdown)
                 a.startGame();
             this.cancel();
-            return;
         } else {
             if (counter <= noInterval || counter % interval == 0) {
-                chatMessage = chatMessage.replace("%time%", counter + "");
-                screenMessage = screenMessage.replace("%time%", counter + "");
+                // replace the messages and broadcast it, then set back the message to it's layout
+                chatMessage = chatMessage.replace("%time%", counter+"");
+                screenMessage = screenMessage.replace("%time%", counter+"");
                 a.broadcastMessage(GREEN, chatMessage, screenMessage);
-                chatMessage = chatMessage.replace(counter + "", "%time%");
-                screenMessage = screenMessage.replace(counter + "", "%time%");
+                chatMessage = chatMessage.replace(counter+"", "%time%");
+                screenMessage = screenMessage.replace(counter+"", "%time%");
             }
         }
         counter--;

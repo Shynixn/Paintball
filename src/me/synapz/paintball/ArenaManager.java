@@ -3,6 +3,8 @@ package me.synapz.paintball;
 import com.google.common.base.Joiner;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
+import static org.bukkit.ChatColor.*;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,15 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static org.bukkit.ChatColor.*;
-
 public class ArenaManager {
 
-    private static ArenaManager instance = new ArenaManager();
-    private ArrayList<Arena> arenas = new ArrayList<Arena>();
+    private ArenaManager() {}
 
-    private ArenaManager() {
-    }
+    private static ArenaManager instance = new ArenaManager();
+
+    private ArrayList<Arena> arenas = new ArrayList<Arena>();
 
     public static ArenaManager getArenaManager() {
         return instance;
@@ -64,7 +64,7 @@ public class ArenaManager {
         }
         return teamList;
     }
-
+    
     public void addNewArenaToConfig(Arena arena) {
         String[] steps = {"Name", "Spectate-Loc", "Max-Players", "Min-Players", "Is-Enabled", "Teams"};
         String id = arena.getDefaultName();
@@ -74,7 +74,7 @@ public class ArenaManager {
                 Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, arena.getName());
             } else if (value.equals("Is-Enabled")) {
                 Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, false);
-            } else {
+            }else {
                 Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, "not_set");
             }
         }
@@ -134,7 +134,7 @@ public class ArenaManager {
                 a = new Arena(arenaName, name);
                 // set the value of that arena
                 a.loadValues(file);
-            } catch (Exception e) {
+            }catch (Exception e) {
                 Message.getMessenger().msg(Bukkit.getConsoleSender(), false, RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
                 e.printStackTrace();
             }

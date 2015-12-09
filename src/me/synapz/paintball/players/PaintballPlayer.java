@@ -1,9 +1,14 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.Arena;
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class PaintballPlayer {
 

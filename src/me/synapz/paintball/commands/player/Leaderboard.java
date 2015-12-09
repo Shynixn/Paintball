@@ -3,7 +3,7 @@ package me.synapz.paintball.commands.player;
 
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Paintball;
-import me.synapz.paintball.StatType;
+import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class Leaderboard extends Command {
+public class Leaderboard extends Command{
 
     public void onCommand(Player player, String[] args) {
         StatType statType = null;

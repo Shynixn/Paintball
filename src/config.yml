@@ -27,7 +27,7 @@ countdown:
      # Set interval the same as the countdown to remove any countdown messages
      interval: 10
      # The number at which there will be no delay in showing numbers. Ex. 15...10...5......3...2...1...
-     no-interval: 3
+     no-interval: 10
    # Arena countdown configuration - after players have been set to their team spawnpoints, a countdown
    # will begin on when to start to match
    arena:
@@ -36,9 +36,9 @@ countdown:
      countdown: 10
      # The interval when showing the numbers. Ex. 15...10...5
      # Set interval the same as the countdown to remove any countdown messages
-     interval: 5
-     # When there will be no delay in showing numbers. Ex. 10...5...4...3...2...1
-     no-interval: 4
+     interval: 1
+     # When there will be no interval in showing numbers. Ex. 10...5...4...3...2...1
+     no-interval: 0
 
 # broadcastwinner
 Teams:

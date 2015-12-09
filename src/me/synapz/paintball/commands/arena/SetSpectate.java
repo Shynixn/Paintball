@@ -1,9 +1,9 @@
 package me.synapz.paintball.commands.arena;
 
 
+import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Message;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
