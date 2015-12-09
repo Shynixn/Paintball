@@ -7,7 +7,7 @@ import me.synapz.paintball.Utils;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.entity.Player;
 
-public class ForceStop extends Command{
+public class ForceStop extends Command {
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);

@@ -1,7 +1,6 @@
 package me.synapz.paintball;
 
 import me.synapz.paintball.commands.CommandManager;
-
 import me.synapz.paintball.events.*;
 import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;

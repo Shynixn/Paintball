@@ -1,9 +1,8 @@
 package me.synapz.paintball.commands;
 
 
-import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.Message;
 import me.synapz.paintball.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -27,18 +26,10 @@ public abstract class Command {
     public abstract int getMinArgs();
 
 
-
     public String getCorrectUsage(Command command) {
         String type = command.getCommandType() == CommandType.ADMIN ? "admin " : command.getCommandType() == CommandType.ARENA ? "arena " : "";
         String name = command.getName().equals("admin") || command.getName().equals("arena") ? "" : command.getName();
         return "Usage: /paintball " + type + name + " " + command.getArgs();
-    }
-
-
-    public enum CommandType {
-        ADMIN,
-        ARENA,
-        PLAYER;
     }
 
     public boolean teamCheck(Arena a, String teamString, Player sender) {
@@ -57,6 +48,11 @@ public abstract class Command {
         }
 
 
+    }
 
+    public enum CommandType {
+        ADMIN,
+        ARENA,
+        PLAYER
     }
 }

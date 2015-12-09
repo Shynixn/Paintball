@@ -8,7 +8,7 @@ import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class Spectate extends Command{
+public class Spectate extends Command {
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[1]);

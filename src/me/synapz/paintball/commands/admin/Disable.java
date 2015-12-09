@@ -1,15 +1,15 @@
 package me.synapz.paintball.commands.admin;
 
 
-import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.Message;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class Disable extends Command{
+public class Disable extends Command {
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);

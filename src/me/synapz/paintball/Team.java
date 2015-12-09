@@ -3,17 +3,21 @@ package me.synapz.paintball;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import static org.bukkit.Color.*;
-
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.bukkit.Color.*;
 
 public class Team {
 
-    private static Map<ChatColor, DyeColor> dyeColors = new EnumMap<ChatColor, DyeColor>(ChatColor.class){{
+    public static List<String> LIST = Arrays.asList("§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§0", "§a", "§b", "§c", "§d", "§e", "§f");
+    private static Map<ChatColor, DyeColor> dyeColors = new EnumMap<ChatColor, DyeColor>(ChatColor.class) {{
         put(ChatColor.DARK_BLUE, DyeColor.BLUE);
         put(ChatColor.DARK_GREEN, DyeColor.GREEN);
         put(ChatColor.DARK_AQUA, DyeColor.CYAN);
@@ -31,7 +35,6 @@ public class Team {
         put(ChatColor.YELLOW, DyeColor.YELLOW);
         put(ChatColor.WHITE, DyeColor.WHITE);
     }};
-
     private static Map<ChatColor, Color> colors = new EnumMap<ChatColor, Color>(ChatColor.class) {{
         put(ChatColor.DARK_BLUE, NAVY);
         put(ChatColor.DARK_GREEN, GREEN);
@@ -50,19 +53,12 @@ public class Team {
         put(ChatColor.YELLOW, YELLOW);
         put(ChatColor.WHITE, WHITE);
     }};
-
     private static Map<ChatColor, String> colorNames = new EnumMap<ChatColor, String>(ChatColor.class);
-
-    public static void loadTeamColors() {
-        colorNames = Settings.getSettings().getTeamNames();
-    }
-    public static List<String> LIST = Arrays.asList("§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§0", "§a", "§b", "§c", "§d", "§e", "§f");
     private static Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-
     private ChatColor color;
     private Arena arena;
 
-    public Team (Arena a, String colorCode) {
+    public Team(Arena a, String colorCode) {
 
         this.arena = a;
         this.color = ChatColor.getByChar(colorCode.charAt(1));
@@ -70,6 +66,10 @@ public class Team {
         if (sb.getTeam(this.getTitleName()) == null) {
             sb.registerNewTeam(this.getTitleName()).setPrefix(color + "");
         }
+    }
+
+    public static void loadTeamColors() {
+        colorNames = Settings.getSettings().getTeamNames();
     }
 
     public static Scoreboard getPluginScoreboard() {

@@ -8,7 +8,7 @@ import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class CreateArena extends Command{
+public class CreateArena extends Command {
 
     public void onCommand(Player player, String[] args) {
         String arenaName = args[2];
@@ -18,7 +18,7 @@ public class CreateArena extends Command{
             a.getName(); // test to see if the arena exists by getting its name
             Message.getMessenger().msg(player, false, ChatColor.RED, "An arena named " + arenaName + " already exists!");
             return;
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             // Arena doesn't except in the list of arenas therefore you can make it...
         }
 

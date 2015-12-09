@@ -1,12 +1,8 @@
 package me.synapz.paintball;
 
-import me.synapz.paintball.storage.Settings;
-import static org.bukkit.ChatColor.*;
-
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Set;
+import static org.bukkit.ChatColor.GREEN;
 
 public class CountdownTask extends BukkitRunnable {
 
@@ -54,11 +50,11 @@ public class CountdownTask extends BukkitRunnable {
             return;
         } else {
             if (counter <= noInterval || counter % interval == 0) {
-                chatMessage = chatMessage.replace("%time%", counter+"");
-                screenMessage = screenMessage.replace("%time%", counter+"");
+                chatMessage = chatMessage.replace("%time%", counter + "");
+                screenMessage = screenMessage.replace("%time%", counter + "");
                 a.broadcastMessage(GREEN, chatMessage, screenMessage);
-                chatMessage = chatMessage.replace(counter+"", "%time%");
-                screenMessage = screenMessage.replace(counter+"", "%time%");
+                chatMessage = chatMessage.replace(counter + "", "%time%");
+                screenMessage = screenMessage.replace(counter + "", "%time%");
             }
         }
         counter--;

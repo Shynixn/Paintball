@@ -5,7 +5,7 @@ import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.entity.Player;
 
-public class List extends Command{
+public class List extends Command {
 
     public void onCommand(Player player, String[] args) {
         ArenaManager.getArenaManager().getList(player);

@@ -4,16 +4,16 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.StatType;
 import me.synapz.paintball.commands.Command;
-import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import static org.bukkit.ChatColor.*;
-
 import java.util.Map;
 import java.util.UUID;
+
+import static org.bukkit.ChatColor.RESET;
+import static org.bukkit.ChatColor.STRIKETHROUGH;
 
 public class Stats extends Command {
 

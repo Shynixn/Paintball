@@ -1,8 +1,8 @@
 package me.synapz.paintball.events;
 
-import me.synapz.paintball.*;
-import me.synapz.paintball.storage.PaintballFile;
-import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.Message;
+import me.synapz.paintball.Paintball;
+import me.synapz.paintball.StatType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -15,7 +15,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class LeaderboardSigns implements Listener {
 
@@ -25,7 +24,8 @@ public class LeaderboardSigns implements Listener {
     // TODO: make a refresh thing go everytime a statistic is added, make it set the signs's everything and do checks if it changed so we dont double change them
     @EventHandler
     public void onSignCreate(SignChangeEvent e) {
-        if (e.getLines().length <= 3 || !e.getLine(0).equalsIgnoreCase("pb") || !e.getLine(1).equalsIgnoreCase("lb")) return;
+        if (e.getLines().length <= 3 || !e.getLine(0).equalsIgnoreCase("pb") || !e.getLine(1).equalsIgnoreCase("lb"))
+            return;
 
         if (!Message.getMessenger().signPermissionValidator(e.getPlayer(), "paintball.leaderboard.create")) {
             return;
@@ -77,12 +77,14 @@ public class LeaderboardSigns implements Listener {
 
     @EventHandler
     public void onLeaderboardSignclick(PlayerInteractEvent e) {
-        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN) return;
+        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN)
+            return;
         if (!(e.getClickedBlock().getState() instanceof Sign)) return;
         Sign sign = (Sign) e.getClickedBlock().getState();
         Player player = e.getPlayer();
 
-        if (sign.getLine(0) == null || !sign.getLine(0).equals("Paintball Leaderboard") || sign.getLine(1) == null) return;
+        if (sign.getLine(0) == null || !sign.getLine(0).equals("Paintball Leaderboard") || sign.getLine(1) == null)
+            return;
 
         // todo: get player of clicked sign's all stats and show them all their stats
     }

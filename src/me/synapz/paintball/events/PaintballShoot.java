@@ -6,7 +6,6 @@ import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.PbPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;

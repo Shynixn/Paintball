@@ -2,10 +2,10 @@ package me.synapz.paintball.commands;
 
 
 import me.synapz.paintball.Message;
+import me.synapz.paintball.commands.admin.*;
 import me.synapz.paintball.commands.arena.*;
 import me.synapz.paintball.commands.player.*;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.commands.admin.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,24 +14,36 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandManager implements CommandExecutor{
+public class CommandManager implements CommandExecutor {
 
-
-    private static Map<String, Command> COMMANDS = new HashMap<String, Command>();
 
     private static final String NO_CONSOLE_PERMS = "Console does not have access to that command!";
     private static final String COMMAND_NOT_FOUND = "Unknown Command! Type /paintball for a list of commands.";
+    private static Map<String, Command> COMMANDS = new HashMap<String, Command>();
 
+    // TODO: add command ARENA help
+    public static void displayHelp(Player player, Command.CommandType type) {
+        boolean isPlayerType = type == Command.CommandType.PLAYER;
+        boolean isArenatype = type == Command.CommandType.ARENA;
+        player.sendMessage(Message.getMessenger().getHelpTitle(type));
 
-    public void init() {
-    	addCommands(new Join(), new LeaveArena(), new Spectate(), new Stats(), new Leaderboard(), new List(), new Admin(Command.CommandType.PLAYER),
-    			new CreateArena(), new RemoveArena(), new SetLobbySpawn(), new SetSpawn(), new SetSpectate(), new SetMin(),
-    			new SetMax(), new SetTeams(), new ForceStart(), new ForceStop(), new Rename(), new Enable(), new Disable(),
-    			new Steps(),  new Info(), new Reload(), new Admin(Command.CommandType.ADMIN), new Arena(Command.CommandType.ARENA));
+        String beginning = isPlayerType ? Settings.getSettings().getTheme() + "/pb " : isArenatype ? Settings.getSettings().getTheme() + "/pb arena " : Settings.getSettings().getTheme() + "/pb admin ";
+        for (Command command : COMMANDS.values()) {
+            String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
+            if (command.getCommandType() == type || command.getName().equals("admin") && player.hasPermission("paintball.admin.help") || command.getName().equals("arena") && player.hasPermission("paintball.arena.help")) {
+                player.sendMessage((command.getName().equals("arena") && type == Command.CommandType.ADMIN ? Settings.getSettings().getTheme() + "/pb arena" : command.getName().equals("admin") && type == Command.CommandType.ARENA ? Settings.getSettings().getTheme() + "/pb admin" : beginning) + ((command.getName().equals("admin") || command.getName().equals("arena")) && type != Command.CommandType.PLAYER ? "" : command.getName()) + args + ChatColor.WHITE + " - " + Settings.getSettings().getSecondaryColor() + command.getInfo());
+
+            }
+        }
     }
 
+    public void init() {
+        addCommands(new Join(), new LeaveArena(), new Spectate(), new Stats(), new Leaderboard(), new List(), new Admin(Command.CommandType.PLAYER),
+                new CreateArena(), new RemoveArena(), new SetLobbySpawn(), new SetSpawn(), new SetSpectate(), new SetMin(),
+                new SetMax(), new SetTeams(), new ForceStart(), new ForceStop(), new Rename(), new Enable(), new Disable(),
+                new Steps(), new Info(), new Reload(), new Admin(Command.CommandType.ADMIN), new Arena(Command.CommandType.ARENA));
+    }
 
-    
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String commandLabel, String[] args) {
 
         if (cmd.getName().equalsIgnoreCase("paintball")) {
@@ -45,9 +57,7 @@ public class CommandManager implements CommandExecutor{
             if (args.length == 0) {
                 displayHelp(player, Command.CommandType.PLAYER);
                 return true;
-            }
-
-            else if (args.length >= 1) {
+            } else if (args.length >= 1) {
                 Command command = COMMANDS.get(args[0]);
 
                 if (nullCheck(command, player)) {
@@ -57,8 +67,7 @@ public class CommandManager implements CommandExecutor{
                 if (command.getName().equalsIgnoreCase("admin") || command.getName().equalsIgnoreCase("arena")) {
                     if (args.length == 1) {
                         dispatchCommand(command, player, args);
-                    }
-                    else {
+                    } else {
                         Command command1 = COMMANDS.get(args[1]);
                         if (nullCheck(command1, player)) {
                             return true;
@@ -74,29 +83,12 @@ public class CommandManager implements CommandExecutor{
     }
 
     private boolean nullCheck(Command command, CommandSender sender) {
-        try{
+        try {
             command.getName();
             return false;
-        }catch(Exception e) {
+        } catch (Exception e) {
             Message.getMessenger().msg(sender, false, ChatColor.RED, COMMAND_NOT_FOUND);
             return true;
-        }
-    }
-
-
-    // TODO: add command ARENA help
-    public static void displayHelp(Player player, Command.CommandType type) {
-        boolean isPlayerType = type == Command.CommandType.PLAYER;
-        boolean isArenatype = type == Command.CommandType.ARENA;
-        player.sendMessage(Message.getMessenger().getHelpTitle(type));
-
-        String beginning = isPlayerType ? Settings.getSettings().getTheme() + "/pb ": isArenatype ? Settings.getSettings().getTheme() + "/pb arena " : Settings.getSettings().getTheme() + "/pb admin ";
-        for (Command command : COMMANDS.values()) {
-            String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
-            if (command.getCommandType() == type || command.getName().equals("admin") && player.hasPermission("paintball.admin.help") || command.getName().equals("arena") && player.hasPermission("paintball.arena.help")) {
-                player.sendMessage((command.getName().equals("arena") && type == Command.CommandType.ADMIN ? Settings.getSettings().getTheme() + "/pb arena" : command.getName().equals("admin") && type == Command.CommandType.ARENA ? Settings.getSettings().getTheme() + "/pb admin" : beginning) + ((command.getName().equals("admin") || command.getName().equals("arena")) && type != Command.CommandType.PLAYER ? "" : command.getName()) + args + ChatColor.WHITE + " - " + Settings.getSettings().getSecondaryColor() + command.getInfo());
-
-            }
         }
     }
 
@@ -108,7 +100,7 @@ public class CommandManager implements CommandExecutor{
             if (argumentChecker(command, player, args)) {
                 command.onCommand(player, args);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Message.getMessenger().msg(player, false, ChatColor.RED, "An internal error occurred: " + e.getMessage());
             e.printStackTrace();
         }
@@ -134,10 +126,10 @@ public class CommandManager implements CommandExecutor{
         }
         return true;
     }
-    
-    private void addCommands(Command...cmds) {
-    	for (Command cmd : cmds) {
-    		COMMANDS.put(cmd.getName(), cmd);
-    	}
+
+    private void addCommands(Command... cmds) {
+        for (Command cmd : cmds) {
+            COMMANDS.put(cmd.getName(), cmd);
+        }
     }
 }

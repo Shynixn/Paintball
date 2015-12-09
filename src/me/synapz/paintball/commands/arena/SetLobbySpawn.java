@@ -1,14 +1,14 @@
 package me.synapz.paintball.commands.arena;
 
 
-import me.synapz.paintball.*;
 import me.synapz.paintball.Arena;
+import me.synapz.paintball.*;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class SetLobbySpawn extends Command{
+public class SetLobbySpawn extends Command {
 
     public void onCommand(Player player, String[] args) {
         Location spawn = player.getLocation();

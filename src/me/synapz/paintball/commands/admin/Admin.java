@@ -5,7 +5,7 @@ import me.synapz.paintball.commands.Command;
 import me.synapz.paintball.commands.CommandManager;
 import org.bukkit.entity.Player;
 
-public class Admin extends Command{
+public class Admin extends Command {
 
     private Command.CommandType type = CommandType.PLAYER;
 

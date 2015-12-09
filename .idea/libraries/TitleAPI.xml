@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="TitleAPI">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../Jars/TitleAPI.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/Plugin Dev Stuff/API/TitleAPI.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

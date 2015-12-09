@@ -1,9 +1,9 @@
 package me.synapz.paintball.commands.player;
 
 
-import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.Message;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ public class LeaveArena extends Command {
         try {
             a = ArenaManager.getArenaManager().getArena(player);
             a.getName(); // used to see if it returns null
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             Message.getMessenger().msg(player, false, ChatColor.RED, "You are not in an arena.");
             return;
         }

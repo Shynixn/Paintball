@@ -1,9 +1,5 @@
 package me.synapz.paintball;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import java.util.Set;
 import java.util.UUID;
 
 public enum StatType {
@@ -28,6 +24,16 @@ public enum StatType {
         this.sign = signName;
     }
 
+    public static String getReadableList() {
+        StringBuilder values = new StringBuilder();
+
+        for (StatType stat : StatType.values()) {
+            values.append(stat.getSignName() + ", ");
+        }
+        values.replace(values.lastIndexOf(","), values.length() - 1, "");
+        return values.toString();
+    }
+
     public String getPath(UUID id) {
         return "Player-Data." + id + ".Stats" + this.path;
     }
@@ -40,15 +46,6 @@ public enum StatType {
         return this.sign;
     }
 
-    public static String getReadableList() {
-        StringBuilder values = new StringBuilder();
-
-        for (StatType stat : StatType.values()) {
-            values.append(stat.getSignName() + ", ");
-        }
-        values.replace(values.lastIndexOf(","), values.length()-1, "");
-        return values.toString();
-    }
     // useful for calculated stats like KD and Accuracy, which have their own method instead of being stored in config
     public boolean isCalculated() {
         return path.equals("none");

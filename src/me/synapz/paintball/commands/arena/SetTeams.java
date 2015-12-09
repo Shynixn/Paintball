@@ -1,8 +1,7 @@
 package me.synapz.paintball.commands.arena;
 
-import com.google.common.base.Joiner;
-import me.synapz.paintball.*;
 import me.synapz.paintball.Arena;
+import me.synapz.paintball.*;
 import me.synapz.paintball.commands.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -10,8 +9,6 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.bukkit.ChatColor.GRAY;
 
 public class SetTeams extends Command {
 
