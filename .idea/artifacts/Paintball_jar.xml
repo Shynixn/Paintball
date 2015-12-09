@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="Paintball:jar">
-    <output-path>$PROJECT_DIR$/../../Bukkit/plugins</output-path>
-    <root id="archive" name="Paintball.jar">
-      <element id="module-output" name="Paintball" />
-    </root>
-  </artifact>
-</component>
