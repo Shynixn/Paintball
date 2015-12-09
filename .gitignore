@@ -1,7 +1,10 @@
+# Eclipse Stuff
+/.classpath
+/.project
 
-*.class
-.idea
-out
-.project
-Paintball.eml
-Paintball.userlibraries
+# IntelliJ IDEA Stuff
+/.idea
+/*.iml
+
+# Maven Stuff
+/target
