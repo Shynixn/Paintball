@@ -1,10 +1,6 @@
-# Eclipse Stuff
-/.classpath
-/.project
-
 # IntelliJ IDEA Stuff
 /.idea
-/*.iml
+*.iml
 
 # Maven Stuff
 /target
