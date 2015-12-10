@@ -2,10 +2,11 @@ package me.synapz.paintball.players;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Message;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+
 import static org.bukkit.ChatColor.*;
+import static me.synapz.paintball.storage.Settings.*;
 
 public class SpectatorPlayer extends PaintballPlayer {
 
@@ -23,10 +24,10 @@ public class SpectatorPlayer extends PaintballPlayer {
     }
 
     public void chat(String message) {
-        String chat = Settings.SPEC_CHAT;
+        String chat = SPEC_CHAT;
 
         chat = chat.replace("%MSG%", message);
-        chat = chat.replace("%PREFIX%", Settings.getSettings().getPrefix());
+        chat = chat.replace("%PREFIX%", PREFIX);
         chat = chat.replace("%PLAYER%", player.getName());
 
         for (Player player : arena.getAllPlayers().keySet()) {
@@ -35,11 +36,11 @@ public class SpectatorPlayer extends PaintballPlayer {
     }
 
     public void leaveArena() {
-        Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
+        getSettings().getCache().restorePlayerInformation(player.getUniqueId());
     }
 
     protected void storeInformation() {
-        Settings.getSettings().getCache().savePlayerInformation(player);
+        getSettings().getCache().savePlayerInformation(player);
         arena.addSpectator(this);
     }
 

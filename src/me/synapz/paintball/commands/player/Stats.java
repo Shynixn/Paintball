@@ -4,12 +4,12 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.commands.Command;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static org.bukkit.ChatColor.*;
+import static me.synapz.paintball.storage.Settings.*;
 
 import java.util.Map;
 import java.util.UUID;
@@ -23,12 +23,10 @@ public class Stats extends Command {
         Paintball pb = (Paintball) JavaPlugin.getProvidingPlugin(Paintball.class);
         Map<StatType, String> stats = pb.getPlayerData().getPlayerStats(target);
 
-        String theme = Settings.getSettings().getTheme();
-        String sec = Settings.getSettings().getSecondaryColor();
-        Message.getMessenger().msg(player, false, false, sec + STRIKETHROUGH + "        " + RESET + " " + theme + Bukkit.getOfflinePlayer(target).getName() + "'s Stats" + RESET + " " + sec + STRIKETHROUGH + "        ");
+        Message.getMessenger().msg(player, false, false, SECONDARY + STRIKETHROUGH + "        " + RESET + " " + THEME + Bukkit.getOfflinePlayer(target).getName() + "'s Stats" + RESET + " " + SECONDARY + STRIKETHROUGH + "        ");
 
         for (StatType type : stats.keySet()) {
-            Message.getMessenger().msg(player, false, false, Settings.getSettings().getTheme() + type.getName() + ": " + Settings.getSettings().getSecondaryColor() + stats.get(type));
+            Message.getMessenger().msg(player, false, false, THEME + type.getName() + ": " + SECONDARY + stats.get(type));
         }
     }
 

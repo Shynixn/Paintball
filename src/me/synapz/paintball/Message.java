@@ -3,12 +3,11 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 import me.synapz.paintball.commands.Command;
-import me.synapz.paintball.enums.Value;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.*;
 
 public class Message {
@@ -29,19 +28,19 @@ public class Message {
         
         for (String string : messages) {
             // TODO: titleAPI check (Not a Boolean)
-            if (titleAPI && Value.TITLE_API.getValue() && sender instanceof Player) {
-                TitleAPI.sendTitle((Player)sender, 10, 10, 10, Settings.getSettings().getPrefix(), color + string);
+            if (titleAPI && TITLE_API && sender instanceof Player) {
+                TitleAPI.sendTitle((Player)sender, 10, 10, 10, PREFIX, color + string);
             }
-            sender.sendMessage(Settings.getSettings().getPrefix() + color + string);
+            sender.sendMessage(PREFIX + color + string);
         }
     }
 
     public void msg(CommandSender sender, boolean prefix, boolean titleAPI, String... msg){
         String[] messages = msg;
-        String strPrefix = prefix ? Settings.getSettings().getPrefix() : "";
+        String strPrefix = prefix ? PREFIX : "";
         for (String string : messages) {
-            if (titleAPI && Settings.TITLE_API && sender instanceof Player) {
-                TitleAPI.sendTitle((Player)sender, 10, 10, 10, Settings.getSettings().getPrefix(), string);
+            if (titleAPI && TITLE_API && sender instanceof Player) {
+                TitleAPI.sendTitle((Player)sender, 10, 10, 10, PREFIX, string);
             }
             sender.sendMessage(strPrefix + string);
         }
@@ -81,7 +80,7 @@ public class Message {
         } else if (type == Command.CommandType.ARENA) {
             title += " Arena";
         }
-        return Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "                    " + RESET + Settings.getSettings().getTheme() + " " + title + " " + Settings.getSettings().getSecondaryColor() + STRIKETHROUGH + "                    ";
+        return SECONDARY + STRIKETHROUGH + "                    " + RESET + THEME + " " + title + " " + SECONDARY + STRIKETHROUGH + "                    ";
     }
     
     public enum Usage {

@@ -1,19 +1,16 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.*;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import static org.bukkit.ChatColor.GRAY;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.*;
+import static me.synapz.paintball.storage.Settings.*;
 
 public class LobbyPlayer extends PaintballPlayer {
 
@@ -30,17 +27,17 @@ public class LobbyPlayer extends PaintballPlayer {
         giveWoolHelmet();
 
         if (arena.canStartTimer()) {
-            Utils.countdown(Settings.LOBBY_COUNTDOWN, Settings.LOBBY_INTERVAL, Settings.LOBBY_NO_INTERVAL, arena, GREEN + "Auto-teleporting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Teleporting" + GRAY + "\n%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
+            Utils.countdown(LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL, arena, GREEN + "Auto-teleporting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Teleporting" + GRAY + "\n%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
         }
     }
 
     public void chat(String message) {
-        String chat = Settings.ARENA_CHAT;
+        String chat = ARENA_CHAT;
 
         chat = chat.replace("%TEAMNAME%", team.getTitleName());
         chat = chat.replace("%TEAMCOLOR%", team.getChatColor() + "");
         chat = chat.replace("%MSG%", message);
-        chat = chat.replace("%PREFIX%", Settings.getSettings().getPrefix());
+        chat = chat.replace("%PREFIX%", PREFIX);
         chat = chat.replace("%PLAYER%", player.getName());
         for (PaintballPlayer pbPlayer : arena.getAllPlayers().values()) {
             pbPlayer.getPlayer().sendMessage(chat);
@@ -48,7 +45,7 @@ public class LobbyPlayer extends PaintballPlayer {
     }
 
     public void leaveArena() {
-        Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
+        getSettings().getCache().restorePlayerInformation(player.getUniqueId());
     }
 
     protected void giveItems() {
@@ -63,9 +60,7 @@ public class LobbyPlayer extends PaintballPlayer {
         }};
 
         if (items.size() > 9) {
-            String theme = Settings.getSettings().getTheme();
-            String sec = Settings.getSettings().getSecondaryColor();
-            player.getInventory().setItem(0, Utils.makeWool(sec + ">> " + theme + "Click to change team" + sec + " <<", team.getDyeColor()));
+            player.getInventory().setItem(0, Utils.makeWool(SECONDARY + ">> " + THEME + "Click to change team" + SECONDARY + " <<", team.getDyeColor()));
             return;
         }
 
@@ -81,7 +76,7 @@ public class LobbyPlayer extends PaintballPlayer {
     }
 
     protected void storeInformation() {
-        Settings.getSettings().getCache().savePlayerInformation(player);
+        getSettings().getCache().savePlayerInformation(player);
         arena.addLobbyPlayer(this);
     }
 

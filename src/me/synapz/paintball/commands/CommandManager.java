@@ -4,12 +4,14 @@ package me.synapz.paintball.commands;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.commands.arena.*;
 import me.synapz.paintball.commands.player.*;
-import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.commands.admin.*;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import static org.bukkit.ChatColor.*;
+import static me.synapz.paintball.storage.Settings.*;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,7 @@ public class CommandManager implements CommandExecutor{
 
         if (cmd.getName().equalsIgnoreCase("paintball")) {
             if (!(sender instanceof Player)) {
-                Message.getMessenger().msg(sender, false, ChatColor.RED, NO_CONSOLE_PERMS);
+                Message.getMessenger().msg(sender, false, RED, NO_CONSOLE_PERMS);
                 return true;
             }
 
@@ -78,7 +80,7 @@ public class CommandManager implements CommandExecutor{
             command.getName();
             return false;
         }catch(Exception e) {
-            Message.getMessenger().msg(sender, false, ChatColor.RED, COMMAND_NOT_FOUND);
+            Message.getMessenger().msg(sender, false, RED, COMMAND_NOT_FOUND);
             return true;
         }
     }
@@ -90,11 +92,11 @@ public class CommandManager implements CommandExecutor{
         boolean isArenatype = type == Command.CommandType.ARENA;
         player.sendMessage(Message.getMessenger().getHelpTitle(type));
 
-        String beginning = isPlayerType ? Settings.getSettings().getTheme() + "/pb ": isArenatype ? Settings.getSettings().getTheme() + "/pb arena " : Settings.getSettings().getTheme() + "/pb admin ";
+        String beginning = isPlayerType ? THEME + "/pb ": isArenatype ? THEME + "/pb arena " : THEME + "/pb admin ";
         for (Command command : COMMANDS.values()) {
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
             if (command.getCommandType() == type || command.getName().equals("admin") && player.hasPermission("paintball.admin.help") || command.getName().equals("arena") && player.hasPermission("paintball.arena.help")) {
-                player.sendMessage((command.getName().equals("arena") && type == Command.CommandType.ADMIN ? Settings.getSettings().getTheme() + "/pb arena" : command.getName().equals("admin") && type == Command.CommandType.ARENA ? Settings.getSettings().getTheme() + "/pb admin" : beginning) + ((command.getName().equals("admin") || command.getName().equals("arena")) && type != Command.CommandType.PLAYER ? "" : command.getName()) + args + ChatColor.WHITE + " - " + Settings.getSettings().getSecondaryColor() + command.getInfo());
+                player.sendMessage((command.getName().equals("arena") && type == Command.CommandType.ADMIN ? THEME + "/pb arena" : command.getName().equals("admin") && type == Command.CommandType.ARENA ? THEME + "/pb admin" : beginning) + ((command.getName().equals("admin") || command.getName().equals("arena")) && type != Command.CommandType.PLAYER ? "" : command.getName()) + args + WHITE + " - " + SECONDARY + command.getInfo());
 
             }
         }
@@ -109,7 +111,7 @@ public class CommandManager implements CommandExecutor{
                 command.onCommand(player, args);
             }
         }catch (Exception e) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, "An internal error occurred: " + e.getMessage());
+            Message.getMessenger().msg(player, false, RED, "An internal error occurred: " + e.getMessage());
             e.printStackTrace();
         }
     }

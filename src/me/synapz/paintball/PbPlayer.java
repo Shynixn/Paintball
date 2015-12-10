@@ -20,7 +20,9 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class PbPlayer {
-    
+
+    // TODO: class is currently being replaced with ArenaPlayer, just keeping until ArenaPlayer is done.
+
     Player player;
     Team team;
     Arena arena;

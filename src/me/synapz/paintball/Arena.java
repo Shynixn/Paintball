@@ -7,8 +7,9 @@ import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.players.SpectatorPlayer;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
+
+import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.*;
 
 import org.bukkit.ChatColor;
@@ -21,7 +22,7 @@ import java.util.*;
 
 public class Arena {
     
-    private FileConfiguration FILE = Settings.getSettings().getArenaFile();
+    private FileConfiguration FILE = getSettings().getArenaFile();
 
     private Map<Player, PaintballPlayer> allPlayers = new HashMap<Player, PaintballPlayer>();
     private ArrayList<SpectatorPlayer> spectators = new ArrayList<SpectatorPlayer>();
@@ -143,7 +144,7 @@ public class Arena {
         for (Team t : teams) {
             teamColors.add(t.getChatColor() + "");
         }
-        Settings.getSettings().getArenaFile().set(getPath() + "Teams", teamColors);
+        getSettings().getArenaFile().set(getPath() + "Teams", teamColors);
         advSave();
     }
     
@@ -319,7 +320,7 @@ public class Arena {
         lobby.removeAll(lobby);
         // TODO does this work?
         allPlayers.remove(lobby);
-        Utils.countdown(Settings.ARENA_COUNTDOWN, Settings.ARENA_INTERVAL, Settings.ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", false);
+        Utils.countdown(ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", false);
     }
     
     // Used for server reload and forcestops, so no messages will be sent
@@ -380,11 +381,11 @@ public class Arena {
     
     public void broadcastMessage(ChatColor color, String chatMessage, String screenMessage) {
         for (PaintballPlayer pbPlayer : allPlayers.values()) {
-            if (!screenMessage.equals("") && Settings.TITLE_API) {
+            if (!screenMessage.equals("") && TITLE_API) {
                 String[] messages = screenMessage.split("\n");
-                TitleAPI.sendTitle(pbPlayer.getPlayer(), 10, 10, 10, messages.length == 1 ? Settings.getSettings().getPrefix() : messages[0], messages.length == 1 ? screenMessage : messages[1]);
+                TitleAPI.sendTitle(pbPlayer.getPlayer(), 10, 10, 10, messages.length == 1 ? PREFIX : messages[0], messages.length == 1 ? screenMessage : messages[1]);
             }
-            pbPlayer.getPlayer().sendMessage(Settings.getSettings().getPrefix() + color + chatMessage);
+            pbPlayer.getPlayer().sendMessage(PREFIX + color + chatMessage);
         }
     }
     
@@ -435,7 +436,7 @@ public class Arena {
     }
     
     public void updateAllSigns() {
-        List<String> signLocs = Settings.getSettings().getArenaFile().getStringList(getPath() + "Sign-Locs");
+        List<String> signLocs = getSettings().getArenaFile().getStringList(getPath() + "Sign-Locs");
         if (signLocs == null) return;
         
         for (String s : signLocs) {
@@ -490,7 +491,7 @@ public class Arena {
     }
 
     private void advSave() {
-        Settings.getSettings().saveArenaFile();
+        getSettings().saveArenaFile();
         /**
          * Because the saveArenaFile() method gets called every time a value is changed,
          * we also want to see if the arena is setup because if it is, Arena.NOT_SETUP should

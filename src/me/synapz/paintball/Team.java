@@ -1,6 +1,6 @@
 package me.synapz.paintball;
 
-import me.synapz.paintball.storage.Settings;
+import static me.synapz.paintball.storage.Settings.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import static org.bukkit.Color.*;
@@ -54,7 +54,7 @@ public class Team {
     private static Map<ChatColor, String> colorNames = new EnumMap<ChatColor, String>(ChatColor.class);
 
     public static void loadTeamColors() {
-        colorNames = Settings.getSettings().getTeamNames();
+        colorNames = TEAM_NAMES;
     }
     public static List<String> LIST = Arrays.asList("§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§0", "§a", "§b", "§c", "§d", "§e", "§f");
     private static Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();

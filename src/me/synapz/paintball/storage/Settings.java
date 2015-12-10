@@ -17,16 +17,19 @@ import java.util.Map;
 
 public class Settings {
 
+    // Constants
     public static int ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL;
     public static String ARENA_CHAT, SPEC_CHAT;
+    public static String PREFIX, VERSION, THEME, WEBSITE, AUTHOR, SECONDARY;
     public static boolean SPLASH_PAINTBALLS, COLOR_PLAYER_TITLE, WOOL_HELMET, TITLE_API;
+    public static Map<ChatColor, String> TEAM_NAMES = new HashMap<ChatColor, String>();
+
+    // Variables
     private static Settings settings;
     private Plugin pb;
     private FileConfiguration arena;
     private PlayerData cache;
     private File aFile;
-    private String prefix, version, theme, website, author, secondary;
-    private Map<ChatColor, String> teamNames = new HashMap<ChatColor, String>();
 
     public Settings(Plugin plugin) {
         if (settings == null) {
@@ -94,12 +97,12 @@ public class Settings {
 
     private void loadValues(FileConfiguration configFile, PluginDescriptionFile pluginYML) {
         // regular values
-        version = pluginYML.getVersion();
-        website = pluginYML.getWebsite();
-        author = pluginYML.getAuthors().toString();
-        prefix = ChatColor.translateAlternateColorCodes('&', configFile.getString("prefix"));
-        theme = ChatColor.translateAlternateColorCodes('&', configFile.getString("theme-color"));
-        secondary = ChatColor.translateAlternateColorCodes('&', configFile.getString("secondary-color"));
+        VERSION = pluginYML.getVersion();
+        WEBSITE = pluginYML.getWebsite();
+        AUTHOR = pluginYML.getAuthors().toString();
+        PREFIX = ChatColor.translateAlternateColorCodes('&', configFile.getString("prefix"));
+        THEME = ChatColor.translateAlternateColorCodes('&', configFile.getString("theme-color"));
+        SECONDARY = ChatColor.translateAlternateColorCodes('&', configFile.getString("secondary-color"));
 
         // arena values
         SPLASH_PAINTBALLS = configFile.getBoolean("paintball-splash");
@@ -114,7 +117,7 @@ public class Settings {
         TITLE_API = configFile.getBoolean("title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
 
         for (String colorcode : configFile.getConfigurationSection("Teams").getKeys(false)) {
-            teamNames.put(ChatColor.getByChar(colorcode), configFile.getString("Teams." + colorcode) + "");
+            TEAM_NAMES.put(ChatColor.getByChar(colorcode), configFile.getString("Teams." + colorcode) + "");
         }
 
         // TODO: add stats tag to config.yml chts
@@ -125,36 +128,5 @@ public class Settings {
 
     public FileConfiguration getArenaFile() {
         return arena;
-    }
-
-    public String getPrefix() {
-        String output = prefix == null ? ChatColor.DARK_GRAY + "[" + ChatColor.AQUA + "Paintball" + ChatColor.DARK_GRAY + "] " : prefix + " ";
-        return output;
-    }
-
-    public Map<ChatColor, String> getTeamNames() {
-        return teamNames;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public String getTheme() {
-        String code = theme == null ? "&3" : theme;
-        return ChatColor.translateAlternateColorCodes('&', code);
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getSecondaryColor() {
-        String code = secondary == null ? "&7" : secondary;
-        return ChatColor.translateAlternateColorCodes('&', code);
     }
 }
