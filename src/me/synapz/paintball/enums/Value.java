@@ -1,13 +1,9 @@
 package me.synapz.paintball.enums;
 
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.Bukkit;
-import static org.bukkit.ChatColor.*;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_8_R3.generator.InternalChunkGenerator;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPlugin;
+
+import static org.bukkit.ChatColor.*;
 
 public enum Value {
 
@@ -55,6 +51,7 @@ public enum Value {
         this.path = path;
         this.defaultValue = defaultValue;
 
+        // TODO: value doesn't exist?
         FileConfiguration file = Settings.getSettings().getConfigFile();
         if (defaultValue instanceof Boolean) {
             value = file.getBoolean(path);

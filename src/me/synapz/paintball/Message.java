@@ -5,14 +5,11 @@ import com.connorlinfoot.titleapi.TitleAPI;
 import me.synapz.paintball.commands.Command;
 import me.synapz.paintball.enums.Value;
 import me.synapz.paintball.storage.Settings;
-import static org.bukkit.ChatColor.*;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.logging.Level;
+import static org.bukkit.ChatColor.*;
 
 public class Message {
     
@@ -31,7 +28,7 @@ public class Message {
         String[] messages = msg;
         
         for (String string : messages) {
-            // TODO: titleAPI check
+            // TODO: titleAPI check (Not a Boolean)
             if (titleAPI && Value.TITLE_API.getValue() && sender instanceof Player) {
                 TitleAPI.sendTitle((Player)sender, 10, 10, 10, Settings.getSettings().getPrefix(), color + string);
             }
@@ -89,6 +86,6 @@ public class Message {
     
     public enum Usage {
         TO_MANY_ARGS,
-        NOT_ENOUGH_ARGS;
+        NOT_ENOUGH_ARGS
     }
 }
