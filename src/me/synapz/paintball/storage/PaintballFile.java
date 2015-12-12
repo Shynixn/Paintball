@@ -25,8 +25,7 @@ public abstract class PaintballFile {
         if (!file.exists()) {
             try {
                 file.createNewFile();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "", "Could not create " + name + ". Stack trace: ");
                 e.printStackTrace();
             }
@@ -38,8 +37,8 @@ public abstract class PaintballFile {
     public void saveFile() {
         try {
             fileConfig.save(file);
-        }catch (Exception e) {
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Could not save " + name + ".", "", "Stack trace" );
+        } catch (Exception e) {
+            Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Could not save " + name + ".", "", "Stack trace");
             e.printStackTrace();
         }
     }

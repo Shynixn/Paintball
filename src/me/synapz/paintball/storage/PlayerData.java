@@ -1,7 +1,9 @@
 package me.synapz.paintball.storage;
 
 
-import me.synapz.paintball.*;
+import me.synapz.paintball.Message;
+import me.synapz.paintball.PbPlayer;
+import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -58,7 +60,7 @@ public final class PlayerData extends PaintballFile {
     }
 
     public HashMap<String, String> getPlayerAtRank(int rank, StatType type) {
-        HashMap<String, String> result = new HashMap<String, String>(){{
+        HashMap<String, String> result = new HashMap<String, String>() {{
             put("Unknown", "");
         }};
 
@@ -79,7 +81,7 @@ public final class PlayerData extends PaintballFile {
         }
         for (String uuid : uuidList.keySet()) {
             double value = Double.parseDouble(uuidList.get(uuid));
-            if (statValues.get(rank-1) == value) {
+            if (statValues.get(rank - 1) == value) {
                 result.clear(); // remove all entries so we know there will only be 1 set of things returning
                 if (Bukkit.getServer().getPlayer(UUID.fromString(uuid)) == null) {
                     String name = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
@@ -103,14 +105,14 @@ public final class PlayerData extends PaintballFile {
 
         for (StatType type : StatType.values()) {
             if (uuidNotFound) // their uuid wasn't in file so they have no stats, so add 0 for everything
-                stats.put(type, 0+"");
+                stats.put(type, 0 + "");
             else
                 stats.put(type, type == StatType.KD ? getKD(target) : type == StatType.ACCURACY ? getAccuracy(target) : getFileConfig().getString(type.getPath(target)));
         }
         return stats;
     }
 
-    public  void paginate(CommandSender sender, StatType type, int page, int pageLength) {
+    public void paginate(CommandSender sender, StatType type, int page, int pageLength) {
         SortedMap<String, String> allPlayers = new TreeMap<String, String>(Collections.<String>reverseOrder());
         for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
             String name;
@@ -138,8 +140,8 @@ public final class PlayerData extends PaintballFile {
 
     public void getPage(Player player, StatType type, int page) {
         // int totalPages = getFileConfig().getConfigurationSection("Player-Data").getKeys(false).size() % 8;
-        int current = Integer.parseInt(page+""+page);
-        int end = current+8;
+        int current = Integer.parseInt(page + "" + page);
+        int end = current + 8;
         // TODO: 11/20/15  add prefix
         for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
             Message.getMessenger().msg(player, false, false, "#" + current + " - " + Bukkit.getPlayer(UUID.fromString(uuid)) == null ? Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() : Bukkit.getPlayer(UUID.fromString(uuid)).getName() + " Many: " + getPlayerStats(UUID.fromString(uuid)).get(type));
@@ -166,7 +168,7 @@ public final class PlayerData extends PaintballFile {
 
         float n = (float) numerator;
         float d = (float) denominator;
-        return (n/d);
+        return (n / d);
     }
 
     public void savePlayerInformation(Player player) {
@@ -202,7 +204,7 @@ public final class PlayerData extends PaintballFile {
         int count = 0;
         for (Object item : data.getList("Player-Data." + id + path).toArray()) {
             if (item instanceof ItemStack) {
-                items[count] = new ItemStack((ItemStack)item);
+                items[count] = new ItemStack((ItemStack) item);
                 count++;
             }
         }
