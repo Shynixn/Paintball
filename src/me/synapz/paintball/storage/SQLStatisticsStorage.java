@@ -1,12 +1,12 @@
 package me.synapz.paintball.storage;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.Set;
-import java.util.UUID;
 
 public class SQLStatisticsStorage {
 
@@ -14,31 +14,35 @@ public class SQLStatisticsStorage {
 
     public FileConfiguration removeStats(FileConfiguration yaml) {
         Set<String> keys = yaml.getConfigurationSection("Player-Data").getKeys(false);
-        HashMap<UUID, String> encodedStats = new HashMap<>();
+        YamlConfiguration statsYaml = new YamlConfiguration();
         for (String key : keys) {
             ConfigurationSection stats = yaml.getConfigurationSection(key + ".Stats");
             String path = stats.getCurrentPath();
-            String toEncode = path + ":" + stats.toString();
-            byte[] byteArray = toEncode.getBytes();
-            String encoded = Base64.getEncoder().encode(byteArray).toString();
-            UUID uuid = UUID.fromString(key.replace("Player-Data.", ""));
-            encodedStats.put(uuid, encoded);
+            statsYaml.set(path, stats);
             yaml.set(path, null);
         }
-        //TODO: Send HashMap of strings to SQL
+        byte[] byteArray = statsYaml.saveToString().getBytes();
+        String encoded = Base64.getEncoder().encode(byteArray).toString();
+        yaml.set("Stats", encoded);
+        //TODO: Send String/Yaml to SQL
         return yaml;
     }
 
     public FileConfiguration addStats(FileConfiguration yaml) {
-        //TODO: get HashMap from SQL
-        HashMap<UUID, String> encodedStats = new HashMap<>();
-        for (UUID uuid : encodedStats.keySet()) {
-            String encoded = encodedStats.get(uuid);
-            String decoded = Base64.getDecoder().decode(encoded.getBytes()).toString();
-            String[] split = decoded.split(":");
-            String path = split[0];
-            ConfigurationSection stats = null;
-            //get Configuration Section
+        try {
+            //TODO: get String/Yaml from SQL
+            String base64Stats = null;
+            String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
+            YamlConfiguration statsYaml = new YamlConfiguration();
+            statsYaml.loadFromString(yamlString);
+            Set<String> keys = statsYaml.getConfigurationSection("Player-Data").getKeys(false);
+            for (String key : keys) {
+                ConfigurationSection stats = statsYaml.getConfigurationSection(key + ".Stats");
+                String path = stats.getCurrentPath();
+                yaml.set(path, stats);
+            }
+        } catch (InvalidConfigurationException e) {
+            e.printStackTrace();
         }
         return yaml;
     }
