@@ -21,59 +21,79 @@ import org.bukkit.entity.Player;
 import java.util.*;
 
 public class Arena {
-    
+
+    // Arena File so we can access and set arena settings
     private FileConfiguration FILE = getSettings().getArenaFile();
 
+    // All the players in the arena (Lobby, Spec, InGame) linked to the player which is linked to the PaintballPLayer
     private Map<Player, PaintballPlayer> allPlayers = new HashMap<Player, PaintballPlayer>();
     private ArrayList<SpectatorPlayer> spectators = new ArrayList<SpectatorPlayer>();
     private List<LobbyPlayer> lobby = new ArrayList<LobbyPlayer>();
     private List<ArenaPlayer> inGame = new ArrayList<ArenaPlayer>();
-    
+
+    // Arenas values
+    // TODO: possiblly remove these and just make a method checking if each max, min, spectator are set or if isEnabled is true
     private boolean isMaxSet, isMinSet, isSpectateSet, isEnabled;
-    
-    private String name, currentName;
-    
+
+    // Arena name is the current name of the arena
+    // Arena currentName is the name set when setup, this is used for renaming: you can't change a path name so we keep the currentName for accessing paths
+    private String defaultName, currentName;
+
+    // Paths for easy access
     String maxPath = "Max-Players";
     String minPath = "Min-Players";
     String enabledPath = "Is-Enabled";
     String spectatePath = "Spectate-Loc";
+
+    // Current state of the arena
     ArenaState state = ArenaState.NOT_SETUP;
-    
+
     public enum ArenaState {
         NOT_SETUP,
         WAITING,
         DISABLED,
         IN_PROGRESS
     }
-    
+
+    /**
+     * Creates a new arena
+     * @param name Arenas current name, used to show the name of the arena
+     * @param currentName Arenas name when setup, used to access paths
+     */
     public Arena(String name, String currentName) {
         this.currentName = currentName;
         this.name = name;
-        
+
+        // Go through each arena inside the arena (located in config) and add it to the team list
         for (Team t : ArenaManager.getArenaManager().getTeamsList(this)) {
             getArenaTeamList().add(t);
         }
     }
-    
+
+    // Returns the current name of the arena (Arenas.Syn.name)
     public String getName() {
         return this.currentName;
     }
-    
+
+    // Returns the path name of the arena ex: if path is Arenas.Syn it would return Syn
     public String getDefaultName() {
         return name;
     }
-    
+
+    // Sets the current name of the
     private void setName(String newName) {
         FILE.set(getPath() + "Name", newName);
         this.currentName = newName;
     }
-    
+
+    // Removes arena from list and from arenas.yml
     public void removeArena() {
         FILE.set("Arenas." + this.getDefaultName(), null);
         ArenaManager.getArenaManager().getArenas().remove(this);
         advSave();
     }
-    
+
+    // Renames arena by setting Arenas.arena.name to the new name, however it keeps the past name as a way to reference in the path (can't change path names)
     public void rename(String newName) {
         // Rename .Name to arenas new name
         FILE.set(getPath() + "Name", newName);
@@ -82,35 +102,42 @@ public class Arena {
         setName(newName);
         advSave();
     }
-    
+
+    // Gets the lobby spawn of a team
     public Location getSpawn(Team team) {
         return (Location) FILE.get(team.getPath() + ".Spawn");
     }
-    
+
+    // Sets the spawn of a team in the arena to a location
     public void setArenaSpawn(Location location, Team team) {
         FILE.set(team.getPath() + ".Spawn", location);
         advSave();
     }
-    
+
+    // Sets the lobby of a team to a location
     public void setLobbySpawn(Location location, Team team) {
         FILE.set(team.getPath() + ".Lobby", location);
         advSave();
     }
-    
+
+    // Gets a team's lobby location
     public Location getLobbySpawn(Team team) {
         return (Location) FILE.get(team.getPath() + ".Lobby");
     }
-    
+
+    // Sets the spectator spawn for the arena
     public void setSpectateLoc(Location loc) {
         isSpectateSet = true;
         FILE.set(getPath() + spectatePath, loc);
         advSave();
     }
-    
+
+    // Gets the arena's spectator spawn
     public Location getSpectateSpawn() {
         return (Location) FILE.get(getPath() + spectatePath);
     }
-    
+
+    // Joins spectator (just creates a new SpectatorPlayer
     public void joinSpectate(Player player) {
         new SpectatorPlayer(this, player);
     }
@@ -120,34 +147,43 @@ public class Arena {
         FILE.set(getPath() + maxPath, max);
         advSave();
     }
-    
+
+    // Sets the min required plauers to an int (lobby playercount reaches this number, it calls the lobby-countdown and waits for more players)
     public void setMinPlayers(int min) {
         isMinSet = true;
         FILE.set(getPath() + minPath, min);
         advSave();
     }
-    
+
+    // Gets the max number of players
     public int getMax() {
         return FILE.getInt(getPath() + maxPath);
     }
-    
+
+    // Gets the min number of players
     public int getMin() {
         return FILE.getInt(getPath() + minPath);
     }
-    
+
+    // Gets all of the teams on this arena
     public List<Team> getArenaTeamList() {
         return ArenaManager.getArenaManager().getTeamsList(this);
     }
-    
+
+    // Sets the teams of this arena
     public void setArenaTeamList(List<Team> teams) {
+        // makes a list of teams
         List<String> teamColors = new ArrayList<String>();
         for (Team t : teams) {
             teamColors.add(t.getChatColor() + "");
         }
+        // sets the arena's teams to the list of teams in arena.yml
         getSettings().getArenaFile().set(getPath() + "Teams", teamColors);
         advSave();
     }
-    
+
+    // Gets the steps for the arena
+    // TODO: this is a giant block of code, see if there is any better ways of doing this
     public String getSteps() {
         ArrayList<String> steps = new ArrayList<String>();
         String finalString;
@@ -168,7 +204,9 @@ public class Arena {
         return isSetup() && isEnabled ? prefix + GRAY + "Complete. Arena is open!" : prefix + finalString;
         
     }
-    
+
+    // Set the arena to be enabled/disabled
+    // TODO: do all the checks in Enable command class instead of here
     public void setEnabled(boolean setEnabled, Player sender) {
         String message;
         ChatColor color;
@@ -204,7 +242,8 @@ public class Arena {
         advSave();
         Message.getMessenger().msg(sender, false, color, this.toString() + " " + message);
     }
-    
+
+    // Checks weather this arena is setup or not. In order to be setup max, min, spectator and all spawns must be set
     public boolean isSetup() {
         boolean spawnsSet = true;
         if (getArenaTeamList().isEmpty()) {
@@ -221,14 +260,17 @@ public class Arena {
         return isMaxSet && isMinSet && isSpectateSet && spawnsSet;
     }
 
+    // Check if a player is in the arena, all players have all spectator, lobby, and arena players
     public boolean containsPlayer(Player player) {
         return allPlayers.keySet().contains(player);
     }
 
+    // Gets the PaintballPlayer hooked up to the player
     public PaintballPlayer getPaintballPlayer(Player player) {
         return allPlayers.get(player);
     }
-    
+
+    // Loads all the arenas values from arenas.yml into memory, sets isMinSet, isMaxSet, isEnabled, and isSpectateSet
     public void loadValues(FileConfiguration file) {
         String[] paths = {"Max-Players", "Min-Players", "Is-Enabled", "Spectate-Loc"};
         int pathValue = 0;
@@ -263,7 +305,9 @@ public class Arena {
             }
         }
     }
-    
+
+    // Force start this arena. It has to have enough player, be setup and enabled, and not be in progress
+    // TODO: add all checks to ForceStart command class
     public void forceStart(Player sender) {
         // TODO: add ifs to command
         String reason = "";
@@ -284,7 +328,9 @@ public class Arena {
         }
         Message.getMessenger().msg(sender, false, RED, "Cannot force start " + this.toString(), this.toString() + RED + reason);
     }
-    
+
+    // Force stop the arena. It has to be in progress
+    // TODO: add all checks into ForceStop command class
     public void forceStop(Player sender) {
         if (state == ArenaState.IN_PROGRESS) {
             this.forceRemovePlayers();
@@ -297,20 +343,23 @@ public class Arena {
         }
         Message.getMessenger().msg(sender, false, RED, "Cannot force stop " + this.toString(), this.toString() + RED + " is not in progress.");
     }
-    
+
+    // Put the arena to string ex: Arena Syn, where Syn is the arena name. At the end it is green so if you don't want it to be green change it after
+    // TODO: make it have a param of ChatColor so we don't only have the end at green
     public String toString() {
         return "Arena " + GRAY + this.getName() + GREEN;
     }
     
-    
+    // Return the path the Arena is at with a . at the end (This is where defaultName comes in handy)
     public String getPath() {
-        return "Arenas." + name + ".";
+        return "Arenas." + defaultName + ".";
     }
     
     public void joinLobby(Player player, Team team) {
         new LobbyPlayer(this, team == null ? getTeamWithLessPlayers() : team, player);
     }
 
+    // Starts the game, turns all LobbyPlayer's into lobby players and t
     public void startGame() {
         // TODO: Set all the player's walk speed, swim speed, and fly speed tpo 0
         state = ArenaState.IN_PROGRESS;
@@ -329,6 +378,7 @@ public class Arena {
             player.leaveArena();
             // player.forceLeave()?
         }
+        // TODO: keep this for now until forceRemove is full tested because if it doesn't work then this must be back
         /*
         if (inGame.keySet().isEmpty() && lobby.keySet().isEmpty() && spectators.isEmpty()) {
             state = ArenaState.WAITING;
@@ -351,7 +401,9 @@ public class Arena {
         spectators.removeAll(spectators);
         state = ArenaState.WAITING; */
     }
-    
+
+    // Make a player leave the arena
+    // TODO: Currently doesn't do anything, instead of this we want a leave inside the PaintballPlayer, keep this here to use for reference
     public void leave(Player player) {
         /*
         if (Team.getPluginScoreboard().getTeam(getTeam(player).getTitleName()) != null)     {
@@ -373,12 +425,15 @@ public class Arena {
         }
         */
     }
-    
+
+    // Called when a team wins
+    // TODO: currently not used, add to a PAintballHitEven or something to check if they won then call this method
     public void win(Team team) {
         // TODO: add you won!
         broadcastMessage(GREEN, "The " + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
     }
-    
+
+    // Broadcasts a message to the whole arena
     public void broadcastMessage(ChatColor color, String chatMessage, String screenMessage) {
         for (PaintballPlayer pbPlayer : allPlayers.values()) {
             if (!screenMessage.equals("") && TITLE_API) {
@@ -388,7 +443,8 @@ public class Arena {
             pbPlayer.getPlayer().sendMessage(PREFIX + color + chatMessage);
         }
     }
-    
+
+    // Returns the team with less players for when someone joins
     private Team getTeamWithLessPlayers() {
         // Make new HashMap with Team to Size, this way we can easily extract the largest size
         HashMap<Team, Integer> size = new HashMap<Team, Integer>();
@@ -403,12 +459,14 @@ public class Arena {
         }
         return Utils.max(this, size);
     }
-    
+
+    // If we can start the lobby timer
     public boolean canStartTimer() {
         int size = lobby.size();
         return size >= this.getMin() && size <= this.getMax();
     }
-    
+
+    // Gets the arenas current state
     public ArenaState getState() {
         if (!isSetup()) {
             state = ArenaState.NOT_SETUP;

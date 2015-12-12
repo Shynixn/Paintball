@@ -70,6 +70,7 @@ public class JoinSigns implements Listener {
             return;
         }
         if (sign.getLine(1).equals(GREEN + "Auto Join")) {
+            // TODO: check all arenas then autojoin the one closest to the max amount of players
             for (Arena a : ArenaManager.getArenaManager().getArenas()) {
                 if (a.getState() == Arena.ArenaState.WAITING) {
                     a.joinLobby(player, null);
