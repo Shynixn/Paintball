@@ -22,7 +22,7 @@ public class SQLStatisticsStorage {
     String database;
 
     public SQLStatisticsStorage(Plugin pb) {
-        this.pl = pb;
+        pl = pb;
     }
 
     public void setupSQL(String host, Integer port, String username, String password, String database) {
@@ -31,8 +31,8 @@ public class SQLStatisticsStorage {
         this.username = username;
         this.password = password;
         this.database = database;
-        executeQuery("CREATE DATABASE IF NOT EXISTS " + database);
-        executeQuery("CREATE TABLE IF NOT EXISTS Paintball_Stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
+        this.executeQuery("CREATE DATABASE IF NOT EXISTS " + database);
+        this.executeQuery("CREATE TABLE IF NOT EXISTS Paintball_Stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
     }
 
     public FileConfiguration removeStats(FileConfiguration yaml) {
@@ -47,15 +47,14 @@ public class SQLStatisticsStorage {
         byte[] byteArray = statsYaml.saveToString().getBytes();
         String encoded = Base64.getEncoder().encode(byteArray).toString();
         yaml.set("Stats", encoded);
-        executeQuery("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
+        this.executeQuery("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
         return yaml;
     }
 
     public FileConfiguration addStats(FileConfiguration yaml) {
         try {
             Connection conn;
-            String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
-            conn = DriverManager.getConnection(host, username, password);
+            conn = DriverManager.getConnection(this.host, this.username, this.password);
             PreparedStatement sql = conn.prepareStatement("SELECT statsFROM `Paintball_Stats` WHERE id = '1';");
             ResultSet result = sql.executeQuery();
             result.next();
@@ -77,9 +76,8 @@ public class SQLStatisticsStorage {
 
     public void executeQuery(String query) {
         Connection conn;
-        String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
         try {
-            conn = DriverManager.getConnection(host, username, password);
+            conn = DriverManager.getConnection(this.host, this.username, this.password);
             PreparedStatement statement = conn.prepareStatement(query);
             statement.executeQuery();
         } catch (Exception e) {
