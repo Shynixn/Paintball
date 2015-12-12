@@ -18,7 +18,7 @@ public class SQLStatisticsStorage {
         for (String key : keys) {
             ConfigurationSection stats = yaml.getConfigurationSection(key + ".Stats");
             String path = stats.getCurrentPath();
-            String toEncode = path + ":" + stats;
+            String toEncode = path + ":" + stats.toString();
             byte[] byteArray = toEncode.getBytes();
             String encoded = Base64.getEncoder().encode(byteArray).toString();
             UUID uuid = UUID.fromString(key.replace("Player-Data.", ""));
@@ -36,7 +36,9 @@ public class SQLStatisticsStorage {
             String encoded = encodedStats.get(uuid);
             String decoded = Base64.getDecoder().decode(encoded.getBytes()).toString();
             String[] split = decoded.split(":");
-            yaml.set(split[0], split[1]);
+            String path = split[0];
+            ConfigurationSection stats = null;
+            //get Configuration Section
         }
         return yaml;
     }
