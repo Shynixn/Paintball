@@ -53,15 +53,28 @@ public class Team {
 
     private static Map<ChatColor, String> colorNames = new EnumMap<ChatColor, String>(ChatColor.class);
 
+    // Set the colorNames variable to the TEAM_NAMES variable, which was set in Setting, this way we can use it here
     public static void loadTeamColors() {
         colorNames = TEAM_NAMES;
     }
+
+    // List of all available color codes
     public static List<String> LIST = Arrays.asList("§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§0", "§a", "§b", "§c", "§d", "§e", "§f");
+    // Scoreboard (This is the only scoreboard for the plugin) and it is used for coloring player HUD
     private static Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
 
+    // Team's chat color
     private ChatColor color;
+    // Team's arena it is set to
     private Arena arena;
 
+    /**
+        Used to create a new Team.
+        Specifically used in SetTeam's command class when we set the arena's teams
+        Used when loading an already created arena, check's the arenas already-set teams then re-creates it in memory.
+        @param a - arena being set to
+        @param colorCode - color of the team
+     **/
     public Team (Arena a, String colorCode) {
 
         this.arena = a;
@@ -72,26 +85,32 @@ public class Team {
         }
     }
 
+    // Return the one plugin's scoreboard instance
     public static Scoreboard getPluginScoreboard() {
         return sb;
     }
 
+    // Return the team's specific path in config.
     public String getPath() {
         return "Arenas." + arena.getDefaultName() + ".Team-Locations." + this.getTitleName();
     }
 
+    // Return the team's specific ChatColor associated with it, ex: ChatColor.RED.
     public ChatColor getChatColor() {
         return color;
     }
 
+    // Return the team's color (Helpful or setting HUD color) ex: Color.AQUA
     public Color getColor() {
         return colors.get(color);
     }
 
+    // Returns Team's title name, basically the team's name. This value can be changed in config.yml, ex: "&6: Orange" this would return Orange
     public String getTitleName() {
         return colorNames.get(color);
     }
 
+    // Returns dye color for this team, ex: DyeColor.BLUE;
     public DyeColor getDyeColor() {
         return dyeColors.get(color);
     }

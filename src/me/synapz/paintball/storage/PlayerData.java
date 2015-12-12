@@ -26,6 +26,8 @@ public final class PlayerData extends PaintballFile {
         this.data = getFileConfig();
     }
 
+    // Adds one to a player's stat
+    // ex: if a player gets 1 kill, add one the stat in config
     public void incrementStat(StatType type, PbPlayer player) {
         UUID id = player.getPlayer().getUniqueId();
 
@@ -53,12 +55,7 @@ public final class PlayerData extends PaintballFile {
         saveFile();
     }
 
-    public void incrementStat(StatType type, Player player) {
-        UUID id = player.getPlayer().getUniqueId();
-        addOneToPath(type.getPath(id));
-        saveFile();
-    }
-
+    // Gets a player at a rank, returns Unknown if no player can be found at rank
     public HashMap<String, String> getPlayerAtRank(int rank, StatType type) {
         HashMap<String, String> result = new HashMap<String, String>() {{
             put("Unknown", "");
@@ -99,6 +96,8 @@ public final class PlayerData extends PaintballFile {
         return result;
     }
 
+    // Returns a player's stats in a Map with StatType holding the type connected to a String with it's value
+    // Usedful for leaderboards and /pb stats
     public Map<StatType, String> getPlayerStats(UUID target) {
         Map<StatType, String> stats = new HashMap<StatType, String>();
         boolean uuidNotFound = getFileConfig().getConfigurationSection("Player-Data." + target + ".Stats") == null;
@@ -112,6 +111,9 @@ public final class PlayerData extends PaintballFile {
         return stats;
     }
 
+    // Method for /pb leaderboard <stat> <page>
+    // Organizes players from best to worse based on the stat selected
+    // TODO: does not look nice, and doesn't have enough players to test fully
     public void paginate(CommandSender sender, StatType type, int page, int pageLength) {
         SortedMap<String, String> allPlayers = new TreeMap<String, String>(Collections.<String>reverseOrder());
         for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
@@ -138,6 +140,8 @@ public final class PlayerData extends PaintballFile {
         }
     }
 
+    // Gets the page of a player's stats, useful for /pb stat and /pb leaderboard <page>
+    // TODO: not working at all
     public void getPage(Player player, StatType type, int page) {
         // int totalPages = getFileConfig().getConfigurationSection("Player-Data").getKeys(false).size() % 8;
         int current = Integer.parseInt(page + "" + page);
@@ -148,18 +152,21 @@ public final class PlayerData extends PaintballFile {
         }
     }
 
+    // Returns a player's KD by dividing kills and deaths
     public String getKD(UUID id) {
         int kills = getFileConfig().getInt(StatType.KILLS.getPath(id));
         int deaths = getFileConfig().getInt(StatType.DEATHS.getPath(id));
         return String.format("%.2f", divide(kills, deaths));
     }
 
+    // Returns a player's accuracy by dividing shots and hits
     public String getAccuracy(UUID id) {
         int shots = getFileConfig().getInt(StatType.SHOTS.getPath(id));
         int hits = getFileConfig().getInt(StatType.HITS.getPath(id));
         return String.format("%d%s", (int) divide(shots, hits), "%");
     }
 
+    // Divides two numbers safely
     private double divide(int numerator, int denominator) {
         if (numerator == 0)
             return 0;
@@ -171,6 +178,9 @@ public final class PlayerData extends PaintballFile {
         return (n / d);
     }
 
+    // Saves player information to PlayerData file
+    // Called when the player enters an arena
+    // TODO: add exp and other missing values
     public void savePlayerInformation(Player player) {
         UUID id = player.getUniqueId();
         data.set("Player-Data." + id + ".Name", player.getName());
@@ -185,6 +195,7 @@ public final class PlayerData extends PaintballFile {
         saveFile();
     }
 
+    // Restores all of the player's settings
     public void restorePlayerInformation(UUID id) {
         Player player = Bukkit.getServer().getPlayer(id);
 
@@ -199,6 +210,7 @@ public final class PlayerData extends PaintballFile {
         saveFile();
     }
 
+    // Get the player's last inventory contents what were set in Player-Data
     private ItemStack[] getLastInventoryContents(UUID id, String path) {
         ItemStack[] items = new ItemStack[data.getList("Player-Data." + id + path).size()];
         int count = 0;
@@ -211,6 +223,8 @@ public final class PlayerData extends PaintballFile {
         return items;
     }
 
+    // Checks to make sure there is a configuration section, if it isn't it is created for that player
+    // Checks to see if there are any missing stats from config, this would happen in a future upgrade and it sets that stat to 0 isntead of it being null
     private void addStatsIfNotYetAdded(UUID id) {
         // checks to make sure the stat's are in config, if not make it
         if (getFileConfig().getConfigurationSection("Player-Data." + id + "Stats") == null) {
@@ -228,6 +242,7 @@ public final class PlayerData extends PaintballFile {
         saveFile();
     }
 
+    // Increments the set path by one
     private void addOneToPath(String path) {
         getFileConfig().set(path, getFileConfig().getInt(path) + 1);
     }
