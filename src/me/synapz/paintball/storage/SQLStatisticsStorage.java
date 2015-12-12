@@ -3,6 +3,7 @@ package me.synapz.paintball.storage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,11 +14,16 @@ import java.util.Set;
 
 public class SQLStatisticsStorage {
 
+    Plugin pl;
     String host;
     Integer port;
     String username;
     String password;
     String database;
+
+    public SQLStatisticsStorage(Plugin pb) {
+        this.pl = pb;
+    }
 
     public void setupSQL(String host, Integer port, String username, String password, String database) {
         this.host = host;
@@ -26,7 +32,7 @@ public class SQLStatisticsStorage {
         this.password = password;
         this.database = database;
         executeQuery("CREATE DATABASE IF NOT EXISTS " + database);
-        executeQuery("CREATE TABLE IF NOT EXISTS stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
+        executeQuery("CREATE TABLE IF NOT EXISTS Paintball_Stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
     }
 
     public FileConfiguration removeStats(FileConfiguration yaml) {
@@ -41,7 +47,7 @@ public class SQLStatisticsStorage {
         byte[] byteArray = statsYaml.saveToString().getBytes();
         String encoded = Base64.getEncoder().encode(byteArray).toString();
         yaml.set("Stats", encoded);
-        executeQuery("INSERT INTO stats (id,stats) VALUES (1," + encoded + ")");
+        executeQuery("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
         return yaml;
     }
 
@@ -50,7 +56,7 @@ public class SQLStatisticsStorage {
             Connection conn;
             String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
             conn = DriverManager.getConnection(host, username, password);
-            PreparedStatement sql = conn.prepareStatement("SELECT statsFROM `stats` WHERE id = '1';");
+            PreparedStatement sql = conn.prepareStatement("SELECT statsFROM `Paintball_Stats` WHERE id = '1';");
             ResultSet result = sql.executeQuery();
             result.next();
             String base64Stats = result.getString("stats");
