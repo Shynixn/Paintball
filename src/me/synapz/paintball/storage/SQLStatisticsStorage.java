@@ -1,16 +1,33 @@
 package me.synapz.paintball.storage;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Base64;
 import java.util.Set;
 
 public class SQLStatisticsStorage {
 
-    // TODO: setting up SQL and methods to deal with storing encoded strings
+    String host;
+    Integer port;
+    String username;
+    String password;
+    String database;
+
+    public void setupSQL(String host, Integer port, String username, String password, String database) {
+        this.host = host;
+        this.port = port;
+        this.username = username;
+        this.password = password;
+        this.database = database;
+        executeQuery("CREATE DATABASE IF NOT EXISTS " + database);
+        executeQuery("CREATE TABLE IF NOT EXISTS stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
+    }
 
     public FileConfiguration removeStats(FileConfiguration yaml) {
         Set<String> keys = yaml.getConfigurationSection("Player-Data").getKeys(false);
@@ -24,14 +41,19 @@ public class SQLStatisticsStorage {
         byte[] byteArray = statsYaml.saveToString().getBytes();
         String encoded = Base64.getEncoder().encode(byteArray).toString();
         yaml.set("Stats", encoded);
-        //TODO: Send String/Yaml to SQL
+        executeQuery("INSERT INTO stats (id,stats) VALUES (1," + encoded + ")");
         return yaml;
     }
 
     public FileConfiguration addStats(FileConfiguration yaml) {
         try {
-            //TODO: get String/Yaml from SQL
-            String base64Stats = null;
+            Connection conn;
+            String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
+            conn = DriverManager.getConnection(host, username, password);
+            PreparedStatement sql = conn.prepareStatement("SELECT statsFROM `stats` WHERE id = '1';");
+            ResultSet result = sql.executeQuery();
+            result.next();
+            String base64Stats = result.getString("stats");
             String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
             YamlConfiguration statsYaml = new YamlConfiguration();
             statsYaml.loadFromString(yamlString);
@@ -41,9 +63,21 @@ public class SQLStatisticsStorage {
                 String path = stats.getCurrentPath();
                 yaml.set(path, stats);
             }
-        } catch (InvalidConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return yaml;
+    }
+
+    public void executeQuery(String query) {
+        Connection conn;
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
+        try {
+            conn = DriverManager.getConnection(host, username, password);
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
