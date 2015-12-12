@@ -1,7 +1,7 @@
 name: Paintball
 version: Beta_3
 description: Paintball Minigame
-author: Synapz_
+authors: [Synapz_, dart2112]
 main: me.synapz.paintball.Paintball
 website: NotAdded2Spigot.yet/sorry
 softdepend: [TitleAPI]
