@@ -3,8 +3,10 @@ package me.synapz.paintball.storage;
 
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Paintball;
+import me.synapz.paintball.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -12,8 +14,11 @@ import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.*;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Settings {
 
@@ -30,6 +35,15 @@ public class Settings {
     private FileConfiguration arena;
     private PlayerData cache;
     private File aFile;
+
+    // SQL Stuff
+    // TODO: make these final
+    public static boolean SQL;
+    public static String HOST;
+    public static int PORT;
+    public static String USERNAME;
+    public static String PASSWORD;
+    public static String DATABASE;
 
     public Settings(Plugin plugin) {
         if (settings == null) {
@@ -74,6 +88,7 @@ public class Settings {
         cache = new PlayerData(pb);
 
         loadValues(pb.getConfig(), pb.getDescription());
+        loadSQL();
     }
 
     public void reloadConfig() {
@@ -123,9 +138,49 @@ public class Settings {
         // TODO: add stats tag to config.yml chts
         SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.spectator-chat"));
         ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.arena-chat"));
+        loadSQL();
+    }
+
+    private void loadSQL() {
+        FileConfiguration config = pb.getConfig();
+        SQL = config.getBoolean("SQL");
+        if (SQL) {
+            HOST = config.getString("SQL-Settings.host");
+            PORT = config.getInt("SQL-Settings.port");
+            USERNAME = config.getString("SQL-Settings.user");
+            PASSWORD = config.getString("SQL-Settings.pass");
+            DATABASE = config.getString("SQL-Settings.database");
+            setupSQL();
+        }
+    }
+
+    //TODO: Add check for if SQL has been recently disabled and reinsert the stats
+    private void setupSQL() {
+        Utils.executeQuery("CREATE DATABASE IF NOT EXISTS " + DATABASE);
+        if (!SQL) {
+            return;
+        }
+        Utils.executeQuery("CREATE TABLE IF NOT EXISTS Paintball_Stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
+        try {
+            Connection conn;
+            conn = DriverManager.getConnection(HOST, USERNAME, PASSWORD);
+            PreparedStatement sql = conn.prepareStatement("SELECT statsFROM `Paintball_Stats` WHERE id = '1';");
+            ResultSet result = sql.executeQuery();
+            result.next();
+            String encoded = result.getString("stats");
+            File file = new File(pb.getDataFolder(), "playerdata.yml");
+            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+            yaml.set("Stats", encoded);
+            yaml.save(file);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Failed to download SQL backup!");
+        }
     }
 
 
+
+    // TODO: make a new ArenaFile class
     public FileConfiguration getArenaFile() {
         return arena;
     }

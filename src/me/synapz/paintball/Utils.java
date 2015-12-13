@@ -14,6 +14,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLClientInfoException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -141,5 +145,19 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    // TODO: for some reason this spams console like 6 times when it fails
+    public static void executeQuery(String query) {
+        Connection conn;
+        try {
+            conn = DriverManager.getConnection(Settings.HOST, Settings.USERNAME, Settings.PASSWORD);
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.executeQuery();
+        } catch (Exception e) {
+            Settings.SQL = false;  // TODO: is this ok? it failed so that means they did something wrong, so they have to fix it. Without this it might continue and just spam console
+            Message.getMessenger().msg(Bukkit.getConsoleSender(), true, ChatColor.RED, "Error starting SQL. Falling back to storing values in playerdata.yml. Check config.yml's SQL settings.");
+            e.printStackTrace();
+        }
     }
 }

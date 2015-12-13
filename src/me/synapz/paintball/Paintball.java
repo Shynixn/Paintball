@@ -18,8 +18,6 @@ public class Paintball extends JavaPlugin {
         this.data = new PlayerData(this);
         Settings.getSettings();
 
-        this.loadSQL();
-
         ArenaManager.getArenaManager().setup();
         CommandManager commandManager = new CommandManager();
         commandManager.init();
@@ -31,17 +29,6 @@ public class Paintball extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new LeaderboardSigns(), this);
 
         this.getCommand("paintball").setExecutor(commandManager);
-    }
-
-    public void loadSQL() {
-        if (this.getConfig().getBoolean("SQL")) {
-            String host = this.getConfig().getString("SQL-Settings.host");
-            Integer port = this.getConfig().getInt("SQL-Settings.port");
-            String user = this.getConfig().getString("SQL-Settings.user");
-            String pass = this.getConfig().getString("SQL-Settings.pass");
-            String database = this.getConfig().getString("SQL-Settings.database");
-            this.data.setupSQL(host, port, user, pass, database);
-        }
     }
 
     @Override

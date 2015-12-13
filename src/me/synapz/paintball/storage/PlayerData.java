@@ -5,17 +5,21 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.players.PaintballPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-
+import java.sql.*;
 import java.util.*;
+
+import static me.synapz.paintball.storage.Settings.*;
 
 public final class PlayerData extends PaintballFile {
 
@@ -26,6 +30,45 @@ public final class PlayerData extends PaintballFile {
 
         this.data = getFileConfig();
     }
+
+    @Override
+    public FileConfiguration getFileConfig() {
+        if (SQL) {
+            return this.addStats(fileConfig);
+        }
+        return this.fileConfig;
+    }
+
+    @Override
+    public void saveFile() {
+        if (SQL) {
+            try {
+                this.removeStats(fileConfig).save(file);
+            }catch (Exception exc) {
+                Message.getMessenger().msg(Bukkit.getConsoleSender(), true, ChatColor.RED, "Error saving SQL. Check config.yml's SQL settings. Falling back to playerdata.yml's stats.");
+                exc.printStackTrace();
+            }
+        } else {
+            super.saveFile();
+        }
+    }
+
+    public FileConfiguration removeStats(FileConfiguration yaml) {
+        Set<String> keys = yaml.getConfigurationSection("Player-Data").getKeys(false);
+        YamlConfiguration statsYaml = new YamlConfiguration();
+        for (String key : keys) {
+            ConfigurationSection stats = yaml.getConfigurationSection(key + ".Stats");
+            String path = stats.getCurrentPath();
+            statsYaml.set(path, stats);
+            yaml.set(path, null);
+        }
+        byte[] byteArray = statsYaml.saveToString().getBytes();
+        String encoded = Base64.getEncoder().encode(byteArray).toString();
+        yaml.set("Stats", encoded);
+        Utils.executeQuery("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
+        return yaml;
+    }
+
 
     // Adds one to a player's stat
     // ex: if a player gets 1 kill, add one the stat in config
@@ -210,6 +253,43 @@ public final class PlayerData extends PaintballFile {
         data.set("Player-Data." + id + ".Info", null);
         saveFile();
     }
+
+    private FileConfiguration addStats(FileConfiguration yaml) {
+        YamlConfiguration statsYaml = new YamlConfiguration();
+        try {
+            Connection conn;
+            conn = DriverManager.getConnection(HOST, USERNAME, PASSWORD);
+            PreparedStatement sql = conn.prepareStatement("SELECT statsFROM `Paintball_Stats` WHERE id = '1';");
+            ResultSet result = sql.executeQuery();
+            result.next();
+            String base64Stats = result.getString("stats");
+            String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
+            statsYaml.loadFromString(yamlString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Bukkit.getLogger().info("SQL connection failed! Using offline backup until we can connect again");
+            if (yaml.contains("Stats")) {
+                String base64Stats = yaml.getString("Stats");
+                String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
+                try {
+                    statsYaml.loadFromString(yamlString);
+                } catch (InvalidConfigurationException e1) {
+                    e1.printStackTrace();
+                    Bukkit.getLogger().severe("Failed to load offline config! Please check SQL connection and playerdata file!");
+                }
+            } else {
+                Bukkit.getLogger().severe("Statistics Down!! We have no SQL connection and don't have a backup of stats!");
+            }
+        }
+        Set<String> keys = statsYaml.getConfigurationSection("Player-Data").getKeys(false);
+        for (String key : keys) {
+            ConfigurationSection stats = statsYaml.getConfigurationSection(key + ".Stats");
+            String path = stats.getCurrentPath();
+            yaml.set(path, stats);
+        }
+        return yaml;
+    }
+
 
     // Get the player's last inventory contents what were set in Player-Data
     private ItemStack[] getLastInventoryContents(UUID id, String path) {
