@@ -6,6 +6,7 @@
     * Team colors shown in chat, HUD, name, and armor
     * Ability to change each team's name in config
 * Join/Auto-join signs
+    * Auto join signs will automatically join the arena with the most players
 * Change Paintball colors to match your server
     * Many servers have chosen colors to match their server. You can make the plugin match your server or chat with two useful configs, theme-color, secondary-color, and prefix to make your plugin look custom to your server
 * Safe reloading (/reload and /stop) 
@@ -79,3 +80,4 @@ Bugs
 - [ ] /paintball admin item << gives item if player clicks will auto 
 - [ ] Revamp settings, hashmap path, default if not found
 - [x] List<Arena> arenasPlayingTitle
+- [ ] Add arena autojoin to join most ready arena
