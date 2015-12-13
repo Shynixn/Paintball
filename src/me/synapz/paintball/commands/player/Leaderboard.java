@@ -24,7 +24,7 @@ public class Leaderboard extends Command{
                 statType = type;
         }
         if (statType == null) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, this.getCorrectUsage(this), args[1] + " is an invalid statistic type.", "Choose either " + StatType.getReadableList());
+            Message.getMessenger().msg(player, false, ChatColor.RED, this.getCorrectUsage(), args[1] + " is an invalid statistic type.", "Choose either " + StatType.getReadableList());
             return;
         }
 
@@ -32,7 +32,7 @@ public class Leaderboard extends Command{
         try {
             page = Integer.parseInt(args[2]);
         } catch (NumberFormatException exc) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, this.getCorrectUsage(this), "Please specify a real number as the page.");
+            Message.getMessenger().msg(player, false, ChatColor.RED, this.getCorrectUsage(), "Please specify a real number as the page.");
             return;
         }
 

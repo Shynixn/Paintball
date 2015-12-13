@@ -20,7 +20,7 @@ public class LeaveArena extends Command {
             return;
         }
 
-        a.leave(player);
+        a.getAllPlayers().get(player).leaveArena();
         Message.getMessenger().msg(player, true, ChatColor.GREEN, "Successfully left arena.");
     }
 

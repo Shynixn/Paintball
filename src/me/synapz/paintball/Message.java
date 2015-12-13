@@ -70,9 +70,9 @@ public class Message {
     // Sends a message if there is some type of wrong usage
     public void wrongUsage(Command command, Player player, Usage usage) {
         if (usage.equals(Usage.TO_MANY_ARGS)) {
-            Message.getMessenger().msg(player, false, RED, "To many arguments!", command.getCorrectUsage(command));
+            Message.getMessenger().msg(player, false, RED, "To many arguments!", command.getCorrectUsage());
         } else {
-            Message.getMessenger().msg(player, false, RED, "Not enough arguments!", command.getCorrectUsage(command));
+            Message.getMessenger().msg(player, false, RED, "Not enough arguments!", command.getCorrectUsage());
         }
     }
 
@@ -84,7 +84,7 @@ public class Message {
         } else if (type == Command.CommandType.ARENA) {
             title += " Arena";
         }
-        return SECONDARY + STRIKETHROUGH + "                    " + RESET + THEME + " " + title + " " + SECONDARY + STRIKETHROUGH + "                    ";
+        return SECONDARY + STRIKETHROUGH + "                       " + RESET + THEME + " " + title + " " + SECONDARY + STRIKETHROUGH + "                       ";
     }
     
     public enum Usage {

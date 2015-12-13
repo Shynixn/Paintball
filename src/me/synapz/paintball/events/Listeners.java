@@ -29,7 +29,7 @@ public class Listeners implements Listener {
         Player p = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(p);
         if (a != null) {
-            a.leave(p);
+            a.getAllPlayers().get(p).leaveArena();
         }
     }
 
