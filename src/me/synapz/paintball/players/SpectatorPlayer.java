@@ -12,13 +12,14 @@ public class SpectatorPlayer extends PaintballPlayer {
 
     public SpectatorPlayer(Arena a, Player p) {
         super(a, null, p);
+
+        initPlayer();
     }
 
     public void initPlayer() {
         // TODO: give some helmet?
         player.teleport(arena.getSpectateSpawn());
         stripValues();
-        storeInformation();
         giveItems();
         displayMessages();
     }
@@ -35,13 +36,8 @@ public class SpectatorPlayer extends PaintballPlayer {
         }
     }
 
-    public void leaveArena() {
-        getSettings().getCache().restorePlayerInformation(player.getUniqueId());
-    }
-
-    protected void storeInformation() {
-        getSettings().getCache().savePlayerInformation(player);
-        arena.addSpectator(this);
+    protected String getChatLayout() {
+        return SPEC_CHAT;
     }
 
     private void stripValues() {
@@ -60,7 +56,7 @@ public class SpectatorPlayer extends PaintballPlayer {
     }
 
     private void giveItems() {
-        // give item to leave and teleport
+        // TODO: give item to leave and teleport
     }
 
     private void displayMessages() {

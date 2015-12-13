@@ -402,30 +402,6 @@ public class Arena {
         state = ArenaState.WAITING; */
     }
 
-    // Make a player leave the arena
-    // TODO: Currently doesn't do anything, instead of this we want a leave inside the PaintballPlayer, keep this here to use for reference
-    public void leave(Player player) {
-        /*
-        if (Team.getPluginScoreboard().getTeam(getTeam(player).getTitleName()) != null)     {
-            Team.getPluginScoreboard().getTeam(getTeam(player).getTitleName()).removePlayer(player);
-        }
-        
-        lobby.keySet().remove(player);
-        inGame.keySet().remove(getPbPlayer(player));
-        spectators.remove(player);
-        Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
-        
-        if (inGame.keySet().size() == 1) {
-            PbPlayer pbPlayer = (PbPlayer) inGame.keySet().toArray()[0];
-            Team.getPluginScoreboard().getTeam(inGame.get(pbPlayer).getTitleName()).removePlayer(player);
-            Settings.getSettings().getCache().restorePlayerInformation(pbPlayer.getPlayer().getUniqueId());
-            win(getTeam((pbPlayer.getPlayer())));
-            inGame.keySet().remove(getPbPlayer(player));
-            state = ArenaState.WAITING;
-        }
-        */
-    }
-
     // Called when a team wins
     // TODO: currently not used, add to a PAintballHitEven or something to check if they won then call this method
     public void win(Team team) {
@@ -474,6 +450,11 @@ public class Arena {
         return state;
     }
 
+    // Set the arena's state
+    public void setState(ArenaState state) {
+        this.state = state;
+    }
+
     // Returns the color associated with the state with it's name
     public String getStateAsString() {
         ChatColor color = RED;
@@ -514,28 +495,30 @@ public class Arena {
         }
     }
 
-    // Add a lobby player to the arena
-    public void addLobbyPlayer(LobbyPlayer lobbyPlayer) {
-        if (!allPlayers.values().contains(lobbyPlayer)) {
-            allPlayers.put(lobbyPlayer.getPlayer(), lobbyPlayer);
+    public void removePlayer(PaintballPlayer pbPlayer) {
+        allPlayers.remove(pbPlayer);
+
+        if (pbPlayer instanceof LobbyPlayer) {
+            lobby.remove(pbPlayer);
+        } else if (pbPlayer instanceof ArenaPlayer) {
+            inGame.remove(pbPlayer);
+        } else if (pbPlayer instanceof SpectatorPlayer) {
+            spectators.remove(pbPlayer);
         }
-        lobby.add(lobbyPlayer);
     }
 
-    // Add an arena player to the arena
-    public void addArenaPlayer(ArenaPlayer arenaPlayer) {
-        if (!allPlayers.values().contains(arenaPlayer)) {
-            allPlayers.put(arenaPlayer.getPlayer(), arenaPlayer);
+    public void addPlayer(PaintballPlayer pbPlayer) {
+        if (!allPlayers.values().contains(pbPlayer)) {
+            allPlayers.put(pbPlayer.getPlayer(), pbPlayer);
         }
-        inGame.add(arenaPlayer);
-    }
 
-    // Add a spectator to the arena
-    public void addSpectator(SpectatorPlayer spectatorPlayer) {
-        if (!allPlayers.values().contains(spectatorPlayer)) {
-            allPlayers.put(spectatorPlayer.getPlayer(), spectatorPlayer);
+        if (pbPlayer instanceof LobbyPlayer) {
+            lobby.add((LobbyPlayer) pbPlayer);
+        } else if (pbPlayer instanceof ArenaPlayer) {
+            inGame.add((ArenaPlayer) pbPlayer);
+        } else if (pbPlayer instanceof SpectatorPlayer) {
+            spectators.add((SpectatorPlayer) pbPlayer);
         }
-        spectators.add(spectatorPlayer);
     }
 
     // Get the list of lobby players

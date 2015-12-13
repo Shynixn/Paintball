@@ -21,7 +21,6 @@ public class LobbyPlayer extends PaintballPlayer {
     protected void initPlayer() {
         player.teleport(arena.getLobbySpawn(team));
         stripValues();
-        storeInformation();
         giveItems();
         displayMessages();
         giveWoolHelmet();
@@ -31,20 +30,12 @@ public class LobbyPlayer extends PaintballPlayer {
         }
     }
 
-    public void chat(String message) {
-        String chat = ARENA_CHAT;
-
-        chat = chat.replace("%TEAMNAME%", team.getTitleName());
-        chat = chat.replace("%TEAMCOLOR%", team.getChatColor() + "");
-        chat = chat.replace("%MSG%", message);
-        chat = chat.replace("%PREFIX%", PREFIX);
-        chat = chat.replace("%PLAYER%", player.getName());
-        for (PaintballPlayer pbPlayer : arena.getAllPlayers().values()) {
-            pbPlayer.getPlayer().sendMessage(chat);
-        }
+    protected String getChatLayout() {
+        return ARENA_CHAT;
     }
 
     public void leaveArena() {
+        arena.addPlayer(this);
         getSettings().getCache().restorePlayerInformation(player.getUniqueId());
     }
 
@@ -73,11 +64,6 @@ public class LobbyPlayer extends PaintballPlayer {
     private void displayMessages() {
         arena.broadcastMessage(GREEN, team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + arena.getLobbyPlayers().size() + "/" + arena.getMax(), GREEN + "Joined arena " + GRAY + arena.getLobbyPlayers().size() + "/" + arena.getMax());
         Message.getMessenger().msg(player, true, true, GREEN + "You have joined the arena!");
-    }
-
-    protected void storeInformation() {
-        getSettings().getCache().savePlayerInformation(player);
-        arena.addLobbyPlayer(this);
     }
 
     private void stripValues() {

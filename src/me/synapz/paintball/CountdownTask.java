@@ -24,6 +24,7 @@ public class CountdownTask extends BukkitRunnable {
 
     private int counter;
 
+    // Creates a new countdown
     public CountdownTask(int counter, int interval, int noInterval, Arena a, String chatMessage, String screenMessage, String finishedMessage, boolean isLobbyCountdown) {
         this.a = a;
         this.counter = counter;
