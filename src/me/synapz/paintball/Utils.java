@@ -21,6 +21,7 @@ import java.util.Set;
 
 public class Utils {
 
+    // Gets the inventory list of a player
     public static List<ItemStack> getInventoryList(Player p, boolean isArmourList) {
         ItemStack[] list = isArmourList ? p.getInventory().getArmorContents() : p.getInventory().getContents();
         List<ItemStack> returnList = new ArrayList<ItemStack>();
@@ -32,6 +33,7 @@ public class Utils {
         return returnList;
     }
 
+    // Turns a string like 'red' in to a team
     public static Team stringToTeam(Arena a, String team) {
         for (Team t : a.getArenaTeamList()) {
             if (t.getTitleName().equalsIgnoreCase(team) || t.getTitleName().replace(" ", "").equalsIgnoreCase(team)) {
@@ -41,6 +43,7 @@ public class Utils {
         return null;
     }
 
+    // Checks to see if the arena is null
     public static boolean nullCheck(String arenaName, Arena arena, Player sender) {
         if (arena == null) {
             String error = arenaName + " is an invalid arena.";
@@ -54,6 +57,7 @@ public class Utils {
         }
     }
 
+    // Gets the game mode from an int
     public static GameMode getLastGameMode(int gamemodeValue) {
         switch (gamemodeValue) {
             case 0:
@@ -69,11 +73,7 @@ public class Utils {
         }
     }
 
-    public static void setAllSpeeds(Player p, float speed) {
-        p.setWalkSpeed(speed);
-        p.setFlySpeed(speed);
-    }
-
+    // Starts a countdown
     public static void countdown(int counter, int interval, int noInterval, Arena a, String chatMessage, String screenMessage, String finishedMessage, boolean isLobbyCountDown) {
         if (!CountdownTask.arenasRunningTask.contains(a)) {
             final Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
@@ -81,6 +81,7 @@ public class Utils {
         }
     }
 
+    // Returns an Array[] of items to an ArrayList
     public static ArrayList<String> addItemsToArray(ArrayList<String> array, String... s) {
         for (String str : s) {
             if (str != "") {
@@ -90,6 +91,7 @@ public class Utils {
         return array;
     }
 
+    // Makes wool from DyeColor and adds a name
     public static ItemStack makeWool(String name, DyeColor color) {
         ItemStack wool = new Wool(color).toItemStack(1);
         ItemMeta woolMeta = wool.getItemMeta();
@@ -98,6 +100,7 @@ public class Utils {
         return wool;
     }
 
+    // Gets the team with the least amount of players
     public static Team max(Arena a , HashMap<Team, Integer> size) {
         // Get all the sizes of each Team and assign it to numbers array
         // in case there aren't any players in the arena

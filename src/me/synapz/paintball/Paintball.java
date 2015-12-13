@@ -52,6 +52,7 @@ public class Paintball extends JavaPlugin {
         ArenaManager.getArenaManager().stopArenas();
     }
 
+    // TODO: bad way of getting player data, find better way
     public PlayerData getPlayerData() {
         return data;
     }

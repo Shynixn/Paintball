@@ -102,6 +102,7 @@ public class CommandManager implements CommandExecutor{
         }
     }
 
+    // Sends out the command if: The player has the permission, correct arguments, and fails if there is an exception then sends the player the error
     private void dispatchCommand(Command command, Player player, String[] args) {
         try {
             if (!Message.getMessenger().permissionValidator(player, command.getPermission())) {
@@ -116,6 +117,7 @@ public class CommandManager implements CommandExecutor{
         }
     }
 
+    // Checks arguments of a command
     private boolean argumentChecker(Command command, Player player, String[] args) {
         if (command.getMaxArgs() == command.getMinArgs()) {
             if (args.length < command.getMinArgs()) {
@@ -136,7 +138,8 @@ public class CommandManager implements CommandExecutor{
         }
         return true;
     }
-    
+
+    // Add a list of commands to the COMMANDS list
     private void addCommands(Command...cmds) {
     	for (Command cmd : cmds) {
     		COMMANDS.put(cmd.getName(), cmd);

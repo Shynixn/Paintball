@@ -27,11 +27,11 @@ public abstract class Command {
     public abstract int getMinArgs();
 
 
-
-    public String getCorrectUsage(Command command) {
-        String type = command.getCommandType() == CommandType.ADMIN ? "admin " : command.getCommandType() == CommandType.ARENA ? "arena " : "";
-        String name = command.getName().equals("admin") || command.getName().equals("arena") ? "" : command.getName();
-        return "Usage: /paintball " + type + name + " " + command.getArgs();
+    // Get's the correct usage of the command
+    public String getCorrectUsage() {
+        String type = this.getCommandType() == CommandType.ADMIN ? "admin " : this.getCommandType() == CommandType.ARENA ? "arena " : "";
+        String name = this.getName().equals("admin") || this.getName().equals("arena") ? "" : this.getName();
+        return "Usage: /paintball " + type + name + " " + this.getArgs();
     }
 
 
@@ -41,6 +41,7 @@ public abstract class Command {
         PLAYER;
     }
 
+    // Checks to see if a team is invalid, if it is it sends the sender the list of valid teams
     public boolean teamCheck(Arena a, String teamString, Player sender) {
         String validTeams = " ";
         for (Team team : a.getArenaTeamList()) {

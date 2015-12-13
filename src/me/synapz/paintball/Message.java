@@ -12,8 +12,7 @@ import static org.bukkit.ChatColor.*;
 
 public class Message {
     
-    // TODO remove static, it's really not needed...
-    // determined default values
+    // TODO remove static instance, it's really not needed...
     public static final String NO_PERMS = "You don't have access to that command!";
     
     private static Message instance = new Message();
@@ -22,12 +21,12 @@ public class Message {
         return instance;
     }
 
+    // Message a player
     // TODO: remove duplicated code
     public void msg(CommandSender sender, boolean titleAPI, ChatColor color, String... msg){
         String[] messages = msg;
         
         for (String string : messages) {
-            // TODO: titleAPI check (Not a Boolean)
             if (titleAPI && TITLE_API && sender instanceof Player) {
                 TitleAPI.sendTitle((Player)sender, 10, 10, 10, PREFIX, color + string);
             }
@@ -35,6 +34,7 @@ public class Message {
         }
     }
 
+    // Message a player with or without a prefix
     public void msg(CommandSender sender, boolean prefix, boolean titleAPI, String... msg){
         String[] messages = msg;
         String strPrefix = prefix ? PREFIX : "";
@@ -45,7 +45,8 @@ public class Message {
             sender.sendMessage(strPrefix + string);
         }
     }
-    
+
+    // Checks to see if a player has a permission, returns true if they do false if they don't
     public boolean permissionValidator(Player player, String permission) {
         if (player.hasPermission(permission)) {
             return true;
@@ -55,6 +56,7 @@ public class Message {
         }
     }
 
+    // Checks to see if a player has a permission to break/create a sign
     // TODO: make this better!!
     public boolean signPermissionValidator(Player player, String permission) {
         if (player.hasPermission(permission)) {
@@ -64,7 +66,8 @@ public class Message {
             return false;
         }
     }
-    
+
+    // Sends a message if there is some type of wrong usage
     public void wrongUsage(Command command, Player player, Usage usage) {
         if (usage.equals(Usage.TO_MANY_ARGS)) {
             Message.getMessenger().msg(player, false, RED, "To many arguments!", command.getCorrectUsage(command));
@@ -72,7 +75,8 @@ public class Message {
             Message.getMessenger().msg(player, false, RED, "Not enough arguments!", command.getCorrectUsage(command));
         }
     }
-    
+
+    // Get's the help associated with the command type
     public String getHelpTitle(Command.CommandType type) {
         String title = "Paintball";
         if (type == Command.CommandType.ADMIN) {

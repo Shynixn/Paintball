@@ -62,7 +62,7 @@ public class Arena {
      */
     public Arena(String name, String currentName) {
         this.currentName = currentName;
-        this.name = name;
+        this.defaultName = name;
 
         // Go through each arena inside the arena (located in config) and add it to the team list
         for (Team t : ArenaManager.getArenaManager().getTeamsList(this)) {
@@ -77,7 +77,7 @@ public class Arena {
 
     // Returns the path name of the arena ex: if path is Arenas.Syn it would return Syn
     public String getDefaultName() {
-        return name;
+        return defaultName;
     }
 
     // Sets the current name of the
@@ -473,7 +473,8 @@ public class Arena {
         }
         return state;
     }
-    
+
+    // Returns the color associated with the state with it's name
     public String getStateAsString() {
         ChatColor color = RED;
         switch (state) {
@@ -492,7 +493,8 @@ public class Arena {
         }
         return color + state.toString();
     }
-    
+
+    // Updates all join signs
     public void updateAllSigns() {
         List<String> signLocs = getSettings().getArenaFile().getStringList(getPath() + "Sign-Locs");
         if (signLocs == null) return;
@@ -512,6 +514,7 @@ public class Arena {
         }
     }
 
+    // Add a lobby player to the arena
     public void addLobbyPlayer(LobbyPlayer lobbyPlayer) {
         if (!allPlayers.values().contains(lobbyPlayer)) {
             allPlayers.put(lobbyPlayer.getPlayer(), lobbyPlayer);
@@ -519,6 +522,7 @@ public class Arena {
         lobby.add(lobbyPlayer);
     }
 
+    // Add an arena player to the arena
     public void addArenaPlayer(ArenaPlayer arenaPlayer) {
         if (!allPlayers.values().contains(arenaPlayer)) {
             allPlayers.put(arenaPlayer.getPlayer(), arenaPlayer);
@@ -526,6 +530,7 @@ public class Arena {
         inGame.add(arenaPlayer);
     }
 
+    // Add a spectator to the arena
     public void addSpectator(SpectatorPlayer spectatorPlayer) {
         if (!allPlayers.values().contains(spectatorPlayer)) {
             allPlayers.put(spectatorPlayer.getPlayer(), spectatorPlayer);
@@ -533,21 +538,27 @@ public class Arena {
         spectators.add(spectatorPlayer);
     }
 
+    // Get the list of lobby players
     public List<LobbyPlayer> getLobbyPlayers() {
         return lobby;
     }
 
+    // Get the list of arena players
     public List<ArenaPlayer> getAllArenaPlayers() {
         return inGame;
     }
 
+    // Get the lsit of spectators
     public List<SpectatorPlayer> getSpectators() {
         return spectators;
     }
+
+    // get the list of all players
     public Map<Player, PaintballPlayer> getAllPlayers() {
         return allPlayers;
     }
 
+    // Saves arena file along with other checks
     private void advSave() {
         getSettings().saveArenaFile();
         /**

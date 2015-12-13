@@ -26,10 +26,12 @@ public class ArenaManager {
         return instance;
     }
 
+    // Sets up arenas
     public void setup() {
         loadArenas();
     }
 
+    // Gets an arena from a name
     public Arena getArena(String name) {
         for (Arena a : arenas) {
             if (a.getName().equalsIgnoreCase(name)) {
@@ -39,6 +41,7 @@ public class ArenaManager {
         return null;
     }
 
+    // Gets an arena from a player inside it
     public Arena getArena(Player player) {
         for (Arena a : arenas) {
             if (a.containsPlayer(player))
@@ -47,16 +50,19 @@ public class ArenaManager {
         return null;
     }
 
+    // Gets a list of all arenas
     public ArrayList<Arena> getArenas() {
         return arenas;
     }
 
+    // Stops all arenas
     public void stopArenas() {
         for (Arena a : getArenas()) {
             a.forceRemovePlayers();
         }
     }
 
+    // Gets the team list for an arena
     public List<Team> getTeamsList(Arena a) {
         List<Team> teamList = new ArrayList<Team>();
         for (String s : Settings.getSettings().getArenaFile().getStringList(a.getPath() + ".Teams")) {
@@ -64,7 +70,8 @@ public class ArenaManager {
         }
         return teamList;
     }
-    
+
+    // Adds a new arena to arenas.yml
     public void addNewArenaToConfig(Arena arena) {
         String[] steps = {"Name", "Spectate-Loc", "Max-Players", "Min-Players", "Is-Enabled", "Teams"};
         String id = arena.getDefaultName();
@@ -82,6 +89,7 @@ public class ArenaManager {
         Settings.getSettings().saveArenaFile();
     }
 
+    // Get a readable list and send it to the param player
     public void getList(Player player) {
         List<String> list = new ArrayList<String>();
 
@@ -118,6 +126,7 @@ public class ArenaManager {
                 GREEN + "█-" + GRAY + "Joinable " + RED + "█-" + GRAY + "InProgress " + GRAY + "█-" + GRAY + "Disabled/Not-Setup");
     }
 
+    // Load all arenas from arenas.yml
     private void loadArenas() {
         FileConfiguration file = Settings.getSettings().getArenaFile();
         Set<String> rawArenas = file.getConfigurationSection("Arenas") == null ? null : file.getConfigurationSection("Arenas").getKeys(false);
@@ -142,6 +151,7 @@ public class ArenaManager {
         }
     }
 
+    // Stores an arena's sign into areans.yml so it can be easily updated
     // TODO: also store leaderboard signs...
     public void storeSignLocation(Location loc, Arena a) {
         List<String> signsList = Settings.getSettings().getArenaFile().getStringList(a.getPath() + "Sign-Locs");
@@ -154,6 +164,7 @@ public class ArenaManager {
         Settings.getSettings().saveArenaFile();
     }
 
+    // Remove a sign location from arenas.yml
     public void removeSignLocation(Location loc, Arena a) {
         List<String> signsList = Settings.getSettings().getArenaFile().getStringList(a.getPath() + "Sign-Locs");
         String locString = loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();

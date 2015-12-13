@@ -14,13 +14,13 @@ public class CountdownTask extends BukkitRunnable {
     // used to check if there is a current instance of CountdownTask running for an arena; we don't want double messages!
     public static ArrayList<Arena> arenasRunningTask = new ArrayList<Arena>();
 
-    private final Arena a;
-    private final int interval;
-    private final int noInterval;
-    private final String finishedMessage;
-    private final boolean isLobbyCountdown;
-    private String chatMessage;
-    private String screenMessage;
+    private final Arena a; // arena for the countdown
+    private final int interval; // countdown interval
+    private final int noInterval; // countdown when there is no interval
+    private final String finishedMessage; // message when countdown is finished
+    private final boolean isLobbyCountdown; // if it is a lobbyCountdown this is true
+    private String chatMessage; // message to be sent in chat
+    private String screenMessage; // messahe to be sent in middle of screen using title api
 
     private int counter;
 
@@ -39,7 +39,6 @@ public class CountdownTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        // TODO: If player leaves and joins fast they will get the countdown two times.
         // TODO: check if this part works
         if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
             // cancel it because people left and it doesnt have enough players
@@ -47,6 +46,7 @@ public class CountdownTask extends BukkitRunnable {
             this.cancel();
         }
         if (counter <= 0) {
+            // countdown is finished...
             arenasRunningTask.remove(a);
             a.broadcastMessage(GREEN, finishedMessage, finishedMessage);
             if (isLobbyCountdown)
@@ -54,7 +54,7 @@ public class CountdownTask extends BukkitRunnable {
             this.cancel();
         } else {
             if (counter <= noInterval || counter % interval == 0) {
-                // replace the messages and broadcast it, then set back the message to it's layout
+                // replace the messages and broadcast it, then set back the message to it's layout for next countdown message
                 chatMessage = chatMessage.replace("%time%", counter+"");
                 screenMessage = screenMessage.replace("%time%", counter+"");
                 a.broadcastMessage(GREEN, chatMessage, screenMessage);
