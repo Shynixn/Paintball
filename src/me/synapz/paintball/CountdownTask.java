@@ -1,13 +1,10 @@
 package me.synapz.paintball;
 
-import me.synapz.paintball.storage.Settings;
 import static org.bukkit.ChatColor.*;
 
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 public class CountdownTask extends BukkitRunnable {
 
@@ -20,7 +17,7 @@ public class CountdownTask extends BukkitRunnable {
     private final String finishedMessage; // message when countdown is finished
     private final boolean isLobbyCountdown; // if it is a lobbyCountdown this is true
     private String chatMessage; // message to be sent in chat
-    private String screenMessage; // messahe to be sent in middle of screen using title api
+    private String screenMessage; // message to be sent in middle of screen using title api
 
     private int counter;
 
@@ -59,8 +56,8 @@ public class CountdownTask extends BukkitRunnable {
                 chatMessage = chatMessage.replace("%time%", counter+"");
                 screenMessage = screenMessage.replace("%time%", counter+"");
                 a.broadcastMessage(GREEN, chatMessage, screenMessage);
-                chatMessage = chatMessage.replace(counter+"", "%time%");
-                screenMessage = screenMessage.replace(counter+"", "%time%");
+                chatMessage = chatMessage.replace(GRAY + "" + counter, GRAY + "%time%");
+                screenMessage = screenMessage.replace(GRAY + "" + counter, GRAY + "%time%");
             }
         }
         counter--;

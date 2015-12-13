@@ -5,7 +5,10 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.storage.Settings;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,9 +27,6 @@ public abstract class PaintballPlayer {
         this.team = t;
         this.player = p;
 
-        getSettings().getCache().savePlayerInformation(player);
-        arena.addPlayer(this);
-
         initPlayer();
     }
 
@@ -43,7 +43,10 @@ public abstract class PaintballPlayer {
     }
 
     protected void giveWoolHelmet() {
-        player.getInventory().setHelmet(Utils.makeWool(team.getTitleName(), team.getDyeColor()));
+        // TODO: does this work?
+        if (!Settings.WOOL_HELMET && this instanceof ArenaPlayer)
+            return;
+        player.getInventory().setHelmet(Utils.makeWool(team.getChatColor() + team.getTitleName() + " Team", team.getDyeColor()));
     }
 
     public void chat(String message) {
@@ -65,15 +68,13 @@ public abstract class PaintballPlayer {
         if (Team.getPluginScoreboard().getTeam(team.getTitleName()) != null)
             Team.getPluginScoreboard().getTeam(team.getTitleName()).removePlayer(player);
         arena.removePlayer(this);
-        Settings.getSettings().getCache().restorePlayerInformation(player.getUniqueId());
+        Settings.getSettings().getCache().restorePlayerInformation(player);
 
-        // check for seeing if to stop the arena and have a player win
+        // check to see if there is only one player left, if there is everyone else left
         if (arena.getAllArenaPlayers().size() == 1) {
-            ArenaPlayer pbPlayer = (ArenaPlayer) arena.getAllArenaPlayers().toArray()[0];
-            Team.getPluginScoreboard().getTeam(team.getTitleName()).removePlayer(player);
-            Settings.getSettings().getCache().restorePlayerInformation(pbPlayer.getPlayer().getUniqueId());
-            arena.win(team);
-            arena.removePlayer(this);
+            arena.getAllArenaPlayers().get(0).leaveArena(); // get the last final player and make them leave (can't play alone)
+            arena.setState(Arena.ArenaState.WAITING);
+        } else if (arena.getAllArenaPlayers().size() <= 0) {
             arena.setState(Arena.ArenaState.WAITING);
         }
     }

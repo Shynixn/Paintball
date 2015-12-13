@@ -3,6 +3,7 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
+import com.sun.crypto.provider.PBEParameters;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
@@ -361,14 +362,12 @@ public class Arena {
 
     // Starts the game, turns all LobbyPlayer's into lobby players and t
     public void startGame() {
-        // TODO: Set all the player's walk speed, swim speed, and fly speed tpo 0
         state = ArenaState.IN_PROGRESS;
         for (LobbyPlayer p : lobby) {
+            allPlayers.remove(p.getPlayer(), p);
             new ArenaPlayer(this, p.getTeam(), p.getPlayer());
         }
         lobby.removeAll(lobby);
-        // TODO does this work?
-        allPlayers.remove(lobby);
         Utils.countdown(ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", false);
     }
     
@@ -414,7 +413,8 @@ public class Arena {
         for (PaintballPlayer pbPlayer : allPlayers.values()) {
             if (!screenMessage.equals("") && TITLE_API) {
                 String[] messages = screenMessage.split("\n");
-                TitleAPI.sendTitle(pbPlayer.getPlayer(), 10, 10, 10, messages.length == 1 ? PREFIX : messages[0], messages.length == 1 ? screenMessage : messages[1]);
+                // TODO: get better numbers for fad in out etc
+                TitleAPI.sendTitle(pbPlayer.getPlayer(), 0, 10, 10, messages.length == 1 ? PREFIX : messages[0], messages.length == 1 ? screenMessage : messages[1]);
             }
             pbPlayer.getPlayer().sendMessage(PREFIX + color + chatMessage);
         }
@@ -487,7 +487,7 @@ public class Arena {
                 Sign sign = (Sign) loc.getBlock().getState();
                 sign.setLine(1, this.getName()); // in case they rename it
                 sign.setLine(2, this.getStateAsString());
-                sign.setLine(3, this.inGame.size() + this.lobby.size() + "/" + this.getMax());
+                sign.setLine(3, (state == ArenaState.WAITING ? getLobbyPlayers().size() + "": state == ArenaState.IN_PROGRESS ? getAllArenaPlayers().size() + "" : "0") + "/" + this.getMax());
                 sign.update();
             } else {
                 ArenaManager.getArenaManager().removeSignLocation(loc, this);
@@ -496,15 +496,10 @@ public class Arena {
     }
 
     public void removePlayer(PaintballPlayer pbPlayer) {
-        allPlayers.remove(pbPlayer);
-
-        if (pbPlayer instanceof LobbyPlayer) {
-            lobby.remove(pbPlayer);
-        } else if (pbPlayer instanceof ArenaPlayer) {
-            inGame.remove(pbPlayer);
-        } else if (pbPlayer instanceof SpectatorPlayer) {
-            spectators.remove(pbPlayer);
-        }
+        allPlayers.remove(pbPlayer.getPlayer(), pbPlayer);
+        lobby.remove(pbPlayer);
+        inGame.remove(pbPlayer);
+        spectators.remove(pbPlayer);
     }
 
     public void addPlayer(PaintballPlayer pbPlayer) {
@@ -512,11 +507,11 @@ public class Arena {
             allPlayers.put(pbPlayer.getPlayer(), pbPlayer);
         }
 
-        if (pbPlayer instanceof LobbyPlayer) {
+        if (pbPlayer instanceof LobbyPlayer && !lobby.contains(pbPlayer)) {
             lobby.add((LobbyPlayer) pbPlayer);
-        } else if (pbPlayer instanceof ArenaPlayer) {
+        } else if (pbPlayer instanceof ArenaPlayer && !inGame.contains(pbPlayer)) {
             inGame.add((ArenaPlayer) pbPlayer);
-        } else if (pbPlayer instanceof SpectatorPlayer) {
+        } else if (pbPlayer instanceof SpectatorPlayer && !spectators.contains(pbPlayer)) {
             spectators.add((SpectatorPlayer) pbPlayer);
         }
     }
@@ -555,4 +550,7 @@ public class Arena {
             state = ArenaState.DISABLED;
         }
     }
+
+
+    // TODO: add events so players can't teleport and stuff inside arena
 }

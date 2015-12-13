@@ -2,9 +2,10 @@ package me.synapz.paintball.storage;
 
 
 import me.synapz.paintball.Message;
-import me.synapz.paintball.PbPlayer;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.players.PaintballPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -28,7 +29,7 @@ public final class PlayerData extends PaintballFile {
 
     // Adds one to a player's stat
     // ex: if a player gets 1 kill, add one the stat in config
-    public void incrementStat(StatType type, PbPlayer player) {
+    public void incrementStat(StatType type, ArenaPlayer player) {
         UUID id = player.getPlayer().getUniqueId();
 
         switch (type) {
@@ -183,30 +184,30 @@ public final class PlayerData extends PaintballFile {
     // TODO: add exp and other missing values
     public void savePlayerInformation(Player player) {
         UUID id = player.getUniqueId();
-        data.set("Player-Data." + id + ".Name", player.getName());
-        data.set("Player-Data." + id + ".Location", player.getLocation());
-        data.set("Player-Data." + id + ".GameMode", player.getGameMode().getValue());
-        data.set("Player-Data." + id + ".FoodLevel", player.getFoodLevel());
-        data.set("Player-Data." + id + ".Health", player.getHealth());
-        data.set("Player-Data." + id + ".Inventory", Utils.getInventoryList(player, false));
-        data.set("Player-Data." + id + ".Armour", Utils.getInventoryList(player, true));
+        data.set("Player-Data." + id + ".Info.Name", player.getName());
+        data.set("Player-Data." + id + ".Info.Location", player.getLocation());
+        data.set("Player-Data." + id + ".Info.GameMode", player.getGameMode().getValue());
+        data.set("Player-Data." + id + ".Info.FoodLevel", player.getFoodLevel());
+        data.set("Player-Data." + id + ".Info.Health", player.getHealth());
+        data.set("Player-Data." + id + ".Info.Inventory", Utils.getInventoryList(player, false));
+        data.set("Player-Data." + id + ".Info.Armour", Utils.getInventoryList(player, true));
         addStatsIfNotYetAdded(id);
 
         saveFile();
     }
 
-    // Restores all of the player's settings
-    public void restorePlayerInformation(UUID id) {
-        Player player = Bukkit.getServer().getPlayer(id);
-
-        player.teleport((Location) data.get("Player-Data." + id + ".Location"));
-        player.getInventory().setContents(getLastInventoryContents(id, ".Inventory"));
-        player.getInventory().setArmorContents(getLastInventoryContents(id, ".Armour"));
+    // Restores all of the player's settings, then sets the info to null
+    public void restorePlayerInformation(Player player) {
+        UUID id = player.getUniqueId();
+        player.getInventory().clear();
+        player.teleport((Location) data.get("Player-Data." + id + ".Info.Location"));
+        player.getInventory().setContents(getLastInventoryContents(id, ".Info.Inventory"));
+        player.getInventory().setArmorContents(getLastInventoryContents(id, ".Info.Armour"));
         player.setFoodLevel(data.getInt("Player-Data." + id + ".FoodLevel"));
-        player.setHealth(data.getInt("Player-Data." + id + ".Health"));
-        player.setGameMode(Utils.getLastGameMode(data.getInt("Player-Data." + id + ".GameMode")));
+        player.setHealth(data.getInt("Player-Data." + id + ".Info.Health"));
+        player.setGameMode(Utils.getLastGameMode(data.getInt("Player-Data." + id + ".Info.GameMode")));
 
-        data.set(id.toString(), null);
+        data.set("Player-Data." + id + ".Info", null);
         saveFile();
     }
 
@@ -227,7 +228,7 @@ public final class PlayerData extends PaintballFile {
     // Checks to see if there are any missing stats from config, this would happen in a future upgrade and it sets that stat to 0 isntead of it being null
     private void addStatsIfNotYetAdded(UUID id) {
         // checks to make sure the stat's are in config, if not make it
-        if (getFileConfig().getConfigurationSection("Player-Data." + id + "Stats") == null) {
+        if (getFileConfig().getConfigurationSection("Player-Data." + id + ".Stats") == null) {
             // set the values to 0
             for (StatType value : StatType.values()) {
                 if (!value.isCalculated())

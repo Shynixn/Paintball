@@ -13,11 +13,13 @@ public class SpectatorPlayer extends PaintballPlayer {
     public SpectatorPlayer(Arena a, Player p) {
         super(a, null, p);
 
+        getSettings().getCache().savePlayerInformation(player);
         initPlayer();
     }
 
     public void initPlayer() {
-        // TODO: give some helmet?
+        // TODO: set to arena spectate? invisable? idk
+        arena.addPlayer(this);
         player.teleport(arena.getSpectateSpawn());
         stripValues();
         giveItems();

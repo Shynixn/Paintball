@@ -26,9 +26,8 @@ public class Utils {
         ItemStack[] list = isArmourList ? p.getInventory().getArmorContents() : p.getInventory().getContents();
         List<ItemStack> returnList = new ArrayList<ItemStack>();
         for (ItemStack item : list) {
-            if (item != null) {
+            if (item != null)
                 returnList.add(item);
-            }
         }
         return returnList;
     }

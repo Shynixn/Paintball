@@ -1,4 +1,4 @@
-prefix: '&8[&3Paintball&8]'
+prefix: '&8[&3Paintball&8] '
 theme-color: '&3'
 secondary-color: '&7'
 # if TitleAPI is installed and this is true, plugin will display some messages in the middle of the screen to the player
@@ -24,7 +24,7 @@ color-player-title: true
 # This will make paintballs slash (turns surrounding blocks red/blue clay)
 paintball-splash: true
 
-# If you have TitleAPI plugin installed and it is true in config, the countdown will be shown in the middle of the screen and chat
+# If you have TitleAPI plugin installed and it is true in config, the countdown will be  also shown in the middle of the screen and chat
 countdown:
    # Lobby countdown configuration - when the minimum amount of players is reached, a timer will begin on when to move
    # players from lobby to their team's spawnpoints

@@ -19,6 +19,9 @@ public class LobbyPlayer extends PaintballPlayer {
     }
 
     protected void initPlayer() {
+        getSettings().getCache().savePlayerInformation(player);
+        arena.addPlayer(this);
+
         player.teleport(arena.getLobbySpawn(team));
         stripValues();
         giveItems();
@@ -26,17 +29,12 @@ public class LobbyPlayer extends PaintballPlayer {
         giveWoolHelmet();
 
         if (arena.canStartTimer()) {
-            Utils.countdown(LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL, arena, GREEN + "Auto-teleporting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Teleporting" + GRAY + "\n%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
+            Utils.countdown(LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL, arena, GREEN + "Waiting for more players. " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Waiting for more players\n" + GRAY + "%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
         }
     }
 
     protected String getChatLayout() {
         return ARENA_CHAT;
-    }
-
-    public void leaveArena() {
-        arena.addPlayer(this);
-        getSettings().getCache().restorePlayerInformation(player.getUniqueId());
     }
 
     protected void giveItems() {

@@ -33,7 +33,6 @@ public class Spectate extends Command{
                 return;
             }
 
-            Message.getMessenger().msg(player, true, ChatColor.GREEN, "Joining " + arena.toString() + " spectate zone.");
             arena.joinSpectate(player);
         }
     }

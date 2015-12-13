@@ -30,8 +30,8 @@ public class SetMin extends Command{
         }
 
         if (arena.getMax() == 0 || min < arena.getMax()) {
-            if (min <= 0) {
-                Message.getMessenger().msg(player, false, RED, "Min must be greater than 0!");
+            if (min <= 1) {
+                Message.getMessenger().msg(player, false, RED, "Min must be greater than 1!");
                 return;
             }
             arena.setMinPlayers(min);
