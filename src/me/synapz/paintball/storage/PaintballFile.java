@@ -35,56 +35,57 @@ public abstract class PaintballFile {
     public PaintballFile(Plugin pb, String name) {
         this.name = name;
         this.pb = pb;
-        file = new File(pb.getDataFolder(), name);
+        this.file = new File(pb.getDataFolder(), name);
 
-        if (!file.exists()) {
+        if (!this.file.exists()) {
             try {
-                file.createNewFile();
+                this.file.createNewFile();
             } catch (IOException e) {
                 Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "", "Could not create " + name + ". Stack trace: ");
                 e.printStackTrace();
             }
         }
-        fileConfig = YamlConfiguration.loadConfiguration(file);
-        saveFile();
+        this.fileConfig = YamlConfiguration.loadConfiguration(this.file);
+        this.saveFile();
     }
 
     public void saveFile() {
         try {
-            if (sql && file.getName().contains("playerdata")) {
-                removeStats(fileConfig).save(file);
+            if (this.sql && this.file.getName().contains("playerdata")) {
+                this.removeStats(this.fileConfig).save(this.file);
             }
-            fileConfig.save(file);
+            this.fileConfig.save(this.file);
         } catch (Exception e) {
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Could not save " + name + ".", "", "Stack trace");
+            Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Could not save " + this.name + ".", "", "Stack trace");
             e.printStackTrace();
         }
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public FileConfiguration getFileConfig() {
-        if (sql && file.getName().contains("playerdata")) {
-            return addStats(fileConfig);
+        if (this.sql && this.file.getName().contains("playerdata")) {
+            return this.addStats(this.fileConfig);
         }
-        return fileConfig;
+        return this.fileConfig;
     }
 
     /**
      * SQL Stuffs
      **/
 
+    //TODO: Add check for if SQL has been recently disabled and reinsert the stats
     public void setupSQL(String host, Integer port, String username, String password, String database) {
-        sql = true;
+        this.sql = true;
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
         this.database = database;
-        this.executeQuery("CREATE DATABASE IF NOT EXISTS " + database);
-        this.executeQuery("CREATE TABLE IF NOT EXISTS Paintball_Stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
+        executeQuery("CREATE DATABASE IF NOT EXISTS " + database);
+        executeQuery("CREATE TABLE IF NOT EXISTS Paintball_Stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
         try {
             Connection conn;
             conn = DriverManager.getConnection(host, username, password);
@@ -92,7 +93,7 @@ public abstract class PaintballFile {
             ResultSet result = sql.executeQuery();
             result.next();
             String encoded = result.getString("stats");
-            File file = new File(this.pb.getDataFolder(), "playerdata.yml");
+            File file = new File(pb.getDataFolder(), "playerdata.yml");
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
             yaml.set("Stats", encoded);
             yaml.save(file);
@@ -114,7 +115,7 @@ public abstract class PaintballFile {
         byte[] byteArray = statsYaml.saveToString().getBytes();
         String encoded = Base64.getEncoder().encode(byteArray).toString();
         yaml.set("Stats", encoded);
-        this.executeQuery("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
+        executeQuery("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
         return yaml;
     }
 
@@ -122,7 +123,7 @@ public abstract class PaintballFile {
         YamlConfiguration statsYaml = new YamlConfiguration();
         try {
             Connection conn;
-            conn = DriverManager.getConnection(this.host, this.username, this.password);
+            conn = DriverManager.getConnection(host, username, password);
             PreparedStatement sql = conn.prepareStatement("SELECT statsFROM `Paintball_Stats` WHERE id = '1';");
             ResultSet result = sql.executeQuery();
             result.next();
@@ -157,7 +158,7 @@ public abstract class PaintballFile {
     public void executeQuery(String query) {
         Connection conn;
         try {
-            conn = DriverManager.getConnection(this.host, this.username, this.password);
+            conn = DriverManager.getConnection(host, username, password);
             PreparedStatement statement = conn.prepareStatement(query);
             statement.executeQuery();
         } catch (Exception e) {
