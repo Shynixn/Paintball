@@ -1,27 +1,22 @@
 package me.synapz.paintball;
 
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.*;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Item;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Wool;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.SQLClientInfoException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class Utils {
 
@@ -79,7 +74,7 @@ public class Utils {
     // Starts a countdown
     public static void countdown(int counter, int interval, int noInterval, Arena a, String chatMessage, String screenMessage, String finishedMessage, boolean isLobbyCountDown) {
         if (!CountdownTask.arenasRunningTask.contains(a)) {
-            final Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
+            Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
             new CountdownTask(counter, interval, noInterval, a, chatMessage, screenMessage, finishedMessage, isLobbyCountDown).runTaskTimer(plugin, 0, 20);
         }
     }
@@ -155,7 +150,7 @@ public class Utils {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.executeQuery();
         } catch (Exception e) {
-            Settings.SQL = false;  // TODO: is this ok? it failed so that means they did something wrong, so they have to fix it. Without this it might continue and just spam console
+            Settings.SQL = false;
             Message.getMessenger().msg(Bukkit.getConsoleSender(), true, ChatColor.RED, "Error starting SQL. Falling back to storing values in playerdata.yml. Check config.yml's SQL settings.");
             e.printStackTrace();
         }

@@ -11,6 +11,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.util.UUID;
 
 public class Paintball extends JavaPlugin implements PluginMessageListener {
 
@@ -20,7 +21,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
     public void onEnable() {
         Team.loadTeamColors();
 
-        data = new PlayerData(this);
+        this.data = new PlayerData(this);
         Settings.getSettings();
 
         ArenaManager.getArenaManager().setup();
@@ -34,8 +35,16 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         Bukkit.getServer().getPluginManager().registerEvents(new LeaderboardSigns(), this);
         Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "PaintBall", this);
         Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, "PaintBall");
-
-        getCommand("paintball").setExecutor(commandManager);
+        //TODO: this replaces the onMove thing in join signs, it runs twice a second and updates them
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                for (Arena a : ArenaManager.getArenaManager().getArenas()) {
+                    a.updateAllSigns();
+                }
+            }
+        }, 10l, 10l);
+        this.getCommand("paintball").setExecutor(commandManager);
     }
 
     @Override
@@ -49,9 +58,17 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         try {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
             String command = in.readUTF();
-            if (command.equals("AddJoinServer")) {
-                Integer ip = in.readInt();
-                //add server IP to system
+            if (command.equals("IncomingPlayer")) {
+                String uuid = in.readUTF();
+                String aname = in.readUTF();
+                String serverUUID = in.readUTF();
+                UUID puuid = UUID.fromString(uuid);
+                Player p = Bukkit.getPlayer(puuid);
+                if (serverUUID.equalsIgnoreCase(this.getConfig().getString("ServerID"))) {
+                    if (p != null) {
+                        //TODO: add player to lobby of arena with name aname
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,6 +77,6 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
 
     // TODO: bad way of getting player data, find better way
     public PlayerData getPlayerData() {
-        return data;
+        return this.data;
     }
 }

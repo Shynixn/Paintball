@@ -13,6 +13,11 @@ SQL-Settings:
   pass: password123
   database: Spigot
 
+# Bungee stuff
+BungeeCord: false
+#This ID must be unique across the server, it is used to send players from the hub plugin(make sure it can fit on a sign)
+ServerID: Paint1
+
 # Arena Settings
 
 # True will give players a wool helmet based on their team when they join the arena, false will ignore this
