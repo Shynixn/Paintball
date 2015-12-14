@@ -507,11 +507,11 @@ public class Arena {
             allPlayers.put(pbPlayer.getPlayer(), pbPlayer);
         }
 
-        if (pbPlayer instanceof LobbyPlayer && !lobby.contains(pbPlayer)) {
+        if (pbPlayer instanceof LobbyPlayer) {
             lobby.add((LobbyPlayer) pbPlayer);
-        } else if (pbPlayer instanceof ArenaPlayer && !inGame.contains(pbPlayer)) {
+        } else if (pbPlayer instanceof ArenaPlayer) {
             inGame.add((ArenaPlayer) pbPlayer);
-        } else if (pbPlayer instanceof SpectatorPlayer && !spectators.contains(pbPlayer)) {
+        } else if (pbPlayer instanceof SpectatorPlayer) {
             spectators.add((SpectatorPlayer) pbPlayer);
         }
     }

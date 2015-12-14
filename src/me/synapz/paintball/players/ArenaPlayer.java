@@ -20,8 +20,6 @@ public class ArenaPlayer extends PaintballPlayer {
 
     public ArenaPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
-
-        initPlayer();
     }
 
     public boolean ifWon() {
