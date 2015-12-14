@@ -43,20 +43,20 @@ public class Settings {
     private File aFile;
 
     public Settings(Plugin plugin) {
-        if (settings == null) {
-            settings = this;
-            init(plugin);
+        if (Settings.settings == null) {
+            Settings.settings = this;
+            this.init(plugin);
         }
-        this.pb = plugin;
+        pb = plugin;
     }
 
     public static Settings getSettings() {
-        if (settings == null) {
-            settings = new Settings(Paintball.getProvidingPlugin(Paintball.class));
-            settings.pb = Paintball.getProvidingPlugin(Paintball.class);
-            settings.init(settings.pb);
+        if (Settings.settings == null) {
+            Settings.settings = new Settings(Paintball.getProvidingPlugin(Paintball.class));
+            Settings.settings.pb = Paintball.getProvidingPlugin(Paintball.class);
+            Settings.settings.init(Settings.settings.pb);
         }
-        return settings;
+        return Settings.settings;
     }
 
     public void init(Plugin pb) {
@@ -69,11 +69,11 @@ public class Settings {
         // TODO: always says error on reload/start
         pb.saveResource("config.yml", false);
 
-        aFile = new File(pb.getDataFolder(), "arenas.yml");
+        this.aFile = new File(pb.getDataFolder(), "arenas.yml");
 
-        if (!aFile.exists()) {
+        if (!this.aFile.exists()) {
             try {
-                aFile.createNewFile();
+                this.aFile.createNewFile();
             } catch (IOException e) {
                 Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "", "Could not create arenas.yml. Stack trace: ");
                 e.printStackTrace();
@@ -81,23 +81,23 @@ public class Settings {
         }
 
 
-        arena = YamlConfiguration.loadConfiguration(aFile);
-        cache = new PlayerData(pb);
+        this.arena = YamlConfiguration.loadConfiguration(this.aFile);
+        this.cache = new PlayerData(pb);
 
-        loadValues(pb.getConfig(), pb.getDescription());
-        loadSQL();
-        loadBungee();
+        this.loadValues(pb.getConfig(), pb.getDescription());
+        this.loadSQL();
+        this.loadBungee();
     }
 
     public void reloadConfig() {
-        pb.reloadConfig();
-        loadValues(pb.getConfig(), pb.getDescription());
-        arena = YamlConfiguration.loadConfiguration(aFile);
+        this.pb.reloadConfig();
+        this.loadValues(this.pb.getConfig(), this.pb.getDescription());
+        this.arena = YamlConfiguration.loadConfiguration(this.aFile);
     }
 
     public void saveArenaFile() {
         try {
-            arena.save(aFile);
+            this.arena.save(this.aFile);
         } catch (Exception e) {
             Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Could not save arenas.yml.", "", "Stack trace");
             e.printStackTrace();
@@ -105,75 +105,77 @@ public class Settings {
     }
 
     public PlayerData getCache() {
-        return cache;
+        return this.cache;
     }
 
     private void loadValues(FileConfiguration configFile, PluginDescriptionFile pluginYML) {
         // regular values
-        VERSION = pluginYML.getVersion();
-        WEBSITE = pluginYML.getWebsite();
-        AUTHOR = pluginYML.getAuthors().toString();
-        PREFIX = ChatColor.translateAlternateColorCodes('&', configFile.getString("prefix"));
-        THEME = ChatColor.translateAlternateColorCodes('&', configFile.getString("theme-color"));
-        SECONDARY = ChatColor.translateAlternateColorCodes('&', configFile.getString("secondary-color"));
+        Settings.VERSION = pluginYML.getVersion();
+        Settings.WEBSITE = pluginYML.getWebsite();
+        Settings.AUTHOR = pluginYML.getAuthors().toString();
+        Settings.PREFIX = ChatColor.translateAlternateColorCodes('&', configFile.getString("prefix"));
+        Settings.THEME = ChatColor.translateAlternateColorCodes('&', configFile.getString("theme-color"));
+        Settings.SECONDARY = ChatColor.translateAlternateColorCodes('&', configFile.getString("secondary-color"));
 
         // arena values
-        SPLASH_PAINTBALLS = configFile.getBoolean("paintball-splash");
-        COLOR_PLAYER_TITLE = configFile.getBoolean("color-player-title");
-        WOOL_HELMET = configFile.getBoolean("give-wool-helmet");
-        LOBBY_COUNTDOWN = configFile.getInt("countdown.lobby.countdown");
-        LOBBY_INTERVAL = configFile.getInt("countdown.lobby.interval");
-        LOBBY_NO_INTERVAL = configFile.getInt("countdown.lobby.no-interval");
-        ARENA_COUNTDOWN = configFile.getInt("countdown.arena.countdown");
-        ARENA_INTERVAL = configFile.getInt("countdown.arena.interval");
-        ARENA_NO_INTERVAL = configFile.getInt("countdown.arena.no-interval");
-        TITLE_API = configFile.getBoolean("title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
+        Settings.SPLASH_PAINTBALLS = configFile.getBoolean("paintball-splash");
+        Settings.COLOR_PLAYER_TITLE = configFile.getBoolean("color-player-title");
+        Settings.WOOL_HELMET = configFile.getBoolean("give-wool-helmet");
+        Settings.LOBBY_COUNTDOWN = configFile.getInt("countdown.lobby.countdown");
+        Settings.LOBBY_INTERVAL = configFile.getInt("countdown.lobby.interval");
+        Settings.LOBBY_NO_INTERVAL = configFile.getInt("countdown.lobby.no-interval");
+        Settings.ARENA_COUNTDOWN = configFile.getInt("countdown.arena.countdown");
+        Settings.ARENA_INTERVAL = configFile.getInt("countdown.arena.interval");
+        Settings.ARENA_NO_INTERVAL = configFile.getInt("countdown.arena.no-interval");
+        Settings.TITLE_API = configFile.getBoolean("title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
 
         for (String colorcode : configFile.getConfigurationSection("Teams").getKeys(false)) {
-            TEAM_NAMES.put(ChatColor.getByChar(colorcode), configFile.getString("Teams." + colorcode) + "");
+            Settings.TEAM_NAMES.put(ChatColor.getByChar(colorcode), configFile.getString("Teams." + colorcode) + "");
         }
 
         // TODO: add stats tag to config.yml chts
-        SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.spectator-chat"));
-        ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.arena-chat"));
-        loadSQL();
+        Settings.SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.spectator-chat"));
+        Settings.ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.arena-chat"));
+        this.loadSQL();
     }
 
     private void loadBungee() {
-        if (pb.getConfig().getBoolean("BungeeCord")) {
-            Settings.BungeeCord = true;
-            Settings.ServerID = pb.getConfig().getString("ServerID");
+        if (this.pb.getConfig().getBoolean("BungeeCord")) {
+            BungeeCord = true;
+            ServerID = this.pb.getConfig().getString("ServerID");
+        } else {
+            BungeeCord = false;
         }
     }
 
     private void loadSQL() {
-        FileConfiguration config = pb.getConfig();
-        SQL = config.getBoolean("SQL");
-        if (SQL) {
-            HOST = config.getString("SQL-Settings.host");
-            PORT = config.getInt("SQL-Settings.port");
-            USERNAME = config.getString("SQL-Settings.user");
-            PASSWORD = config.getString("SQL-Settings.pass");
-            DATABASE = config.getString("SQL-Settings.database");
-            setupSQL();
+        FileConfiguration config = this.pb.getConfig();
+        Settings.SQL = config.getBoolean("SQL");
+        if (Settings.SQL) {
+            Settings.HOST = config.getString("SQL-Settings.host");
+            Settings.PORT = config.getInt("SQL-Settings.port");
+            Settings.USERNAME = config.getString("SQL-Settings.user");
+            Settings.PASSWORD = config.getString("SQL-Settings.pass");
+            Settings.DATABASE = config.getString("SQL-Settings.database");
+            this.setupSQL();
         }
     }
 
     //TODO: Add check for if SQL has been recently disabled and reinsert the stats
     private void setupSQL() {
-        if (!SQL) {
+        if (!Settings.SQL) {
             return;
         }
-        Utils.executeQuery("CREATE DATABASE IF NOT EXISTS " + DATABASE);
+        Utils.executeQuery("CREATE DATABASE IF NOT EXISTS " + Settings.DATABASE);
         Utils.executeQuery("CREATE TABLE IF NOT EXISTS Paintball_Stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
         try {
             Connection conn;
-            conn = DriverManager.getConnection(HOST, USERNAME, PASSWORD);
+            conn = DriverManager.getConnection(Settings.HOST, Settings.USERNAME, Settings.PASSWORD);
             PreparedStatement sql = conn.prepareStatement("SELECT statsFROM `Paintball_Stats` WHERE id = '1';");
             ResultSet result = sql.executeQuery();
             result.next();
             String encoded = result.getString("stats");
-            File file = new File(pb.getDataFolder(), "playerdata.yml");
+            File file = new File(this.pb.getDataFolder(), "playerdata.yml");
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
             yaml.set("Stats", encoded);
             yaml.save(file);
@@ -184,9 +186,8 @@ public class Settings {
     }
 
 
-
     // TODO: make a new ArenaFile class
     public FileConfiguration getArenaFile() {
-        return arena;
+        return this.arena;
     }
 }
