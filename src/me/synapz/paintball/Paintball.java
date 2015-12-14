@@ -5,9 +5,14 @@ import me.synapz.paintball.events.*;
 import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageListener;
 
-public class Paintball extends JavaPlugin {
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+
+public class Paintball extends JavaPlugin implements PluginMessageListener {
 
     PlayerData data;
 
@@ -15,7 +20,7 @@ public class Paintball extends JavaPlugin {
     public void onEnable() {
         Team.loadTeamColors();
 
-        this.data = new PlayerData(this);
+        data = new PlayerData(this);
         Settings.getSettings();
 
         ArenaManager.getArenaManager().setup();
@@ -27,8 +32,10 @@ public class Paintball extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ChatSystem(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new LeaderboardSigns(), this);
+        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "PaintBall", this);
+        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, "PaintBall");
 
-        this.getCommand("paintball").setExecutor(commandManager);
+        getCommand("paintball").setExecutor(commandManager);
     }
 
     @Override
@@ -36,8 +43,23 @@ public class Paintball extends JavaPlugin {
         ArenaManager.getArenaManager().stopArenas();
     }
 
+    @Override
+    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+        if (!channel.equals("PaintBall")) return;
+        try {
+            DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
+            String command = in.readUTF();
+            if (command.equals("AddJoinServer")) {
+                Integer ip = in.readInt();
+                //add server IP to system
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // TODO: bad way of getting player data, find better way
     public PlayerData getPlayerData() {
-        return this.data;
+        return data;
     }
 }
