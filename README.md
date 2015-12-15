@@ -21,6 +21,8 @@
 * In depth step system to show you what you have to set before you can start the arena
 * Per player statistics
     * Highest kill streak, K/D, kills, deaths, games player, wins, defeats, hits, shots, accuracy
+    * Statistics are able to be synced accross servers with SQL
+* BungeeCord support with the hub plugin(Comming Soon)
 * Leaderboards
     * Leaderboard signs
     * Leaderboard command
