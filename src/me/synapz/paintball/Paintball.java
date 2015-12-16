@@ -1,6 +1,5 @@
 package me.synapz.paintball;
 
-import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.synapz.paintball.commands.CommandManager;
@@ -24,7 +23,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
     public void onEnable() {
         Team.loadTeamColors();
 
-        data = new PlayerData(this);
+        this.data = new PlayerData(this);
         Settings.getSettings();
 
         ArenaManager.getArenaManager().setup();
@@ -44,11 +43,11 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             public void run() {
                 for (Arena a : ArenaManager.getArenaManager().getArenas()) {
                     a.updateAllSigns();
-                    Paintball.this.bungeeUpdateSigns();
+                    bungeeUpdateSigns();
                 }
             }
         }, 10l, 10l);
-        getCommand("paintball").setExecutor(commandManager);
+        this.getCommand("paintball").setExecutor(commandManager);
     }
 
     @Override
@@ -62,8 +61,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("ArenaUpdate");
             out.writeUTF(Settings.ServerID);
-            //TODO: get arena states and make a string split with :'s
-            Player player = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+            //TODO: get arena states and names and make a string split with :'s
             Bukkit.getServer().sendPluginMessage(this, "PaintBall", out.toByteArray());
         }
     }
@@ -80,7 +78,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
                 String serverUUID = in.readUTF();
                 UUID puuid = UUID.fromString(uuid);
                 Player p = Bukkit.getPlayer(puuid);
-                if (serverUUID.equalsIgnoreCase(getConfig().getString("ServerID"))) {
+                if (serverUUID.equalsIgnoreCase(this.getConfig().getString("ServerID"))) {
                     if (p != null) {
                         //TODO: add player to lobby of arena with name aname
                     }
@@ -93,6 +91,6 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
 
     // TODO: bad way of getting player data, find better way
     public PlayerData getPlayerData() {
-        return data;
+        return this.data;
     }
 }
