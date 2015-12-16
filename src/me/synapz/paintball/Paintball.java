@@ -23,7 +23,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
     public void onEnable() {
         Team.loadTeamColors();
 
-        this.data = new PlayerData(this);
+        data = new PlayerData(this);
         Settings.getSettings();
 
         ArenaManager.getArenaManager().setup();
@@ -43,11 +43,11 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             public void run() {
                 for (Arena a : ArenaManager.getArenaManager().getArenas()) {
                     a.updateAllSigns();
-                    bungeeUpdateSigns();
+                    Paintball.this.bungeeUpdateSigns();
                 }
             }
         }, 10l, 10l);
-        this.getCommand("paintball").setExecutor(commandManager);
+        getCommand("paintball").setExecutor(commandManager);
     }
 
     @Override
@@ -62,6 +62,9 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             out.writeUTF("ArenaUpdate");
             out.writeUTF(Settings.ServerID);
             //TODO: get arena states and names and make a string split with :'s
+            // name:name:name
+            // state:state:state
+            // they must be in the correct order
             Bukkit.getServer().sendPluginMessage(this, "PaintBall", out.toByteArray());
         }
     }
@@ -78,7 +81,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
                 String serverUUID = in.readUTF();
                 UUID puuid = UUID.fromString(uuid);
                 Player p = Bukkit.getPlayer(puuid);
-                if (serverUUID.equalsIgnoreCase(this.getConfig().getString("ServerID"))) {
+                if (serverUUID.equalsIgnoreCase(getConfig().getString("ServerID"))) {
                     if (p != null) {
                         //TODO: add player to lobby of arena with name aname
                     }
@@ -91,6 +94,6 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
 
     // TODO: bad way of getting player data, find better way
     public PlayerData getPlayerData() {
-        return this.data;
+        return data;
     }
 }
