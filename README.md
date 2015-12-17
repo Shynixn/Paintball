@@ -83,3 +83,4 @@ Bugs
 - [ ] Revamp settings, hashmap path, default if not found
 - [x] List<Arena> arenasPlayingTitle
 - [ ] Add arena autojoin to join most ready arena
+- [ ] Make arenas.yml file smaller (1 line locations, 1 line values, etc)-- Longer .yml files may lag so this will help to read files faster
