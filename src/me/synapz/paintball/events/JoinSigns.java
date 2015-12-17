@@ -77,7 +77,7 @@ public class JoinSigns implements Listener {
         }
         if (sign.getLine(1).equals(GREEN + "Auto Join")) {
             // TODO: check all arenas then autojoin the one closest to the max amount of players
-            for (Arena a : ArenaManager.getArenaManager().getArenas()) {
+            for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
                 if (a.getState() == ArenaState.WAITING) {
                     a.joinLobby(player, null);
                     return;
@@ -91,7 +91,7 @@ public class JoinSigns implements Listener {
             Message.getMessenger().msg(player, false, RED, "No arena named " + sign.getLine(1) + " found.");
             return;
         }
-        for (Arena a : ArenaManager.getArenaManager().getArenas()) {
+        for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
             if (sign.getLine(1).contains(a.getName())) {
                 if (a.getStateAsString().contains("WAITING")) {
                     a.joinLobby(player, null);

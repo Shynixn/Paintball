@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +22,8 @@ public class ArenaManager {
 
     private static ArenaManager instance = new ArenaManager();
 
-    private ArrayList<Arena> arenas = new ArrayList<Arena>();
+    // HashMap with arena's name to arena, makes it way more efficient to get an arena from a string
+    private HashMap<String, Arena> arenas = new HashMap<>();
 
     public static ArenaManager getArenaManager() {
         return instance;
@@ -34,17 +36,12 @@ public class ArenaManager {
 
     // Gets an arena from a name
     public Arena getArena(String name) {
-        for (Arena a : arenas) {
-            if (a.getName().equalsIgnoreCase(name)) {
-                return a;
-            }
-        }
-        return null;
+        return arenas.get(name);
     }
 
     // Gets an arena from a player inside it
     public Arena getArena(Player player) {
-        for (Arena a : arenas) {
+        for (Arena a : arenas.values()) {
             if (a.containsPlayer(player))
                 return a;
         }
@@ -52,13 +49,13 @@ public class ArenaManager {
     }
 
     // Gets a list of all arenas
-    public ArrayList<Arena> getArenas() {
+    public HashMap<String, Arena> getArenas() {
         return arenas;
     }
 
     // Stops all arenas
     public void stopArenas() {
-        for (Arena a : getArenas()) {
+        for (Arena a : getArenas().values()) {
             for (PaintballPlayer player : a.getAllPlayers().values()) {
                 player.leaveArena();
             }
@@ -88,7 +85,7 @@ public class ArenaManager {
                 Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, "not_set");
             }
         }
-        arenas.add(arena);
+        arenas.put(arena.getName(), arena);
         Settings.getSettings().saveArenaFile();
     }
 
@@ -101,7 +98,7 @@ public class ArenaManager {
             return;
         }
 
-        for (Arena a : getArenas()) {
+        for (Arena a : getArenas().values()) {
             String color = "";
 
             switch (a.getState()) {
@@ -150,7 +147,7 @@ public class ArenaManager {
                 Message.getMessenger().msg(Bukkit.getConsoleSender(), false, RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
                 e.printStackTrace();
             }
-            arenas.add(a);
+            arenas.put(a.getName(), a);
         }
     }
 

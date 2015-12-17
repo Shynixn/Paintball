@@ -41,7 +41,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
-                for (Arena a : ArenaManager.getArenaManager().getArenas()) {
+                for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
                     a.updateAllSigns();
                     Paintball.this.bungeeUpdateSigns();
                 }
