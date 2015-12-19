@@ -23,6 +23,9 @@ import java.util.*;
 
 public class Arena {
 
+    public final int TIME = Settings.getSettings().getConfig().getInt("Arena-Settings.Arenas." + getDefaultName() + ".time", Settings.ARENA_TIME);
+    public final int MAX_SCORE = Settings.getSettings().getConfig().getInt("Arena-Settings.Arenas." + getDefaultName() + ".max-score", Settings.MAX_SCORE);
+
     // Arena File so we can access and set arena settings
     private FileConfiguration FILE = getSettings().getArenaFile();
 
@@ -65,7 +68,7 @@ public class Arena {
         this.defaultName = name;
 
         // Go through each arena inside the arena (located in config) and add it to the team list
-        for (Team t : ArenaManager.getArenaManager().getTeamsList(this)) {
+        for (Team t : ArenaManager.getArenaManager().getTeamsList(this).keySet()) {
             getArenaTeamList().add(t);
         }
     }
@@ -167,8 +170,8 @@ public class Arena {
     }
 
     // Gets all of the teams on this arena
-    public List<Team> getArenaTeamList() {
-        return ArenaManager.getArenaManager().getTeamsList(this);
+    public Set<Team> getArenaTeamList() {
+        return ArenaManager.getArenaManager().getTeamsList(this).keySet();
     }
 
     // Sets the teams of this arena
@@ -325,10 +328,17 @@ public class Arena {
         }
     }
 
+    public void getGameTimer() {
+
+    }
+
     // Called when a team wins
     // TODO: currently not used, add to a PAintballHitEven or something to check if they won then call this method
     public void win(Team team) {
-        // TODO: add you won!
+        if (Settings.BROADCAST_WINNER) {
+            // TODO: broadcast to server / network (except for those in game, they get a different message)
+        }
+
         broadcastMessage(GREEN, "The " + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
     }
 
@@ -364,6 +374,10 @@ public class Arena {
     public boolean canStartTimer() {
         int size = lobby.size();
         return size >= this.getMin() && size <= this.getMax();
+    }
+
+    public int getTeamScore(Team team) {
+        return ArenaManager.getArenaManager().getTeamsList(this).get(team);
     }
 
     // Gets the arenas current state

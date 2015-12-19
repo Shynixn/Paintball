@@ -11,14 +11,14 @@ public class CountdownTask extends BukkitRunnable {
     // used to check if there is a current instance of CountdownTask running for an arena; we don't want double messages!
     public static ArrayList<Arena> arenasRunningTask = new ArrayList<Arena>();
 
-    private final Arena a; // arena for the countdown
-    private final int interval; // countdown interval
-    private final int noInterval; // countdown when there is no interval
-    private final String finishedMessage; // message when countdown is finished
-    private final boolean isLobbyCountdown; // if it is a lobbyCountdown this is true
+    private Arena a; // arena for the countdown
+    private int interval; // countdown interval
+    private int noInterval; // countdown when there is no interval
+    private String finishedMessage; // message when countdown is finished
+    private boolean isLobbyCountdown; // if it is a lobbyCountdown this is true
     private String chatMessage; // message to be sent in chat
     private String screenMessage; // message to be sent in middle of screen using title api
-
+    private boolean isSimpleTimer = false; // a simpleTimer is no messages, just counting
     private int counter;
 
     // Creates a new countdown
@@ -35,8 +35,23 @@ public class CountdownTask extends BukkitRunnable {
         arenasRunningTask.add(a);
     }
 
+    public CountdownTask(Arena a, int counter) {
+        this.a = a;
+        this.counter = counter;
+        isSimpleTimer = true;
+    }
+
     @Override
     public void run() {
+        if (isSimpleTimer) {
+            if (counter <= 0) {
+                ;
+                this.cancel();
+            } else {
+                counter--;
+            }
+            return;
+        }
         // TODO: check if this part works
         if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
             // cancel it because people left and it doesnt have enough players
@@ -49,6 +64,7 @@ public class CountdownTask extends BukkitRunnable {
             a.broadcastMessage(GREEN, finishedMessage, finishedMessage);
             if (isLobbyCountdown)
                 a.startGame();
+            new CountdownTask(a, a.TIME);
             this.cancel();
         } else {
             if (counter <= noInterval || counter % interval == 0) {

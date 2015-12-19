@@ -57,14 +57,16 @@ public class ArenaPlayer extends PaintballPlayer {
 
         if (reachedGoal()) {
             won = true;
+            arena.win(team);
             // TODO: add timer and win messages
         }
     }
 
     // This will look into config.yml for the arena, if the time or kills is reached, they reahced the goal
     private boolean reachedGoal() {
-        return false;
+        return arena.MAX_SCORE == arena.getTeamScore(team);
     }
+
     private void colorPlayerTitle() {
         if (!Settings.COLOR_PLAYER_TITLE)
             return;

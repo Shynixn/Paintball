@@ -90,6 +90,7 @@ public class JoinSigns implements Listener {
                 if (a.getState() == ArenaState.WAITING) {
                     arenaSize.put(a.getLobbyPlayers().size(), a);
                     sizes.add(a.getLobbyPlayers().size());
+                    openArenas++;
                 }
             }
             if (openArenas == 0) {

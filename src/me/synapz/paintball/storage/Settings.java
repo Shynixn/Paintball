@@ -23,10 +23,10 @@ import java.util.Map;
 public class Settings {
 
     // Constants
-    public static int ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL;
+    public static int MAX_SCORE, ARENA_TIME, ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL;
     public static String ARENA_CHAT, SPEC_CHAT;
     public static String PREFIX, VERSION, THEME, WEBSITE, AUTHOR, SECONDARY;
-    public static boolean COLOR_PLAYER_TITLE, WOOL_HELMET, TITLE_API;
+    public static boolean BROADCAST_WINNER, COLOR_PLAYER_TITLE, WOOL_HELMET, TITLE_API;
     public static Map<ChatColor, String> TEAM_NAMES = new HashMap<ChatColor, String>();
     // SQL and Bungee Stuff
     // TODO: make these final
@@ -159,7 +159,10 @@ public class Settings {
         Settings.ARENA_COUNTDOWN = configFile.getInt("countdown.arena.countdown");
         Settings.ARENA_INTERVAL = configFile.getInt("countdown.arena.interval");
         Settings.ARENA_NO_INTERVAL = configFile.getInt("countdown.arena.no-interval");
-        Settings.TITLE_API = configFile.getBoolean("title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
+        Settings.ARENA_TIME = configFile.getInt("Arena-Settings.Defaults.time");
+        Settings.MAX_SCORE = configFile.getInt("Arena-Settings.Defaults.max-score");
+        Settings.BROADCAST_WINNER = configFile.getBoolean("Chat.broadcast-winner");
+        Settings.TITLE_API = configFile.getBoolean("Options.title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
 
         for (String colorcode : configFile.getConfigurationSection("Teams").getKeys(false)) {
             Settings.TEAM_NAMES.put(ChatColor.getByChar(colorcode), configFile.getString("Teams." + colorcode) + "");
@@ -168,6 +171,10 @@ public class Settings {
         Settings.SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.spectator-chat"));
         Settings.ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.arena-chat"));
         this.loadSQL();
+    }
+
+    public FileConfiguration getConfig() {
+        return pb.getConfig();
     }
 
     private void loadBungee() {

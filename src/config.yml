@@ -94,9 +94,9 @@ Arena-Settings:
   # Arenas will auto-generate with values "default" whenever a new arena is created
   Defaults:
     # The kills/score a team must get to win
-    kills-to-win: 50
+    max-score: 50
     # How much time (in seconds) the game lasts. If no one reaches the kills-to-win when this timer ends the team with most kills is the winner
-    time-to-win: 300
+    time: 300
 
     # Settings for when a player joins an arena
     Join-Arena:
