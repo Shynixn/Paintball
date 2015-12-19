@@ -42,7 +42,7 @@ public abstract class Command {
     }
 
     // Checks to see if a team is invalid, if it is it sends the sender the list of valid teams
-    public boolean teamCheck(Arena a, String teamString, Player sender) {
+    protected boolean teamCheck(Arena a, String teamString, Player sender) {
         String validTeams = " ";
         for (Team team : a.getArenaTeamList()) {
             validTeams += ChatColor.stripColor(team.getTitleName().toLowerCase().replace(" ", "") + " ");
@@ -56,8 +56,5 @@ public abstract class Command {
         } else {
             return true;
         }
-
-
-
     }
 }

@@ -42,9 +42,12 @@ public abstract class PaintballPlayer {
         return team;
     }
 
+    protected abstract String getChatLayout();
+
+    protected abstract void initPlayer();
+
     protected void giveWoolHelmet() {
-        // TODO: does this work?
-        if (!Settings.WOOL_HELMET && this instanceof ArenaPlayer)
+        if (!Settings.WOOL_HELMET)
             return;
         player.getInventory().setHelmet(Utils.makeWool(team.getChatColor() + team.getTitleName() + " Team", team.getDyeColor()));
     }
@@ -62,8 +65,6 @@ public abstract class PaintballPlayer {
         }
     }
 
-    protected abstract void initPlayer();
-
     public void leaveArena() {
         if (Team.getPluginScoreboard().getTeam(team.getTitleName()) != null)
             Team.getPluginScoreboard().getTeam(team.getTitleName()).removePlayer(player);
@@ -78,6 +79,4 @@ public abstract class PaintballPlayer {
             arena.setState(Arena.ArenaState.WAITING);
         }
     }
-
-    protected abstract String getChatLayout();
 }

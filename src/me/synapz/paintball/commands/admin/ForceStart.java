@@ -2,6 +2,7 @@ package me.synapz.paintball.commands.admin;
 
 
 import me.synapz.paintball.Arena;
+import static me.synapz.paintball.Arena.ArenaState.*;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Utils;
@@ -15,7 +16,30 @@ public class ForceStart extends Command{
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
         if (Utils.nullCheck(args[2], arena, player)) {
-            arena.forceStart(player);
+            String error = "";
+            switch (arena.getState()) {
+                case WAITING:
+                    if (arena.getLobbyPlayers().size() < arena.getMin()) {
+                        error = "does not have enough players.";
+                        break;
+                    } else {
+                        arena.forceStart(true);
+                        return;
+                    }
+                case DISABLED:
+                    error = "has not been enabled.";
+                    break;
+                case NOT_SETUP:
+                    error = "has not been setup.";
+                    break;
+                case IN_PROGRESS:
+                    error = "is already in progress";
+                    break;
+                default:
+                    error = "has encountered an unexpected error.";
+                    break;
+            }
+            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " " + error);
         }
     }
 

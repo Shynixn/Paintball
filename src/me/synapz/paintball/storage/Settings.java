@@ -67,7 +67,9 @@ public class Settings {
         this.pb = pb;
 
         // TODO: always says error on reload/start
-        pb.saveResource("config.yml", false);
+        if (!(new File(pb.getDataFolder(), "config.yml").exists())) {
+            pb.saveResource("config.yml", false);
+        }
 
         this.aFile = new File(pb.getDataFolder(), "arenas.yml");
 

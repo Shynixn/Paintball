@@ -3,7 +3,6 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
-import com.sun.crypto.provider.PBEParameters;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
@@ -33,7 +32,6 @@ public class Arena {
     private List<ArenaPlayer> inGame = new ArrayList<ArenaPlayer>();
 
     // Arenas values
-    // TODO: possiblly remove these and just make a method checking if each max, min, spectator are set or if isEnabled is true
     private boolean isMaxSet, isMinSet, isSpectateSet, isEnabled;
 
     // Arena name is the current name of the arena
@@ -207,41 +205,14 @@ public class Arena {
     }
 
     // Set the arena to be enabled/disabled
-    // TODO: do all the checks in Enable command class instead of here
-    public void setEnabled(boolean setEnabled, Player sender) {
-        String message;
-        ChatColor color;
-        
-        if (setEnabled) {
-            if (!isSetup()) {
-                color = RED;
-                message = RED + "has not been setup.";
-                isEnabled = false;
-            } else {
-                if (!isEnabled) {
-                    isEnabled = true;
-                    state = ArenaState.WAITING;
-                    color = GREEN;
-                    message = "has been enabled!";
-                } else {
-                    color = RED;
-                    message = RED + "is already enabled.";
-                }
-            }
-        } else {
-            if (isEnabled) {
-                isEnabled = false;
-                state = ArenaState.DISABLED;
-                color = GREEN;
-                message = "has been disabled!";
-            } else {
-                color = RED;
-                message = RED + "is already disabled.";
-            }
-        }
+    public void setEnabled(boolean setEnabled) {
+        if (setEnabled)
+            state = ArenaState.WAITING;
+        else
+            state = ArenaState.DISABLED;
+        isEnabled = setEnabled;
         FILE.set(getPath() + enabledPath, isEnabled);
         advSave();
-        Message.getMessenger().msg(sender, false, color, this.toString() + " " + message);
     }
 
     // Checks weather this arena is setup or not. In order to be setup max, min, spectator and all spawns must be set
@@ -261,6 +232,9 @@ public class Arena {
         return isMaxSet && isMinSet && isSpectateSet && spawnsSet;
     }
 
+    public boolean isEnabled() {
+        return isEnabled;
+    }
     // Check if a player is in the arena, all players have all spectator, lobby, and arena players
     public boolean containsPlayer(Player player) {
         return allPlayers.keySet().contains(player);
@@ -308,45 +282,16 @@ public class Arena {
     }
 
     // Force start this arena. It has to have enough player, be setup and enabled, and not be in progress
-    // TODO: add all checks to ForceStart command class
-    public void forceStart(Player sender) {
-        // TODO: add ifs to command
-        String reason = "";
-        if (isSetup() || isEnabled) {
-            if (lobby.size() >= getMin()) {
-                if (state == ArenaState.WAITING) {
-                    startGame();
-                    Message.getMessenger().msg(sender, false, GREEN, "Successfully started " + this.toString());
-                    return;
-                } else if (state == ArenaState.IN_PROGRESS) {
-                    reason = " is already in progress";
-                }
-            } else {
-                reason = " does not have enough players.";
-            }
+    public void forceStart(boolean toStart) {
+        if (toStart) {
+            startGame();
         } else {
-            reason = " has not been setup or enabled.";
-        }
-        Message.getMessenger().msg(sender, false, RED, "Cannot force start " + this.toString(), this.toString() + RED + reason);
-    }
-
-    // Force stop the arena. It has to be in progress
-    // TODO: add all checks into ForceStop command class
-    public void forceStop(Player sender) {
-        if (state == ArenaState.IN_PROGRESS) {
+            this.broadcastMessage(RED, this.toString() + RED + " has been force stopped.", "");
             this.forceRemovePlayers();
-            broadcastMessage(RED, this.toString() + RED + " has been force stopped.", "");
-            // todo make config value to compleelty block all commands
-            if (!this.containsPlayer(sender)) {
-                Message.getMessenger().msg(sender, false, GREEN, this.toString() + " has been force stopped.");
-            }
-            return;
         }
-        Message.getMessenger().msg(sender, false, RED, "Cannot force stop " + this.toString(), this.toString() + RED + " is not in progress.");
     }
 
     // Put the arena to string ex: Arena Syn, where Syn is the arena name. At the end it is green so if you don't want it to be green change it after
-    // TODO: make it have a param of ChatColor so we don't only have the end at green
     public String toString() {
         return "Arena " + GRAY + this.getName() + GREEN;
     }
@@ -375,30 +320,7 @@ public class Arena {
     public void forceRemovePlayers() {
         for (PaintballPlayer player : allPlayers.values()) {
             player.leaveArena();
-            // player.forceLeave()?
         }
-        // TODO: keep this for now until forceRemove is full tested because if it doesn't work then this must be back
-        /*
-        if (inGame.keySet().isEmpty() && lobby.keySet().isEmpty() && spectators.isEmpty()) {
-            state = ArenaState.WAITING;
-            return;
-        }
-        for (PbPlayer pb : inGame.keySet()) {
-            Team.getPluginScoreboard().getTeam(getTeam(pb.getPlayer()).getTitleName()).removePlayer(pb.getPlayer());
-            Settings.getSettings().getCache().restorePlayerInformation(pb.getPlayer().getUniqueId());
-        }
-        for (Player p : lobby.keySet()) {
-            Team.getPluginScoreboard().getTeam(getTeam(p).getTitleName()).removePlayer(p);
-            Settings.getSettings().getCache().restorePlayerInformation(p.getUniqueId());
-        }
-        for (Player p : spectators) {
-            Team.getPluginScoreboard().getTeam(getTeam(p).getTitleName()).removePlayer(p);
-            Settings.getSettings().getCache().restorePlayerInformation(p.getUniqueId());
-        }
-        lobby.keySet().removeAll(lobby.keySet());
-        inGame.keySet().removeAll(inGame.keySet());
-        spectators.removeAll(spectators);
-        state = ArenaState.WAITING; */
     }
 
     // Called when a team wins

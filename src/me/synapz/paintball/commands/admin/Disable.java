@@ -20,7 +20,15 @@ public class Disable extends Command{
         }
 
         if (Utils.nullCheck(args[2], arena, player)) {
-            arena.setEnabled(false, player);
+            if (!arena.isSetup()) {
+                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been setup.");
+                return;
+            }
+            if (!arena.isEnabled()) {
+                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is already disable.");
+                return;
+            }
+            arena.setEnabled(false);
         }
     }
 

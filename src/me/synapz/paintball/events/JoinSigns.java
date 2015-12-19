@@ -5,6 +5,7 @@ import me.synapz.paintball.Arena.ArenaState;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Utils;
+import me.synapz.paintball.commands.admin.Info;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -14,6 +15,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import static me.synapz.paintball.storage.Settings.THEME;
 import static me.synapz.paintball.storage.Settings.WEBSITE;
@@ -76,15 +82,21 @@ public class JoinSigns implements Listener {
             return;
         }
         if (sign.getLine(1).equals(GREEN + "Auto Join")) {
-            // TODO: check all arenas then autojoin the one closest to the max amount of players
+            // TODO: check if this works
+            int openArenas = 0; // arenas which are able to join, if it is still 0 non are open so send error message
+            HashMap<Integer, Arena> arenaSize = new HashMap<Integer, Arena>(); // a HashMap with the arena's lobby size to it's arena so you can easily fetch the arena from it's size
+            List<Integer> sizes = new ArrayList<Integer>(); // all the sizes, this way we can call Collections.max and fetch the largest size to be used, then use the hashmap to get the size hooked with the arena
             for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
                 if (a.getState() == ArenaState.WAITING) {
-                    a.joinLobby(player, null);
-                    return;
+                    arenaSize.put(a.getLobbyPlayers().size(), a);
+                    sizes.add(a.getLobbyPlayers().size());
                 }
             }
-            Message.getMessenger().msg(player, false, RED, "No arenas are currently opened.");
-            return;
+            if (openArenas == 0) {
+                Message.getMessenger().msg(player, false, RED, "No arenas are currently opened.");
+                return;
+            }
+            arenaSize.get(Collections.max(sizes)).joinLobby(player, null);
         }
 
         if (ArenaManager.getArenaManager().getArena(sign.getLine(1)) == null) {
