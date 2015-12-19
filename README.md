@@ -37,6 +37,7 @@
 * Kill coins shop, buy weapons (grenades, snipers, etc)
 * Kits
 * Scoreboard Support?
+* SkyText Support (http://dev.bukkit.org/bukkit-plugins/skytext/)
 
 ###Bugs
 Bugs
