@@ -14,7 +14,7 @@ public class SpectatorPlayer extends PaintballPlayer {
         super(a, null, p);
     }
 
-    public void initPlayer() {
+    protected void initPlayer() {
         // TODO: set to arena spectate? invisable? idk
         getSettings().getCache().savePlayerInformation(player);
         arena.addPlayer(this);
@@ -22,6 +22,10 @@ public class SpectatorPlayer extends PaintballPlayer {
         stripValues();
         giveItems();
         displayMessages();
+    }
+
+    protected String getChatLayout() {
+        return SPEC_CHAT;
     }
 
     public void chat(String message) {
@@ -34,10 +38,6 @@ public class SpectatorPlayer extends PaintballPlayer {
         for (Player player : arena.getAllPlayers().keySet()) {
             player.sendMessage(chat);
         }
-    }
-
-    protected String getChatLayout() {
-        return SPEC_CHAT;
     }
 
     private void stripValues() {

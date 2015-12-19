@@ -1,6 +1,7 @@
 package me.synapz.paintball.storage;
 
 
+import me.synapz.paintball.Arena;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Utils;
@@ -14,7 +15,9 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Settings {
@@ -23,7 +26,7 @@ public class Settings {
     public static int ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL;
     public static String ARENA_CHAT, SPEC_CHAT;
     public static String PREFIX, VERSION, THEME, WEBSITE, AUTHOR, SECONDARY;
-    public static boolean SPLASH_PAINTBALLS, COLOR_PLAYER_TITLE, WOOL_HELMET, TITLE_API;
+    public static boolean COLOR_PLAYER_TITLE, WOOL_HELMET, TITLE_API;
     public static Map<ChatColor, String> TEAM_NAMES = new HashMap<ChatColor, String>();
     // SQL and Bungee Stuff
     // TODO: make these final
@@ -110,6 +113,34 @@ public class Settings {
         return this.cache;
     }
 
+    // Adds a new arena to config.yml with values default
+    public void addNewConfigSection(Arena a) {
+        FileConfiguration config = pb.getConfig();
+        List<String> valuesToSet = new ArrayList<String>() {{
+            add("kills-to-win");
+            add("time-to-win");
+            add("Join-Arena.open-kit-menu");
+            add("Join-Arena.give-wool-helmet");
+            add("Join-Lobby.give-wool-helmet");
+            add("Join-Lobby.color-player-title");
+            add("Rewards.Kill-Coins.per-kill");
+            add("Rewards.Kill-Coins.per-death");
+            add("Rewards.Money.per-kill");
+            add("Rewards.Money.per-death");
+            add("Rewards.Money.per-win");
+            add("Rewards.Money.per-defeat");
+        }};
+
+        for (String value : valuesToSet) {
+            config.set("Arena-Settings." + "Arenas." + a.getDefaultName() + "." + value, "default");
+        }
+        pb.saveConfig();
+    }
+
+    public void removeArenaConfigSection(Arena a) {
+        pb.getConfig().set("Arena-Settings." + "Arenas." + a.getDefaultName(), null);
+        pb.saveConfig();
+    }
     private void loadValues(FileConfiguration configFile, PluginDescriptionFile pluginYML) {
         // regular values
         Settings.VERSION = pluginYML.getVersion();
@@ -120,7 +151,6 @@ public class Settings {
         Settings.SECONDARY = ChatColor.translateAlternateColorCodes('&', configFile.getString("secondary-color"));
 
         // arena values
-        Settings.SPLASH_PAINTBALLS = configFile.getBoolean("paintball-splash");
         Settings.COLOR_PLAYER_TITLE = configFile.getBoolean("color-player-title");
         Settings.WOOL_HELMET = configFile.getBoolean("give-wool-helmet");
         Settings.LOBBY_COUNTDOWN = configFile.getInt("countdown.lobby.countdown");
@@ -135,7 +165,6 @@ public class Settings {
             Settings.TEAM_NAMES.put(ChatColor.getByChar(colorcode), configFile.getString("Teams." + colorcode) + "");
         }
 
-        // TODO: add stats tag to config.yml chts
         Settings.SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.spectator-chat"));
         Settings.ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.arena-chat"));
         this.loadSQL();

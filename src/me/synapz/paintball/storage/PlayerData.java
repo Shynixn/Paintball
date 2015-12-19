@@ -80,16 +80,15 @@ public final class PlayerData extends PaintballFile {
                 // killstreak is less than past killstreak, return
                 if (getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath(id)) >= player.getKillstreak())
                     return;
-
                 getFileConfig().set(StatType.HIGEST_KILL_STREAK.getPath(id), player.getKillstreak());
                 return;
             case GAMES_PLAYED:
-                if (player.ifWon()) {
+                if (player.won()) {
                     addOneToPath(StatType.WINS.getPath(id));
                 } else {
                     addOneToPath(StatType.DEFEATS.getPath(id));
                 }
-                break;
+                break; // not return; because after we increment the win/defeat, increment the games played
             case SHOTS:
                 // todo:
                 // if hit() incriemnthit

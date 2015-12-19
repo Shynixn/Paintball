@@ -1,11 +1,22 @@
+# Prefix of the plugin, shown in all messages sent by the plugin
 prefix: '&8[&3Paintball&8] '
+# Theme color of messages. This is the main color used in main text. Set it to match your server
 theme-color: '&3'
+# Secondary color or messages. Used in informative text. Set it to match your server
 secondary-color: '&7'
-# if TitleAPI is installed and this is true, plugin will display some messages in the middle of the screen to the player
-title-api: true
 
-# if SQL is enabled the statistics of games will be backup to the SQL database below. this means you can sync stats between servers
-SQL: false
+Options:
+  # If TitleAPI is installed and this is true, plugin will display some messages in the middle of the screen to the player
+  title-api: true
+  # If Vault is installed and this is true, plugin will be able to make money transfers by using Arena-Settings.Default.Money section
+  vault: true
+  # Will enable SQL and the SQL-Setting to be functional
+  SQL: false
+  # Will allow Bungeecord (joining Paintball on other servers) and will make Bungeecord section functional
+  bungeecord: false
+
+# Requires SQL to be true
+# If SQL is enabled the statistics of games will be backup to the SQL database below. This means you can sync stats between servers
 SQL-Settings:
   host: localhost
   port: 1433
@@ -13,21 +24,34 @@ SQL-Settings:
   pass: password123
   database: Spigot
 
-# Bungee stuff
-BungeeCord: false
-#This ID must be unique across the server, it is used to send players from the hub plugin(make sure it can fit on a sign)
-ServerID: Paint1
+# Requires bungeecord to be true
+Bungeecord:
+  # This ID must be unique across the network, it is used to send players from the hub plugin(make sure it can fit on a sign)
+  ServerID: Paint1
 
-# Arena Settings
 
-# True will give players a wool helmet based on their team when they join the arena, false will ignore this
-give-wool-helmet: true
+Kits:
+Special-Items:
 
-# Make title red/blue based on their team
-color-player-title: true
+# Team names of each color code
+Teams:
+   0: "Black"
+   1: "Navy Blue"
+   2: "Green"
+   3: "Cyan"
+   4: "Red"
+   5: "Purple"
+   6: "Orange"
+   7: "Silver"
+   8: "Gray"
+   9: "Blue"
+   a: "Lime"
+   b: "Aqua"
+   c: "Light Red"
+   d: "Magenta"
+   e: "Yellow"
+   f: "White"
 
-# This will make paintballs slash (turns surrounding blocks red/blue clay)
-paintball-splash: true
 
 # If you have TitleAPI plugin installed and it is true in config, the countdown will be  also shown in the middle of the screen and chat
 countdown:
@@ -54,31 +78,74 @@ countdown:
      # When there will be no interval in showing numbers. Ex. 10...5...4...3...2...1
      no-interval: 0
 
-# broadcastwinner
-Teams:
-   0: "Black"
-   1: "Navy Blue"
-   2: "Green"
-   3: "Cyan"
-   4: "Red"
-   5: "Purple"
-   6: "Orange"
-   7: "Silver"
-   8: "Gray"
-   9: "Blue"
-   a: "Lime"
-   b: "Aqua"
-   c: "Light Red"
-   d: "Magenta"
-   e: "Yellow"
-   f: "White"
-
+# Settings to do with chat aspects of Paintball
 Chat:
-   # chatting: true/false - completly disable chat
-   #lobby chat/arena - disable chat and use global chat
-   # Will broadcast winning team to all players on the server.
+   # True - use arena chat which can only be viewed by arena players. False - will use global chat
+   arena-chat: true
+   # True - broadcasts winning teams to all players on the server. False - only players in arena will see who won
    broadcast-winner: false
    # Chat format for specators. Tags: %ARENA%, %PLAYER%, %MSG%, %PREFIX%, %STATS%??
    spectator-chat: "&7[Spectator] %PLAYER%: %MSG%"
    # Chat format for lobby players and in game players. Tags: %ARENA%, %PLAYER%, %MSG%, %TEAMCOLOR%, %TEAMNAME%, %PREFIX%
    arena-chat: "%PREFIX%&8-%TEAMCOLOR%%TEAMNAME%&8- &a%PLAYER%&7: %MSG%"
+
+Arena-Settings:
+  # The default settings for each arena. Set an arena setting to "default" in order to use this default value ex: kills-to-win: default
+  # Arenas will auto-generate with values "default" whenever a new arena is created
+  Defaults:
+    # The kills/score a team must get to win
+    kills-to-win: 50
+    # How much time (in seconds) the game lasts. If no one reaches the kills-to-win when this timer ends the team with most kills is the winner
+    time-to-win: 300
+
+    # Settings for when a player joins an arena
+    Join-Arena:
+      # True - opens a kit menu with default kits. False - no kit menu will open
+      open-kit-menu: true
+      # True - give a wool helmet based on their team color. False - instead of wool, there will be a colored leather helmet
+      give-wool-helmet: true
+      # True - colors player's nametag based on their team color. False - ignores this
+      color-player-title: true
+
+    # Settings for when a player joins a lobby
+    Join-Lobby:
+      # True - give a wool helmet based on their team color. False - instead of wool, there will be a colored leather helmet
+      give-wool-helmet: true
+      # True - colors player's nametag based on their team color. False - ignores this
+      color-player-title: true
+      # True - will give the player a item that allows them to switch team. False - player will not be able to switch team unless they leave and join
+      give-team-switcher: true
+
+    # Default rewards
+    Rewards:
+      # Rewards having to do with kill coins. Kill coins are basically coins recived on a kill, which can be used to buy special items. Kill coins are reset every game.
+      Kill-Coins:
+        per-kill: 1
+        per-death: 0
+      # Rewards having to do with money. Money can also be used to buy special items and doesn't reset every game.
+      # Requires Vault and config setting as vault: true
+      Money:
+        per-kill: 15
+        per-death: -10
+        per-win: 100
+        per-defeat: -50
+  Arenas:
+    ExampleArena:
+      kills-to-win: default
+      time-to-win: default
+      Join-Arena:
+        open-kit-menu: default
+        give-wool-helmet: default
+        color-player-title: default
+      Join-Lobby:
+        give-wool-helmet: default
+        color-player-title: default
+      Rewards:
+        Kill-Coins:
+          per-kill: default
+          per-death: default
+        Money:
+          per-kill: default
+          per-death: default
+          per-win: default
+          per-defeat: default

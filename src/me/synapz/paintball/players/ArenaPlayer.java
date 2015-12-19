@@ -2,6 +2,7 @@ package me.synapz.paintball.players;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Team;
+import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,15 +16,16 @@ import static me.synapz.paintball.storage.Settings.*;
 
 public class ArenaPlayer extends PaintballPlayer {
 
-    int killStreak;
-    int killCoins;
+    private int killStreak = 0;
+    private int killCoins = 0;
+    private boolean won = false;
 
     public ArenaPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
     }
 
-    public boolean ifWon() {
-        return true;
+    public boolean won() {
+        return won;
     }
 
     public int getKillstreak() {
@@ -39,9 +41,30 @@ public class ArenaPlayer extends PaintballPlayer {
         player.teleport(arena.getSpawn(team));
         giveArmour();
         colorPlayerTitle();
+        giveWoolHelmet();
         // TODO: openKit menu, stop from being able to move
     }
 
+    @Override
+    public void leaveArena() {
+        super.leaveArena();
+        // TODO: set win to true or leave false
+        Settings.getSettings().getCache().incrementStat(StatType.GAMES_PLAYED, this);
+    }
+
+    public void shoot() {
+        // TODO: switch through each item, do something for each one
+
+        if (reachedGoal()) {
+            won = true;
+            // TODO: add timer and win messages
+        }
+    }
+
+    // This will look into config.yml for the arena, if the time or kills is reached, they reahced the goal
+    private boolean reachedGoal() {
+        return false;
+    }
     private void colorPlayerTitle() {
         if (!Settings.COLOR_PLAYER_TITLE)
             return;

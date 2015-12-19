@@ -7,6 +7,8 @@ import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.commands.Command;
+import static org.bukkit.ChatColor.*;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -16,30 +18,32 @@ public class ForceStart extends Command{
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
         if (Utils.nullCheck(args[2], arena, player)) {
-            String error = "";
+            String msg;
             switch (arena.getState()) {
                 case WAITING:
                     if (arena.getLobbyPlayers().size() < arena.getMin()) {
-                        error = "does not have enough players.";
+                        msg = "does not have enough players.";
                         break;
                     } else {
+                        msg = "has been force started!";
                         arena.forceStart(true);
-                        return;
+                        break;
                     }
                 case DISABLED:
-                    error = "has not been enabled.";
+                    msg = "has not been enabled.";
                     break;
                 case NOT_SETUP:
-                    error = "has not been setup.";
+                    msg = "has not been setup.";
                     break;
                 case IN_PROGRESS:
-                    error = "is already in progress";
+                    msg = "is already in progress";
                     break;
                 default:
-                    error = "has encountered an unexpected error.";
+                    msg = "has encountered an unexpected error.";
                     break;
             }
-            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " " + error);
+            ChatColor color = arena.getState() == WAITING ? GREEN : RED;
+            Message.getMessenger().msg(player, false, color, arena.toString() + color + " " + msg);
         }
     }
 

@@ -24,7 +24,7 @@ public class CreateArena extends Command{
 
         Arena a = new Arena(arenaName, arenaName);
         Message.getMessenger().msg(player, false, ChatColor.GREEN, a.toString() + " successfully created!");
-        ArenaManager.getArenaManager().addNewArenaToConfig(a);
+        ArenaManager.getArenaManager().addNewArena(a);
     }
 
     public String getName() {

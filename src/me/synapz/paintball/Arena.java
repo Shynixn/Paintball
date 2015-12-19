@@ -7,6 +7,7 @@ import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.players.SpectatorPlayer;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 
 import static me.synapz.paintball.storage.Settings.*;
@@ -88,7 +89,8 @@ public class Arena {
     // Removes arena from list and from arenas.yml
     public void removeArena() {
         FILE.set("Arenas." + this.getDefaultName(), null);
-        ArenaManager.getArenaManager().getArenas().remove(this);
+        Settings.getSettings().removeArenaConfigSection(this);
+        ArenaManager.getArenaManager().getArenas().remove(this.getDefaultName(), this);
         advSave();
     }
 

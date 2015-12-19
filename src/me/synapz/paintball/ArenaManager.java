@@ -72,7 +72,7 @@ public class ArenaManager {
     }
 
     // Adds a new arena to arenas.yml
-    public void addNewArenaToConfig(Arena arena) {
+    public void addNewArena(Arena arena) {
         String[] steps = {"Name", "Spectate-Loc", "Max-Players", "Min-Players", "Is-Enabled", "Teams"};
         String id = arena.getDefaultName();
 
@@ -86,6 +86,7 @@ public class ArenaManager {
             }
         }
         arenas.put(arena.getName(), arena);
+        Settings.getSettings().addNewConfigSection(arena);
         Settings.getSettings().saveArenaFile();
     }
 
