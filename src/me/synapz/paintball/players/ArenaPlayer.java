@@ -46,7 +46,7 @@ public class ArenaPlayer extends PaintballPlayer {
         colorPlayerTitle();
         giveWoolHelmet();
 
-        // TODO: remove, this is jsut for testing :)
+        // TODO: remove, this is just for testing :)
         new BukkitRunnable() {
             // TODO: add counter timer
             int counter = Settings.MAX_SCORE;
@@ -67,15 +67,17 @@ public class ArenaPlayer extends PaintballPlayer {
     @Override
     public void leaveArena() {
         super.leaveArena();
-        // TODO: set win to true or leave false
         Settings.getSettings().getCache().incrementStat(StatType.GAMES_PLAYED, this);
+    }
+
+    public void setWon() {
+        won = true;
     }
 
     public void shoot() {
         // TODO: switch through each item, do something for each one
 
         if (reachedGoal()) {
-            won = true;
             arena.win(team);
             // TODO: add timer and win messages
         }

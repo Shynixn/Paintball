@@ -288,7 +288,7 @@ public class Arena {
         }
     }
 
-    // Force start this arena. It has to have enough player, be setup and enabled, and not be in progress
+    // Force start/stop this arena. It has to have enough player, be setup and enabled, and not be in progress
     public void forceStart(boolean toStart) {
         if (toStart) {
             startGame();
@@ -330,18 +330,17 @@ public class Arena {
         }
     }
 
-    public void getGameTimer() {
-
-    }
-
     // Called when a team wins
-    // TODO: currently not used, add to a PAintballHitEven or something to check if they won then call this method
     public void win(Team team) {
         if (Settings.BROADCAST_WINNER) {
             // TODO: broadcast to server / network (except for those in game, they get a different message)
         }
+        for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
+            if (arenaPlayer.getTeam() == team)
+                arenaPlayer.setWon();
+        }
         new BukkitRunnable() {
-            // TODO: add counter timer
+            // TODO: add counter timer looking at config
             int counter = 10;
             @Override
             public void run() {
@@ -353,9 +352,6 @@ public class Arena {
                 }
             }
         }.runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 20);
-        if (BROADCAST_WINNER) {
-            // TODO: broascast
-        }
         broadcastMessage(GREEN, "The " + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
         resetTeamScores();
     }
