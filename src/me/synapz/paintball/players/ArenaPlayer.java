@@ -1,6 +1,7 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.Arena;
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.storage.Settings;
@@ -9,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
 import static me.synapz.paintball.storage.Settings.*;
@@ -42,6 +45,22 @@ public class ArenaPlayer extends PaintballPlayer {
         giveArmour();
         colorPlayerTitle();
         giveWoolHelmet();
+
+        // TODO: remove, this is jsut for testing :)
+        new BukkitRunnable() {
+            // TODO: add counter timer
+            int counter = Settings.MAX_SCORE;
+            @Override
+            public void run() {
+                System.out.println(counter);
+                if (counter == 0) {
+                    shoot();
+                    this.cancel();
+                } else {
+                    counter--;
+                }
+            }
+        }.runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 1);
         // TODO: openKit menu, stop from being able to move
     }
 

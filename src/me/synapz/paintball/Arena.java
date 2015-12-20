@@ -18,6 +18,8 @@ import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -338,8 +340,24 @@ public class Arena {
         if (Settings.BROADCAST_WINNER) {
             // TODO: broadcast to server / network (except for those in game, they get a different message)
         }
-
+        new BukkitRunnable() {
+            // TODO: add counter timer
+            int counter = 10;
+            @Override
+            public void run() {
+                if (counter == 0) {
+                    forceRemovePlayers();
+                    this.cancel();
+                } else {
+                    counter--;
+                }
+            }
+        }.runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 20);
+        if (BROADCAST_WINNER) {
+            // TODO: broascast
+        }
         broadcastMessage(GREEN, "The " + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
+        resetTeamScores();
     }
 
     // Broadcasts a message to the whole arena
@@ -374,6 +392,13 @@ public class Arena {
     public boolean canStartTimer() {
         int size = lobby.size();
         return size >= this.getMin() && size <= this.getMax();
+    }
+
+    public void resetTeamScores() {
+        // TODO: does this work?
+        for (Team team : getArenaTeamList()) {
+            ArenaManager.getArenaManager().getTeamsList(this).replace(team, getTeamScore(team), 0);
+        }
     }
 
     public int getTeamScore(Team team) {

@@ -97,7 +97,8 @@ Arena-Settings:
     max-score: 50
     # How much time (in seconds) the game lasts. If no one reaches the kills-to-win when this timer ends the team with most kills is the winner
     time: 300
-
+    # How much time (in seconds) to wait after a team wins before players will be sent out of the arena. In this time players can see their scores and move around
+    win-waiting-time: 10
     # Settings for when a player joins an arena
     Join-Arena:
       # True - opens a kit menu with default kits. False - no kit menu will open
