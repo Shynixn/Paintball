@@ -63,10 +63,10 @@ public class ArenaManager {
     }
 
     // Gets the team list for an arena, the Integer is that team's score
-    public HashMap<Team, Integer> getTeamsList(Arena a) {
-        HashMap<Team, Integer> teamList = new HashMap<Team, Integer>();
+    public List<Team> getTeamsList(Arena a) {
+        List<Team> teamList = new ArrayList<>();
         for (String s : Settings.getSettings().getArenaFile().getStringList(a.getPath() + ".Teams")) {
-            teamList.put(new Team(a, s), 0);
+            teamList.add(new Team(a, s));
         }
         return teamList;
     }

@@ -18,7 +18,6 @@ public class CountdownTask extends BukkitRunnable {
     private boolean isLobbyCountdown; // if it is a lobbyCountdown this is true
     private String chatMessage; // message to be sent in chat
     private String screenMessage; // message to be sent in middle of screen using title api
-    private boolean isSimpleTimer = false; // a simpleTimer is no messages, just counting
     private int counter;
 
     // Creates a new countdown
@@ -35,23 +34,8 @@ public class CountdownTask extends BukkitRunnable {
         arenasRunningTask.add(a);
     }
 
-    public CountdownTask(Arena a, int counter) {
-        this.a = a;
-        this.counter = counter;
-        isSimpleTimer = true;
-    }
-
     @Override
     public void run() {
-        if (isSimpleTimer) {
-            if (counter <= 0) {
-                ;
-                this.cancel();
-            } else {
-                counter--;
-            }
-            return;
-        }
         // TODO: check if this part works
         if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
             // cancel it because people left and it doesnt have enough players
@@ -64,7 +48,6 @@ public class CountdownTask extends BukkitRunnable {
             a.broadcastMessage(GREEN, finishedMessage, finishedMessage);
             if (isLobbyCountdown)
                 a.startGame();
-            new CountdownTask(a, a.TIME);
             this.cancel();
         } else {
             if (counter <= noInterval || counter % interval == 0) {

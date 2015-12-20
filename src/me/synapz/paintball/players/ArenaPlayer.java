@@ -45,22 +45,6 @@ public class ArenaPlayer extends PaintballPlayer {
         giveArmour();
         colorPlayerTitle();
         giveWoolHelmet();
-
-        // TODO: remove, this is just for testing :)
-        new BukkitRunnable() {
-            // TODO: add counter timer
-            int counter = Settings.MAX_SCORE;
-            @Override
-            public void run() {
-                System.out.println(counter);
-                if (counter == 0) {
-                    shoot();
-                    this.cancel();
-                } else {
-                    counter--;
-                }
-            }
-        }.runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 1);
         // TODO: openKit menu, stop from being able to move
     }
 
@@ -76,7 +60,8 @@ public class ArenaPlayer extends PaintballPlayer {
 
     public void shoot() {
         // TODO: switch through each item, do something for each one
-
+        // TODO: incremenScore each time they shoot
+        arena.incrementTeamScore(team);
         if (reachedGoal()) {
             arena.win(team);
             // TODO: add timer and win messages

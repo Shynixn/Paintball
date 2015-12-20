@@ -43,6 +43,7 @@ public class Arena {
     // Arena name is the current name of the arena
     // Arena currentName is the name set when setup, this is used for renaming: you can't change a path name so we keep the currentName for accessing paths
     private String defaultName, currentName;
+    private Map<Team, Integer> teams = new HashMap<>();
 
     // Paths for easy access
     String maxPath = "Max-Players";
@@ -70,8 +71,8 @@ public class Arena {
         this.defaultName = name;
 
         // Go through each arena inside the arena (located in config) and add it to the team list
-        for (Team t : ArenaManager.getArenaManager().getTeamsList(this).keySet()) {
-            getArenaTeamList().add(t);
+        for (Team team : ArenaManager.getArenaManager().getTeamsList(this)) {
+            teams.put(team, 0);
         }
     }
 
@@ -173,7 +174,7 @@ public class Arena {
 
     // Gets all of the teams on this arena
     public Set<Team> getArenaTeamList() {
-        return ArenaManager.getArenaManager().getTeamsList(this).keySet();
+        return teams.keySet();
     }
 
     // Sets the teams of this arena
@@ -393,12 +394,16 @@ public class Arena {
     public void resetTeamScores() {
         // TODO: does this work?
         for (Team team : getArenaTeamList()) {
-            ArenaManager.getArenaManager().getTeamsList(this).replace(team, getTeamScore(team), 0);
+            teams.replace(team, getTeamScore(team), 0);
         }
     }
 
     public int getTeamScore(Team team) {
-        return ArenaManager.getArenaManager().getTeamsList(this).get(team);
+        return teams.get(team);
+    }
+
+    public void incrementTeamScore(Team team) {
+        teams.replace(team, teams.get(team), teams.get(team)+1);
     }
 
     // Gets the arenas current state
