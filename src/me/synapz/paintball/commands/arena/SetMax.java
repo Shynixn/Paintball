@@ -33,7 +33,12 @@ public class SetMax extends Command{
             }
             arena.setMaxPlayers(max);
         } else {
-            Message.getMessenger().msg(player, false, RED, "Your max (" + GRAY + max + RED + ") must be greater than your min (" + GRAY + arena.getMin() + RED + ") !");
+            Message.getMessenger().msg(player, false, RED, "Your max (" + GRAY + max + RED + ") must be greater than your min (" + GRAY + arena.getMin() + RED + ")!");
+            return;
+        }
+
+        if (max > arena.getArenaTeamList().size() && arena.getAllArenaPlayers().size() != 0) {
+            Message.getMessenger().msg(player, false, RED, "Max (" + GRAY + max + RED + ") must be greater than the number of teams (" + GRAY + arena.getArenaTeamList().size() + RED + ")!");
             return;
         }
         Message.getMessenger().msg(player, false, GREEN, "Max players for " + arena.toString() + " set to " + GRAY + max, arena.getSteps());

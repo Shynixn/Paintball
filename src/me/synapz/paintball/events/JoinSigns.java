@@ -98,6 +98,7 @@ public class JoinSigns implements Listener {
                 return;
             }
             arenaSize.get(Collections.max(sizes)).joinLobby(player, null);
+            return;
         }
 
         if (ArenaManager.getArenaManager().getArena(sign.getLine(1)) == null) {

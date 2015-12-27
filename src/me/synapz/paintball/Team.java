@@ -114,4 +114,17 @@ public class Team {
     public DyeColor getDyeColor() {
         return dyeColors.get(color);
     }
+
+    // Returns if the team is full or not, if there are 100 max players, only 25 can go in per team
+    public boolean isFull(Arena arena) {
+        Map<Team, Integer> teamsWithSize = new HashMap<Team, Integer>() {{
+            for (Team t : arena.getArenaTeamList()) {
+                put(t, arena.getLobbyPlayers().size());
+            }
+        }};
+
+        int maxPerTeam = arena.getMax()/arena.getArenaTeamList().size();
+
+        return teamsWithSize.get(this) % maxPerTeam != 0 && teamsWithSize.get(this) >= maxPerTeam;
+    }
 }

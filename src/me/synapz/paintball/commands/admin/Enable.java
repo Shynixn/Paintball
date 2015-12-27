@@ -28,6 +28,7 @@ public class Enable extends Command{
                 Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is already enabled.");
                 return;
             }
+            Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + " has been enabled!");
             arena.setEnabled(true);
         }
     }

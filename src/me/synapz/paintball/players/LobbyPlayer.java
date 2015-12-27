@@ -4,6 +4,7 @@ import me.synapz.paintball.*;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -12,10 +13,18 @@ import java.util.List;
 import static org.bukkit.ChatColor.*;
 import static me.synapz.paintball.storage.Settings.*;
 
-public class LobbyPlayer extends PaintballPlayer {
+public final class LobbyPlayer extends PaintballPlayer {
 
     public LobbyPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
+    }
+
+    public void setTeam(Team newTeam) {
+        team = newTeam;
+        Message.getMessenger().msg(player, true, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
+        player.teleport(arena.getLobbySpawn(team));
+        giveItems();
+        giveWoolHelmet();
     }
 
     protected void initPlayer() {
@@ -37,18 +46,21 @@ public class LobbyPlayer extends PaintballPlayer {
         return ARENA_CHAT;
     }
 
-    protected void giveItems() {
+    private void giveItems() {
         player.getInventory().clear();
         List<ItemStack> items = new ArrayList<ItemStack>() {{
-            for (Team team : arena.getArenaTeamList()) {
-                if (!team.getTitleName().equals(team.getTitleName())) {
-                    // quick check to block spawning the wool the player is on
-                    add(Utils.makeWool(team.getChatColor() + "Join " + team.getTitleName(), team.getDyeColor()));
+            for (Team t : arena.getArenaTeamList()) {
+                // quick check to make sure we don't give them wool for their own team
+                if (!team.getTitleName().equals(t.getTitleName())) {
+                    add(Utils.makeWool(t.getChatColor() + "Join " + t.getTitleName(), t.getDyeColor()));
                 }
             }
         }};
 
+        // For if the amount of teams are larger than 9 slots (how would they click the 10th or 11th?
         if (items.size() > 9) {
+            // Just creates a wool item, which when you click will open a change menu
+            // TODO: make inventory click events for this
             player.getInventory().setItem(0, Utils.makeWool(SECONDARY + ">> " + THEME + "Click to change team" + SECONDARY + " <<", team.getDyeColor()));
             return;
         }

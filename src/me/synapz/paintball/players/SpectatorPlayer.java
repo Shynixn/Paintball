@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import static org.bukkit.ChatColor.*;
 import static me.synapz.paintball.storage.Settings.*;
 
-public class SpectatorPlayer extends PaintballPlayer {
+public final class SpectatorPlayer extends PaintballPlayer {
 
     public SpectatorPlayer(Arena a, Player p) {
         super(a, null, p);

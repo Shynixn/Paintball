@@ -178,11 +178,13 @@ public class Arena {
     }
 
     // Sets the teams of this arena
-    public void setArenaTeamList(List<Team> teams) {
+    public void setArenaTeamList(List<Team> teamsToAdd) {
         // makes a list of teams
         List<String> teamColors = new ArrayList<String>();
-        for (Team t : teams) {
+        this.teams = new HashMap<>();
+        for (Team t : teamsToAdd) {
             teamColors.add(t.getChatColor() + "");
+            this.teams.put(t, 0);
         }
         // sets the arena's teams to the list of teams in arena.yml
         getSettings().getArenaFile().set(getPath() + "Teams", teamColors);
@@ -324,7 +326,7 @@ public class Arena {
         Utils.countdown(ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", false);
     }
     
-    // Used for server reload and forcestops, so no messages will be sent
+    // Used for server reload and arena force stops, so no messages will be sent
     public void forceRemovePlayers() {
         for (PaintballPlayer player : allPlayers.values()) {
             player.leaveArena();

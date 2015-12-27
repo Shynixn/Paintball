@@ -17,7 +17,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import static me.synapz.paintball.storage.Settings.*;
 
 
-public class ArenaPlayer extends PaintballPlayer {
+public final class ArenaPlayer extends PaintballPlayer {
 
     private int killStreak = 0;
     private int killCoins = 0;
@@ -42,6 +42,7 @@ public class ArenaPlayer extends PaintballPlayer {
     protected void initPlayer() {
         arena.addPlayer(this);
         player.teleport(arena.getSpawn(team));
+        giveItems();
         giveArmour();
         colorPlayerTitle();
         giveWoolHelmet();
@@ -73,6 +74,10 @@ public class ArenaPlayer extends PaintballPlayer {
         return arena.MAX_SCORE == arena.getTeamScore(team);
     }
 
+    private void giveItems() {
+        player.getInventory().clear();
+        // TODO: give items
+    }
     private void colorPlayerTitle() {
         if (!Settings.COLOR_PLAYER_TITLE)
             return;
