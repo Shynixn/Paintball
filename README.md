@@ -42,46 +42,29 @@
 ###Bugs
 Bugs
 - [ ] EasySetupGUI?
-- [x] Add each color to config to set name
-- [x] Make it so max cannot be lower than min and vise versa
-- [x] Can enable without setting teams
-- [x] rename stat losses to defeats
-- [x] add paintball.admin.*, paintball.player.* and paintball.*
 - [ ] no commands in arena
 - [ ] no item drop
 - [ ] what if the spawn is in another world.... and the world isn't loaded
 - [ ] pb stat page
-- [ ] lobby chat option?
 - [ ] HUD color sometimes doesn’t go back to normal
 - [ ] force leave doesn’t make the other person leave
-- [ ] Could not save config.yml to plugins/Paintball/config.yml because config.yml already exists.
-- [ ] somehow allow people in lobby to change team
-- [x] Says does not have enough players instead of saying its disabled
-- [x] KD 
+- [ ] add config option to stop changing teams
 - [ ] Set multiple spawn points?? /pb arena setspawn red <number>
 - [ ] Leaderboard command /pb leaderboard <stat>
-- [ ] Maybe place rank in my stat commands
-- [ ] Move chest to arena start
-- [x] when adding armor stuff to config, it adds the team they were on! (i think)
-- [ ] doesn’t auto stop when everyone leaves
+- [ ] Maybe place rank in my stat
 - [ ] /stats values change on reloads
-- [ ] (rank) (name) (stat) (value)
-- [x] pb admin arena
+- [ ] stat signs fix layout
 - [ ] commands out of order
-- [ ] Disable arena chats
+- [ ] Get all config values loaded into plugin with checks
 - [ ] Pb admin command <command>
 - [ ] add start time to signs if arena is starting soon
-- [ ] add new, full for when waiting?
-- [ ] success message color, error message color
+- [ ] add new, full for when 
 - [ ] click on leaderboard sign, show all their stats
-- [x] disallow someone to hit join sign if arena contains ther name 
-- [x] stop: runs multiple timers if more people join
-- [ ] in game don’t let move things around inventory
-- [ ] give wool helmet in lobby, on change, change the helmet
+- [ ] in game don’t let move things around 
 - [ ] add join sign permissions to default
 - [x] add check on run to check if there are still enough players to start, if there isn’t cancel it
-- [ ] /paintball admin item << gives item if player clicks will auto 
-- [ ] Revamp settings, hashmap path, default if not found
+- [ ] /paintball admin item << gives item if player clicks 
 - [x] List<Arena> arenasPlayingTitle
 - [ ] Add arena autojoin to join most ready arena
 - [ ] Make arenas.yml file smaller (1 line locations, 1 line values, etc)-- Longer .yml files may lag so this will help to read files faster
+- [ ] Add def to settings and send console error when it can't load 
