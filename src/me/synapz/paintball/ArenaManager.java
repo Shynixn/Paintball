@@ -56,9 +56,7 @@ public class ArenaManager {
     // Stops all arenas
     public void stopArenas() {
         for (Arena a : getArenas().values()) {
-            for (PaintballPlayer player : a.getAllPlayers().values()) {
-                player.leaveArena();
-            }
+            a.forceRemovePlayers();
         }
     }
 

@@ -72,13 +72,16 @@ public class Listeners implements Listener {
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     if (item.getItemMeta().getDisplayName().contains("Join")) { // check to make sure it is a team changing object
                         for (Team t : a.getArenaTeamList()) {
+                            if (item.getItemMeta().getDisplayName().contains(t.getTitleName())) {
                                 if (!t.isFull()) {
                                     lobbyPlayer.setTeam(t);
                                 } else {
                                     Message.getMessenger().msg(player, true, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
-                                break;
+                                    break;
+                                }
                             }
                         }
+                        player.closeInventory();
                     } else if (e.getItem().getItemMeta().getDisplayName().contains("Click to change team")) {
                         Inventory inv = Bukkit.createInventory(null, 18, "Team Switcher");
                         for (Team t : a.getArenaTeamList()) {

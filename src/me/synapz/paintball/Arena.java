@@ -333,8 +333,12 @@ public class Arena {
     // Used for server reload and arena force stops, so no messages will be sent
     public void forceRemovePlayers() {
         for (PaintballPlayer player : allPlayers.values()) {
-            player.leaveArena();
+            player.forceLeaveArena();
         }
+        allPlayers = new HashMap<>();
+        lobby = new ArrayList<>();
+        spectators = new ArrayList<>();
+        inGame = new ArrayList<>();
     }
 
     // Called when a team wins

@@ -94,10 +94,8 @@ public abstract class PaintballPlayer {
 
     // Leaves an arena (removes their color names, restores information, removes from lists, and checks to see if to force stop (1 player left)
     public void leaveArena() {
-        if (Team.getPluginScoreboard().getTeam(team.getTitleName()) != null)
-            Team.getPluginScoreboard().getTeam(team.getTitleName()).removePlayer(player);
+        forceLeaveArena();
         arena.removePlayer(this);
-        Settings.getSettings().getCache().restorePlayerInformation(player);
 
         // check to see if there is only one player left, if there is everyone else left
         if (arena.getAllArenaPlayers().size() == 1) {
@@ -106,5 +104,11 @@ public abstract class PaintballPlayer {
         } else if (arena.getAllArenaPlayers().size() <= 0) {
             arena.setState(Arena.ArenaState.WAITING);
         }
+    }
+
+    public void forceLeaveArena() {
+        if (Team.getPluginScoreboard().getTeam(team.getTitleName()) != null)
+            Team.getPluginScoreboard().getTeam(team.getTitleName()).removePlayer(player);
+        Settings.getSettings().getCache().restorePlayerInformation(player);
     }
 }

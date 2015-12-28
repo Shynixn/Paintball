@@ -18,15 +18,16 @@ public class SetLobbySpawn extends Command{
 
         if (!Utils.nullCheck(args[2], arena, player)) return;
 
+        if (arena.getArenaTeamList().isEmpty()) {
+            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " does not have any teams set!");
+            return;
+        }
+
         if (args[3].equalsIgnoreCase("all")) {
-            if (arena.getArenaTeamList().isEmpty()) {
-                Message.getMessenger().msg(player, false, ChatColor.RED, arena.getName() + " does not have any teams set!");
-                return;
-            }
             for (Team t : arena.getArenaTeamList()) {
                 arena.setLobbySpawn(spawn, t);
             }
-            Message.getMessenger().msg(player, false, ChatColor.GREEN, "Set " + arena.getName() + "'s all lobby spawns to your location.", arena.getSteps());
+            Message.getMessenger().msg(player, false, ChatColor.GREEN, "Set " + arena.getName() + "'s lobby spawns set to your location.", arena.getSteps());
             return;
         }
         if (teamCheck(arena, teamString, player)) {

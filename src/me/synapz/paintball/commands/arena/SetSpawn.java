@@ -20,6 +20,10 @@ public class SetSpawn extends Command {
         }
         Team team = Utils.stringToTeam(arena, args[3]);
 
+        if (arena.getArenaTeamList().isEmpty()) {
+            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " does not have any teams set!");
+            return;
+        }
 
         if (teamCheck(arena, args[3], player)) {
             arena.setArenaSpawn(spawn, team);
