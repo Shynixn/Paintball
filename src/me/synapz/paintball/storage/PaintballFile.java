@@ -18,7 +18,7 @@ import java.util.Set;
 
 public abstract class PaintballFile {
 
-    protected final FileConfiguration fileConfig;
+    protected FileConfiguration fileConfig;
     protected final File file;
     protected final String name;
 
@@ -40,7 +40,7 @@ public abstract class PaintballFile {
 
     public void saveFile() {
         try {
-            this.fileConfig.save(this.file);
+            fileConfig.save(file);
         } catch (Exception e) {
             Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Could not save " + this.name + ".", "", "Stack trace");
             e.printStackTrace();

@@ -3,6 +3,7 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
+import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;

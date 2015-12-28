@@ -5,11 +5,13 @@ import static org.bukkit.ChatColor.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CountdownTask extends BukkitRunnable {
 
     // used to check if there is a current instance of CountdownTask running for an arena; we don't want double messages!
-    public static ArrayList<Arena> arenasRunningTask = new ArrayList<Arena>();
+    public static Map<Arena, CountdownTask> tasks = new HashMap<Arena, CountdownTask>();
 
     private Arena a; // arena for the countdown
     private int interval; // countdown interval
@@ -31,7 +33,7 @@ public class CountdownTask extends BukkitRunnable {
         this.finishedMessage = finishedMessage;
         this.isLobbyCountdown = isLobbyCountdown;
 
-        arenasRunningTask.add(a);
+        tasks.put(a, this);
     }
 
     @Override
@@ -39,16 +41,15 @@ public class CountdownTask extends BukkitRunnable {
         // TODO: check if this part works
         if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
             // cancel it because people left and it doesnt have enough players
-            arenasRunningTask.remove(a);
             this.cancel();
         }
         if (counter <= 0) {
             // countdown is finished...
-            arenasRunningTask.remove(a);
             a.broadcastMessage(GREEN, finishedMessage, finishedMessage);
-            if (isLobbyCountdown)
-                a.startGame();
             this.cancel();
+            if (isLobbyCountdown) {
+                a.startGame();
+            }
         } else {
             if (counter <= noInterval || counter % interval == 0) {
                 // replace the messages and broadcast it, then set back the message to it's layout for next countdown message
@@ -60,5 +61,12 @@ public class CountdownTask extends BukkitRunnable {
             }
         }
         counter--;
+    }
+
+    // Overrides cancel so that it cancels the task AND removes the arena from the tasks
+    @Override
+    public void cancel() {
+        super.cancel();
+        tasks.remove(a, this);
     }
 }

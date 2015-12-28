@@ -76,7 +76,7 @@ public class Utils {
 
     // Starts a countdown
     public static void countdown(int counter, int interval, int noInterval, Arena a, String chatMessage, String screenMessage, String finishedMessage, boolean isLobbyCountDown) {
-        if (!CountdownTask.arenasRunningTask.contains(a)) {
+        if (CountdownTask.tasks.get(a) == null) {
             Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
             new CountdownTask(counter, interval, noInterval, a, chatMessage, screenMessage, finishedMessage, isLobbyCountDown).runTaskTimer(plugin, 0, 20);
         }

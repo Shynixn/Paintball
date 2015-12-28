@@ -7,6 +7,8 @@ import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -32,7 +34,7 @@ public final class ArenaPlayer extends PaintballPlayer {
     }
 
     public int getKillstreak() {
-        return 10;
+        return killStreak;
     }
 
     protected String getChatLayout() {
@@ -59,13 +61,28 @@ public final class ArenaPlayer extends PaintballPlayer {
         won = true;
     }
 
-    public void shoot() {
-        // TODO: switch through each item, do something for each one
-        // TODO: incremenScore each time they shoot
+    public void die() {
+        killStreak = 0;
+        player.teleport(arena.getSpawn(team));
+        Settings.getSettings().getCache().incrementStat(StatType.DEATHS, this);
+    }
+
+    public void kill() {
+        killStreak++;
+        killCoins++;
         arena.incrementTeamScore(team);
+        Settings.getSettings().getCache().incrementStat(StatType.KILLS, this);
+        Settings.getSettings().getCache().incrementStat(StatType.HIGEST_KILL_STREAK, this);
+        // TODO: kill messages
+    }
+
+    public void shoot(PlayerInteractEvent event) {
+        // TODO: if they hit, increment HITS and add one to killstreak
+        Settings.getSettings().getCache().incrementStat(StatType.SHOTS, this);
+        // TODO: switch through each item, do something for each one
         if (reachedGoal()) {
             arena.win(team);
-            // TODO: add timer and win messages
+            // TODO: win messages
         }
     }
 

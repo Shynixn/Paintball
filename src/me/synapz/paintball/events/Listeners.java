@@ -1,10 +1,12 @@
 package me.synapz.paintball.events;
 
 import me.synapz.paintball.*;
+import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.players.SpectatorPlayer;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,6 +14,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -79,13 +85,14 @@ public class Listeners implements Listener {
                 }
 
             } else if (gamePlayer instanceof ArenaPlayer) {
-
+                ArenaPlayer arenaPlayer = (ArenaPlayer) gamePlayer;
+                arenaPlayer.shoot(e);
             }
         }
     }
 
     @EventHandler
-    public void itemMoveInArena(InventoryClickEvent e) {
+    public void onItemMoveInArena(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         if (isInArena(player)) {
             Arena a = getArena(player);
@@ -109,6 +116,56 @@ public class Listeners implements Listener {
                     Message.getMessenger().msg(player, true, ChatColor.RED, "You are not allowed to move items in your inventory!");
                     e.setCancelled(true);
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDeathInArena(PlayerDeathEvent e) {
+        Player player = e.getEntity();
+        Player killer = player.getKiller();
+        if (isInArena(player)) {
+            Arena a = getArena(player);
+            PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
+
+            if (gamePlayer instanceof ArenaPlayer) {
+                ArenaPlayer arenaPlayer = (ArenaPlayer) gamePlayer;
+                arenaPlayer.die();
+
+                if (isInArena(killer)) {
+                    ArenaPlayer arenaKiller = (ArenaPlayer) a.getPaintballPlayer(killer);
+                    arenaKiller.kill();
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPaintballHit(EntityDamageByEntityEvent e) {
+        Player player = e.getEntity() instanceof Player ? (Player) e.getEntity() : null;
+        Player hitter = e.getDamager() instanceof Player ? (Player) e.getDamager() : null;
+
+        if (player == null || hitter == null) {
+            return;
+        }
+
+        if (isInArena(player) && isInArena(hitter)) {
+            Arena a = getArena(hitter);
+            ArenaPlayer arenaPlayer = (ArenaPlayer) a.getPaintballPlayer(hitter);
+
+            Settings.getSettings().getCache().incrementStat(StatType.HITS, arenaPlayer);
+        }
+    }
+
+    @EventHandler
+    public void onDamageAsLobbyOrSpectator(EntityDamageEvent e) {
+        Player player = e.getEntity() instanceof Player ? (Player) e.getEntity() : null;
+        if (player != null && isInArena(player)) {
+            Arena a = getArena(player);
+            PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
+
+            if (gamePlayer instanceof LobbyPlayer || gamePlayer instanceof SpectatorPlayer) {
+                e.setCancelled(true);
             }
         }
     }

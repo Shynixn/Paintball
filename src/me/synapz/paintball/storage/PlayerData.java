@@ -1,6 +1,7 @@
 package me.synapz.paintball.storage;
 
 
+import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
@@ -76,6 +77,11 @@ public final class PlayerData extends PaintballFile {
         UUID id = player.getPlayer().getUniqueId();
 
         switch (type) {
+            // KD and ACCURACY are automatically determined by dividing
+            case KD:
+                return;
+            case ACCURACY:
+                return;
             case HIGEST_KILL_STREAK:
                 // killstreak is less than past killstreak, return
                 if (getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath(id)) >= player.getKillstreak())
@@ -83,15 +89,11 @@ public final class PlayerData extends PaintballFile {
                 getFileConfig().set(StatType.HIGEST_KILL_STREAK.getPath(id), player.getKillstreak());
                 return;
             case GAMES_PLAYED:
-                if (player.won()) {
+                if (player.won())
                     addOneToPath(StatType.WINS.getPath(id));
-                } else {
+                else
                     addOneToPath(StatType.DEFEATS.getPath(id));
-                }
-                break; // not return; because after we increment the win/defeat, increment the games played
-            case SHOTS:
-                // todo:
-                // if hit() incriemnthit
+                break; // not return; because it still has to increment the games played
         }
 
         addOneToPath(type.getPath(id));
@@ -206,13 +208,11 @@ public final class PlayerData extends PaintballFile {
     public String getAccuracy(UUID id) {
         int shots = getFileConfig().getInt(StatType.SHOTS.getPath(id));
         int hits = getFileConfig().getInt(StatType.HITS.getPath(id));
-        return String.format("%d%s", (int) divide(shots, hits), "%");
+        return String.format("%d%s", (int) Math.round(divide(hits, shots)*100), "%");
     }
 
     // Divides two numbers safely
     private double divide(int numerator, int denominator) {
-        if (numerator == 0)
-            return 0;
         if (denominator == 0)
             return numerator;
 
@@ -324,6 +324,7 @@ public final class PlayerData extends PaintballFile {
 
     // Increments the set path by one
     private void addOneToPath(String path) {
+        // TODO: file saves but only updates Stat values on reload :(
         getFileConfig().set(path, getFileConfig().getInt(path) + 1);
     }
 }

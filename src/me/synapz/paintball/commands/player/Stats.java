@@ -23,10 +23,13 @@ public class Stats extends Command {
         Paintball pb = (Paintball) JavaPlugin.getProvidingPlugin(Paintball.class);
         Map<StatType, String> stats = pb.getPlayerData().getPlayerStats(target);
 
-        Message.getMessenger().msg(player, false, false, SECONDARY + STRIKETHROUGH + "        " + RESET + " " + THEME + Bukkit.getOfflinePlayer(target).getName() + "'s Stats" + RESET + " " + SECONDARY + STRIKETHROUGH + "        ");
+        Message.getMessenger().msg(player, false, false, SECONDARY + STRIKETHROUGH + "             " + RESET + " " + THEME + Bukkit.getOfflinePlayer(target).getName() + "'s Stats" + RESET + " " + SECONDARY + STRIKETHROUGH + "             ");
 
-        for (StatType type : stats.keySet()) {
-            Message.getMessenger().msg(player, false, false, THEME + type.getName() + ": " + SECONDARY + stats.get(type));
+        for (StatType type : StatType.values()) {
+            String name = type.getName();
+            if (type == StatType.SHOTS || type == StatType.HITS || type == StatType.KILLS || type == StatType.DEATHS || type == StatType.DEFEATS || type == StatType.WINS)
+                name = "  " + name;
+            Message.getMessenger().msg(player, false, false, THEME + name + ": " + SECONDARY + stats.get(type));
         }
     }
 

@@ -1,11 +1,10 @@
 package me.synapz.paintball.commands.admin;
 
 
-import me.synapz.paintball.Arena;
+import me.synapz.paintball.*;
+
 import static me.synapz.paintball.Arena.ArenaState.*;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Message;
-import me.synapz.paintball.Utils;
+
 import me.synapz.paintball.commands.Command;
 import static org.bukkit.ChatColor.*;
 
@@ -19,12 +18,14 @@ public class ForceStart extends Command{
 
         if (Utils.nullCheck(args[2], arena, player)) {
             String msg;
+            ChatColor color = ChatColor.RED;
             switch (arena.getState()) {
                 case WAITING:
                     if (arena.getLobbyPlayers().size() < arena.getMin()) {
                         msg = "does not have enough players.";
                         break;
                     } else {
+                        color = ChatColor.GREEN;
                         msg = "has been force started!";
                         arena.forceStart(true);
                         break;
@@ -42,8 +43,9 @@ public class ForceStart extends Command{
                     msg = "has encountered an unexpected error.";
                     break;
             }
-            ChatColor color = arena.getState() == WAITING ? GREEN : RED;
+            CountdownTask.tasks.get(arena).cancel();
             Message.getMessenger().msg(player, false, color, arena.toString() + color + " " + msg);
+            arena.startGame();
         }
     }
 
