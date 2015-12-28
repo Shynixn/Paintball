@@ -295,6 +295,9 @@ public class Arena {
     // Force start/stop this arena. It has to have enough player, be setup and enabled, and not be in progress
     public void forceStart(boolean toStart) {
         if (toStart) {
+            // in case there are any current countdown tasks in that arena (lobby countdown) we want to stop it
+            if (CountdownTask.tasks.get(this) != null)
+                CountdownTask.tasks.get(this).cancel();
             startGame();
         } else {
             this.broadcastMessage(RED, this.toString() + RED + " has been force stopped.", "");

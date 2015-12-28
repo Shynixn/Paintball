@@ -3,12 +3,16 @@ package me.synapz.paintball.players;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
+import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -54,6 +58,7 @@ public final class ArenaPlayer extends PaintballPlayer {
     @Override
     public void leaveArena() {
         super.leaveArena();
+        team.playerLeaveTeam();
         Settings.getSettings().getCache().incrementStat(StatType.GAMES_PLAYED, this);
     }
 
@@ -86,6 +91,13 @@ public final class ArenaPlayer extends PaintballPlayer {
         }
     }
 
+    public void giveShop() {
+        Inventory inv = Bukkit.createInventory(null, 9, ChatColor.GOLD + "KillCoin Shop");
+        // TODO: add bunch of cool stuff with settings menu to disable, set cost, permission etc.
+        // TODO: add permission to be able to access KillCoin Shop
+        player.openInventory(inv);
+    }
+
     // This will look into config.yml for the arena, if the time or kills is reached, they reahced the goal
     private boolean reachedGoal() {
         return arena.MAX_SCORE == arena.getTeamScore(team);
@@ -93,8 +105,11 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     private void giveItems() {
         player.getInventory().clear();
-        // TODO: give items
+        player.getInventory().setItem(0, Utils.makeItem(Material.SNOW_BALL, Settings.THEME + "Paintball", 64));
+        player.getInventory().setItem(8, Utils.makeItem(Material.DOUBLE_PLANT, ChatColor.GOLD + "KillCoin Shop", 1));
+
     }
+
     private void colorPlayerTitle() {
         if (!Settings.COLOR_PLAYER_TITLE)
             return;

@@ -43,9 +43,7 @@ public class ForceStart extends Command{
                     msg = "has encountered an unexpected error.";
                     break;
             }
-            CountdownTask.tasks.get(arena).cancel();
             Message.getMessenger().msg(player, false, color, arena.toString() + color + " " + msg);
-            arena.startGame();
         }
     }
 

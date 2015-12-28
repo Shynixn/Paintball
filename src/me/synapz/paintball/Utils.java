@@ -3,10 +3,7 @@ package me.synapz.paintball;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.GameMode;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,10 +13,7 @@ import org.bukkit.plugin.Plugin;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Utils {
 
@@ -99,6 +93,30 @@ public class Utils {
         woolMeta.setDisplayName(name);
         wool.setItemMeta(woolMeta);
         return wool;
+    }
+
+    // Makes wool from DyeColor and name, also adds lore. ex: 6/6 Full, so players can see if they can join
+    public static ItemStack makeWool(String name, DyeColor color, Team team) {
+        ItemStack wool = makeWool(name, color);
+        ItemMeta meta = wool.getItemMeta();
+        List<String> newLore = new ArrayList<String>(){{
+            add(ChatColor.RESET + "" + ChatColor.GRAY + team.getSize() + "/" + team.getMax());
+            if (team.isFull())
+                add(ChatColor.RED + "Team is full");
+        }};
+        meta.setLore(newLore);
+        wool.setItemMeta(meta);
+        return wool;
+    }
+
+    public static ItemStack makeItem(Material type, String name, int amount) {
+        ItemStack item = new ItemStack(type, amount);
+
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        item.setItemMeta(meta);
+
+        return item;
     }
 
     // Gets the team with the least amount of players

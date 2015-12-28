@@ -67,6 +67,8 @@ public class Team {
     private ChatColor color;
     // Team's arena it is set to
     private Arena arena;
+    // Amount of players on this team, incremented whenever someone joines the team
+    int size = 0;
 
     /**
         Used to create a new Team.
@@ -115,16 +117,24 @@ public class Team {
         return dyeColors.get(color);
     }
 
+    public void playerJoinTeam() {
+        size++;
+    }
+
+    public void playerLeaveTeam() {
+        size--;
+    }
+
     // Returns if the team is full or not, if there are 100 max players, only 25 can go in per team
-    public boolean isFull(Arena arena) {
-        Map<Team, Integer> teamsWithSize = new HashMap<Team, Integer>() {{
-            for (Team t : arena.getArenaTeamList()) {
-                put(t, arena.getLobbyPlayers().size());
-            }
-        }};
+    public boolean isFull() {
+        return size != 0 && size%getMax() == 0;
+    }
 
-        int maxPerTeam = arena.getMax()/arena.getArenaTeamList().size();
+    public int getMax() {
+        return Math.round(arena.getMax()/arena.getArenaTeamList().size());
+    }
 
-        return teamsWithSize.get(this) % maxPerTeam != 0 && teamsWithSize.get(this) >= maxPerTeam;
+    public int getSize() {
+       return size;
     }
 }

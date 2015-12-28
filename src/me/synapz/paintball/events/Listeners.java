@@ -16,12 +16,20 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Colorable;
+import org.bukkit.material.Wool;
+
+import static me.synapz.paintball.storage.Settings.SECONDARY;
+import static me.synapz.paintball.storage.Settings.THEME;
 
 public class Listeners implements Listener {
 
@@ -53,21 +61,21 @@ public class Listeners implements Listener {
     @EventHandler
     public void clickItemInArena(PlayerInteractEvent e) {
         Player player = e.getPlayer();
+        ItemStack item = e.getItem();
         if (isInArena(player)) {
             Arena a = getArena(player);
             PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
 
+            // TODO: check if they clicked on the team they are already on
             if (gamePlayer instanceof LobbyPlayer) {
                 LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (e.getItem().getItemMeta().getDisplayName().contains("Join")) { // check to make sure it is a team changing object
+                    if (item.getItemMeta().getDisplayName().contains("Join")) { // check to make sure it is a team changing object
                         for (Team t : a.getArenaTeamList()) {
-                            if (e.getItem().getItemMeta().getDisplayName().contains(t.getTitleName())) {
-                                if (!t.isFull(a)) {
+                                if (!t.isFull()) {
                                     lobbyPlayer.setTeam(t);
                                 } else {
                                     Message.getMessenger().msg(player, true, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
-                                }
                                 break;
                             }
                         }
@@ -75,18 +83,24 @@ public class Listeners implements Listener {
                         Inventory inv = Bukkit.createInventory(null, 18, "Team Switcher");
                         for (Team t : a.getArenaTeamList()) {
                             // Make a new inventory and place all teams (except the one they are on) into it
-                            if (!t.getTitleName().equals(lobbyPlayer.getTeam())) {
-                                inv.addItem(Utils.makeWool(t.getChatColor() + t.getTitleName(), t.getDyeColor()));
+                            if (t != lobbyPlayer.getTeam()) {
+                                inv.addItem(Utils.makeWool(t.getChatColor() + t.getTitleName(), t.getDyeColor(), t));
                             }
                         }
                         player.openInventory(inv);
                     }
-                    e.setCancelled(true);
                 }
-
+                e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
                 ArenaPlayer arenaPlayer = (ArenaPlayer) gamePlayer;
-                arenaPlayer.shoot(e);
+
+                if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    if (item.getType() == Material.DOUBLE_PLANT && item.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
+                        arenaPlayer.giveShop();
+                    } else if (item.getItemMeta().getDisplayName().contains("Paintball")) { // paintball item
+                        arenaPlayer.shoot(e);
+                    }
+                }
             }
         }
     }
@@ -94,6 +108,8 @@ public class Listeners implements Listener {
     @EventHandler
     public void onItemMoveInArena(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
+        ItemStack clickedItem = e.getCurrentItem();
+
         if (isInArena(player)) {
             Arena a = getArena(player);
             PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
@@ -101,8 +117,8 @@ public class Listeners implements Listener {
             if (gamePlayer instanceof LobbyPlayer) {
                 if (e.getInventory().getName().contains("Team Switcher")) {
                     for (Team t : a.getArenaTeamList()) {
-                        if (e.getCurrentItem().getItemMeta().getDisplayName().contains(t.getTitleName())) {
-                            if (!t.isFull(a)) {
+                        if (clickedItem.getItemMeta().getDisplayName().contains(t.getTitleName())) {
+                            if (!t.isFull()) {
                                 LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                                 lobbyPlayer.setTeam(t);
                             } else {
@@ -112,11 +128,24 @@ public class Listeners implements Listener {
                         }
                     }
                     e.setCancelled(true);
-                } else if (gamePlayer instanceof SpectatorPlayer) {
-                    Message.getMessenger().msg(player, true, ChatColor.RED, "You are not allowed to move items in your inventory!");
+                }
+            } else if (gamePlayer instanceof SpectatorPlayer) {
+                Message.getMessenger().msg(player, true, ChatColor.RED, "You are not allowed to move items in your inventory!");
+                e.setCancelled(true);
+            } else if (gamePlayer instanceof ArenaPlayer) {
+                if (clickedItem.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
                     e.setCancelled(true);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onShootItemFromInventoryInArena(PlayerDropItemEvent e) {
+        Player player = (Player) e.getPlayer();
+
+        if (isInArena(player)) {
+            e.setCancelled(true);
         }
     }
 

@@ -20,7 +20,9 @@ public final class LobbyPlayer extends PaintballPlayer {
     }
 
     public void setTeam(Team newTeam) {
+        team.playerLeaveTeam();
         team = newTeam;
+        team.playerJoinTeam();
         Message.getMessenger().msg(player, true, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
         player.teleport(arena.getLobbySpawn(team));
         giveItems();
@@ -36,6 +38,7 @@ public final class LobbyPlayer extends PaintballPlayer {
         giveItems();
         displayMessages();
         giveWoolHelmet();
+        team.playerJoinTeam();
 
         if (arena.canStartTimer()) {
             Utils.countdown(LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL, arena, GREEN + "Waiting for more players. " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Waiting for more players\n" + GRAY + "%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
@@ -48,22 +51,24 @@ public final class LobbyPlayer extends PaintballPlayer {
 
     private void giveItems() {
         player.getInventory().clear();
-        List<ItemStack> items = new ArrayList<ItemStack>() {{
-            for (Team t : arena.getArenaTeamList()) {
-                // quick check to make sure we don't give them wool for their own team
-                if (!team.getTitleName().equals(t.getTitleName())) {
-                    add(Utils.makeWool(t.getChatColor() + "Join " + t.getTitleName(), t.getDyeColor()));
-                }
-            }
-        }};
 
-        // For if the amount of teams are larger than 9 slots (how would they click the 10th or 11th?
-        if (items.size() > 9) {
+        // For if the amount of teams are larger than 9 slots (how would they click the 10th or 11th? The -1 is because the player is on 1 team, we don't show that team
+        if (arena.getArenaTeamList().size()-1 > 9) {
             // Just creates a wool item, which when you click will open a change menu
             // TODO: make inventory click events for this
             player.getInventory().setItem(0, Utils.makeWool(SECONDARY + ">> " + THEME + "Click to change team" + SECONDARY + " <<", team.getDyeColor()));
             return;
         }
+
+
+        List<ItemStack> items = new ArrayList<ItemStack>() {{
+            for (Team t : arena.getArenaTeamList()) {
+                // quick check to make sure we don't give them wool for their own team
+                if (!team.getTitleName().equals(t.getTitleName())) {
+                    add(Utils.makeWool(t.getChatColor() + "Join " + t.getTitleName(), t.getDyeColor(), t));
+                }
+            }
+        }};
 
         for (ItemStack item : items) {
             int spot = items.indexOf(item);
@@ -89,5 +94,11 @@ public final class LobbyPlayer extends PaintballPlayer {
         player.setFoodLevel(20);
         player.setHealth(player.getMaxHealth());
         player.setFireTicks(0);
+    }
+
+    @Override
+    public void leaveArena() {
+        team.playerLeaveTeam();
+        super.leaveArena();
     }
 }
