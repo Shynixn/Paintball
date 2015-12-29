@@ -70,7 +70,7 @@ public class Listeners implements Listener {
             if (gamePlayer instanceof LobbyPlayer) {
                 LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (item.getItemMeta().getDisplayName().contains("Join")) { // check to make sure it is a team changing object
+                    if (item.hasItemMeta() && item.getItemMeta().getDisplayName().contains("Join")) { // check to make sure it is a team changing object
                         for (Team t : a.getArenaTeamList()) {
                             if (item.getItemMeta().getDisplayName().contains(t.getTitleName())) {
                                 if (!t.isFull()) {
@@ -82,7 +82,7 @@ public class Listeners implements Listener {
                             }
                         }
                         player.closeInventory();
-                    } else if (e.getItem().getItemMeta().getDisplayName().contains("Click to change team")) {
+                    } else if (e.getItem().hasItemMeta() && e.getItem().getItemMeta().getDisplayName().contains("Click to change team")) {
                         Inventory inv = Bukkit.createInventory(null, 18, "Team Switcher");
                         for (Team t : a.getArenaTeamList()) {
                             // Make a new inventory and place all teams (except the one they are on) into it
@@ -100,7 +100,7 @@ public class Listeners implements Listener {
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     if (item.getType() == Material.DOUBLE_PLANT && item.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
                         arenaPlayer.giveShop();
-                    } else if (item.getItemMeta().getDisplayName().contains("Paintball")) { // paintball item
+                    } else if (item.hasItemMeta() && item.getItemMeta().getDisplayName().contains("Paintball")) { // paintball item
                         arenaPlayer.shoot(e);
                     }
                 }
@@ -120,7 +120,7 @@ public class Listeners implements Listener {
             if (gamePlayer instanceof LobbyPlayer) {
                 if (e.getInventory().getName().contains("Team Switcher")) {
                     for (Team t : a.getArenaTeamList()) {
-                        if (clickedItem.getItemMeta().getDisplayName().contains(t.getTitleName())) {
+                        if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().getDisplayName().contains(t.getTitleName())) {
                             if (!t.isFull()) {
                                 LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                                 lobbyPlayer.setTeam(t);

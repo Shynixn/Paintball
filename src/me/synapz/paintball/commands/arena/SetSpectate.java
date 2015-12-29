@@ -34,7 +34,7 @@ public class SetSpectate extends Command {
     }
 
     public String getInfo() {
-        return "Set Arena spectate loc";
+        return "Set Arena spectate location";
     }
 
     public CommandType getCommandType() {

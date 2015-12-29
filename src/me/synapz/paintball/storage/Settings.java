@@ -70,7 +70,7 @@ public class Settings {
         this.pb = pb;
 
         // TODO: always says error on reload/start
-        if (!new File(pb.getDataFolder(), "config.yml").exists()) {
+        if (pb.getDataFolder().listFiles().) {
             pb.saveResource("config.yml", false);
         }
 

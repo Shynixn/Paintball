@@ -300,6 +300,7 @@ public class Arena {
                 CountdownTask.tasks.get(this).cancel();
             startGame();
         } else {
+            state = ArenaState.WAITING;
             this.broadcastMessage(RED, this.toString() + RED + " has been force stopped.", "");
             this.forceRemovePlayers();
         }

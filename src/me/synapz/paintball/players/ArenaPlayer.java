@@ -111,8 +111,8 @@ public final class ArenaPlayer extends PaintballPlayer {
     }
 
     private void colorPlayerTitle() {
-        if (!Settings.COLOR_PLAYER_TITLE)
-            return;
+        //if (!Settings.COLOR_PLAYER_TITLE)
+        //    return;
         Scoreboard sb = Team.getPluginScoreboard();
         final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
         playerTeam.addPlayer(player);

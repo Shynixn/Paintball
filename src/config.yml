@@ -4,6 +4,8 @@ prefix: '&8[&3Paintball&8] '
 theme-color: '&3'
 # Secondary color or messages. Used in informative text. Set it to match your server
 secondary-color: '&7'
+# Do not change this value, this is so the plugin can update your config to the latest while backing up the old one
+version: 1 #TODO: incorperate into plugin
 
 Options:
   # If TitleAPI is installed and this is true, plugin will display some messages in the middle of the screen to the player

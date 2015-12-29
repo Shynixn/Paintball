@@ -38,7 +38,6 @@ public class CountdownTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        // TODO: check if this part works
         if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
             // cancel it because people left and it doesnt have enough players
             this.cancel();
