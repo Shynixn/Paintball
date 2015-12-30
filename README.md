@@ -7,6 +7,8 @@
     * Ability to change each team's name in config
 * Join/Auto-join signs
     * Auto join signs will automatically join the arena with the most players
+* Auto updating signs
+    * Join, autojoin, and leaderboard signs will be automatically updated with a configurable time
 * Change Paintball colors to match your server
     * Many servers have chosen colors to match their server. You can make the plugin match your server or chat with two useful configs, theme-color, secondary-color, and prefix to make your plugin look custom to your server
 * Safe reloading (/reload and /stop)
@@ -58,13 +60,12 @@ Bugs
 - [ ] Get all config values loaded into plugin with checks
 - [ ] Pb admin command <command>
 - [ ] add start time to signs if arena is starting soon
-- [ ] add new, full for when
+- [ ] replace sign with Full if full
+- [ ] should arena signs auto remove when arena is removed?
 - [ ] click on leaderboard sign, show all their stats
 - [ ] in game don’t let move things around
 - [ ] add join sign permissions to default
-- [x] add check on run to check if there are still enough players to start, if there isn’t cancel it
 - [ ] /paintball admin item << gives item if player clicks
-- [x] List<Arena> arenasPlayingTitle
 - [ ] Add arena autojoin to join most ready arena
 - [ ] Make arenas.yml file smaller (1 line locations, 1 line values, etc)-- Longer .yml files may lag so this will help to read files faster
 - [ ] Add def to settings and send console error when it can't load
