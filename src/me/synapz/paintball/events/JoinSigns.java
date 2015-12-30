@@ -6,6 +6,7 @@ import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.commands.admin.Info;
+import me.synapz.paintball.locations.SignLocation;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -48,6 +49,7 @@ public class JoinSigns implements Listener {
             e.setLine(1, GREEN + "Auto Join");
             e.setLine(2, "");
             e.setLine(3, "");
+            new SignLocation(e.getBlock().getLocation());
             return;
         }
 
@@ -60,7 +62,7 @@ public class JoinSigns implements Listener {
                 e.setLine(2, a.getStateAsString());
                 e.setLine(3, "");
                 Message.getMessenger().msg(e.getPlayer(), false, GREEN, a + " join sign successfully created!");
-                ArenaManager.getArenaManager().storeSignLocation(e.getBlock().getLocation(), a);
+                new SignLocation(a, e.getBlock().getLocation(), SignLocation.SignLocations.JOIN);
             } else {
                 e.getBlock().breakNaturally();
                 return;
@@ -137,8 +139,9 @@ public class JoinSigns implements Listener {
 
         if (joinSign) {
             Arena a = ArenaManager.getArenaManager().getArena(sign.getLine(1));
-            ArenaManager.getArenaManager().removeSignLocation(sign.getLocation(), a);
+            new SignLocation(a, sign.getLocation(), SignLocation.SignLocations.JOIN).removeSign();
             Message.getMessenger().msg(e.getPlayer(), false, GREEN, a + "'s join sign has been successfully removed!");
         }
+        // TODO: add leaderboard and autojoin signs
     }
 }

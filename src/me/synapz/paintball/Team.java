@@ -1,6 +1,8 @@
 package me.synapz.paintball;
 
 import static me.synapz.paintball.storage.Settings.*;
+
+import me.synapz.paintball.locations.TeamLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import static org.bukkit.Color.*;
@@ -93,8 +95,8 @@ public class Team {
     }
 
     // Return the team's specific path in config.
-    public String getPath() {
-        return "Arenas." + arena.getDefaultName() + ".Team-Locations." + this.getTitleName();
+    public String getPath(boolean lobby) {
+        return "Arenas." + arena.getDefaultName() + "." + (lobby ? "Lobby" : "Spawn") + "." + this.getTitleName();
     }
 
     // Return the team's specific ChatColor associated with it, ex: ChatColor.RED.

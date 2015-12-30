@@ -2,6 +2,7 @@ package me.synapz.paintball.players;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Message;
+import me.synapz.paintball.locations.TeamLocation;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
@@ -18,7 +19,7 @@ public final class SpectatorPlayer extends PaintballPlayer {
         // TODO: set to arena spectate? invisable? idk
         getSettings().getCache().savePlayerInformation(player);
         arena.addPlayer(this);
-        player.teleport(arena.getSpectateSpawn());
+        player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPECTATOR, team));
         stripValues();
         giveItems();
         displayMessages();

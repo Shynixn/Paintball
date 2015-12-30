@@ -1,13 +1,20 @@
 package me.synapz.paintball;
 
 import com.google.common.base.Joiner;
-import me.synapz.paintball.players.PaintballPlayer;
+import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
+
+import static me.synapz.paintball.storage.Settings.THEME;
+import static me.synapz.paintball.storage.Settings.getSettings;
 import static org.bukkit.ChatColor.*;
+import static me.synapz.paintball.Arena.*;
+import static me.synapz.paintball.locations.SignLocation.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -150,28 +157,48 @@ public class ArenaManager {
         }
     }
 
-    // Stores an arena's sign into areans.yml so it can be easily updated
-    // TODO: also store leaderboard signs...
-    public void storeSignLocation(Location loc, Arena a) {
-        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(a.getPath() + "Sign-Locs");
-        String locString = loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();
-        if (signsList == null)
-            signsList = new ArrayList<String>();
-        if (signsList.contains(locString)) return;
-        signsList.add(locString);
-        Settings.getSettings().getArenaFile().set(a.getPath() + "Sign-Locs", signsList);
-        Settings.getSettings().saveArenaFile();
-    }
+    // Updates every type of sign (Leaderboard, Join, Autojoin)
+    public void updateAllSignsOnServer() {
+        List<String> signLocs = getSettings().getArenaFile().getStringList("Sign-Locs");
+        String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
 
-    // Remove a sign location from arenas.yml
-    public void removeSignLocation(Location loc, Arena a) {
-        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(a.getPath() + "Sign-Locs");
-        String locString = loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();
-        if (signsList == null || !(signsList.contains(locString))) {
-            return;
+        if (signLocs == null) return;
+
+        for (String s : signLocs) {
+            for (Arena a : getArenas().values()) {
+                SignLocation signLoc = new SignLocation(a, s);
+                Location loc = signLoc.getLocation();
+
+                if (!(loc.getBlock().getState() instanceof Sign)) {
+                    signLoc.removeSign();
+                    return;
+                }
+                Sign sign = (Sign) loc.getBlock().getState();
+                switch (signLoc.getType()) {
+                    case JOIN:
+                        sign.setLine(0, prefix); // in case the prefix changes
+                        sign.setLine(1, a.getName()); // in case they rename it
+                        sign.setLine(2, a.getStateAsString());
+                        sign.setLine(3, (a.getState() == Arena.ArenaState.WAITING ? a.getLobbyPlayers().size() + "": a.getState() == ArenaState.IN_PROGRESS ? a.getAllArenaPlayers().size() + "" : "0") + "/" + a.getMax());
+                        sign.update();
+                        break;
+                    case AUTOJOIN:
+                        sign.setLine(0, Settings.PREFIX); // in case the prefix changes
+                        break;
+                    case LEADERBOARD:
+                        // TODO: better way
+                        StatType type = null;
+                        for (StatType t : StatType.values()) {
+                            if (t.getSignName().equalsIgnoreCase(sign.getLine(2))) {
+                                type = t;
+                            }
+                        }
+                        HashMap<String, String> playerAndStat = Settings.getSettings().getCache().getPlayerAtRank(Integer.parseInt(sign.getLine(0)), type);
+                        sign.setLine(1, playerAndStat.keySet().toArray()[0] + ""); // #1 Synapz_ Kills 23
+                        sign.setLine(3, playerAndStat.values().toArray()[0] + "");
+                        break;
+                }
+            }
         }
-        signsList.remove(locString);
-        Settings.getSettings().getArenaFile().set(a.getPath() + "Sign-Locs", signsList);
-        Settings.getSettings().saveArenaFile();
     }
 }

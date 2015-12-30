@@ -5,6 +5,7 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -47,7 +48,7 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     protected void initPlayer() {
         arena.addPlayer(this);
-        player.teleport(arena.getSpawn(team));
+        player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team));
         giveItems();
         giveArmour();
         colorPlayerTitle();
@@ -68,7 +69,7 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     public void die() {
         killStreak = 0;
-        player.teleport(arena.getSpawn(team));
+        player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team));
         Settings.getSettings().getCache().incrementStat(StatType.DEATHS, this);
     }
 

@@ -4,6 +4,7 @@ package me.synapz.paintball.commands.arena;
 import me.synapz.paintball.*;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.locations.TeamLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ public class SetSpawn extends Command {
         }
 
         if (teamCheck(arena, args[3], player)) {
-            arena.setArenaSpawn(spawn, team);
+            arena.setLocation(TeamLocation.TeamLocations.SPAWN, spawn, team);
             Message.getMessenger().msg(player, false, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " spawn for " + arena.toString() + " set!", arena.getSteps());
         }
     }

@@ -1,6 +1,7 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.*;
+import me.synapz.paintball.locations.TeamLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -24,7 +25,7 @@ public final class LobbyPlayer extends PaintballPlayer {
         team = newTeam;
         team.playerJoinTeam();
         Message.getMessenger().msg(player, true, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
-        player.teleport(arena.getLobbySpawn(team));
+        player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team));
         giveItems();
         giveWoolHelmet();
     }
@@ -33,7 +34,7 @@ public final class LobbyPlayer extends PaintballPlayer {
         getSettings().getCache().savePlayerInformation(player);
         arena.addPlayer(this);
 
-        player.teleport(arena.getLobbySpawn(team));
+        player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team));
         stripValues();
         giveItems();
         displayMessages();

@@ -3,20 +3,20 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
-import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.locations.PaintballLocation;
+import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.players.SpectatorPlayer;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.Bukkit;
 
+import static me.synapz.paintball.locations.TeamLocation.*;
 import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,7 +44,11 @@ public class Arena {
     // Arena name is the current name of the arena
     // Arena currentName is the name set when setup, this is used for renaming: you can't change a path name so we keep the currentName for accessing paths
     private String defaultName, currentName;
+    // Team with their size
     private Map<Team, Integer> teams = new HashMap<>();
+
+    // All the locations attached to their type. Ex: LocationType.LOBBY is to to the lobby location
+
 
     // Paths for easy access
     String maxPath = "Max-Players";
@@ -111,39 +115,17 @@ public class Arena {
         advSave();
     }
 
-    // Gets the lobby spawn of a team
-    public Location getSpawn(Team team) {
-        return (Location) FILE.get(team.getPath() + ".Spawn");
+    // Gets the spawn of a team
+    public Location getLocation(TeamLocations type, Team team) {
+        return new TeamLocation(this, team, type).getLocation();
     }
 
     // Sets the spawn of a team in the arena to a location
-    public void setArenaSpawn(Location location, Team team) {
-        FILE.set(team.getPath() + ".Spawn", location);
-        advSave();
+    public void setLocation(TeamLocations type, Location location, Team team) {
+        isSpectateSet = type == TeamLocations.SPECTATOR ? true : isSpectateSet;
+        new TeamLocation(this, team, location, type);
     }
 
-    // Sets the lobby of a team to a location
-    public void setLobbySpawn(Location location, Team team) {
-        FILE.set(team.getPath() + ".Lobby", location);
-        advSave();
-    }
-
-    // Gets a team's lobby location
-    public Location getLobbySpawn(Team team) {
-        return (Location) FILE.get(team.getPath() + ".Lobby");
-    }
-
-    // Sets the spectator spawn for the arena
-    public void setSpectateLoc(Location loc) {
-        isSpectateSet = true;
-        FILE.set(getPath() + spectatePath, loc);
-        advSave();
-    }
-
-    // Gets the arena's spectator spawn
-    public Location getSpectateSpawn() {
-        return (Location) FILE.get(getPath() + spectatePath);
-    }
 
     // Joins spectator (just creates a new SpectatorPlayer
     public void joinSpectate(Player player) {
@@ -203,10 +185,10 @@ public class Arena {
         
         steps = Utils.addItemsToArray(steps, isMaxSet ? done + "max"+end : "max", isMinSet ? done + "min"+end : "min");
         for (Team t : getArenaTeamList()) {
-            String lobbyName = t.getTitleName().toLowerCase().replace(" ", "") + "-lobby";
-            String spawnName = t.getTitleName().toLowerCase().replace(" ", "") + "-spawn";
-            steps.add(FILE.get(t.getPath() + ".Lobby") != null ? done + lobbyName + end : lobbyName);
-            steps.add(FILE.get(t.getPath() + ".Spawn") != null ? done + spawnName + end : spawnName);
+            String lobbyName = t.getTitleName().toLowerCase().replace(" ", "") + " (lobby)";
+            String spawnName = t.getTitleName().toLowerCase().replace(" ", "") + " (spawn)";
+            steps.add(FILE.getString(t.getPath(true)) != null ? done + lobbyName + end : lobbyName);
+            steps.add(FILE.getString(t.getPath(false)) != null ? done + spawnName + end : spawnName);
         }
         Utils.addItemsToArray(steps, isSpectateSet ? done + "spectate" + end : "spectate", isEnabled ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "set-teams" : "");
         finalString = GRAY + Joiner.on(", ").join(steps);
@@ -233,10 +215,11 @@ public class Arena {
             spawnsSet = false;
         }
         for (Team t : getArenaTeamList()) {
-            if (FILE.get(t.getPath() + ".Lobby") == null) {
+            if (FILE.getString(t.getPath(true)) == null) {
                 spawnsSet = false;
             }
-            if (FILE.get(t.getPath() + ".Spawn")== null) {
+            // TODO make t.getPath(type) instead of boolean
+            if (FILE.getString(t.getPath(false))== null) {
                 spawnsSet = false;
             }
         }
@@ -450,26 +433,6 @@ public class Arena {
         return color + state.toString();
     }
 
-    // Updates all join signs
-    public void updateAllSigns() {
-        List<String> signLocs = getSettings().getArenaFile().getStringList(getPath() + "Sign-Locs");
-        if (signLocs == null) return;
-        
-        for (String s : signLocs) {
-            String[] locStr = s.split(",");
-            Location loc = new Location(Bukkit.getWorld(locStr[0]), Integer.parseInt(locStr[1]), Integer.parseInt(locStr[2]), Integer.parseInt(locStr[3]));
-            if (loc.getBlock().getState() instanceof Sign) {
-                Sign sign = (Sign) loc.getBlock().getState();
-                sign.setLine(1, this.getName()); // in case they rename it
-                sign.setLine(2, this.getStateAsString());
-                sign.setLine(3, (state == ArenaState.WAITING ? getLobbyPlayers().size() + "": state == ArenaState.IN_PROGRESS ? getAllArenaPlayers().size() + "" : "0") + "/" + this.getMax());
-                sign.update();
-            } else {
-                ArenaManager.getArenaManager().removeSignLocation(loc, this);
-            }
-        }
-    }
-
     public void removePlayer(PaintballPlayer pbPlayer) {
         allPlayers.remove(pbPlayer.getPlayer(), pbPlayer);
         lobby.remove(pbPlayer);
@@ -512,7 +475,7 @@ public class Arena {
     }
 
     // Saves arena file along with other checks
-    private void advSave() {
+    public void advSave() {
         getSettings().saveArenaFile();
         /**
          * Because the saveArenaFile() method gets called every time a value is changed,
