@@ -18,7 +18,7 @@ public class ForceStop extends Command{
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
         if (Utils.nullCheck(args[2], arena, player)) {
-            if (arena.getState() == Arena.ArenaState.IN_PROGRESS) {
+            if (arena.getState() == Arena.ArenaState.IN_PROGRESS || arena.getState() == Arena.ArenaState.STARTING) {
                 // if the player isn't in the arena send them a message, otherwise the forceStart method will send the message to everyone
                 if (!arena.getAllPlayers().keySet().contains(player))
                     Message.getMessenger().msg(player, false, GREEN, arena.toString() + GREEN + " has been force stopped!");

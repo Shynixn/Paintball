@@ -41,6 +41,9 @@ public class Join extends Command {
             case IN_PROGRESS:
                 Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently in progress.");
                 return;
+            case STARTING:
+                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently in progress.");
+                return;
             case NOT_SETUP:
                 Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been fully setup.");
                 return;

@@ -76,7 +76,7 @@ public class SetTeams extends Command {
     }
 
     public String getName() {
-        return "setteam";
+        return "setteams";
     }
 
     public String getInfo() {

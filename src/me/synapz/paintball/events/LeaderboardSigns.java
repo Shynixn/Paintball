@@ -2,6 +2,7 @@ package me.synapz.paintball.events;
 
 import me.synapz.paintball.*;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.locations.SignLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -9,11 +10,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
 
 public class LeaderboardSigns implements Listener {
 
@@ -71,6 +76,22 @@ public class LeaderboardSigns implements Listener {
         e.setLine(1, playerAndStat.keySet().toArray()[0] + "");
         e.setLine(2, type.getName());
         e.setLine(3, playerAndStat.values().toArray()[0] + "");
+        new SignLocation(e.getBlock().getLocation(), SignLocation.SignLocations.LEADERBOARD);
+    }
+
+    @EventHandler
+    public void onLeaderboardBreak(BlockBreakEvent e) {
+        // paintball.sign.destroy
+        if (!(e.getBlock().getType() == Material.SIGN) && !(e.getBlock().getType() == Material.SIGN_POST)) return;
+        Sign sign = (Sign) e.getBlock().getState();
+
+        if (!(StatType.valueOf(sign.getLine(2)) != null)) return; // checks if the 3rd line is a stat type
+        // todo: replace with other permission validator
+        if (!e.getPlayer().hasPermission("paintball.sign.destroy"))
+            Message.getMessenger().msg(e.getPlayer(), false, RED, "You do not have permission to destroy Paintball signs!");
+
+        new SignLocation(sign.getLocation(), SignLocation.SignLocations.LEADERBOARD).removeSign();
+        Message.getMessenger().msg(e.getPlayer(), false, GREEN, " Leaderboard sign has been successfully removed!");
     }
 
     @EventHandler

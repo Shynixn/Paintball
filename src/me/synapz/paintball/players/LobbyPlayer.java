@@ -25,7 +25,7 @@ public final class LobbyPlayer extends PaintballPlayer {
         team = newTeam;
         team.playerJoinTeam();
         Message.getMessenger().msg(player, true, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
-        player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team));
+        player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team));
         giveItems();
         giveWoolHelmet();
     }

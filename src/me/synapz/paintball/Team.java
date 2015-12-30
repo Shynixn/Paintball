@@ -95,8 +95,8 @@ public class Team {
     }
 
     // Return the team's specific path in config.
-    public String getPath(boolean lobby) {
-        return "Arenas." + arena.getDefaultName() + "." + (lobby ? "Lobby" : "Spawn") + "." + this.getTitleName();
+    public String getPath(TeamLocation.TeamLocations type) {
+        return "Arenas." + arena.getDefaultName() + "." + type.toString() + "." + this.getTitleName();
     }
 
     // Return the team's specific ChatColor associated with it, ex: ChatColor.RED.

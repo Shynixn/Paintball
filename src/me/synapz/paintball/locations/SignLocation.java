@@ -1,7 +1,6 @@
 package me.synapz.paintball.locations;
 
 import me.synapz.paintball.Arena;
-import me.synapz.paintball.Team;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Location;
 
@@ -14,32 +13,41 @@ public final class SignLocation extends PaintballLocation {
         LEADERBOARD,
         JOIN,
         AUTOJOIN;
+
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase().replace(super.toString().toLowerCase().toCharArray()[0], super.toString().toUpperCase().toCharArray()[0]);
+        }
     }
 
     private final SignLocations type;
 
-    // Syntax for sign location is type,arena,world,x,y,z,yaw,pitch
     public SignLocation(Arena a, Location loc, SignLocations type) {
         super(a, loc);
         this.type = type;
 
-        setSignLocation();
+        setLocation();
     }
 
-    // Just for autojoining signs, they have NO arena set to them
-    public SignLocation(Location loc) {
-        super(null, loc);
-        this.type = SignLocations.AUTOJOIN;
-    }
 
-    // Creates a new TeamLocation by looking inside of arenas.yml and grabbing it out
+
     public SignLocation(Arena arena, String rawLocation) {
         super(arena, rawLocation);
-        String rawType = rawLocation.split(",")[0];
-        this.type = rawType.equals("join") ? SignLocations.JOIN : SignLocations.LEADERBOARD;
+        this.type = SignLocations.JOIN;
     }
 
+    public SignLocation(SignLocations type, String rawLocation) {
+        super(null, rawLocation);
+        this.type = type;
+    }
 
+    // Just for autojoinin and leaderboard signs, they have NO arena set to them
+    public SignLocation(Location loc, SignLocations type) {
+        super(null, loc);
+        this.type = type;
+
+        setLocation();
+    }
 
     public SignLocations getType() {
         return type;
@@ -47,26 +55,28 @@ public final class SignLocation extends PaintballLocation {
 
     // Remove a sign location from arenas.yml
     public void removeSign() {
-        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(arena.getPath() + "Sign-Locs");
-        String locString = type.toString() + "," + loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();
-        if (signsList == null || !(signsList.contains(locString))) {
+        String path = type == SignLocations.LEADERBOARD || type == SignLocations.AUTOJOIN ? "Signs." + type.toString() : arena.getPath() + type.toString();
+        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(path);
+
+        if (signsList == null || !(signsList.contains(super.toString()))) {
             return;
         }
-        signsList.remove(locString);
-        Settings.getSettings().getArenaFile().set(arena.getPath() + "Sign-Locs", signsList);
+        signsList.remove(super.toString());
+        Settings.getSettings().getArenaFile().set(path, signsList);
         Settings.getSettings().saveArenaFile();
     }
 
-    private void setSignLocation() {
-        List<String> signsList = Settings.getSettings().getArenaFile().getStringList("Sign-Locs");
-        String locString = type.toString().toLowerCase() + "," + loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ() + "," + loc.getPitch() + "," + loc.getYaw();
+    protected void setLocation() {
+        String path = type == SignLocations.LEADERBOARD || type == SignLocations.AUTOJOIN ? "Signs." + type.toString() : arena.getPath() + type.toString();
+        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(path);
+
         if (signsList == null)
             signsList = new ArrayList<String>();
-        if (signsList.contains(locString)) return;
-        signsList.add(locString);
-        Settings.getSettings().getArenaFile().set("Sign-Locs", signsList);
+        if (signsList.contains(super.toString()))
+            return;
+
+        signsList.add(super.toString());
+        Settings.getSettings().getArenaFile().set(path, signsList);
         Settings.getSettings().saveArenaFile();
     }
-
-
 }

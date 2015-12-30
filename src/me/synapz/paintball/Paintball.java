@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -37,15 +38,17 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         Bukkit.getServer().getPluginManager().registerEvents(new LeaderboardSigns(), this);
         Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "PaintBall", this);
         Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, "PaintBall");
-        //TODO: this replaces the onMove thing in join signs, it runs twice a second and updates them
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+
+        getCommand("paintball").setExecutor(commandManager);
+
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
                 ArenaManager.getArenaManager().updateAllSignsOnServer();
                 Paintball.this.bungeeUpdateSigns();
+                System.out.println(Settings.SIGN_UPDATE_TIME);
             }
-        }, 10l, 10l);
-        getCommand("paintball").setExecutor(commandManager);
+        }, 0L, (long) Settings.SIGN_UPDATE_TIME);
     }
 
     @Override

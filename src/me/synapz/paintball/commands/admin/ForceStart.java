@@ -39,6 +39,9 @@ public class ForceStart extends Command{
                 case IN_PROGRESS:
                     msg = "is already in progress";
                     break;
+                case STARTING:
+                    msg = "is already in progress";
+                    break;
                 default:
                     msg = "has encountered an unexpected error.";
                     break;

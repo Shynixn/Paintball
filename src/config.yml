@@ -6,6 +6,9 @@ theme-color: '&3'
 secondary-color: '&7'
 # Do not change this value, this is so the plugin can update your config to the latest while backing up the old one
 version: 1 #TODO: incorperate into plugin
+# Time, in ticks, to update the Join, Leaderboard, and Autojoin signs. Making this number bigger may decrease lag but will take signs longer to change. Changing this will require a restart/reload
+# 20 Ticks = 1 Second
+sign-update-time: 40
 
 Options:
   # If TitleAPI is installed and this is true, plugin will display some messages in the middle of the screen to the player

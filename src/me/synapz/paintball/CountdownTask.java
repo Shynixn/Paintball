@@ -38,8 +38,8 @@ public class CountdownTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS) {
-            // cancel it because people left and it doesnt have enough players
+        if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS && a.getState() != Arena.ArenaState.STARTING) {
+            System.out.println("Canceling...");
             this.cancel();
         }
         if (counter <= 0) {
@@ -48,6 +48,8 @@ public class CountdownTask extends BukkitRunnable {
             this.cancel();
             if (isLobbyCountdown) {
                 a.startGame();
+            } else {
+                a.setState(Arena.ArenaState.IN_PROGRESS);
             }
         } else {
             if (counter <= noInterval || counter % interval == 0) {

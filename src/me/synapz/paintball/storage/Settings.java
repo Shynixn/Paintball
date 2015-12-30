@@ -23,7 +23,7 @@ import java.util.Map;
 public class Settings {
 
     // Constants
-    public static int MAX_SCORE, ARENA_TIME, ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL;
+    public static int MAX_SCORE, ARENA_TIME, ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL, SIGN_UPDATE_TIME;
     public static String ARENA_CHAT, SPEC_CHAT;
     public static String PREFIX, VERSION, THEME, WEBSITE, AUTHOR, SECONDARY;
     public static boolean BROADCAST_WINNER, COLOR_PLAYER_TITLE, WOOL_HELMET, TITLE_API;
@@ -148,6 +148,7 @@ public class Settings {
         PREFIX = ChatColor.translateAlternateColorCodes('&', configFile.getString("prefix"));
         THEME = ChatColor.translateAlternateColorCodes('&', configFile.getString("theme-color"));
         SECONDARY = ChatColor.translateAlternateColorCodes('&', configFile.getString("secondary-color"));
+        SIGN_UPDATE_TIME = configFile.getInt("sign-update-time");
 
         // arena values
         COLOR_PLAYER_TITLE = configFile.getBoolean("color-player-title");

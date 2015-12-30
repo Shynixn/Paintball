@@ -78,18 +78,9 @@ public class ArenaManager {
 
     // Adds a new arena to arenas.yml
     public void addNewArena(Arena arena) {
-        String[] steps = {"Name", "Spectate-Loc", "Max-Players", "Min-Players", "Is-Enabled", "Teams"};
-        String id = arena.getDefaultName();
+        Settings.getSettings().getArenaFile().set(arena.getPath() + "Name", arena.getName());
+        Settings.getSettings().getArenaFile().set(arena.getPath() + "Enabled", false);
 
-        for (String value : steps) {
-            if (value.equals("Name")) {
-                Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, arena.getName());
-            } else if (value.equals("Is-Enabled")) {
-                Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, false);
-            }else {
-                Settings.getSettings().getArenaFile().set("Arenas." + id + "." + value, "not_set");
-            }
-        }
         arenas.put(arena.getName(), arena);
         Settings.getSettings().addNewConfigSection(arena);
         Settings.getSettings().saveArenaFile();
@@ -114,6 +105,8 @@ public class ArenaManager {
                 case IN_PROGRESS:
                     color += RED;
                     break;
+                case STARTING:
+                    color += RED;
                 case DISABLED:
                     color += GRAY;
                     break;
@@ -148,7 +141,7 @@ public class ArenaManager {
                 // add each arena to the server
                 a = new Arena(arenaName, name);
                 // set the value of that arena
-                a.loadValues(file);
+                a.loadValues();
             }catch (Exception e) {
                 Message.getMessenger().msg(Bukkit.getConsoleSender(), false, RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
                 e.printStackTrace();
@@ -159,45 +152,65 @@ public class ArenaManager {
 
     // Updates every type of sign (Leaderboard, Join, Autojoin)
     public void updateAllSignsOnServer() {
-        List<String> signLocs = getSettings().getArenaFile().getStringList("Sign-Locs");
+        List<String> leaderboards = getSettings().getArenaFile().getStringList("Signs.Leaderboard");
+        List<String> autojoins = getSettings().getArenaFile().getStringList("Signs.Autojoin");
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
 
-        if (signLocs == null) return;
+        for (String rawSignLoc : leaderboards) {
+            SignLocation signLoc = new SignLocation(SignLocations.LEADERBOARD, rawSignLoc);
+            Location location = signLoc.getLocation();
 
-        for (String s : signLocs) {
-            for (Arena a : getArenas().values()) {
-                SignLocation signLoc = new SignLocation(a, s);
-                Location loc = signLoc.getLocation();
+            if (!(location.getBlock().getState() instanceof Sign)) {
+                signLoc.removeSign();
+                return;
+            }
 
-                if (!(loc.getBlock().getState() instanceof Sign)) {
+            Sign sign = (Sign) location.getBlock().getState();
+            // TODO: better way
+            StatType type = null;
+            for (StatType t : StatType.values()) {
+                if (t.getSignName().equalsIgnoreCase(sign.getLine(2))) {
+                    type = t;
+                }
+            }
+            HashMap<String, String> playerAndStat = Settings.getSettings().getCache().getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+            sign.setLine(1, playerAndStat.keySet().toArray()[0] + "");
+            sign.setLine(3, playerAndStat.values().toArray()[0] + "");
+            sign.update();
+        }
+
+        for (String rawSignLoc : autojoins) {
+            SignLocation signLoc = new SignLocation(SignLocations.AUTOJOIN, rawSignLoc);
+            Location location = signLoc.getLocation();
+
+            if (!(location.getBlock().getState() instanceof Sign)) {
+                signLoc.removeSign();
+                return;
+            }
+            Sign sign = (Sign) location.getBlock().getState();
+            sign.setLine(0, prefix); // in case the prefix changes
+            sign.update();
+        }
+
+        for (Arena a : getArenas().values()) {
+            List<String> joins = getSettings().getArenaFile().getStringList(a.getPath() + "Join");
+
+            for (String rawSignLoc : joins) {
+                SignLocation signLoc = new SignLocation(a, rawSignLoc);
+                Location location = signLoc.getLocation();
+
+                if (!(location.getBlock().getState() instanceof Sign)) {
                     signLoc.removeSign();
                     return;
                 }
-                Sign sign = (Sign) loc.getBlock().getState();
-                switch (signLoc.getType()) {
-                    case JOIN:
-                        sign.setLine(0, prefix); // in case the prefix changes
-                        sign.setLine(1, a.getName()); // in case they rename it
-                        sign.setLine(2, a.getStateAsString());
-                        sign.setLine(3, (a.getState() == Arena.ArenaState.WAITING ? a.getLobbyPlayers().size() + "": a.getState() == ArenaState.IN_PROGRESS ? a.getAllArenaPlayers().size() + "" : "0") + "/" + a.getMax());
-                        sign.update();
-                        break;
-                    case AUTOJOIN:
-                        sign.setLine(0, Settings.PREFIX); // in case the prefix changes
-                        break;
-                    case LEADERBOARD:
-                        // TODO: better way
-                        StatType type = null;
-                        for (StatType t : StatType.values()) {
-                            if (t.getSignName().equalsIgnoreCase(sign.getLine(2))) {
-                                type = t;
-                            }
-                        }
-                        HashMap<String, String> playerAndStat = Settings.getSettings().getCache().getPlayerAtRank(Integer.parseInt(sign.getLine(0)), type);
-                        sign.setLine(1, playerAndStat.keySet().toArray()[0] + ""); // #1 Synapz_ Kills 23
-                        sign.setLine(3, playerAndStat.values().toArray()[0] + "");
-                        break;
-                }
+
+                Sign sign = (Sign) location.getBlock().getState();
+
+                sign.setLine(0, prefix); // in case the prefix changes
+                sign.setLine(1, a.getName()); // in case they rename it
+                sign.setLine(2, a.getStateAsString());
+                sign.setLine(3, (a.getState() == Arena.ArenaState.WAITING ? a.getLobbyPlayers().size() + "": a.getState() == ArenaState.IN_PROGRESS || a.getState() == ArenaState.STARTING ? a.getAllArenaPlayers().size() + "" : "0") + "/" + a.getMax());
+                sign.update();
             }
         }
     }

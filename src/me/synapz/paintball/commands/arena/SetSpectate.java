@@ -16,7 +16,7 @@ public class SetSpectate extends Command {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
         if (Utils.nullCheck(args[2], arena, player)) {
-            arena.setLocation(TeamLocation.TeamLocations.SPECTATOR, player.getLocation(), null);
+            arena.setSpectatorLocation(player.getLocation());
             Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + ChatColor.GREEN + " spectate location set!", arena.getSteps());
         }
     }

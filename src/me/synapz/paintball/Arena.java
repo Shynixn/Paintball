@@ -3,7 +3,7 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
-import me.synapz.paintball.locations.PaintballLocation;
+import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
@@ -38,23 +38,11 @@ public class Arena {
     private List<LobbyPlayer> lobby = new ArrayList<LobbyPlayer>();
     private List<ArenaPlayer> inGame = new ArrayList<ArenaPlayer>();
 
-    // Arenas values
-    private boolean isMaxSet, isMinSet, isSpectateSet, isEnabled;
-
     // Arena name is the current name of the arena
     // Arena currentName is the name set when setup, this is used for renaming: you can't change a path name so we keep the currentName for accessing paths
     private String defaultName, currentName;
     // Team with their size
     private Map<Team, Integer> teams = new HashMap<>();
-
-    // All the locations attached to their type. Ex: LocationType.LOBBY is to to the lobby location
-
-
-    // Paths for easy access
-    String maxPath = "Max-Players";
-    String minPath = "Min-Players";
-    String enabledPath = "Is-Enabled";
-    String spectatePath = "Spectate-Loc";
 
     // Current state of the arena
     ArenaState state = ArenaState.NOT_SETUP;
@@ -63,7 +51,13 @@ public class Arena {
         NOT_SETUP,
         WAITING,
         DISABLED,
-        IN_PROGRESS
+        STARTING,
+        IN_PROGRESS;
+
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase().replace("_", " ").replace(super.toString().toLowerCase().toCharArray()[0], super.toString().toUpperCase().toCharArray()[0]);
+        }
     }
 
     /**
@@ -122,10 +116,16 @@ public class Arena {
 
     // Sets the spawn of a team in the arena to a location
     public void setLocation(TeamLocations type, Location location, Team team) {
-        isSpectateSet = type == TeamLocations.SPECTATOR ? true : isSpectateSet;
         new TeamLocation(this, team, location, type);
     }
 
+    public Location getSpectatorLocation() {
+        return new SpectatorLocation(this).getLocation();
+    }
+
+    public void setSpectatorLocation(Location location) {
+        new SpectatorLocation(this, location);
+    }
 
     // Joins spectator (just creates a new SpectatorPlayer
     public void joinSpectate(Player player) {
@@ -133,26 +133,32 @@ public class Arena {
     }
     
     public void setMaxPlayers(int max) {
-        isMaxSet = true;
-        FILE.set(getPath() + maxPath, max);
+        FILE.set(getPath() + "Max", max);
         advSave();
     }
 
     // Sets the min required plauers to an int (lobby playercount reaches this number, it calls the lobby-countdown and waits for more players)
     public void setMinPlayers(int min) {
-        isMinSet = true;
-        FILE.set(getPath() + minPath, min);
+        FILE.set(getPath() + "Min", min);
         advSave();
+    }
+
+    public boolean isMinSet() {
+        return getMin() != 0;
+    }
+
+    private boolean isMaxSet() {
+        return getMax() != 0;
     }
 
     // Gets the max number of players
     public int getMax() {
-        return FILE.getInt(getPath() + maxPath);
+        return FILE.getInt(getPath() + "Max");
     }
 
     // Gets the min number of players
     public int getMin() {
-        return FILE.getInt(getPath() + minPath);
+        return FILE.getInt(getPath() + "Min");
     }
 
     // Gets all of the teams on this arena
@@ -183,17 +189,17 @@ public class Arena {
         String end = RESET + "" + GRAY;
         String prefix = BLUE + "Steps: ";
         
-        steps = Utils.addItemsToArray(steps, isMaxSet ? done + "max"+end : "max", isMinSet ? done + "min"+end : "min");
+        steps = Utils.addItemsToArray(steps, isMaxSet() ? done + "max"+end : "max", isMinSet() ? done + "min"+end : "min");
         for (Team t : getArenaTeamList()) {
             String lobbyName = t.getTitleName().toLowerCase().replace(" ", "") + " (lobby)";
             String spawnName = t.getTitleName().toLowerCase().replace(" ", "") + " (spawn)";
-            steps.add(FILE.getString(t.getPath(true)) != null ? done + lobbyName + end : lobbyName);
-            steps.add(FILE.getString(t.getPath(false)) != null ? done + spawnName + end : spawnName);
+            steps.add(FILE.getString(t.getPath(TeamLocations.LOBBY)) != null ? done + lobbyName + end : lobbyName);
+            steps.add(FILE.getString(t.getPath(TeamLocations.SPAWN)) != null ? done + spawnName + end : spawnName);
         }
-        Utils.addItemsToArray(steps, isSpectateSet ? done + "spectate" + end : "spectate", isEnabled ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "set-teams" : "");
+        Utils.addItemsToArray(steps, (FILE.getString(this.getPath() + "Spectator") != null ? done + "setspec" + end : "setspec"), isEnabled() ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "setteams" : "");
         finalString = GRAY + Joiner.on(", ").join(steps);
         
-        return isSetup() && isEnabled ? prefix + GRAY + "Complete. Arena is open!" : prefix + finalString;
+        return isSetup() && isEnabled() ? prefix + GRAY + "Complete. Arena is open!" : prefix + finalString;
         
     }
 
@@ -203,31 +209,31 @@ public class Arena {
             state = ArenaState.WAITING;
         else
             state = ArenaState.DISABLED;
-        isEnabled = setEnabled;
-        FILE.set(getPath() + enabledPath, isEnabled);
+        FILE.set(getPath() + "Enabled", setEnabled);
         advSave();
     }
 
     // Checks weather this arena is setup or not. In order to be setup max, min, spectator and all spawns must be set
     public boolean isSetup() {
         boolean spawnsSet = true;
+        boolean isSpectateSet = FILE.getString(this.getPath() + "Spectator") != null;
         if (getArenaTeamList().isEmpty()) {
             spawnsSet = false;
         }
         for (Team t : getArenaTeamList()) {
-            if (FILE.getString(t.getPath(true)) == null) {
+            if (FILE.getString(t.getPath(TeamLocations.SPAWN)) == null) {
                 spawnsSet = false;
             }
             // TODO make t.getPath(type) instead of boolean
-            if (FILE.getString(t.getPath(false))== null) {
+            if (FILE.getString(t.getPath(TeamLocations.LOBBY))== null) {
                 spawnsSet = false;
             }
         }
-        return isMaxSet && isMinSet && isSpectateSet && spawnsSet;
+        return isMaxSet() && isMinSet() && isSpectateSet && spawnsSet;
     }
 
     public boolean isEnabled() {
-        return isEnabled;
+        return FILE.getBoolean(this.getPath() + "Enabled");
     }
     // Check if a player is in the arena, all players have all spectator, lobby, and arena players
     public boolean containsPlayer(Player player) {
@@ -240,36 +246,12 @@ public class Arena {
     }
 
     // Loads all the arenas values from arenas.yml into memory, sets isMinSet, isMaxSet, isEnabled, and isSpectateSet
-    public void loadValues(FileConfiguration file) {
-        String[] paths = {"Max-Players", "Min-Players", "Is-Enabled", "Spectate-Loc"};
-        int pathValue = 0;
-        
-        for (String value : paths) {
-            boolean isSet = false;
-            if (!FILE.getString(getPath() + value).equals("not_set")) {
-                isSet = true;
-            }
-            
-            switch (pathValue) {
-                case 0:
-                    isMaxSet = isSet;
-                    break;
-                case 1:
-                    isMinSet = isSet;
-                    break;
-                case 2:
-                    isEnabled = file.getBoolean(getPath() + value);
-                    break;
-                case 3:
-                    isSpectateSet = isSet;
-                    break;
-            }
-            pathValue++;
-        }
-        if (isSetup() && isEnabled) {
+    public void loadValues() {
+        // TODO: add things from config.yml like time etc if they aren't defaulted
+        if (isSetup() && isEnabled()) {
             state = ArenaState.WAITING;
         } else {
-            if (!isEnabled && isSetup()) {
+            if (!isEnabled() && isSetup()) {
                 state = ArenaState.DISABLED;
             }
         }
@@ -305,7 +287,7 @@ public class Arena {
 
     // Starts the game, turns all LobbyPlayer's into lobby players and t
     public void startGame() {
-        state = ArenaState.IN_PROGRESS;
+        state = ArenaState.STARTING;
         for (LobbyPlayer p : lobby) {
             allPlayers.remove(p.getPlayer(), p);
             new ArenaPlayer(this, p.getTeam(), p.getPlayer());
@@ -426,6 +408,9 @@ public class Arena {
             case IN_PROGRESS:
                 color = RED;
                 break;
+            case STARTING:
+                color = RED;
+                break;
             case NOT_SETUP:
                 color = GRAY;
                 break;
@@ -482,9 +467,9 @@ public class Arena {
          * we also want to see if the arena is setup because if it is, Arena.NOT_SETUP should
          * be replaced with ArenaState.WAITING (or ArenaState.DISABLED) because the setup is complete.
          */
-        if (isSetup() && isEnabled) {
+        if (isSetup() && isEnabled()) {
             state = ArenaState.WAITING;
-        } else if (isSetup() && !isEnabled) {
+        } else if (isSetup() && !isEnabled()) {
             state = ArenaState.DISABLED;
         }
     }

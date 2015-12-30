@@ -11,9 +11,10 @@ public abstract class PaintballLocation {
     // Important class to shorten files by shorting
     // Turns Locations into: world,x,y,z,yaw,pitch
 
+    protected static final FileConfiguration FILE = Settings.getSettings().getArenaFile();
+
     protected final Arena arena;
     protected final Location loc;
-    protected final FileConfiguration FILE = Settings.getSettings().getArenaFile();
 
     // Just creates a PaintballLocation
     public PaintballLocation(Arena a, Location loc) {
@@ -21,7 +22,7 @@ public abstract class PaintballLocation {
         this.loc = loc;
     }
 
-    // Creates a PaintballLocation from a path
+    // Creates a PaintballLocation from a path (Does not set anything in arenas.yml, just gets it)
     public PaintballLocation(Arena a, String locationFromFile) {
         String[] rawLocation = locationFromFile.split(",");
         // TODO: replace world with rawLocation[0]
@@ -29,6 +30,7 @@ public abstract class PaintballLocation {
         this.arena = a;
         this.loc = location;
     }
+
 
     public Location getLocation() {
         return loc;
@@ -43,4 +45,6 @@ public abstract class PaintballLocation {
         // Override for sign TODO
         return loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch();
     }
+
+    protected abstract void setLocation();
 }
