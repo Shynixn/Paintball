@@ -3,6 +3,7 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
+import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -17,6 +18,7 @@ import static org.bukkit.ChatColor.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,7 +47,9 @@ public class Arena {
     private Map<Team, Integer> teams = new HashMap<>();
 
     // Current state of the arena
-    ArenaState state = ArenaState.NOT_SETUP;
+    private ArenaState state = ArenaState.NOT_SETUP;
+
+    private Map<Location, SignLocation> signLocations = new HashMap<>();
 
     public enum ArenaState {
         NOT_SETUP,
@@ -247,6 +251,12 @@ public class Arena {
 
     // Loads all the arenas values from arenas.yml into memory, sets isMinSet, isMaxSet, isEnabled, and isSpectateSet
     public void loadValues() {
+        //  Puts all the Signs from arenas.yml into memory
+        for (String rawLocation : FILE.getStringList(this.getPath() + "Join")) {
+            SignLocation signLoc = new SignLocation(this, rawLocation);
+            signLocations.put(signLoc.getLocation(), signLoc);
+        }
+
         // TODO: add things from config.yml like time etc if they aren't defaulted
         if (isSetup() && isEnabled()) {
             state = ArenaState.WAITING;
@@ -255,6 +265,36 @@ public class Arena {
                 state = ArenaState.DISABLED;
             }
         }
+    }
+
+    public void updateSigns() {
+        String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
+        for (SignLocation signLoc : getSignLocations().values()) {
+            Location loc = signLoc.getLocation();
+            if (!(loc.getBlock().getState() instanceof Sign)) {
+                signLoc.removeSign();
+                return;
+            }
+            Sign sign = (Sign) loc.getBlock().getState();
+
+            sign.setLine(0, prefix); // in case the prefix changes
+            sign.setLine(1, getName()); // in case they rename it
+            sign.setLine(2, getStateAsString());
+            sign.setLine(3, (getState() == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "": getState() == ArenaState.IN_PROGRESS || getState() == ArenaState.STARTING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
+            sign.update();
+        }
+    }
+
+    public Map<Location, SignLocation> getSignLocations() {
+        return signLocations;
+    }
+
+    public void addSignLocation(SignLocation signLoc) {
+        signLocations.put(signLoc.getLocation(), signLoc);
+    }
+
+    public void removeSignLocation(SignLocation signLoc) {
+        signLocations.remove(signLoc.getLocation(), signLoc);
     }
 
     // Force start/stop this arena. It has to have enough player, be setup and enabled, and not be in progress

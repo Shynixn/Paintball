@@ -46,7 +46,6 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             public void run() {
                 ArenaManager.getArenaManager().updateAllSignsOnServer();
                 Paintball.this.bungeeUpdateSigns();
-                System.out.println(Settings.SIGN_UPDATE_TIME);
             }
         }, 0L, (long) Settings.SIGN_UPDATE_TIME);
     }

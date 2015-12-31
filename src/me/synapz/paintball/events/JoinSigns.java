@@ -120,31 +120,38 @@ public class JoinSigns implements Listener {
     }
 
     @EventHandler
-    public void onLobbySignBreak(BlockBreakEvent e) {
-        // paintball.sign.destroy
-        if (!(e.getBlock().getType() == Material.SIGN) && !(e.getBlock().getType() == Material.SIGN_POST)) return;
-        Sign sign = (Sign) e.getBlock().getState();
+    public void onSignBreak(BlockBreakEvent e) {
+        // Check to make sure it is a sign
+        try {
+            Sign sign = (Sign) e.getBlock().getState();
+            sign.getType();
+        } catch (ClassCastException exc) {
+            return;
+        }
 
-        if (!sign.getLine(0).contains("Paintball")) return;
-        // todo: replace with other permission validator
         if (!e.getPlayer().hasPermission("paintball.sign.destroy"))
             Message.getMessenger().msg(e.getPlayer(), false, RED, "You do not have permission to destroy Paintball signs!");
-        // make sure it is a join sign and not a auto-join sign by making sure it has an Arena state
-        boolean joinSign = false;
-        for (ArenaState state : ArenaState.values()) {
-            if (sign.getLine(2).contains(state.toString())) {
-                joinSign = true;
+
+
+        Sign sign = (Sign) e.getBlock().getState();
+        SignLocation autoJoinOrLbsign = ArenaManager.getArenaManager().getSigns().get(sign.getLocation());
+
+        if (autoJoinOrLbsign != null) {
+            if (autoJoinOrLbsign.getType() == SignLocation.SignLocations.LEADERBOARD) {
+                Message.getMessenger().msg(e.getPlayer(), false, GREEN, "Leaderboard sign has been successfully removed!");
+            } else {
+                Message.getMessenger().msg(e.getPlayer(), false, GREEN, "Autojoin sign has been successfully removed!");
+            }
+            autoJoinOrLbsign.removeSign();
+        } else {
+            Arena a = ArenaManager.getArenaManager().getArena(sign.getLine(1));
+            if (a != null) {
+                a.getSignLocations().get(sign.getLocation()).removeSign();
+                Message.getMessenger().msg(e.getPlayer(), false, GREEN, a + "'s join sign has been successfully removed!");
             }
         }
+        // todo: replace with other permission validator
 
-        if (joinSign) {
-            Arena a = ArenaManager.getArenaManager().getArena(sign.getLine(1));
-            new SignLocation(a, sign.getLocation(), SignLocation.SignLocations.JOIN).removeSign();
-            Message.getMessenger().msg(e.getPlayer(), false, GREEN, a + "'s join sign has been successfully removed!");
-        } else {
-            new SignLocation(sign.getLocation(), SignLocation.SignLocations.AUTOJOIN).removeSign();
-            Message.getMessenger().msg(e.getPlayer(), false, GREEN, "Autojoin sign has been successfully removed!");
-        }
         // TODO: add leaderboard and autojoin signs
     }
 }

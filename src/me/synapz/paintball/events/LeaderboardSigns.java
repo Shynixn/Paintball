@@ -80,21 +80,6 @@ public class LeaderboardSigns implements Listener {
     }
 
     @EventHandler
-    public void onLeaderboardBreak(BlockBreakEvent e) {
-        // paintball.sign.destroy
-        if (!(e.getBlock().getType() == Material.SIGN) && !(e.getBlock().getType() == Material.SIGN_POST)) return;
-        Sign sign = (Sign) e.getBlock().getState();
-
-        if (!(StatType.valueOf(sign.getLine(2)) != null)) return; // checks if the 3rd line is a stat type
-        // todo: replace with other permission validator
-        if (!e.getPlayer().hasPermission("paintball.sign.destroy"))
-            Message.getMessenger().msg(e.getPlayer(), false, RED, "You do not have permission to destroy Paintball signs!");
-
-        new SignLocation(sign.getLocation(), SignLocation.SignLocations.LEADERBOARD).removeSign();
-        Message.getMessenger().msg(e.getPlayer(), false, GREEN, " Leaderboard sign has been successfully removed!");
-    }
-
-    @EventHandler
     public void onLeaderboardSignclick(PlayerInteractEvent e) {
         if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN) return;
         if (!(e.getClickedBlock().getState() instanceof Sign)) return;

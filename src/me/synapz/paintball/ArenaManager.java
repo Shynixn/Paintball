@@ -7,9 +7,7 @@ import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 
 import static me.synapz.paintball.storage.Settings.THEME;
-import static me.synapz.paintball.storage.Settings.getSettings;
 import static org.bukkit.ChatColor.*;
-import static me.synapz.paintball.Arena.*;
 import static me.synapz.paintball.locations.SignLocation.*;
 
 import org.bukkit.ChatColor;
@@ -18,10 +16,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ArenaManager {
 
@@ -36,9 +31,12 @@ public class ArenaManager {
         return instance;
     }
 
+    private Map<Location, SignLocation> leaderboardAndJoinSigns = new HashMap<>();
+
     // Sets up arenas
     public void setup() {
         loadArenas();
+        loadSigns();
     }
 
     // Gets an arena from a name
@@ -152,66 +150,66 @@ public class ArenaManager {
 
     // Updates every type of sign (Leaderboard, Join, Autojoin)
     public void updateAllSignsOnServer() {
-        List<String> leaderboards = getSettings().getArenaFile().getStringList("Signs.Leaderboard");
-        List<String> autojoins = getSettings().getArenaFile().getStringList("Signs.Autojoin");
+        long start = System.currentTimeMillis();
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
 
-        for (String rawSignLoc : leaderboards) {
-            SignLocation signLoc = new SignLocation(SignLocations.LEADERBOARD, rawSignLoc);
-            Location location = signLoc.getLocation();
-
-            if (!(location.getBlock().getState() instanceof Sign)) {
-                signLoc.removeSign();
-                return;
-            }
-
-            Sign sign = (Sign) location.getBlock().getState();
-            // TODO: better way
-            StatType type = null;
-            for (StatType t : StatType.values()) {
-                if (t.getSignName().equalsIgnoreCase(sign.getLine(2))) {
-                    type = t;
-                }
-            }
-            HashMap<String, String> playerAndStat = Settings.getSettings().getCache().getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
-            sign.setLine(1, playerAndStat.keySet().toArray()[0] + "");
-            sign.setLine(3, playerAndStat.values().toArray()[0] + "");
-            sign.update();
-        }
-
-        for (String rawSignLoc : autojoins) {
-            SignLocation signLoc = new SignLocation(SignLocations.AUTOJOIN, rawSignLoc);
-            Location location = signLoc.getLocation();
-
-            if (!(location.getBlock().getState() instanceof Sign)) {
-                signLoc.removeSign();
-                return;
-            }
-            Sign sign = (Sign) location.getBlock().getState();
-            sign.setLine(0, prefix); // in case the prefix changes
-            sign.update();
-        }
-
         for (Arena a : getArenas().values()) {
-            List<String> joins = getSettings().getArenaFile().getStringList(a.getPath() + "Join");
+            a.updateSigns();
+        }
 
-            for (String rawSignLoc : joins) {
-                SignLocation signLoc = new SignLocation(a, rawSignLoc);
-                Location location = signLoc.getLocation();
-
-                if (!(location.getBlock().getState() instanceof Sign)) {
-                    signLoc.removeSign();
-                    return;
-                }
-
-                Sign sign = (Sign) location.getBlock().getState();
-
-                sign.setLine(0, prefix); // in case the prefix changes
-                sign.setLine(1, a.getName()); // in case they rename it
-                sign.setLine(2, a.getStateAsString());
-                sign.setLine(3, (a.getState() == Arena.ArenaState.WAITING ? a.getLobbyPlayers().size() + "": a.getState() == ArenaState.IN_PROGRESS || a.getState() == ArenaState.STARTING ? a.getAllArenaPlayers().size() + "" : "0") + "/" + a.getMax());
-                sign.update();
+        for (SignLocation signLoc : leaderboardAndJoinSigns.values()) {
+            if (!(signLoc.getLocation().getBlock().getState() instanceof Sign)) {
+                signLoc.removeSign();
+                return;
             }
+
+            Sign sign = (Sign) signLoc.getLocation().getBlock().getState();
+            switch (signLoc.getType()) {
+                case AUTOJOIN:
+                    sign.setLine(0, prefix); // in case the prefix changes
+                    sign.update();
+                    break;
+                case LEADERBOARD:
+                    // TODO: better way
+                    StatType type = null;
+                    for (StatType t : StatType.values()) {
+                        if (t.getSignName().equalsIgnoreCase(sign.getLine(2))) {
+                            type = t;
+                        }
+                    }
+                    HashMap<String, String> playerAndStat = Settings.getSettings().getCache().getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+                    sign.setLine(1, playerAndStat.keySet().toArray()[0] + "");
+                    sign.setLine(3, playerAndStat.values().toArray()[0] + "");
+                    sign.update();
+                    break;
+                default:
+                    break; // should never happen
+            }
+        }
+    }
+
+    public void addSign(SignLocation signLoc) {
+        leaderboardAndJoinSigns.put(signLoc.getLocation(), signLoc);
+    }
+
+    public void removeSign(SignLocation signLoc) {
+        leaderboardAndJoinSigns.remove(signLoc.getLocation(), signLoc);
+    }
+
+    public Map<Location, SignLocation> getSigns() {
+        return leaderboardAndJoinSigns;
+    }
+
+    private void loadSigns() {
+        FileConfiguration file = Settings.getSettings().getArenaFile();
+        for (String rawLoc : file.getStringList("Signs.Autojoin")) {
+            SignLocation signLoc = new SignLocation(SignLocations.AUTOJOIN, rawLoc);
+            leaderboardAndJoinSigns.put(signLoc.getLocation(), signLoc);
+        }
+
+        for (String rawLoc : file.getStringList("Signs.Leaderboard")) {
+            SignLocation signLoc = new SignLocation(SignLocations.LEADERBOARD, rawLoc);
+            leaderboardAndJoinSigns.put(signLoc.getLocation(), signLoc);
         }
     }
 }

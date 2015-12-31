@@ -1,6 +1,7 @@
 package me.synapz.paintball.locations;
 
 import me.synapz.paintball.Arena;
+import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Location;
 
@@ -27,9 +28,8 @@ public final class SignLocation extends PaintballLocation {
         this.type = type;
 
         setLocation();
+        arena.addSignLocation(this);
     }
-
-
 
     public SignLocation(Arena arena, String rawLocation) {
         super(arena, rawLocation);
@@ -47,6 +47,7 @@ public final class SignLocation extends PaintballLocation {
         this.type = type;
 
         setLocation();
+        ArenaManager.getArenaManager().addSign(this);
     }
 
     public SignLocations getType() {
@@ -55,7 +56,15 @@ public final class SignLocation extends PaintballLocation {
 
     // Remove a sign location from arenas.yml
     public void removeSign() {
-        String path = type == SignLocations.LEADERBOARD || type == SignLocations.AUTOJOIN ? "Signs." + type.toString() : arena.getPath() + type.toString();
+        String path;
+
+        if (type == SignLocations.LEADERBOARD || type == SignLocations.AUTOJOIN) {
+            path = "Signs." + type.toString();
+            ArenaManager.getArenaManager().removeSign(this);
+        } else {
+            path = arena.getPath() + type.toString();
+            arena.removeSignLocation(this);
+        }
         List<String> signsList = Settings.getSettings().getArenaFile().getStringList(path);
 
         if (signsList == null || !(signsList.contains(super.toString()))) {
