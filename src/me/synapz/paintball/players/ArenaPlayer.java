@@ -5,6 +5,7 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
@@ -93,12 +94,14 @@ public final class ArenaPlayer extends PaintballPlayer {
     }
 
     public void giveShop() {
-        Inventory inv = Bukkit.createInventory(null, 9, ChatColor.GOLD + "KillCoin Shop");
         // TODO: add bunch of cool stuff with settings menu to disable, set cost, permission etc.
         // TODO: add permission to be able to access KillCoin Shop
-        player.openInventory(inv);
+        KillCoinItemHandler.getHandler().showInventory(this);
     }
 
+    public int getKillCoins() {
+        return killCoins;
+    }
     // This will look into config.yml for the arena, if the time or kills is reached, they reahced the goal
     private boolean reachedGoal() {
         return arena.MAX_SCORE == arena.getTeamScore(team);

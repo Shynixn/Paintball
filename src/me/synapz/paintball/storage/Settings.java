@@ -5,6 +5,7 @@ import me.synapz.paintball.Arena;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Utils;
+import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -96,6 +97,7 @@ public class Settings {
         pb.reloadConfig();
         loadValues(pb.getConfig(), pb.getDescription());
         arena = YamlConfiguration.loadConfiguration(aFile);
+        KillCoinItemHandler.getHandler().loadItemsFromConfig();
     }
 
     public void saveArenaFile() {

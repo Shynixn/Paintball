@@ -57,8 +57,28 @@ Teams:
    e: "Yellow"
    f: "White"
 
+# These are the default items which will be added to shop
+# You can make more KillCoinItems through the small API, with directions on plugin page #TODO plugin page here
+Kill-Coin-Shop:
+  double-snow-ball-shooter:
+    # The name of the item (Supports chat colors &1,&2 etc)
+    name: "&6Double Paintball Shooter"
+    # The description of what the item does (Supports chat colors)
+    description: "&7Shoots two Paintballs at a time!"
+    # Weather or not to require permission: "paintball.shop.doublesnowballs"
+    require-permission: false
+    # amount given of this item do not put greater than 64 # TODO: allow greater than 64
+    amount: 1
+    expiration-time: -1 # Time, in seconds, until item expires, -1 for no expiration
+    # Money required to buy this item, money will be removed
+    # *Requires Vault and vault: true*
+    money: 20
+    # KillCoins required to buy this item
+    kill-coins: 2
+    # Will not show the item at all in KillCoins shop
+    shown: true
 
-# If you have TitleAPI plugin installed and it is true in config, the countdown will be  also shown in the middle of the screen and chat
+# If you have TitleAPI plugin installed and it is true in config, the countdown will be also shown in the middle of the screen and chat
 countdown:
    # Lobby countdown configuration - when the minimum amount of players is reached, a timer will begin on when to move
    # players from lobby to their team's spawnpoints
