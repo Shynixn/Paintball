@@ -7,6 +7,7 @@ import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -29,8 +30,10 @@ public class KillCoinItem extends ItemStack {
     private final int expirationTime;
     private final String permission;
     private final boolean showItem;
+    private final boolean configItem;
+    private final String type;
 
-    public KillCoinItem(@NotNull Material material, @NotNull String name, @Nullable String description, @Nullable double money, @Nullable int killcoins, @Nullable int expirationTime, @Nullable String permission, @NotNull int amount, @NotNull boolean showItem) {
+    public KillCoinItem(@NotNull Material material, @NotNull String name, @Nullable String description, @NotNull double money, @NotNull int killcoins, @Nullable int expirationTime, @Nullable String permission, @NotNull int amount, @NotNull boolean showItem) {
         super(material, amount);
         this.name = name;
         this.description = description;
@@ -39,13 +42,15 @@ public class KillCoinItem extends ItemStack {
         this.expirationTime = expirationTime;
         this.permission = permission;
         this.showItem = showItem;
+        this.configItem = false;
+        this.type = "";
 
         KillCoinItemHandler.getHandler().addItem(this);
     }
 
     // Creates a KillCoinItem from config.yml based on a rawItem
     public KillCoinItem(String path, FileConfiguration file) {
-        super(Material.valueOf(file.getString(path + ".material")), file.getInt(path + ".amount")); // TODO: make material come from config.yml
+        super(Material.valueOf(file.getString(path + ".material")), file.getInt(path + ".amount"));
         this.name = file.getString(path + ".name");
         this.description = file.getString(path + ".description");
         this.money = file.getDouble(path + ".money");
@@ -53,6 +58,8 @@ public class KillCoinItem extends ItemStack {
         this.expirationTime = file.getInt(path + ".expiration-time");
         this.permission = file.getString(path + ".permission-required");
         this.showItem = file.getBoolean(path + ".shown");
+        this.configItem = true;
+        this.type = file.getString(path + ".type");
 
         KillCoinItemHandler.getHandler().addItem(this);
     }
@@ -123,8 +130,8 @@ public class KillCoinItem extends ItemStack {
         if (this.hasPermission() && !player.getPlayer().hasPermission(permission)) {
             builder.append("You don't have permission to use this item!");
         } else {
-            //if (player.getKillCoins() < this.getKillCoins())
-              //  builder.append("You don't have enough KillCoins ");
+            if (player.getKillCoins() < this.getKillCoins())
+            builder.append("You don't have enough KillCoins ");
 
             // if (arenaPlayer.getMoney() < getMoney() // TODO: import Vault for this
             // builder.append(", Money");
@@ -141,8 +148,18 @@ public class KillCoinItem extends ItemStack {
         playerToGetItem.getPlayer().getInventory().addItem(this);
     }
 
+    public String getItemType() {
+        return type;
+    }
+
+    public void onClickItem(PlayerInteractEvent event) {}
+
     public boolean hasError(ArenaPlayer player) {
         return !(getError(player) == null);
+    }
+
+    public boolean hasType() {
+        return configItem;
     }
 
     public boolean showItem() {

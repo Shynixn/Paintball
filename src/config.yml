@@ -61,6 +61,9 @@ Teams:
 # You can make more KillCoinItems through the small API, with directions on plugin page #TODO plugin page here
 Kill-Coin-Shop:
   double-snow-ball-shooter:
+    # The type of the KillCoin item, avaiable types: double_shooter, TODO: more types
+    # You are only limited to the default types unless you make more using the API
+    type: double_shooter
     # The name of the item (Supports chat colors &1,&2 etc)
     name: "&6Double Paintball Shooter"
     # The material for the item for a list of materials look at: TOOD: list of materials here
@@ -71,13 +74,14 @@ Kill-Coin-Shop:
     permission-required: "paintball.shop.doubleshooter"
     # amount given of this item do not put greater than 64 # TODO: allow greater than 64
     amount: 1
-    expiration-time: -1 # Time, in seconds, until item expires, -1 for no expiration
-    # Money required to buy this item, money will be removed
+    # Time, in seconds, until item expires, 0 for no expiration
+    expiration-time: 0
+    # Money that will be spent for the item
     # *Requires Vault and vault: true*
     money: 20
-    # KillCoins required to buy this item
+    # KillCoins that will be spend for the item
     killcoins: 2
-    # Will not show the item at all in KillCoins shop
+    # Weather or not the item will be shown in the KillCoin Shop
     shown: true
 
 # If you have TitleAPI plugin installed and it is true in config, the countdown will be also shown in the middle of the screen and chat
