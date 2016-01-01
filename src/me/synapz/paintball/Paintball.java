@@ -31,7 +31,6 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         ArenaManager.getArenaManager().setup();
         CommandManager commandManager = new CommandManager();
         commandManager.init();
-        KillCoinItemHandler.getHandler().loadItemsFromConfig();
 
         Bukkit.getServer().getPluginManager().registerEvents(new PaintballShoot(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);

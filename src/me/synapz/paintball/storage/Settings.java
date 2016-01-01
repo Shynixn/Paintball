@@ -97,7 +97,6 @@ public class Settings {
         pb.reloadConfig();
         loadValues(pb.getConfig(), pb.getDescription());
         arena = YamlConfiguration.loadConfiguration(aFile);
-        KillCoinItemHandler.getHandler().loadItemsFromConfig();
     }
 
     public void saveArenaFile() {
@@ -173,10 +172,11 @@ public class Settings {
         SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.spectator-chat"));
         ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.arena-chat"));
         loadSQL();
+        KillCoinItemHandler.getHandler().loadItemsFromConfig(pb.getConfig());
     }
 
     public FileConfiguration getConfig() {
-        return this.pb.getConfig();
+        return pb.getConfig();
     }
 
     private void loadBungee() {

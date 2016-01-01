@@ -63,10 +63,12 @@ Kill-Coin-Shop:
   double-snow-ball-shooter:
     # The name of the item (Supports chat colors &1,&2 etc)
     name: "&6Double Paintball Shooter"
+    # The material for the item for a list of materials look at: TOOD: list of materials here
+    material: "STICK"
     # The description of what the item does (Supports chat colors)
     description: "&7Shoots two Paintballs at a time!"
-    # Weather or not to require permission: "paintball.shop.doublesnowballs"
-    require-permission: false
+    # Permission required to buy item, set to "none" for no permission
+    permission-required: "paintball.shop.doubleshooter"
     # amount given of this item do not put greater than 64 # TODO: allow greater than 64
     amount: 1
     expiration-time: -1 # Time, in seconds, until item expires, -1 for no expiration
@@ -74,7 +76,7 @@ Kill-Coin-Shop:
     # *Requires Vault and vault: true*
     money: 20
     # KillCoins required to buy this item
-    kill-coins: 2
+    killcoins: 2
     # Will not show the item at all in KillCoins shop
     shown: true
 

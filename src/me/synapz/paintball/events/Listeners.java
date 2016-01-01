@@ -136,7 +136,7 @@ public class Listeners implements Listener {
                 Message.getMessenger().msg(player, true, ChatColor.RED, "You are not allowed to move items in your inventory!");
                 e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
-                if (clickedItem.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
+                if (clickedItem != null && clickedItem.hasItemMeta() && clickedItem.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
                     e.setCancelled(true);
                 }
             }
