@@ -64,9 +64,9 @@ Kill-Coin-Shop:
     # The name of the item (Supports chat colors &1,&2 etc)
     name: "&6Double Paintball Shooter"
     # The material for the item for a list of materials look at: TOOD: list of materials here
-    material: "STICK"
-    # The description of what the item does (Supports chat colors)
-    description: "&7Shoots two Paintballs at a time!"
+    material: "SNOW_BALL"
+    # The description of what the item does (Supports chat colors and \n, which will add a new line to the description)
+    description: "&dGives you an extra speed Paintball launcher\n&dthat can shoot two paintballs at a time!"
     # Permission required to buy item, set to "none" for no permission
     permission-required: "paintball.shop.doubleshooter"
     # amount given of this item do not put greater than 64 # TODO: allow greater than 64

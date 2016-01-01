@@ -1,12 +1,17 @@
 package me.synapz.paintball.killcoin;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
+import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KillCoinItem extends ItemStack {
 
@@ -25,7 +30,7 @@ public class KillCoinItem extends ItemStack {
     private final String permission;
     private final boolean showItem;
 
-    public KillCoinItem(Material material, String name, String description, double money, int killcoins, int expirationTime, String permission, int amount, boolean showItem) {
+    public KillCoinItem(@NotNull Material material, @NotNull String name, @Nullable String description, @Nullable double money, @Nullable int killcoins, @Nullable int expirationTime, @Nullable String permission, @NotNull int amount, @NotNull boolean showItem) {
         super(material, amount);
         this.name = name;
         this.description = description;
@@ -40,7 +45,7 @@ public class KillCoinItem extends ItemStack {
 
     // Creates a KillCoinItem from config.yml based on a rawItem
     public KillCoinItem(String path, FileConfiguration file) {
-        super(Material.valueOf("STICK"), file.getInt(path + ".amount")); // TODO: make material come from config.yml
+        super(Material.valueOf(file.getString(path + ".material")), file.getInt(path + ".amount")); // TODO: make material come from config.yml
         this.name = file.getString(path + ".name");
         this.description = file.getString(path + ".description");
         this.money = file.getDouble(path + ".money");
@@ -74,6 +79,70 @@ public class KillCoinItem extends ItemStack {
 
     public String getPermission() {
         return permission;
+    }
+
+    public ItemStack getItemStack(ArenaPlayer arenaPlayer) {
+        ItemMeta meta = this.getItemMeta();
+        List<String> newLore = new ArrayList<String>();
+
+        if (!this.showItem()) {
+            return null;
+        }
+
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.getItemName()));
+
+        if (hasDescription()) {
+            String[] description = getDescription().split("\n");
+            for (int i = 0; i < description.length; i++) {
+                newLore.add((i == 0 ? Settings.THEME + "Description: " : "") + Settings.SECONDARY + ChatColor.translateAlternateColorCodes('&', description[i]));
+            }
+        }
+
+        if (hasExpirationTime()) {
+            newLore.add(Settings.THEME + "Lasts: " + Settings.SECONDARY + getExpirationTime() + Settings.THEME + " seconds");
+        }
+
+        if (requiresMoney())
+            newLore.add(Settings.THEME + "Cost: " + Settings.SECONDARY + getMoney()); // todo: implement currency so $amount
+
+        if (requiresKillCoins())
+            newLore.add(Settings.THEME + "KillCoins: " + Settings.SECONDARY + getKillCoins());
+
+        String error = getError(arenaPlayer);
+        if (this.hasError(arenaPlayer))
+            newLore.add(ChatColor.RED + "" + ChatColor.ITALIC + error);
+
+        meta.setLore(newLore);
+        this.setItemMeta(meta);
+        return this;
+    }
+
+    public String getError(ArenaPlayer player) {
+        StringBuilder builder = new StringBuilder();
+
+        if (this.hasPermission() && !player.getPlayer().hasPermission(permission)) {
+            builder.append("You don't have permission to use this item!");
+        } else {
+            //if (player.getKillCoins() < this.getKillCoins())
+              //  builder.append("You don't have enough KillCoins ");
+
+            // if (arenaPlayer.getMoney() < getMoney() // TODO: import Vault for this
+            // builder.append(", Money");
+        }
+
+        if (!builder.toString().isEmpty()) {
+            return builder.toString();
+        } else {
+            return null;
+        }
+    }
+
+    public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
+        playerToGetItem.getPlayer().getInventory().addItem(this);
+    }
+
+    public boolean hasError(ArenaPlayer player) {
+        return !(getError(player) == null);
     }
 
     public boolean showItem() {

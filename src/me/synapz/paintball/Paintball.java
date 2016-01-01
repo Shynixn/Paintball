@@ -5,6 +5,7 @@ import com.google.common.io.ByteStreams;
 import me.synapz.paintball.commands.CommandManager;
 import me.synapz.paintball.events.*;
 import me.synapz.paintball.killcoin.KillCoinItemHandler;
+import me.synapz.paintball.killcoin.KillCoinListeners;
 import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
@@ -37,6 +38,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ChatSystem(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new LeaderboardSigns(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new KillCoinListeners(), this);
         Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "PaintBall", this);
         Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, "PaintBall");
 
