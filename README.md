@@ -40,6 +40,7 @@
 * Kits
 * Scoreboard Support?
 * SkyText Support (http://dev.bukkit.org/bukkit-plugins/skytext/)
+* Minema Recording of Paintball to feature on plugin page
 
 ###Bugs
 Bugs
