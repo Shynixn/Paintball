@@ -2,6 +2,8 @@ package me.synapz.paintball.killcoin;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import me.synapz.paintball.ExpirationTime;
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
@@ -10,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +67,19 @@ public class KillCoinItem extends ItemStack {
         KillCoinItemHandler.getHandler().addItem(this);
     }
 
+    private KillCoinItem(KillCoinItem item) {
+        super(item);
+        this.name = item.getItemName();
+        this.description = item.getDescription();
+        this.money = item.getMoney();
+        this.killcoins = item.getKillCoins();
+        this.expirationTime = item.getExpirationTime();
+        this.permission = item.getPermission();
+        this.showItem = item.showItem();
+        this.configItem = item.hasType();
+        this.type = item.getItemType();
+    }
+
     public String getItemName() {
         return name;
     }
@@ -88,7 +104,7 @@ public class KillCoinItem extends ItemStack {
         return permission;
     }
 
-    public ItemStack getItemStack(ArenaPlayer arenaPlayer) {
+    public KillCoinItem getItemStack(ArenaPlayer arenaPlayer) {
         ItemMeta meta = this.getItemMeta();
         List<String> newLore = new ArrayList<String>();
 
@@ -106,7 +122,7 @@ public class KillCoinItem extends ItemStack {
         }
 
         if (hasExpirationTime()) {
-            newLore.add(Settings.THEME + "Lasts: " + Settings.SECONDARY + getExpirationTime() + Settings.THEME + " seconds");
+            newLore.add(Settings.THEME + "Lasts: " + Settings.SECONDARY + (getExpirationTime() > 60 ? getExpirationTime()/60 : getExpirationTime()) + Settings.THEME + (getExpirationTime() > 60 ? " minutes" : " seconds"));
         }
 
         if (requiresMoney())
@@ -145,7 +161,11 @@ public class KillCoinItem extends ItemStack {
     }
 
     public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
-        playerToGetItem.getPlayer().getInventory().addItem(this);
+        ItemStack item = new ItemStack(this.getItemStack(playerToGetItem));
+        if (this.hasExpirationTime()) {
+            new ExpirationTime(item, playerToGetItem, getExpirationTime()).runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 20);
+        }
+        playerToGetItem.getPlayer().getInventory().addItem(item);
     }
 
     public String getItemType() {

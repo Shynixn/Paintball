@@ -73,7 +73,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         You can set KillCoins, expiration time, or money to 0 to remove requiring it
         You can also set permission, or description safely to null in order to remove a description or required permission
          */
-        new KillCoinItem(Material.DIAMOND_AXE, "Jumper", "Gives you the ability to jump\n5 blocks up!", 0, 10, 300, "paintball.item.sneaker", 1, true) {
+        new KillCoinItem(Material.DIAMOND_AXE, "Jumper", "Gives you the ability to jump\n5 blocks up!", 0, 0, 300, "paintball.item.sneaker", 1, true) {
             /*
             Whenever this item is right clicked, the player is teleported up 5 blocks by adding 5 to the Y
              */

@@ -98,7 +98,7 @@ public class Listeners implements Listener {
                 ArenaPlayer arenaPlayer = (ArenaPlayer) gamePlayer;
 
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (item.getType() == Material.DOUBLE_PLANT && item.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
+                    if (item != null && item.getType() == Material.DOUBLE_PLANT && item.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
                         arenaPlayer.giveShop();
                     } else if (item.hasItemMeta() && item.getItemMeta().getDisplayName().contains("Paintball")) { // paintball item
                         arenaPlayer.shoot(e);

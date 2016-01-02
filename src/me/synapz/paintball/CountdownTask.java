@@ -39,7 +39,6 @@ public class CountdownTask extends BukkitRunnable {
     @Override
     public void run() {
         if (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS && a.getState() != Arena.ArenaState.STARTING) {
-            System.out.println("Canceling...");
             this.cancel();
         }
         if (counter <= 0) {

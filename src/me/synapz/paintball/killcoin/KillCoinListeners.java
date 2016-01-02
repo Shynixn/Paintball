@@ -3,6 +3,7 @@ package me.synapz.paintball.killcoin;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Message;
+import me.synapz.paintball.enums.KillcoinTypes;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -38,6 +39,9 @@ public class KillCoinListeners implements Listener {
         KillCoinItem killCoinItem = KillCoinItemHandler.getHandler().getAllItems().get(item.getItemMeta().getDisplayName());
 
         if (killCoinItem == null)
+            return;
+
+        if (!e.getInventory().getName().contains("KillCoin Shop"))
             return;
 
         if (killCoinItem.hasError(arenaPlayer)) {
@@ -77,9 +81,14 @@ public class KillCoinListeners implements Listener {
             return;
 
         if (killCoinItem.hasType()) {
-            String type = killCoinItem.getItemType();
+            KillcoinTypes type = KillcoinTypes.valueOf(killCoinItem.getItemType());
 
-            
+            // TODO: check if null
+            switch (type) {
+                case DOUBLE_SHOOTER:
+                    System.out.println("test");
+                    break;
+            }
         } else {
             killCoinItem.onClickItem(e);
         }
