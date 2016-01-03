@@ -4,7 +4,7 @@ description: Paintball Minigame
 authors: [Synapz_, dart2112]
 main: me.synapz.paintball.Paintball
 website: NotAdded2Spigot.yet/sorry
-softdepend: [TitleAPI]
+softdepend: [TitleAPI, Vault, ActionBarAPI]
 
 commands:
    paintball:

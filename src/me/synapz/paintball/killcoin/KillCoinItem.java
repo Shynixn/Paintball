@@ -161,11 +161,11 @@ public class KillCoinItem extends ItemStack {
     }
 
     public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
-        ItemStack item = new ItemStack(this.getItemStack(playerToGetItem));
+        KillCoinItem itemToGive = new KillCoinItem(this);
         if (this.hasExpirationTime()) {
-            new ExpirationTime(item, playerToGetItem, getExpirationTime()).runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 20);
+            new ExpirationTime(itemToGive, playerToGetItem, getExpirationTime()).runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 10);
         }
-        playerToGetItem.getPlayer().getInventory().addItem(item);
+        playerToGetItem.getPlayer().getInventory().addItem(itemToGive);
     }
 
     public String getItemType() {
