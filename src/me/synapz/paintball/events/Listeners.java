@@ -2,13 +2,17 @@ package me.synapz.paintball.events;
 
 import me.synapz.paintball.*;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.players.SpectatorPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -17,16 +21,19 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Colorable;
 import org.bukkit.material.Wool;
+import org.bukkit.projectiles.ProjectileSource;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
 import static me.synapz.paintball.storage.Settings.THEME;
@@ -70,7 +77,7 @@ public class Listeners implements Listener {
             if (gamePlayer instanceof LobbyPlayer) {
                 LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (item.hasItemMeta() && item.getItemMeta().getDisplayName().contains("Join")) { // check to make sure it is a team changing object
+                    if (item != null && item.hasItemMeta() && item.getItemMeta().getDisplayName().contains("Join")) { // check to make sure it is a team changing object
                         for (Team t : a.getArenaTeamList()) {
                             if (item.getItemMeta().getDisplayName().contains(t.getTitleName())) {
                                 if (!t.isFull()) {
@@ -100,9 +107,10 @@ public class Listeners implements Listener {
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     if (item != null && item.getType() == Material.DOUBLE_PLANT && item.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
                         arenaPlayer.giveShop();
-                    } else if (item.hasItemMeta() && item.getItemMeta().getDisplayName().contains("Paintball")) { // paintball item
-                        arenaPlayer.shoot(e);
+                        e.setCancelled(true);
+                        return;
                     }
+                    arenaPlayer.shoot(e); // paintball item
                 }
             }
         }
@@ -145,7 +153,7 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onShootItemFromInventoryInArena(PlayerDropItemEvent e) {
-        Player player = (Player) e.getPlayer();
+        Player player = e.getPlayer();
 
         if (isInArena(player)) {
             e.setCancelled(true);
@@ -154,39 +162,61 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onDeathInArena(PlayerDeathEvent e) {
-        Player player = e.getEntity();
-        Player killer = player.getKiller();
+        Player target = e.getEntity();
+        Player source = target.getKiller();
+        if (isInArena(target) && isInArena(source)) {
+                e.setDeathMessage("");
+        }
+    }
+
+
+    @EventHandler
+    public void onRespawnInArena(PlayerRespawnEvent e) {
+        Player player = e.getPlayer();
+
         if (isInArena(player)) {
-            Arena a = getArena(player);
-            PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
+            Arena arena = getArena(player);
+            ArenaPlayer arenaPlayer = arena.getPaintballPlayer(player) instanceof ArenaPlayer ? (ArenaPlayer) arena.getPaintballPlayer(player) : null;
 
-            if (gamePlayer instanceof ArenaPlayer) {
-                ArenaPlayer arenaPlayer = (ArenaPlayer) gamePlayer;
-                arenaPlayer.die();
+            if (arenaPlayer == null)
+                return;
 
-                if (isInArena(killer)) {
-                    ArenaPlayer arenaKiller = (ArenaPlayer) a.getPaintballPlayer(killer);
-                    arenaKiller.kill();
-                }
-            }
+            e.setRespawnLocation(arena.getLocation(TeamLocation.TeamLocations.SPAWN, arenaPlayer.getTeam()));
         }
     }
 
     @EventHandler
-    public void onPaintballHit(EntityDamageByEntityEvent e) {
-        Player player = e.getEntity() instanceof Player ? (Player) e.getEntity() : null;
-        Player hitter = e.getDamager() instanceof Player ? (Player) e.getDamager() : null;
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        // TODO: add check to make sure to disallow friendly fire!
+        Snowball snowball = event.getDamager() instanceof Snowball ? (Snowball) event.getDamager() : null;
 
-        if (player == null || hitter == null) {
+        Player hitBySnowball = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
+
+        if (hitBySnowball == null)
             return;
+
+        if (snowball == null) { // if they are hitting and in an arena cancel it
+            if (isInArena(hitBySnowball)) {
+                event.setCancelled(true);
+            }
         }
 
-        if (isInArena(player) && isInArena(hitter)) {
-            Arena a = getArena(hitter);
-            ArenaPlayer arenaPlayer = (ArenaPlayer) a.getPaintballPlayer(hitter);
+        Player source = snowball.getShooter() instanceof Player ? (Player) snowball.getShooter() : null;
 
-            Settings.getSettings().getCache().incrementStat(StatType.HITS, arenaPlayer);
-        }
+        if (source == null && !(isInArena(source) && isInArena(hitBySnowball))) // if the person who was hit by the snowball is null and the source is null and neither of them are in the arena, so cancel
+            return;
+
+        Arena a = getArena(source);
+        ArenaPlayer arenaPlayer = a.getPaintballPlayer(source) instanceof ArenaPlayer ? (ArenaPlayer) a.getPaintballPlayer(source) : null;
+        ArenaPlayer hitPlayer = a.getPaintballPlayer(hitBySnowball) instanceof ArenaPlayer ? (ArenaPlayer) a.getPaintballPlayer(hitBySnowball) : null;
+
+        if (arenaPlayer == null || hitPlayer == null)
+            return;
+
+        Settings.getSettings().getCache().incrementStat(StatType.HITS, arenaPlayer);
+        hitBySnowball.setHealth(0);
+        hitPlayer.die();
+        arenaPlayer.kill(hitPlayer);
     }
 
     @EventHandler

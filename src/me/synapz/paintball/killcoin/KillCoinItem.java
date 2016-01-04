@@ -163,9 +163,19 @@ public class KillCoinItem extends ItemStack {
     public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
         KillCoinItem itemToGive = new KillCoinItem(this);
         if (this.hasExpirationTime()) {
-            new ExpirationTime(itemToGive, playerToGetItem, getExpirationTime()).runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 10);
+            new ExpirationTime(itemToGive, playerToGetItem, getExpirationTime()).runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 10
+            );
         }
         playerToGetItem.getPlayer().getInventory().addItem(itemToGive);
+    }
+
+    public boolean equals(ItemStack itemStack) {
+        if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
+            ItemMeta itemStackMeta = itemStack.getItemMeta();
+            ItemMeta itemMeta = this.getItemMeta();
+            return itemMeta.hasDisplayName() && itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals(itemStackMeta.getDisplayName()) && itemMeta.getLore().equals(itemStackMeta.getLore());
+        }
+        return false;
     }
 
     public String getItemType() {

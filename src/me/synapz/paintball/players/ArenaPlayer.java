@@ -1,9 +1,6 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.Paintball;
-import me.synapz.paintball.Team;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.*;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.locations.TeamLocation;
@@ -12,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
@@ -70,23 +68,21 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     public void die() {
         killStreak = 0;
-        player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team));
         Settings.getSettings().getCache().incrementStat(StatType.DEATHS, this);
     }
 
-    public void kill() {
+    public void kill(ArenaPlayer target) {
         killStreak++;
         killCoins++;
         arena.incrementTeamScore(team);
         Settings.getSettings().getCache().incrementStat(StatType.KILLS, this);
         Settings.getSettings().getCache().incrementStat(StatType.HIGEST_KILL_STREAK, this);
+        arena.broadcastMessage(ChatColor.GREEN, Settings.THEME + player.getName() + " has killed " + target.getPlayer().getName() + ". Team score now " + arena.getTeamScore(team) + "/" + Settings.MAX_SCORE, "");
         // TODO: kill messages
     }
 
     public void shoot(PlayerInteractEvent event) {
-        // TODO: if they hit, increment HITS and add one to killstreak
         Settings.getSettings().getCache().incrementStat(StatType.SHOTS, this);
-        // TODO: switch through each item, do something for each one
         if (reachedGoal()) {
             arena.win(team);
             // TODO: win messages
@@ -104,7 +100,7 @@ public final class ArenaPlayer extends PaintballPlayer {
     }
     // This will look into config.yml for the arena, if the time or kills is reached, they reahced the goal
     private boolean reachedGoal() {
-        return arena.MAX_SCORE == arena.getTeamScore(team);
+        return arena.MAX_SCORE == arena.getTeamScore(team)+1;
     }
 
     private void giveItems() {

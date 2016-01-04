@@ -6,18 +6,27 @@ import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ExpirationTime extends BukkitRunnable {
+
+    private static Map<String, ExpirationTime> times = new HashMap<>();
 
     private final ArenaPlayer arenaPlayer;
     private final Player player;
     private double counter;
     private final KillCoinItem item;
-    private final Inventory inv;
+    private final PlayerInventory inv;
 
     // Creates a new countdown
     public ExpirationTime(KillCoinItem item, ArenaPlayer arenaPlayer, double counter) {
@@ -26,11 +35,13 @@ public class ExpirationTime extends BukkitRunnable {
         this.player = arenaPlayer.getPlayer();
         this.inv = arenaPlayer.getPlayer().getInventory();
         this.item = item;
+
+        times.put(item.getItemMeta().getDisplayName(), this);
     }
 
     @Override
     public void run() {
-        if (arenaPlayer == null || counter <= 0) {
+        if (arenaPlayer == null || counter <= 0 || !containsItemWithName(item.getItemMeta().getDisplayName())) {
             this.cancel();
             return;
         } else {
@@ -39,25 +50,49 @@ public class ExpirationTime extends BukkitRunnable {
         counter -= 0.5; // it isn't 1 bwcause we want this to run every .5 seconds so we can easily update inventories ActionBars faster
     }
 
-    // Overrides cancel so that it cancels the task AND removes the arena from the tasks
+    // Overrides cancel so that it cancels the task AND removes the item from inventory (if it is in the inventory)
     @Override
     public void cancel() {
-        if (arenaPlayer != null) {
-            arenaPlayer.getPlayer().getInventory().remove(item);
+        if (arenaPlayer != null && containsItemWithName(item.getItemMeta().getDisplayName())) {
+            // inv.remove(getItemInInventory(item.getItemMeta().getDisplayName()));
             Message.getMessenger().msg(player, true, ChatColor.RED, Settings.THEME + "Item " + Settings.SECONDARY + ChatColor.stripColor(item.getItemName()) + Settings.THEME + " has expired!");
         }
+        removeActionBar();
+        times.remove(item.getItemMeta().getDisplayName(), item);
         super.cancel();
     }
 
     private void updateItem() {
-        ItemStack itemInHand = player.getItemInHand();
-        if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && itemInHand.getItemMeta().getDisplayName().equals(item.getItemName())) {
+        if (item.equals(inv.getItemInHand()) && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
             // TODO: if actionbar is installed and true in config
-            ActionBarAPI.sendActionBar(player, Settings.THEME + "Expires in: " + Settings.SECONDARY + (int)counter + Settings.THEME + " seconds");
+            if (times.get(inv.getItemInHand().getItemMeta().getDisplayName()).getCounter() == counter) {
+                ActionBarAPI.sendActionBar(player, Settings.THEME + "Expires in: " + Settings.SECONDARY + (int)counter + Settings.THEME + " seconds");
+            }
         } else {
-            ActionBarAPI.sendActionBar(player, "");
+            removeActionBar();
         }
         // TODO: disallow to buy this item 2 times
         // TODO: what if player moves the item?
+    }
+
+    private boolean containsItemWithName(String name) {
+        return getListOfItems().contains(name);
+    }
+
+    private void removeActionBar() {
+        ActionBarAPI.sendActionBar(player, "");
+    }
+
+    private List<String> getListOfItems() {
+        List<String> names = new ArrayList<String>() {{
+            for (ItemStack item : inv.getContents()) {
+                add(item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : "");
+            }
+        }};
+        return names;
+    }
+
+    private double getCounter() {
+        return counter;
     }
 }
