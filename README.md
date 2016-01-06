@@ -33,24 +33,24 @@
 * Designed using Object Oriented principals
     * Allows me to limit bugs, fix them faster, and add more features quicker
 * TitleAPI (1.8+)
+* Kill coins
+    * Earn killcoins per kill to buy items inside the KillCoin Shop
+    * Comes with KillCoin API so you can add your own items to the KillCoin Shop
 
 ###Soon to come features
-* Kill coins (earned per kill/win with a config number per kill/win)
 * Kill coins shop, buy weapons (grenades, snipers, etc)
-* Kits
 * Scoreboard Support?
 * SkyText Support (http://dev.bukkit.org/bukkit-plugins/skytext/)
 * Minema Recording of Paintball to feature on plugin page
+* McStats
+* Add hover information when someone hovers over command to show detailed description
 
 ###Bugs
 Bugs
-- [ ] EasySetupGUI?
 - [ ] no commands in arena
 - [ ] no item drop
 - [ ] what if the spawn is in another world.... and the world isn't loaded
 - [ ] pb stat page
-- [ ] HUD color sometimes doesn’t go back to normal
-- [ ] force leave doesn’t make the other person leave
 - [ ] add config option to stop changing teams
 - [ ] Set multiple spawn points?? /pb arena setspawn red <number>
 - [ ] Leaderboard command /pb leaderboard <stat>
@@ -71,6 +71,7 @@ Bugs
 - [ ] Make arenas.yml file smaller (1 line locations, 1 line values, etc)-- Longer .yml files may lag so this will help to read files faster
 - [ ] Add def to settings and send console error when it can't load
 - [ ] Big bug where if the team and max aren't multiples of each other, the teams won't be evenly distrobuted. Ex: If max is 16 and there are 12 teams, 16/12 = 0.75 which rounds to 1 per team, so the plugin is currently making it 1 per team
+- [ ] force remove doesnt turn signs to waiting
 
 ####KillCoin API
 Paintball has a powerful, built-in, object-oriented API for creating new KillCoins, giving you a higher ability to expand and customize your server.
