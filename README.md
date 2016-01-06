@@ -71,6 +71,7 @@ Bugs
 - [ ] Make arenas.yml file smaller (1 line locations, 1 line values, etc)-- Longer .yml files may lag so this will help to read files faster
 - [ ] Add def to settings and send console error when it can't load
 - [ ] Big bug where if the team and max aren't multiples of each other, the teams won't be evenly distrobuted. Ex: If max is 16 and there are 12 teams, 16/12 = 0.75 which rounds to 1 per team, so the plugin is currently making it 1 per team
+- [ ] force remove doesnt turn signs to waiting
 
 ####KillCoin API
 Paintball has a powerful, built-in, object-oriented API for creating new KillCoins, giving you a higher ability to expand and customize your server.
