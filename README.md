@@ -33,24 +33,24 @@
 * Designed using Object Oriented principals
     * Allows me to limit bugs, fix them faster, and add more features quicker
 * TitleAPI (1.8+)
+* Kill coins
+    * Earn killcoins per kill to buy items inside the KillCoin Shop
+    * Comes with KillCoin API so you can add your own items to the KillCoin Shop
 
 ###Soon to come features
-* Kill coins (earned per kill/win with a config number per kill/win)
 * Kill coins shop, buy weapons (grenades, snipers, etc)
-* Kits
 * Scoreboard Support?
 * SkyText Support (http://dev.bukkit.org/bukkit-plugins/skytext/)
 * Minema Recording of Paintball to feature on plugin page
+* McStats
+* Add hover information when someone hovers over command to show detailed description
 
 ###Bugs
 Bugs
-- [ ] EasySetupGUI?
 - [ ] no commands in arena
 - [ ] no item drop
 - [ ] what if the spawn is in another world.... and the world isn't loaded
 - [ ] pb stat page
-- [ ] HUD color sometimes doesn’t go back to normal
-- [ ] force leave doesn’t make the other person leave
 - [ ] add config option to stop changing teams
 - [ ] Set multiple spawn points?? /pb arena setspawn red <number>
 - [ ] Leaderboard command /pb leaderboard <stat>
