@@ -28,7 +28,6 @@ public class ExpirationTime extends BukkitRunnable {
     private final KillCoinItem item;
     private final PlayerInventory inv;
 
-    // Creates a new countdown
     public ExpirationTime(KillCoinItem item, ArenaPlayer arenaPlayer, double counter) {
         this.counter = counter;
         this.arenaPlayer = arenaPlayer;
@@ -41,7 +40,7 @@ public class ExpirationTime extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (arenaPlayer == null || counter <= 0 || !containsItemWithName(item.getItemMeta().getDisplayName())) {
+        if (arenaPlayer == null || counter <= 0) {
             this.cancel();
             return;
         } else {
@@ -53,7 +52,7 @@ public class ExpirationTime extends BukkitRunnable {
     // Overrides cancel so that it cancels the task AND removes the item from inventory (if it is in the inventory)
     @Override
     public void cancel() {
-        if (arenaPlayer != null && containsItemWithName(item.getItemMeta().getDisplayName())) {
+        if (arenaPlayer != null) {
             // inv.remove(getItemInInventory(item.getItemMeta().getDisplayName()));
             Message.getMessenger().msg(player, true, ChatColor.RED, Settings.THEME + "Item " + Settings.SECONDARY + ChatColor.stripColor(item.getItemName()) + Settings.THEME + " has expired!");
         }
@@ -71,25 +70,10 @@ public class ExpirationTime extends BukkitRunnable {
         } else {
             removeActionBar();
         }
-        // TODO: disallow to buy this item 2 times
-        // TODO: what if player moves the item?
-    }
-
-    private boolean containsItemWithName(String name) {
-        return getListOfItems().contains(name);
     }
 
     private void removeActionBar() {
         ActionBarAPI.sendActionBar(player, "");
-    }
-
-    private List<String> getListOfItems() {
-        List<String> names = new ArrayList<String>() {{
-            for (ItemStack item : inv.getContents()) {
-                add(item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : "");
-            }
-        }};
-        return names;
     }
 
     private double getCounter() {

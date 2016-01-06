@@ -338,6 +338,7 @@ public class Arena {
     
     // Used for server reload and arena force stops, so no messages will be sent
     public void forceRemovePlayers() {
+        state = ArenaState.WAITING;
         for (PaintballPlayer player : allPlayers.values()) {
             player.forceLeaveArena();
         }

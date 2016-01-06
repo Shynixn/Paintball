@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,7 +27,7 @@ public class KillCoinItem extends ItemStack {
     // Expiration Time
     // Permission
 
-    private final String name;
+    private String name;
     private final String description;
     private final double money;
     private final int killcoins;
@@ -80,30 +81,37 @@ public class KillCoinItem extends ItemStack {
         this.type = item.getItemType();
     }
 
+    // Gets the item name
     public String getItemName() {
         return name;
     }
 
+    // Gets the description of the item
     public String getDescription() {
         return description;
     }
 
+    // Gets the money required to buy the item
     public double getMoney() {
         return money;
     }
 
+    // Gets the item's amount of required KIllCoins
     public int getKillCoins() {
         return killcoins;
     }
 
+    // Gets the item's expiration time
     public int getExpirationTime() {
         return expirationTime;
     }
 
+    // Gets the items permission
     public String getPermission() {
         return permission;
     }
 
+    // Sets the values specific to the arena player, then returns the item to be placed in KillCoinShop
     public KillCoinItem getItemStack(ArenaPlayer arenaPlayer) {
         ItemMeta meta = this.getItemMeta();
         List<String> newLore = new ArrayList<String>();
@@ -112,6 +120,7 @@ public class KillCoinItem extends ItemStack {
             return null;
         }
 
+        setItemDisplayName(arenaPlayer.getPlayer().getInventory());
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.getItemName()));
 
         if (hasDescription()) {
@@ -131,15 +140,15 @@ public class KillCoinItem extends ItemStack {
         if (requiresKillCoins())
             newLore.add(Settings.THEME + "KillCoins: " + Settings.SECONDARY + getKillCoins());
 
-        String error = getError(arenaPlayer);
-        if (this.hasError(arenaPlayer))
-            newLore.add(ChatColor.RED + "" + ChatColor.ITALIC + error);
+        if (hasError(arenaPlayer))
+            newLore.add(ChatColor.RED + "" + ChatColor.ITALIC + getError(arenaPlayer));
 
         meta.setLore(newLore);
         this.setItemMeta(meta);
         return this;
     }
 
+    // Gets the error the arena player has (not enough money, permission, or killcoins)
     public String getError(ArenaPlayer player) {
         StringBuilder builder = new StringBuilder();
 
@@ -160,6 +169,7 @@ public class KillCoinItem extends ItemStack {
         }
     }
 
+    // Adds a copy of the KillCoinItem to the player's inventory
     public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
         KillCoinItem itemToGive = new KillCoinItem(this);
         if (this.hasExpirationTime()) {
@@ -169,6 +179,7 @@ public class KillCoinItem extends ItemStack {
         playerToGetItem.getPlayer().getInventory().addItem(itemToGive);
     }
 
+    // Checks to see if this KillCoinItem equals an ItemStack by looking at its name a lore
     public boolean equals(ItemStack itemStack) {
         if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
             ItemMeta itemStackMeta = itemStack.getItemMeta();
@@ -178,41 +189,63 @@ public class KillCoinItem extends ItemStack {
         return false;
     }
 
+    // Gets the type of item TODO: Replace with return of enum
     public String getItemType() {
         return type;
     }
 
+    // The method that gets fired whenever a player clicks on the item
     public void onClickItem(PlayerInteractEvent event) {}
 
+    // If there is an error when adding the item to the inventory (player doesn't have enough killcoins, permission, etc)
     public boolean hasError(ArenaPlayer player) {
         return !(getError(player) == null);
     }
 
+    // Checks to see if this KillCoinItem is a configItem
     public boolean hasType() {
         return configItem;
     }
 
+    // Weather or not to show the item in the inventory
     public boolean showItem() {
         return showItem;
     }
 
+    // Checks to see if the item has a description
     public boolean hasDescription() {
         return !(description.isEmpty());
     }
 
+    // Checks to see if the item has a expiration date
     public boolean hasExpirationTime() {
         return !(expirationTime <= 0);
     }
 
+    // Checks to see if the item requires any money
     public boolean requiresMoney() {
         return !(money <= 0);
     }
 
+    // Checks to see if the item requires any killcoins
     public boolean requiresKillCoins() {
         return !(killcoins <= 0);
     }
 
+    // Checks to see if the player requires any permissions
     public boolean hasPermission() {
         return !(permission.equals("none"));
+    }
+
+    // Important method that if the player has 2 of the same item names in their inventory, will rename this one to the name, with a space so ExpirationTime doesn't get confused on which is which
+    private void setItemDisplayName(PlayerInventory inv) {
+        for (ItemStack item : inv) {
+            if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equals(this.getItemName())) {
+                StringBuilder builder = new StringBuilder(name);
+                builder.append(" ");
+                this.name = builder.toString();
+                return;
+            }
+        }
     }
 }

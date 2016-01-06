@@ -24,46 +24,110 @@ import java.util.Map;
 public class Settings {
 
     // Constants
-    public static int MAX_SCORE, ARENA_TIME, ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL, SIGN_UPDATE_TIME;
-    public static String ARENA_CHAT, SPEC_CHAT;
-    public static String PREFIX, VERSION, THEME, WEBSITE, AUTHOR, SECONDARY;
-    public static boolean BROADCAST_WINNER, COLOR_PLAYER_TITLE, WOOL_HELMET, TITLE_API;
-    public static Map<ChatColor, String> TEAM_NAMES = new HashMap<ChatColor, String>();
-    // SQL and Bungee Stuff
-    // TODO: make these final
-    public static boolean BungeeCord;
-    public static String ServerID;
-    public static boolean SQL;
-    public static String HOST;
+    public static int MAX_SCORE;
+    public static int ARENA_TIME;
+    public static int ARENA_COUNTDOWN;
+    public static int ARENA_INTERVAL;
+    public static int ARENA_NO_INTERVAL;
+    public static int LOBBY_COUNTDOWN;
+    public static int LOBBY_INTERVAL;
+    public static int LOBBY_NO_INTERVAL;
+    public static int SIGN_UPDATE_TIME;
+    public static int CONFIG_VERSION;
     public static int PORT;
+    public static int ROUND_TIME;
+    public static int WIN_WAIT_TIME;
+    public static int KILLCOIN_PER_KILL;
+    public static int KILLCOIN_PER_DEATH;
+    public static int MONEY_PER_KILL;
+    public static int MONEY_PER_DEATH;
+    public static int MONEY_PER_WIN;
+    public static int MONEY_PER_DEFEAT;
+
+    public static String ARENA_CHAT;
+    public static String SPEC_CHAT;
+    public static String PREFIX;
+    public static String VERSION;
+    public static String THEME;
+    public static String WEBSITE;
+    public static String AUTHOR;
+    public static String SECONDARY;
     public static String USERNAME;
     public static String PASSWORD;
     public static String DATABASE;
+    public static String SERVER_ID;
+    public static String HOST;
+
+    public static boolean BROADCAST_WINNER;
+    public static boolean COLOR_PLAYER_TITLE_ARENA;
+    public static boolean WOOL_HELMET;
+    public static boolean TITLE_API;
+    public static boolean VAULT;
+    public static boolean SQL;
+    public static boolean BUNGEE_CORD;
+    public static boolean USE_ARENA_CHAT;
+    public static boolean PER_TEAM_CHAT; // TODO: os doubled in config
+    public static boolean OPEN_KILLCOIN_MENU; // TODO: rename in config
+    public static boolean GIVE_WOOL_HELMET_ARENA;
+    public static boolean GIVE_WOOL_HELMET_LOBBY;
+    public static boolean COLOR_PLAYER_TITLE_LOBBY;
+    public static boolean GIVE_TEAM_SWITCHER;
+
+    public static final Map<ChatColor, String> TEAM_NAMES = new HashMap<ChatColor, String>();
+
+    private void loadSettings() {
+        FileConfiguration config = pb.getConfig();
+        PluginDescriptionFile pluginYML = pb.getDescription();
+
+        VERSION             = pluginYML.getVersion();
+        WEBSITE             = pluginYML.getWebsite();
+        AUTHOR              = pluginYML.getAuthors().toString();
+        PREFIX              = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
+        THEME               = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
+        SECONDARY           = ChatColor.translateAlternateColorCodes('&', config.getString("secondary-color"));
+        CONFIG_VERSION      = config.getInt("version");
+        SIGN_UPDATE_TIME    = config.getInt("sign-update-time");
+        TITLE_API           = config.getBoolean("Options.title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
+        VAULT               = config.getBoolean("Options.vault");
+        SQL                 = config.getBoolean("Options.SQL");
+        LOBBY_COUNTDOWN     = config.getInt("countdown.lobby.countdown");
+        LOBBY_INTERVAL      = config.getInt("countdown.lobby.interval");
+        LOBBY_NO_INTERVAL   = config.getInt("countdown.lobby.no-interval");
+        ARENA_COUNTDOWN     = config.getInt("countdown.arena.countdown");
+        ARENA_INTERVAL      = config.getInt("countdown.arena.interval");
+        ARENA_NO_INTERVAL   = config.getInt("countdown.arena.no-interval");
+        ARENA_TIME          = config.getInt("Arena-Settings.Defaults.time");
+
+        MAX_SCORE           = config.getInt("Arena-Settings.Defaults.max-score");
+        BROADCAST_WINNER    = config.getBoolean("Chat.broadcast-winner");
+
+        for (String colorcode : config.getConfigurationSection("Teams").getKeys(false)) {
+            TEAM_NAMES.put(ChatColor.getByChar(colorcode), config.getString("Teams." + colorcode) + "");
+        }
+
+        SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', config.getString("Chat.spectator-chat"));
+        ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', config.getString("Chat.arena-chat"));
+
+    }
+
     // Variables
-    private static Settings settings;
+    private static Settings instance;
     private Plugin pb;
     private FileConfiguration arena;
     private PlayerData cache;
     private File aFile;
 
     public Settings(Plugin plugin) {
-        if (settings == null) {
-            settings = this;
-            init(plugin);
-        }
+        init(plugin);
+        instance = this;
         this.pb = plugin;
     }
 
     public static Settings getSettings() {
-        if (settings == null) {
-            settings = new Settings(Paintball.getProvidingPlugin(Paintball.class));
-            settings.pb = Paintball.getProvidingPlugin(Paintball.class);
-            settings.init(settings.pb);
-        }
-        return settings;
+        return instance;
     }
 
-    public void init(Plugin pb) {
+    private void init(Plugin pb) {
         if (!pb.getDataFolder().exists()) {
             pb.getDataFolder().mkdir();
         }
@@ -88,14 +152,20 @@ public class Settings {
         arena = YamlConfiguration.loadConfiguration(aFile);
         cache = new PlayerData(pb);
 
-        loadValues(pb.getConfig(), pb.getDescription());
+        loadEverything();
+    }
+
+    private void loadEverything() {
+        loadSettings();
+        loadSQL();
+        KillCoinItemHandler.getHandler().loadItemsFromConfig(pb.getConfig());
         loadSQL();
         loadBungee();
     }
 
     public void reloadConfig() {
         pb.reloadConfig();
-        loadValues(pb.getConfig(), pb.getDescription());
+        loadEverything();
         arena = YamlConfiguration.loadConfiguration(aFile);
     }
 
@@ -141,50 +211,16 @@ public class Settings {
         this.pb.saveConfig();
     }
 
-    private void loadValues(FileConfiguration configFile, PluginDescriptionFile pluginYML) {
-        // regular values
-        VERSION = pluginYML.getVersion();
-        WEBSITE = pluginYML.getWebsite();
-        AUTHOR = pluginYML.getAuthors().toString();
-        PREFIX = ChatColor.translateAlternateColorCodes('&', configFile.getString("prefix"));
-        THEME = ChatColor.translateAlternateColorCodes('&', configFile.getString("theme-color"));
-        SECONDARY = ChatColor.translateAlternateColorCodes('&', configFile.getString("secondary-color"));
-        SIGN_UPDATE_TIME = configFile.getInt("sign-update-time");
-
-        // arena values
-        COLOR_PLAYER_TITLE = configFile.getBoolean("color-player-title");
-        WOOL_HELMET = configFile.getBoolean("give-wool-helmet");
-        LOBBY_COUNTDOWN = configFile.getInt("countdown.lobby.countdown");
-        LOBBY_INTERVAL = configFile.getInt("countdown.lobby.interval");
-        LOBBY_NO_INTERVAL = configFile.getInt("countdown.lobby.no-interval");
-        ARENA_COUNTDOWN = configFile.getInt("countdown.arena.countdown");
-        ARENA_INTERVAL = configFile.getInt("countdown.arena.interval");
-        ARENA_NO_INTERVAL = configFile.getInt("countdown.arena.no-interval");
-        ARENA_TIME = configFile.getInt("Arena-Settings.Defaults.time");
-        MAX_SCORE = configFile.getInt("Arena-Settings.Defaults.max-score");
-        BROADCAST_WINNER = configFile.getBoolean("Chat.broadcast-winner");
-        TITLE_API = configFile.getBoolean("Options.title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
-
-        for (String colorcode : configFile.getConfigurationSection("Teams").getKeys(false)) {
-            TEAM_NAMES.put(ChatColor.getByChar(colorcode), configFile.getString("Teams." + colorcode) + "");
-        }
-
-        SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.spectator-chat"));
-        ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', configFile.getString("Chat.arena-chat"));
-        loadSQL();
-        KillCoinItemHandler.getHandler().loadItemsFromConfig(pb.getConfig());
-    }
-
     public FileConfiguration getConfig() {
         return pb.getConfig();
     }
 
     private void loadBungee() {
         if (pb.getConfig().getBoolean("BungeeCord")) {
-            Settings.BungeeCord = true;
-            Settings.ServerID = pb.getConfig().getString("ServerID");
+            BUNGEE_CORD = true;
+            SERVER_ID = pb.getConfig().getString("ServerID");
         } else {
-            Settings.BungeeCord = false;
+            BUNGEE_CORD = false;
         }
     }
 
@@ -229,8 +265,6 @@ public class Settings {
             Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Failed to download SQL backup!");
         }
     }
-
-
     // TODO: make a new ArenaFile class
     public FileConfiguration getArenaFile() {
         return arena;
