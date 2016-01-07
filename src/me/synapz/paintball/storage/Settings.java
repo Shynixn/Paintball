@@ -60,7 +60,6 @@ public class Settings {
 
     public static boolean BROADCAST_WINNER;
     public static boolean COLOR_PLAYER_TITLE_ARENA;
-    public static boolean WOOL_HELMET;
     public static boolean TITLE_API;
     public static boolean VAULT;
     public static boolean SQL;
@@ -79,35 +78,47 @@ public class Settings {
         FileConfiguration config = pb.getConfig();
         PluginDescriptionFile pluginYML = pb.getDescription();
 
-        VERSION             = pluginYML.getVersion();
-        WEBSITE             = pluginYML.getWebsite();
-        AUTHOR              = pluginYML.getAuthors().toString();
-        PREFIX              = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
-        THEME               = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
-        SECONDARY           = ChatColor.translateAlternateColorCodes('&', config.getString("secondary-color"));
-        CONFIG_VERSION      = config.getInt("version");
-        SIGN_UPDATE_TIME    = config.getInt("sign-update-time");
-        TITLE_API           = config.getBoolean("Options.title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
-        VAULT               = config.getBoolean("Options.vault");
-        SQL                 = config.getBoolean("Options.SQL");
-        LOBBY_COUNTDOWN     = config.getInt("countdown.lobby.countdown");
-        LOBBY_INTERVAL      = config.getInt("countdown.lobby.interval");
-        LOBBY_NO_INTERVAL   = config.getInt("countdown.lobby.no-interval");
-        ARENA_COUNTDOWN     = config.getInt("countdown.arena.countdown");
-        ARENA_INTERVAL      = config.getInt("countdown.arena.interval");
-        ARENA_NO_INTERVAL   = config.getInt("countdown.arena.no-interval");
-        ARENA_TIME          = config.getInt("Arena-Settings.Defaults.time");
-
-        MAX_SCORE           = config.getInt("Arena-Settings.Defaults.max-score");
-        BROADCAST_WINNER    = config.getBoolean("Chat.broadcast-winner");
+        VERSION                     = pluginYML.getVersion();
+        WEBSITE                     = pluginYML.getWebsite();
+        AUTHOR                      = pluginYML.getAuthors().toString();
+        PREFIX                      = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
+        THEME                       = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
+        SECONDARY                   = ChatColor.translateAlternateColorCodes('&', config.getString("secondary-color"));
+        CONFIG_VERSION              = config.getInt("version");
+        SIGN_UPDATE_TIME            = config.getInt("sign-update-time");
+        TITLE_API                   = config.getBoolean("Options.title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
+        VAULT                       = config.getBoolean("Options.vault");
+        SQL                         = config.getBoolean("Options.SQL");
+        LOBBY_COUNTDOWN             = config.getInt("countdown.lobby.countdown");
+        LOBBY_INTERVAL              = config.getInt("countdown.lobby.interval");
+        LOBBY_NO_INTERVAL           = config.getInt("countdown.lobby.no-interval");
+        ARENA_COUNTDOWN             = config.getInt("countdown.arena.countdown");
+        ARENA_INTERVAL              = config.getInt("countdown.arena.interval");
+        ARENA_NO_INTERVAL           = config.getInt("countdown.arena.no-interval");
+        MAX_SCORE                   = config.getInt("Arena-Settings.Defaults.max-score");
+        ROUND_TIME                  = config.getInt("Arena-Settings.Defaults.time");
+        WIN_WAIT_TIME               = config.getInt("Arena-Settings.Defaults.win-waiting-time");
+        PER_TEAM_CHAT               = config.getBoolean("Arena-Settings.Defaults.per-team-chat");
+        OPEN_KILLCOIN_MENU          = config.getBoolean("Arena-Settings.Defaults."); // TODO: remove this option; no kits
+        GIVE_WOOL_HELMET_ARENA      = config.getBoolean("Arena-Settings.Defaults.Join-Arena.give-wool-helmet");
+        COLOR_PLAYER_TITLE_ARENA    = config.getBoolean("Arena-Settings.Defaults.Join-Arena.color-player-title");
+        GIVE_WOOL_HELMET_LOBBY      = config.getBoolean("Arena-Settings.Defaults.Join-Lobby.give-wool-helmet");
+        COLOR_PLAYER_TITLE_LOBBY    = config.getBoolean("Arena-Settings.Defaults.Join-Lobby.color-player-title");
+        GIVE_TEAM_SWITCHER          = config.getBoolean("Arena-Settings.Defaults.Join-Lobby.give-team-switcher");
+        KILLCOIN_PER_KILL           = config.getInt("Arena-Settings.Rewards.Kill-Coins.per-kill");
+        KILLCOIN_PER_DEATH          = config.getInt("Arena-Settings.Rewards.Kill-Coins.per-death");
+        MONEY_PER_KILL              = config.getInt("Arena-Settings.Rewards.Money.per-kill");
+        MONEY_PER_DEATH             = config.getInt("Arena-Settings.Rewards.Money.per-death");
+        MONEY_PER_WIN               = config.getInt("Arena-Settings.Rewards.Money.per-win");
+        MONEY_PER_DEFEAT            = config.getInt("Arena-Settings.Rewards.Money.per-defeat");
+        USE_ARENA_CHAT              = config.getBoolean("Arena-Settings.Chat.arena-chat");
+        BROADCAST_WINNER            = config.getBoolean("Arena-Settings.Chat.broadcast-winner");
+        SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', config.getString("Chat.spectator-chat"));
+        ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', config.getString("Chat.arena-chat"));
 
         for (String colorcode : config.getConfigurationSection("Teams").getKeys(false)) {
             TEAM_NAMES.put(ChatColor.getByChar(colorcode), config.getString("Teams." + colorcode) + "");
         }
-
-        SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', config.getString("Chat.spectator-chat"));
-        ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', config.getString("Chat.arena-chat"));
-
     }
 
     // Variables
@@ -137,6 +148,7 @@ public class Settings {
         // TODO: always says error on reload/start
             pb.saveResource("config.yml", false);
 
+        // TODO: should be removed and replaced with ArenaFile.java
         aFile = new File(pb.getDataFolder(), "arenas.yml");
 
         if (!aFile.exists()) {

@@ -8,6 +8,7 @@ import me.synapz.paintball.killcoin.KillCoinItem;
 import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.killcoin.KillCoinListeners;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.storage.ArenaFile;
 import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
@@ -37,7 +38,8 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         Team.loadTeamColors();
 
         data = new PlayerData(this);
-        Settings.getSettings();
+        new ArenaFile(this);
+        new Settings(this);
 
         ArenaManager.getArenaManager().setup();
         CommandManager commandManager = new CommandManager();
@@ -116,10 +118,10 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
 
     //TODO: Find a good home for this
     public void bungeeUpdateSigns() {
-        if (Settings.BungeeCord) {
+        if (Settings.BUNGEE_CORD) {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("ArenaUpdate");
-            out.writeUTF(Settings.ServerID);
+            out.writeUTF(Settings.SERVER_ID);
             //TODO: get arena states and names and make a string split with :'s
             // name:name:name
             // state:state:state
