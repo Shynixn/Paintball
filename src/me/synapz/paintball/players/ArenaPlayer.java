@@ -27,6 +27,10 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     private int killStreak = 0;
     private int killCoins = 0;
+    private int kills = 0;
+    private int deaths = 0;
+    private int kd = 0;
+    private int moneyEarned;
     private boolean won = false;
 
     public ArenaPlayer(Arena a, Team t, Player p) {
@@ -35,10 +39,6 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     public boolean won() {
         return won;
-    }
-
-    public int getKillstreak() {
-        return killStreak;
     }
 
     protected String getChatLayout() {
@@ -68,16 +68,21 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     public void die() {
         killStreak = 0;
+        killCoins--; // TODO: check arena settings for per death
+        moneyEarned--; // TODO: check per death and subtract
+        deaths--;
         Settings.getSettings().getCache().incrementStat(StatType.DEATHS, this);
     }
 
     public void kill(ArenaPlayer target) {
         killStreak++;
-        killCoins++;
+        killCoins++; // TODO: instead of just add one, check arena settings for per kill
+        moneyEarned++; // TODO: check arena settings for per kill money
+        kills++;
         arena.incrementTeamScore(team);
         Settings.getSettings().getCache().incrementStat(StatType.KILLS, this);
         Settings.getSettings().getCache().incrementStat(StatType.HIGEST_KILL_STREAK, this);
-        arena.broadcastMessage(ChatColor.GREEN, Settings.THEME + player.getName() + " has killed " + target.getPlayer().getName() + ". Team score now " + arena.getTeamScore(team) + "/" + Settings.MAX_SCORE, "");
+        arena.broadcastMessage(ChatColor.GREEN, Settings.THEME + player.getName() + " shot " + target.getPlayer().getName() + ". Team score now " + arena.getTeamScore(team) + "/" + Settings.MAX_SCORE, "");
         // TODO: kill messages
     }
 
@@ -85,13 +90,10 @@ public final class ArenaPlayer extends PaintballPlayer {
         Settings.getSettings().getCache().incrementStat(StatType.SHOTS, this);
         if (reachedGoal()) {
             arena.win(team);
-            // TODO: win messages
         }
     }
 
     public void giveShop() {
-        // TODO: add bunch of cool stuff with settings menu to disable, set cost, permission etc.
-        // TODO: add permission to be able to access KillCoin Shop
         KillCoinItemHandler.getHandler().showInventory(this);
     }
 
@@ -101,6 +103,27 @@ public final class ArenaPlayer extends PaintballPlayer {
     // This will look into config.yml for the arena, if the time or kills is reached, they reahced the goal
     private boolean reachedGoal() {
         return arena.MAX_SCORE == arena.getTeamScore(team)+1;
+    }
+
+    public int getMoneyEarned() {
+        return moneyEarned;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public String getKd() {
+        double kd = deaths == 0 ? kills : (float)kills/deaths;
+        return String.format(".2f", kd);
+    }
+
+    public int getKillStreak() {
+        return killStreak;
     }
 
     private void giveItems() {

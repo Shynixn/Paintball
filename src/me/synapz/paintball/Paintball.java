@@ -7,6 +7,7 @@ import me.synapz.paintball.events.*;
 import me.synapz.paintball.killcoin.KillCoinItem;
 import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.killcoin.KillCoinListeners;
+import me.synapz.paintball.metrics.Metrics;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.ArenaFile;
 import me.synapz.paintball.storage.PlayerData;
@@ -27,6 +28,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 public class Paintball extends JavaPlugin implements PluginMessageListener {
@@ -110,6 +112,23 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
                 }
             }
         };
+
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+
+            Metrics.Graph playersInArenaGraph = metrics.createGraph("Players In Arena");
+
+            playersInArenaGraph.addPlotter(new Metrics.Plotter() {
+                @Override
+                public int getValue() {
+                    return 22;
+                }
+            });
+
+        } catch (IOException exc) {
+
+        }
     }
 
     @Override

@@ -370,7 +370,11 @@ public class Arena {
                 }
             }
         }.runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 20);
-        broadcastMessage(GREEN, "The " + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
+        broadcastMessage(GREEN, "The " + team.getChatColor() + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
+        for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), true, ChatColor.GREEN, "$" + arenaPlayer.getMoneyEarned(), "Kills: " + arenaPlayer.getKills(), "Deaths: " + arenaPlayer.getDeaths(), "Killstreak: " + arenaPlayer.getKillStreak(), "KD: " + arenaPlayer.getKd(), "Your team " + (arenaPlayer.getTeam() == team ? "won" : "lost")); // TODO: get Vault currency instead of $ and check to make sure vault is enabled
+        }
+        broadcastMessage(GREEN, ChatColor.STRIKETHROUGH + Settings.THEME + "                              ", "");
         resetTeamScores();
     }
 
