@@ -2,6 +2,7 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
 import me.synapz.paintball.killcoin.KillCoinItem;
+import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
@@ -52,23 +53,35 @@ public class ExpirationTime extends BukkitRunnable {
     // Overrides cancel so that it cancels the task AND removes the item from inventory (if it is in the inventory)
     @Override
     public void cancel() {
-        if (arenaPlayer != null) {
-            // inv.remove(getItemInInventory(item.getItemMeta().getDisplayName()));
-            Message.getMessenger().msg(player, true, ChatColor.RED, Settings.THEME + "Item " + Settings.SECONDARY + ChatColor.stripColor(item.getItemName()) + Settings.THEME + " has expired!");
+        if (player != null && player.getInventory().contains(item)) {
+            for (ItemStack itemStack : player.getPlayer().getInventory().getContents()) {
+                if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().equals(item.getItemName(true))) {
+                    player.getPlayer().getInventory().remove(itemStack);
+                    break;
+                }
+            }
+            Message.getMessenger().msg(player.getPlayer(), true, ChatColor.RED, Settings.THEME + "Item " + Settings.SECONDARY + item.getItemName(false) + Settings.THEME + " has expired!");
         }
+        times.remove(item.getItemName(true), item);
         removeActionBar();
-        times.remove(item.getItemMeta().getDisplayName(), item);
         super.cancel();
     }
 
     private void updateItem() {
-        if (item.equals(inv.getItemInHand()) && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
+        ItemStack itemInHand = inv.getItemInHand();
+        if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && item.equals(itemInHand) && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
             // TODO: if actionbar is installed and true in config
             if (times.get(inv.getItemInHand().getItemMeta().getDisplayName()).getCounter() == counter) {
                 ActionBarAPI.sendActionBar(player, Settings.THEME + "Expires in: " + Settings.SECONDARY + (int)counter + Settings.THEME + " seconds");
             }
+        } else if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) { // TODO: meta and displyanme checks
+            // this means the item in the hand is an expiration time, so dont remove the action bar, it will update on its iteration
         } else {
             removeActionBar();
+        }
+
+        if (!inv.contains(item)) {
+            this.cancel();
         }
     }
 

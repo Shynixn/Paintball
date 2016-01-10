@@ -1,11 +1,14 @@
 package me.synapz.paintball.killcoin;
 
+import me.synapz.paintball.Message;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -21,11 +24,11 @@ public class KillCoinItemHandler {
     }
 
     public void addItem(KillCoinItem item) {
-        items.put(ChatColor.translateAlternateColorCodes('&', item.getItemName()), item);
+        items.put(ChatColor.translateAlternateColorCodes('&', item.getItemName(true)), item);
     }
 
     public void removeItem(KillCoinItem item) {
-        items.remove(item.getItemName(), item);
+        items.remove(item.getItemName(true), item);
     }
 
     public void showInventory(ArenaPlayer arenaPlayer) {
@@ -33,7 +36,7 @@ public class KillCoinItemHandler {
         Inventory inv = Bukkit.createInventory(null, 18, ChatColor.GOLD + "KillCoin Shop");
 
         for (KillCoinItem item : items.values()) {
-            inv.addItem(item.getItemStack(arenaPlayer));
+            inv.addItem(item.getItemStack(arenaPlayer, true));
         }
         player.openInventory(inv);
     }

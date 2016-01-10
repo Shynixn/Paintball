@@ -138,10 +138,12 @@ public class Listeners implements Listener {
                             break;
                         }
                     }
+                    player.closeInventory();
                     e.setCancelled(true);
                 }
             } else if (gamePlayer instanceof SpectatorPlayer) {
                 Message.getMessenger().msg(player, true, ChatColor.RED, "You are not allowed to move items in your inventory!");
+                player.closeInventory();
                 e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
                 if (clickedItem != null && clickedItem.hasItemMeta() && clickedItem.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
@@ -211,6 +213,9 @@ public class Listeners implements Listener {
         ArenaPlayer hitPlayer = a.getPaintballPlayer(hitBySnowball) instanceof ArenaPlayer ? (ArenaPlayer) a.getPaintballPlayer(hitBySnowball) : null;
 
         if (arenaPlayer == null || hitPlayer == null)
+            return;
+
+        if (arenaPlayer == hitPlayer) // player hit themself
             return;
 
         Settings.getSettings().getCache().incrementStat(StatType.HITS, arenaPlayer);

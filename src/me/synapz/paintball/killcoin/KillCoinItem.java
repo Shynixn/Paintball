@@ -27,7 +27,8 @@ public class KillCoinItem extends ItemStack {
     // Expiration Time
     // Permission
 
-    private String name;
+    private String nameWithSpaces;
+    private final String name;
     private final String description;
     private final double money;
     private final int killcoins;
@@ -40,6 +41,7 @@ public class KillCoinItem extends ItemStack {
     public KillCoinItem(@NotNull Material material, @NotNull String name, @Nullable String description, @NotNull double money, @NotNull int killcoins, @Nullable int expirationTime, @Nullable String permission, @NotNull int amount, @NotNull boolean showItem) {
         super(material, amount);
         this.name = name;
+        this.nameWithSpaces = name;
         this.description = description;
         this.money = money;
         this.killcoins = killcoins;
@@ -56,6 +58,7 @@ public class KillCoinItem extends ItemStack {
     public KillCoinItem(String path, FileConfiguration file) {
         super(Material.valueOf(file.getString(path + ".material")), file.getInt(path + ".amount"));
         this.name = file.getString(path + ".name");
+        this.nameWithSpaces = name;
         this.description = file.getString(path + ".description");
         this.money = file.getDouble(path + ".money");
         this.killcoins = file.getInt(path + ".killcoins");
@@ -70,7 +73,8 @@ public class KillCoinItem extends ItemStack {
 
     private KillCoinItem(KillCoinItem item) {
         super(item);
-        this.name = item.getItemName();
+        this.name = item.getItemName(false);
+        this.nameWithSpaces = name;
         this.description = item.getDescription();
         this.money = item.getMoney();
         this.killcoins = item.getKillCoins();
@@ -82,8 +86,8 @@ public class KillCoinItem extends ItemStack {
     }
 
     // Gets the item name
-    public String getItemName() {
-        return name;
+    public String getItemName(boolean withSpaces) {
+        return withSpaces ? nameWithSpaces : name;
     }
 
     // Gets the description of the item
@@ -112,7 +116,8 @@ public class KillCoinItem extends ItemStack {
     }
 
     // Sets the values specific to the arena player, then returns the item to be placed in KillCoinShop
-    public KillCoinItem getItemStack(ArenaPlayer arenaPlayer) {
+    // forKillCoinShop sees if it is a KillCoin Shop, if it is, do not add spaces to the name
+    public KillCoinItem getItemStack(ArenaPlayer arenaPlayer, boolean forKillCoinShop) {
         ItemMeta meta = this.getItemMeta();
         List<String> newLore = new ArrayList<String>();
 
@@ -120,8 +125,12 @@ public class KillCoinItem extends ItemStack {
             return null;
         }
 
-        setItemDisplayName(arenaPlayer.getPlayer().getInventory());
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.getItemName()));
+        if (!forKillCoinShop) { // if this isnt for the shop but for being placed in their inventory, add spaces to make the item different than others with same name
+            setItemDisplayName(arenaPlayer.getPlayer().getInventory());
+            setItemDisplayName(arenaPlayer.getPlayer().getInventory());
+        }
+
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.getItemName(!forKillCoinShop)));
 
         if (hasDescription()) {
             String[] description = getDescription().split("\n");
@@ -172,11 +181,11 @@ public class KillCoinItem extends ItemStack {
     // Adds a copy of the KillCoinItem to the player's inventory
     public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
         KillCoinItem itemToGive = new KillCoinItem(this);
+        playerToGetItem.getPlayer().getInventory().addItem(itemToGive.getItemStack(playerToGetItem, false));
         if (this.hasExpirationTime()) {
             new ExpirationTime(itemToGive, playerToGetItem, getExpirationTime()).runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 10
             );
         }
-        playerToGetItem.getPlayer().getInventory().addItem(itemToGive);
     }
 
     // Checks to see if this KillCoinItem equals an ItemStack by looking at its name a lore
@@ -228,7 +237,8 @@ public class KillCoinItem extends ItemStack {
     }
 
     // Checks to see if the item requires any killcoins
-    public boolean requiresKillCoins() {
+    public
+    boolean requiresKillCoins() {
         return !(killcoins <= 0);
     }
 
@@ -240,11 +250,11 @@ public class KillCoinItem extends ItemStack {
     // Important method that if the player has 2 of the same item names in their inventory, will rename this one to the name, with a space so ExpirationTime doesn't get confused on which is which
     private void setItemDisplayName(PlayerInventory inv) {
         for (ItemStack item : inv) {
-            if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equals(this.getItemName())) {
-                StringBuilder builder = new StringBuilder(name);
-                builder.append(" ");
-                this.name = builder.toString();
-                return;
+            // while the item has the same name, add a space
+            while (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equals(this.getItemName(true))) {
+                StringBuilder builder = new StringBuilder(getItemName(true));
+                builder.append(" "); // TODO: append to begining too so formating isn't mesed up
+                this.nameWithSpaces = builder.toString();
             }
         }
     }

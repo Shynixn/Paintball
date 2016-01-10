@@ -76,22 +76,23 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         You can also set permission, or description safely to null in order to remove a description or required permission
          */
         new KillCoinItem(Material.DIAMOND_AXE, "Jumper", "Gives you the ability to jump\n5 blocks up!", 0, 0, 10, "paintball.item.sneaker", 3, true) {
+            int currentAmount = this.getAmount();
             @Override
             public void onClickItem(PlayerInteractEvent event) {
                 Player player = event.getPlayer();
                 Action action = event.getAction();
-                PlayerInventory inv = player.getInventory();
-                int amount = inv.getItemInHand().getAmount();
+                currentAmount = player.getItemInHand().getAmount();
 
                 if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-                    // teleport them 5 blocks up
+                    // teleport the player 5 blocks up
                     player.teleport(player.getLocation().add(0, 5, 0));
 
                     // remove 1 item from their inventory
-                    if (inv.getItemInHand().getAmount() == 1) {
-                        inv.remove(inv.getItemInHand());
+                    currentAmount--;
+                    if (currentAmount == 0) {
+                        player.getInventory().remove(player.getItemInHand());
                     } else {
-                        inv.getItemInHand().setAmount(amount-1);
+                        player.getItemInHand().setAmount(currentAmount);
                     }
                 }
             }
