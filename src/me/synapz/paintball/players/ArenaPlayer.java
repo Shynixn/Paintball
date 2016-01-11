@@ -70,7 +70,7 @@ public final class ArenaPlayer extends PaintballPlayer {
         killStreak = 0;
         killCoins--; // TODO: check arena settings for per death
         moneyEarned--; // TODO: check per death and subtract
-        deaths--;
+        deaths++;
         Settings.getSettings().getCache().incrementStat(StatType.DEATHS, this);
     }
 
@@ -84,13 +84,13 @@ public final class ArenaPlayer extends PaintballPlayer {
         Settings.getSettings().getCache().incrementStat(StatType.HIGEST_KILL_STREAK, this);
         arena.broadcastMessage(ChatColor.GREEN, Settings.THEME + player.getName() + " shot " + target.getPlayer().getName() + ". Team score now " + arena.getTeamScore(team) + "/" + Settings.MAX_SCORE, "");
         // TODO: kill messages
+        if (reachedGoal()) {
+            arena.win(team);
+        }
     }
 
     public void shoot(PlayerInteractEvent event) {
         Settings.getSettings().getCache().incrementStat(StatType.SHOTS, this);
-        if (reachedGoal()) {
-            arena.win(team);
-        }
     }
 
     public void giveShop() {
@@ -102,7 +102,7 @@ public final class ArenaPlayer extends PaintballPlayer {
     }
     // This will look into config.yml for the arena, if the time or kills is reached, they reahced the goal
     private boolean reachedGoal() {
-        return arena.MAX_SCORE == arena.getTeamScore(team)+1;
+        return arena.MAX_SCORE == arena.getTeamScore(team); // TODO: make sure when the game ends no one can be killed
     }
 
     public int getMoneyEarned() {
@@ -118,8 +118,8 @@ public final class ArenaPlayer extends PaintballPlayer {
     }
 
     public String getKd() {
-        double kd = deaths == 0 ? kills : (float)kills/deaths;
-        return String.format(".2f", kd);
+        float kd = deaths == 0 ? kills : (float)kills/ (float)deaths;
+        return String.format("%.2f", kd);
     }
 
     public int getKillStreak() {

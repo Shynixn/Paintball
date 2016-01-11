@@ -164,6 +164,7 @@ public class KillCoinItem extends ItemStack {
         if (this.hasPermission() && !player.getPlayer().hasPermission(permission)) {
             builder.append("You don't have permission to use this item!");
         } else {
+            System.out.println("Player coins: " + player.getKillCoins() + " Required: " + this.getKillCoins());
             if (player.getKillCoins() < this.getKillCoins())
             builder.append("You don't have enough KillCoins ");
 
@@ -180,6 +181,7 @@ public class KillCoinItem extends ItemStack {
 
     // Adds a copy of the KillCoinItem to the player's inventory
     public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
+        // TODO: subtract their money and killcoins
         KillCoinItem itemToGive = new KillCoinItem(this);
         playerToGetItem.getPlayer().getInventory().addItem(itemToGive.getItemStack(playerToGetItem, false));
         if (this.hasExpirationTime()) {

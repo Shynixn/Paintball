@@ -89,7 +89,7 @@ public class Listeners implements Listener {
                             }
                         }
                         player.closeInventory();
-                    } else if (e.getItem().hasItemMeta() && e.getItem().getItemMeta().getDisplayName().contains("Click to change team")) {
+                    } else if (e.getItem() != null && e.getItem().hasItemMeta() && e.getItem().getItemMeta().getDisplayName().contains("Click to change team")) {
                         Inventory inv = Bukkit.createInventory(null, 18, "Team Switcher");
                         for (Team t : a.getArenaTeamList()) {
                             // Make a new inventory and place all teams (except the one they are on) into it
@@ -197,7 +197,7 @@ public class Listeners implements Listener {
         if (hitBySnowball == null)
             return;
 
-        if (snowball == null) { // if they are hitting and in an arena cancel it
+        if (snowball == null || snowball.getShooter() == null) { // if they are hitting and in an arena cancel it
             if (isInArena(hitBySnowball)) {
                 event.setCancelled(true);
             }

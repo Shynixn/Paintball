@@ -84,6 +84,7 @@ public class KillCoinListeners implements Listener {
             KillcoinTypes type = KillcoinTypes.valueOf(killCoinItem.getItemType());
 
             // TODO: check if null
+
             switch (type) {
                 case DOUBLE_SHOOTER:
                     System.out.println("test");

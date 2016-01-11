@@ -100,7 +100,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             }
         };
 
-        new KillCoinItem(Material.SNOW_BALL, "Unlimited Snowballs", "Gives an unlimited snowball", 0, 0, 60, "paintball.item.unlimited", 1, true) {
+        new KillCoinItem(Material.SNOW_BALL, "Unlimited Snowballs", "Gives an unlimited snowball", 0, 0, 60, "paintball.item.unlimited", 2, true) {
             @Override
             public void onClickItem(PlayerInteractEvent event) {
                 Player player = event.getPlayer();
