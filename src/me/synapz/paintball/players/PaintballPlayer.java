@@ -109,6 +109,6 @@ public abstract class PaintballPlayer {
     public void forceLeaveArena() {
         if (Team.getPluginScoreboard().getTeam(team.getTitleName()) != null)
             Team.getPluginScoreboard().getTeam(team.getTitleName()).removePlayer(player);
-        Settings.getSettings().getCache().restorePlayerInformation(player);
+        Settings.PLAYERDATA.restorePlayerInformation(player);
     }
 }

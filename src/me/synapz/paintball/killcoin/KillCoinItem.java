@@ -255,7 +255,7 @@ public class KillCoinItem extends ItemStack {
             // while the item has the same name, add a space
             while (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equals(this.getItemName(true))) {
                 StringBuilder builder = new StringBuilder(getItemName(true));
-                builder.append(" "); // TODO: append to begining too so formating isn't mesed up
+                builder.append(" ");
                 this.nameWithSpaces = builder.toString();
             }
         }

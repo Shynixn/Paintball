@@ -47,7 +47,7 @@ public final class SignLocation extends PaintballLocation {
         this.type = type;
 
         setLocation();
-        ArenaManager.getArenaManager().addSign(this);
+        Settings.ARENA.addSign(this);
     }
 
     public SignLocations getType() {
@@ -60,24 +60,24 @@ public final class SignLocation extends PaintballLocation {
 
         if (type == SignLocations.LEADERBOARD || type == SignLocations.AUTOJOIN) {
             path = "Signs." + type.toString();
-            ArenaManager.getArenaManager().removeSign(this);
+            Settings.ARENA.removeSign(this);
         } else {
             path = arena.getPath() + type.toString();
             arena.removeSignLocation(this);
         }
-        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(path);
+        List<String> signsList = Settings.ARENA_FILE.getStringList(path);
 
         if (signsList == null || !(signsList.contains(super.toString()))) {
             return;
         }
         signsList.remove(super.toString());
-        Settings.getSettings().getArenaFile().set(path, signsList);
-        Settings.getSettings().saveArenaFile();
+        Settings.ARENA_FILE.set(path, signsList);
+        Settings.ARENA.saveFile();
     }
 
     protected void setLocation() {
         String path = type == SignLocations.LEADERBOARD || type == SignLocations.AUTOJOIN ? "Signs." + type.toString() : arena.getPath() + type.toString();
-        List<String> signsList = Settings.getSettings().getArenaFile().getStringList(path);
+        List<String> signsList = Settings.ARENA_FILE.getStringList(path);
 
         if (signsList == null)
             signsList = new ArrayList<String>();
@@ -85,7 +85,7 @@ public final class SignLocation extends PaintballLocation {
             return;
 
         signsList.add(super.toString());
-        Settings.getSettings().getArenaFile().set(path, signsList);
-        Settings.getSettings().saveArenaFile();
+        Settings.ARENA_FILE.set(path, signsList);
+        Settings.ARENA.saveFile();
     }
 }

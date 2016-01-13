@@ -11,8 +11,6 @@ public abstract class PaintballLocation {
     // Important class to shorten files by shorting
     // Turns Locations into: world,x,y,z,yaw,pitch
 
-    protected static final FileConfiguration FILE = Settings.getSettings().getArenaFile();
-
     protected final Arena arena;
     protected final Location loc;
 

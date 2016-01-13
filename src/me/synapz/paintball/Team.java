@@ -53,13 +53,6 @@ public class Team {
         put(ChatColor.WHITE, WHITE);
     }};
 
-    private static Map<ChatColor, String> colorNames = new EnumMap<ChatColor, String>(ChatColor.class);
-
-    // Set the colorNames variable to the TEAM_NAMES variable, which was set in Setting, this way we can use it here
-    public static void loadTeamColors() {
-        colorNames = TEAM_NAMES;
-    }
-
     // List of all available color codes
     public static List<String> LIST = Arrays.asList("§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§0", "§a", "§b", "§c", "§d", "§e", "§f");
     // Scoreboard (This is the only scoreboard for the plugin) and it is used for coloring player HUD
@@ -111,7 +104,7 @@ public class Team {
 
     // Returns Team's title name, basically the team's name. This value can be changed in config.yml, ex: "&6: Orange" this would return Orange
     public String getTitleName() {
-        return colorNames.get(color);
+        return TEAM_NAMES.get(color);
     }
 
     // Returns dye color for this team, ex: DyeColor.BLUE;

@@ -19,7 +19,6 @@ import static org.bukkit.ChatColor.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,9 +29,6 @@ public class Arena {
 
     public final int TIME = Settings.getSettings().getConfig().getInt("Arena-Settings.Arenas." + getDefaultName() + ".time", Settings.ARENA_TIME);
     public final int MAX_SCORE = Settings.getSettings().getConfig().getInt("Arena-Settings.Arenas." + getDefaultName() + ".max-score", Settings.MAX_SCORE);
-
-    // Arena File so we can access and set arena settings
-    private FileConfiguration FILE = getSettings().getArenaFile();
 
     // All the players in the arena (Lobby, Spec, InGame) linked to the player which is linked to the PaintballPLayer
     private Map<Player, PaintballPlayer> allPlayers = new HashMap<Player, PaintballPlayer>();
@@ -74,7 +70,7 @@ public class Arena {
         this.defaultName = name;
 
         // Go through each arena inside the arena (located in config) and add it to the team list
-        for (Team team : ArenaManager.getArenaManager().getTeamsList(this)) {
+        for (Team team : Settings.ARENA.getTeamsList(this)) {
             teams.put(team, 0);
         }
     }
@@ -91,13 +87,13 @@ public class Arena {
 
     // Sets the current name of the
     private void setName(String newName) {
-        FILE.set(getPath() + "Name", newName);
+        ARENA_FILE.set(getPath() + "Name", newName);
         this.currentName = newName;
     }
 
     // Removes arena from list and from arenas.yml
     public void removeArena() {
-        FILE.set("Arenas." + this.getDefaultName(), null);
+        ARENA_FILE.set("Arenas." + this.getDefaultName(), null);
         Settings.getSettings().removeArenaConfigSection(this);
         ArenaManager.getArenaManager().getArenas().remove(this.getDefaultName(), this);
         advSave();
@@ -106,7 +102,7 @@ public class Arena {
     // Renames arena by setting Arenas.arena.name to the new name, however it keeps the past name as a way to reference in the path (can't change path names)
     public void rename(String newName) {
         // Rename .Name to arenas new name
-        FILE.set(getPath() + "Name", newName);
+        ARENA_FILE.set(getPath() + "Name", newName);
         
         // Rename the name in memory
         setName(newName);
@@ -137,13 +133,13 @@ public class Arena {
     }
     
     public void setMaxPlayers(int max) {
-        FILE.set(getPath() + "Max", max);
+        ARENA_FILE.set(getPath() + "Max", max);
         advSave();
     }
 
     // Sets the min required plauers to an int (lobby playercount reaches this number, it calls the lobby-countdown and waits for more players)
     public void setMinPlayers(int min) {
-        FILE.set(getPath() + "Min", min);
+        ARENA_FILE.set(getPath() + "Min", min);
         advSave();
     }
 
@@ -157,12 +153,12 @@ public class Arena {
 
     // Gets the max number of players
     public int getMax() {
-        return FILE.getInt(getPath() + "Max");
+        return ARENA_FILE.getInt(getPath() + "Max");
     }
 
     // Gets the min number of players
     public int getMin() {
-        return FILE.getInt(getPath() + "Min");
+        return ARENA_FILE.getInt(getPath() + "Min");
     }
 
     // Gets all of the teams on this arena
@@ -180,7 +176,7 @@ public class Arena {
             this.teams.put(t, 0);
         }
         // sets the arena's teams to the list of teams in arena.yml
-        getSettings().getArenaFile().set(getPath() + "Teams", teamColors);
+        ARENA_FILE.set(getPath() + "Teams", teamColors);
         advSave();
     }
 
@@ -197,10 +193,10 @@ public class Arena {
         for (Team t : getArenaTeamList()) {
             String lobbyName = t.getTitleName().toLowerCase().replace(" ", "") + " (lobby)";
             String spawnName = t.getTitleName().toLowerCase().replace(" ", "") + " (spawn)";
-            steps.add(FILE.getString(t.getPath(TeamLocations.LOBBY)) != null ? done + lobbyName + end : lobbyName);
-            steps.add(FILE.getString(t.getPath(TeamLocations.SPAWN)) != null ? done + spawnName + end : spawnName);
+            steps.add(ARENA_FILE.getString(t.getPath(TeamLocations.LOBBY)) != null ? done + lobbyName + end : lobbyName);
+            steps.add(ARENA_FILE.getString(t.getPath(TeamLocations.SPAWN)) != null ? done + spawnName + end : spawnName);
         }
-        Utils.addItemsToArray(steps, (FILE.getString(this.getPath() + "Spectator") != null ? done + "setspec" + end : "setspec"), isEnabled() ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "setteams" : "");
+        Utils.addItemsToArray(steps, (ARENA_FILE.getString(this.getPath() + "Spectator") != null ? done + "setspec" + end : "setspec"), isEnabled() ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "setteams" : "");
         finalString = GRAY + Joiner.on(", ").join(steps);
         
         return isSetup() && isEnabled() ? prefix + GRAY + "Complete. Arena is open!" : prefix + finalString;
@@ -213,23 +209,23 @@ public class Arena {
             state = ArenaState.WAITING;
         else
             state = ArenaState.DISABLED;
-        FILE.set(getPath() + "Enabled", setEnabled);
+        ARENA_FILE.set(getPath() + "Enabled", setEnabled);
         advSave();
     }
 
     // Checks weather this arena is setup or not. In order to be setup max, min, spectator and all spawns must be set
     public boolean isSetup() {
         boolean spawnsSet = true;
-        boolean isSpectateSet = FILE.getString(this.getPath() + "Spectator") != null;
+        boolean isSpectateSet = ARENA_FILE.getString(this.getPath() + "Spectator") != null;
         if (getArenaTeamList().isEmpty()) {
             spawnsSet = false;
         }
         for (Team t : getArenaTeamList()) {
-            if (FILE.getString(t.getPath(TeamLocations.SPAWN)) == null) {
+            if (ARENA_FILE.getString(t.getPath(TeamLocations.SPAWN)) == null) {
                 spawnsSet = false;
             }
             // TODO make t.getPath(type) instead of boolean
-            if (FILE.getString(t.getPath(TeamLocations.LOBBY))== null) {
+            if (ARENA_FILE.getString(t.getPath(TeamLocations.LOBBY))== null) {
                 spawnsSet = false;
             }
         }
@@ -237,7 +233,7 @@ public class Arena {
     }
 
     public boolean isEnabled() {
-        return FILE.getBoolean(this.getPath() + "Enabled");
+        return ARENA_FILE.getBoolean(this.getPath() + "Enabled");
     }
     // Check if a player is in the arena, all players have all spectator, lobby, and arena players
     public boolean containsPlayer(Player player) {
@@ -252,7 +248,7 @@ public class Arena {
     // Loads all the arenas values from arenas.yml into memory, sets isMinSet, isMaxSet, isEnabled, and isSpectateSet
     public void loadValues() {
         //  Puts all the Signs from arenas.yml into memory
-        for (String rawLocation : FILE.getStringList(this.getPath() + "Join")) {
+        for (String rawLocation : ARENA_FILE.getStringList(this.getPath() + "Join")) {
             SignLocation signLoc = new SignLocation(this, rawLocation);
             signLocations.put(signLoc.getLocation(), signLoc);
         }
@@ -503,7 +499,7 @@ public class Arena {
 
     // Saves arena file along with other checks
     public void advSave() {
-        getSettings().saveArenaFile();
+        ARENA.saveFile();
         /**
          * Because the saveArenaFile() method gets called every time a value is changed,
          * we also want to see if the arena is setup because if it is, Arena.NOT_SETUP should

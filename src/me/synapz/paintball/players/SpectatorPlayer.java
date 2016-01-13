@@ -17,7 +17,7 @@ public final class SpectatorPlayer extends PaintballPlayer {
 
     protected void initPlayer() {
         // TODO: set to arena spectate? invisable? idk
-        getSettings().getCache().savePlayerInformation(player);
+        PLAYERDATA.savePlayerInformation(player);
         arena.addPlayer(this);
         player.teleport(arena.getSpectatorLocation());
         stripValues();

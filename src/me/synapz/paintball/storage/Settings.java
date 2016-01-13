@@ -1,10 +1,7 @@
 package me.synapz.paintball.storage;
 
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.Message;
-import me.synapz.paintball.Paintball;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.*;
 import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -65,15 +62,59 @@ public class Settings {
     public static boolean SQL;
     public static boolean BUNGEE_CORD;
     public static boolean USE_ARENA_CHAT;
-    public static boolean PER_TEAM_CHAT; // TODO: os doubled in config
+    public static boolean PER_TEAM_CHAT; // TODO: is doubled in config
     public static boolean OPEN_KILLCOIN_MENU; // TODO: rename in config
     public static boolean GIVE_WOOL_HELMET_ARENA;
     public static boolean GIVE_WOOL_HELMET_LOBBY;
     public static boolean COLOR_PLAYER_TITLE_LOBBY;
     public static boolean GIVE_TEAM_SWITCHER;
 
+    public static ArenaFile ARENA;
+    public static PlayerData PLAYERDATA;
+    public static FileConfiguration ARENA_FILE;
+
     public static final Map<ChatColor, String> TEAM_NAMES = new HashMap<ChatColor, String>();
 
+    // Variables
+    private static Settings instance;
+    private Plugin pb;
+
+    public Settings(Plugin plugin) {
+        init(plugin); // init all config.yml stuff
+        instance = this; // inject the instance
+        this.pb = plugin; // set the plugin variable
+        Settings.ARENA.setup(); // setup arena.yml
+    }
+
+    public static Settings getSettings() {
+        return instance;
+    }
+
+    private void init(Plugin pb) {
+        if (!pb.getDataFolder().exists()) {
+            pb.getDataFolder().mkdir();
+        }
+
+        this.pb = pb;
+
+        // TODO: always says error on reload/start
+        pb.saveResource("config.yml", false);
+
+        ARENA = new ArenaFile(pb);
+        PLAYERDATA = new PlayerData(pb);
+        ARENA_FILE = ARENA.getFileConfig();
+
+        loadEverything();
+    }
+
+    private void loadEverything() {
+        loadSettings(); // loads everything in config.yml into constants
+        loadSQL(); // loads sql if it is enabled
+        KillCoinItemHandler.getHandler().loadItemsFromConfig(pb.getConfig()); // loads all killcoin items
+        loadBungee(); // loads bungee support if enabled
+    }
+
+    // Called on server start, reload, and pb admin reload
     private void loadSettings() {
         FileConfiguration config = pb.getConfig();
         PluginDescriptionFile pluginYML = pb.getDescription();
@@ -121,77 +162,9 @@ public class Settings {
         }
     }
 
-    // Variables
-    private static Settings instance;
-    private Plugin pb;
-    private FileConfiguration arena;
-    private PlayerData cache;
-    private File aFile;
-
-    public Settings(Plugin plugin) {
-        init(plugin);
-        instance = this;
-        this.pb = plugin;
-    }
-
-    public static Settings getSettings() {
-        return instance;
-    }
-
-    private void init(Plugin pb) {
-        if (!pb.getDataFolder().exists()) {
-            pb.getDataFolder().mkdir();
-        }
-
-        this.pb = pb;
-
-        // TODO: always says error on reload/start
-            pb.saveResource("config.yml", false);
-
-        // TODO: should be removed and replaced with ArenaFile.java
-        aFile = new File(pb.getDataFolder(), "arenas.yml");
-
-        if (!aFile.exists()) {
-            try {
-                aFile.createNewFile();
-            } catch (IOException e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "", "Could not create arenas.yml. Stack trace: ");
-                e.printStackTrace();
-            }
-        }
-
-
-        arena = YamlConfiguration.loadConfiguration(aFile);
-        cache = new PlayerData(pb);
-
-        loadEverything();
-    }
-
-    private void loadEverything() {
-        loadSettings();
-        loadSQL();
-        KillCoinItemHandler.getHandler().loadItemsFromConfig(pb.getConfig());
-        loadSQL();
-        loadBungee();
-    }
-
     public void reloadConfig() {
         pb.reloadConfig();
         loadEverything();
-        arena = YamlConfiguration.loadConfiguration(aFile);
-    }
-
-    public void saveArenaFile() {
-        try {
-            arena.save(aFile);
-        } catch (Exception e) {
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Could not save arenas.yml.", "", "Stack trace");
-            e.printStackTrace();
-        }
-    }
-
-    public PlayerData getCache() {
-        return cache;
     }
 
     // Adds a new arena to config.yml with values default
@@ -242,6 +215,7 @@ public class Settings {
         if (SQL) {
             HOST = config.getString("SQL-Settings.host");
             PORT = config.getInt("SQL-Settings.port");
+
             USERNAME = config.getString("SQL-Settings.user");
             PASSWORD = config.getString("SQL-Settings.pass");
             DATABASE = config.getString("SQL-Settings.database");
@@ -276,9 +250,5 @@ public class Settings {
             e.printStackTrace();
             Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Failed to download SQL backup!");
         }
-    }
-    // TODO: make a new ArenaFile class
-    public FileConfiguration getArenaFile() {
-        return arena;
     }
 }

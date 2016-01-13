@@ -31,7 +31,7 @@ public final class LobbyPlayer extends PaintballPlayer {
     }
 
     protected void initPlayer() {
-        getSettings().getCache().savePlayerInformation(player);
+        PLAYERDATA.savePlayerInformation(player);
         arena.addPlayer(this);
 
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team));

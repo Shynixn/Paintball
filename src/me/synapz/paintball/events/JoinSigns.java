@@ -7,6 +7,7 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.commands.admin.Info;
 import me.synapz.paintball.locations.SignLocation;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -134,7 +135,7 @@ public class JoinSigns implements Listener {
 
 
         Sign sign = (Sign) e.getBlock().getState();
-        SignLocation autoJoinOrLbsign = ArenaManager.getArenaManager().getSigns().get(sign.getLocation());
+        SignLocation autoJoinOrLbsign = Settings.ARENA.getSigns().get(sign.getLocation());
 
         if (autoJoinOrLbsign != null) {
             if (autoJoinOrLbsign.getType() == SignLocation.SignLocations.LEADERBOARD) {

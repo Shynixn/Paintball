@@ -5,6 +5,7 @@ import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -24,7 +25,7 @@ public class CreateArena extends Command{
 
         Arena a = new Arena(arenaName, arenaName);
         Message.getMessenger().msg(player, false, ChatColor.GREEN, a.toString() + " successfully created!");
-        ArenaManager.getArenaManager().addNewArena(a);
+        Settings.ARENA.addNewArenaToFile(a);
     }
 
     public String getName() {

@@ -218,7 +218,7 @@ public class Listeners implements Listener {
         if (arenaPlayer == hitPlayer) // player hit themself
             return;
 
-        Settings.getSettings().getCache().incrementStat(StatType.HITS, arenaPlayer);
+        Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
         hitBySnowball.setHealth(0);
         hitPlayer.die();
         arenaPlayer.kill(hitPlayer);

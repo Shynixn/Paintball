@@ -5,6 +5,7 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,13 +38,11 @@ public class Leaderboard extends Command{
         }
 
         // calculate the page and set it to the player
-        // TODO better way of doing this
-        Paintball pb = (Paintball) JavaPlugin.getProvidingPlugin(Paintball.class);
         // pb.getPlayerData().getPage(player, statType, page);
         SortedMap<Integer, String> map = new TreeMap<Integer, String>(Collections.reverseOrder());
         map.put(1, "Thing");
         map.put(100, "thing2");
-        pb.getPlayerData().paginate(player, statType, 1, 5);
+        Settings.PLAYERDATA.paginate(player, statType, 1, 5);
     }
 
     public String getArgs() {

@@ -33,17 +33,10 @@ import java.util.UUID;
 
 public class Paintball extends JavaPlugin implements PluginMessageListener {
 
-    PlayerData data;
-
     @Override
     public void onEnable() {
-        Team.loadTeamColors();
-
-        data = new PlayerData(this);
-        new ArenaFile(this);
         new Settings(this);
 
-        ArenaManager.getArenaManager().setup();
         CommandManager commandManager = new CommandManager();
         commandManager.init();
 
@@ -171,10 +164,5 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    // TODO: bad way of getting player data, find better way
-    public PlayerData getPlayerData() {
-        return data;
     }
 }

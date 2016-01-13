@@ -4,6 +4,7 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,12 +17,9 @@ import java.util.UUID;
 
 public class Stats extends Command {
 
-    // TODO fix stats
     public void onCommand(Player player, String[] args) {
         UUID target = args.length == 1 ? player.getUniqueId() : Bukkit.getPlayer(args[1]) == null ? Bukkit.getOfflinePlayer(args[1]).getUniqueId() : Bukkit.getPlayer(args[1]).getUniqueId();
-        // todo: better way of doing this..
-        Paintball pb = (Paintball) JavaPlugin.getProvidingPlugin(Paintball.class);
-        Map<StatType, String> stats = pb.getPlayerData().getPlayerStats(target);
+        Map<StatType, String> stats = Settings.PLAYERDATA.getPlayerStats(target);
 
         Message.getMessenger().msg(player, false, false, SECONDARY + STRIKETHROUGH + "             " + RESET + " " + THEME + Bukkit.getOfflinePlayer(target).getName() + "'s Stats" + RESET + " " + SECONDARY + STRIKETHROUGH + "             ");
 

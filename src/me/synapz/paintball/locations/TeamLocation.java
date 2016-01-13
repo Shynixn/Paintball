@@ -2,6 +2,7 @@ package me.synapz.paintball.locations;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Team;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Location;
 
 public class TeamLocation extends PaintballLocation {
@@ -30,13 +31,13 @@ public class TeamLocation extends PaintballLocation {
 
     // Creates a new TeamLocation by looking inside of arenas.yml and grabbing it out
     public TeamLocation(Arena arena, Team team, TeamLocations type) {
-        super(arena, FILE.getString(team.getPath(type)));
+        super(arena, Settings.ARENA_FILE.getString(team.getPath(type)));
         this.team = team;
         this.type = type;
     }
 
     protected void setLocation() {
-        FILE.set(team.getPath(type), super.toString());
+        Settings.ARENA_FILE.set(team.getPath(type), super.toString());
         arena.advSave();
     }
 }

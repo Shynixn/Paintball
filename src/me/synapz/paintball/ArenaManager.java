@@ -6,6 +6,7 @@ import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 
+import static me.synapz.paintball.storage.Settings.PLAYERDATA;
 import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.*;
 import static me.synapz.paintball.locations.SignLocation.*;
@@ -29,14 +30,6 @@ public class ArenaManager {
 
     public static ArenaManager getArenaManager() {
         return instance;
-    }
-
-    private Map<Location, SignLocation> leaderboardAndJoinSigns = new HashMap<>();
-
-    // Sets up arenas
-    public void setup() {
-        loadArenas();
-        loadSigns();
     }
 
     // Gets an arena from a name
@@ -63,25 +56,6 @@ public class ArenaManager {
         for (Arena a : getArenas().values()) {
             a.forceRemovePlayers();
         }
-    }
-
-    // Gets the team list for an arena, the Integer is that team's score
-    public List<Team> getTeamsList(Arena a) {
-        List<Team> teamList = new ArrayList<>();
-        for (String s : Settings.getSettings().getArenaFile().getStringList(a.getPath() + ".Teams")) {
-            teamList.add(new Team(a, s));
-        }
-        return teamList;
-    }
-
-    // Adds a new arena to arenas.yml
-    public void addNewArena(Arena arena) {
-        Settings.getSettings().getArenaFile().set(arena.getPath() + "Name", arena.getName());
-        Settings.getSettings().getArenaFile().set(arena.getPath() + "Enabled", false);
-
-        arenas.put(arena.getName(), arena);
-        Settings.getSettings().addNewConfigSection(arena);
-        Settings.getSettings().saveArenaFile();
     }
 
     // Get a readable list and send it to the param player
@@ -123,41 +97,15 @@ public class ArenaManager {
                 GREEN + "█-" + GRAY + "Joinable " + RED + "█-" + GRAY + "InProgress " + GRAY + "█-" + GRAY + "Disabled/Not-Setup");
     }
 
-    // Load all arenas from arenas.yml
-    private void loadArenas() {
-        FileConfiguration file = Settings.getSettings().getArenaFile();
-        Set<String> rawArenas = file.getConfigurationSection("Arenas") == null ? null : file.getConfigurationSection("Arenas").getKeys(false);
-
-        if (rawArenas == null) {
-            return;
-        }
-
-        for (String arenaName : rawArenas) {
-            Arena a = null;
-            String name = file.getString("Arenas." + arenaName + ".Name");
-            try {
-                // add each arena to the server
-                a = new Arena(arenaName, name);
-                // set the value of that arena
-                a.loadValues();
-            }catch (Exception e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), false, RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
-                e.printStackTrace();
-            }
-            arenas.put(a.getName(), a);
-        }
-    }
-
     // Updates every type of sign (Leaderboard, Join, Autojoin)
     public void updateAllSignsOnServer() {
-        long start = System.currentTimeMillis();
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
 
         for (Arena a : getArenas().values()) {
             a.updateSigns();
         }
 
-        for (SignLocation signLoc : leaderboardAndJoinSigns.values()) {
+        for (SignLocation signLoc : Settings.ARENA.getSigns().values()) {
             if (!(signLoc.getLocation().getBlock().getState() instanceof Sign)) {
                 signLoc.removeSign();
                 return;
@@ -171,13 +119,19 @@ public class ArenaManager {
                     break;
                 case LEADERBOARD:
                     // TODO: better way
+                    // TODO: lb signs not updating :(
+
                     StatType type = null;
                     for (StatType t : StatType.values()) {
                         if (t.getSignName().equalsIgnoreCase(sign.getLine(2))) {
                             type = t;
                         }
                     }
-                    HashMap<String, String> playerAndStat = Settings.getSettings().getCache().getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+                    if (type == null) {
+                        signLoc.removeSign();
+                        return;
+                    }
+                    HashMap<String, String> playerAndStat = PLAYERDATA.getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
                     sign.setLine(1, playerAndStat.keySet().toArray()[0] + "");
                     sign.setLine(3, playerAndStat.values().toArray()[0] + "");
                     sign.update();
@@ -185,31 +139,6 @@ public class ArenaManager {
                 default:
                     break; // should never happen
             }
-        }
-    }
-
-    public void addSign(SignLocation signLoc) {
-        leaderboardAndJoinSigns.put(signLoc.getLocation(), signLoc);
-    }
-
-    public void removeSign(SignLocation signLoc) {
-        leaderboardAndJoinSigns.remove(signLoc.getLocation(), signLoc);
-    }
-
-    public Map<Location, SignLocation> getSigns() {
-        return leaderboardAndJoinSigns;
-    }
-
-    private void loadSigns() {
-        FileConfiguration file = Settings.getSettings().getArenaFile();
-        for (String rawLoc : file.getStringList("Signs.Autojoin")) {
-            SignLocation signLoc = new SignLocation(SignLocations.AUTOJOIN, rawLoc);
-            leaderboardAndJoinSigns.put(signLoc.getLocation(), signLoc);
-        }
-
-        for (String rawLoc : file.getStringList("Signs.Leaderboard")) {
-            SignLocation signLoc = new SignLocation(SignLocations.LEADERBOARD, rawLoc);
-            leaderboardAndJoinSigns.put(signLoc.getLocation(), signLoc);
         }
     }
 }

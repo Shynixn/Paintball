@@ -29,7 +29,6 @@ public final class ArenaPlayer extends PaintballPlayer {
     private int killCoins = 0;
     private int kills = 0;
     private int deaths = 0;
-    private int kd = 0;
     private int moneyEarned;
     private boolean won = false;
 
@@ -59,7 +58,7 @@ public final class ArenaPlayer extends PaintballPlayer {
     public void leaveArena() {
         super.leaveArena();
         team.playerLeaveTeam();
-        Settings.getSettings().getCache().incrementStat(StatType.GAMES_PLAYED, this);
+        Settings.PLAYERDATA.incrementStat(StatType.GAMES_PLAYED, this);
     }
 
     public void setWon() {
@@ -71,7 +70,7 @@ public final class ArenaPlayer extends PaintballPlayer {
         killCoins--; // TODO: check arena settings for per death
         moneyEarned--; // TODO: check per death and subtract
         deaths++;
-        Settings.getSettings().getCache().incrementStat(StatType.DEATHS, this);
+        Settings.PLAYERDATA.incrementStat(StatType.DEATHS, this);
     }
 
     public void kill(ArenaPlayer target) {
@@ -80,8 +79,8 @@ public final class ArenaPlayer extends PaintballPlayer {
         moneyEarned++; // TODO: check arena settings for per kill money
         kills++;
         arena.incrementTeamScore(team);
-        Settings.getSettings().getCache().incrementStat(StatType.KILLS, this);
-        Settings.getSettings().getCache().incrementStat(StatType.HIGEST_KILL_STREAK, this);
+        Settings.PLAYERDATA.incrementStat(StatType.KILLS, this);
+        Settings.PLAYERDATA.incrementStat(StatType.HIGEST_KILL_STREAK, this);
         arena.broadcastMessage(ChatColor.GREEN, Settings.THEME + player.getName() + " shot " + target.getPlayer().getName() + ". Team score now " + arena.getTeamScore(team) + "/" + Settings.MAX_SCORE, "");
         // TODO: kill messages
         if (reachedGoal()) {
@@ -90,7 +89,7 @@ public final class ArenaPlayer extends PaintballPlayer {
     }
 
     public void shoot(PlayerInteractEvent event) {
-        Settings.getSettings().getCache().incrementStat(StatType.SHOTS, this);
+        Settings.PLAYERDATA.incrementStat(StatType.SHOTS, this);
     }
 
     public void giveShop() {
