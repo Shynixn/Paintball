@@ -59,19 +59,16 @@ Bugs
 - [ ] stat signs fix layout
 - [ ] commands out of order
 - [ ] Get all config values loaded into plugin with checks
-- [ ] Pb admin command <command>
+- [ ] show command info on hover
 - [ ] add start time to signs if arena is starting soon
 - [ ] replace sign with Full if full
 - [ ] should arena signs auto remove when arena is removed?
 - [ ] click on leaderboard sign, show all their stats
 - [ ] in game don’t let move things around
 - [ ] add join sign permissions to default
-- [ ] /paintball admin item << gives item if player clicks
 - [ ] Add arena autojoin to join most ready arena
 - [ ] Make arenas.yml file smaller (1 line locations, 1 line values, etc)-- Longer .yml files may lag so this will help to read files faster
-- [ ] Add def to settings and send console error when it can't load
 - [ ] Big bug where if the team and max aren't multiples of each other, the teams won't be evenly distrobuted. Ex: If max is 16 and there are 12 teams, 16/12 = 0.75 which rounds to 1 per team, so the plugin is currently making it 1 per team
-- [ ] force remove doesnt turn signs to waiting
 
 ####KillCoin API
 Paintball has a powerful, built-in, object-oriented API for creating new KillCoins, giving you a higher ability to expand and customize your server.
