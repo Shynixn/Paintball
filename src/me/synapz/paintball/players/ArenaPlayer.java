@@ -40,10 +40,12 @@ public final class ArenaPlayer extends PaintballPlayer {
         return won;
     }
 
+    @Override
     protected String getChatLayout() {
-        return ARENA_CHAT;
+        return arena.ARENA_CHAT;
     }
 
+    @Override
     protected void initPlayer() {
         arena.addPlayer(this);
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team));
@@ -81,7 +83,7 @@ public final class ArenaPlayer extends PaintballPlayer {
         arena.incrementTeamScore(team);
         Settings.PLAYERDATA.incrementStat(StatType.KILLS, this);
         Settings.PLAYERDATA.incrementStat(StatType.HIGEST_KILL_STREAK, this);
-        arena.broadcastMessage(ChatColor.GREEN, Settings.THEME + player.getName() + " shot " + target.getPlayer().getName() + ". Team score now " + arena.getTeamScore(team) + "/" + Settings.MAX_SCORE, "");
+        arena.broadcastMessage(ChatColor.GREEN, Settings.THEME + player.getName() + " shot " + target.getPlayer().getName() + ". Team score now " + arena.getTeamScore(team) + "/" + arena.MAX_SCORE, "");
         // TODO: kill messages
         if (reachedGoal()) {
             arena.win(team);

@@ -21,28 +21,10 @@ import java.util.Map;
 public class Settings {
 
     // Constants
-    public static int MAX_SCORE;
-    public static int ARENA_TIME;
-    public static int ARENA_COUNTDOWN;
-    public static int ARENA_INTERVAL;
-    public static int ARENA_NO_INTERVAL;
-    public static int LOBBY_COUNTDOWN;
-    public static int LOBBY_INTERVAL;
-    public static int LOBBY_NO_INTERVAL;
     public static int SIGN_UPDATE_TIME;
     public static int CONFIG_VERSION;
     public static int PORT;
-    public static int ROUND_TIME;
-    public static int WIN_WAIT_TIME;
-    public static int KILLCOIN_PER_KILL;
-    public static int KILLCOIN_PER_DEATH;
-    public static int MONEY_PER_KILL;
-    public static int MONEY_PER_DEATH;
-    public static int MONEY_PER_WIN;
-    public static int MONEY_PER_DEFEAT;
 
-    public static String ARENA_CHAT;
-    public static String SPEC_CHAT;
     public static String PREFIX;
     public static String VERSION;
     public static String THEME;
@@ -55,19 +37,10 @@ public class Settings {
     public static String SERVER_ID;
     public static String HOST;
 
-    public static boolean BROADCAST_WINNER;
-    public static boolean COLOR_PLAYER_TITLE_ARENA;
     public static boolean TITLE_API;
     public static boolean VAULT;
     public static boolean SQL;
     public static boolean BUNGEE_CORD;
-    public static boolean USE_ARENA_CHAT;
-    public static boolean PER_TEAM_CHAT; // TODO: is doubled in config
-    public static boolean OPEN_KILLCOIN_MENU; // TODO: rename in config
-    public static boolean GIVE_WOOL_HELMET_ARENA;
-    public static boolean GIVE_WOOL_HELMET_LOBBY;
-    public static boolean COLOR_PLAYER_TITLE_LOBBY;
-    public static boolean GIVE_TEAM_SWITCHER;
 
     public static ArenaFile ARENA;
     public static PlayerData PLAYERDATA;
@@ -130,32 +103,6 @@ public class Settings {
         TITLE_API                   = config.getBoolean("Options.title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
         VAULT                       = config.getBoolean("Options.vault");
         SQL                         = config.getBoolean("Options.SQL");
-        LOBBY_COUNTDOWN             = config.getInt("countdown.lobby.countdown");
-        LOBBY_INTERVAL              = config.getInt("countdown.lobby.interval");
-        LOBBY_NO_INTERVAL           = config.getInt("countdown.lobby.no-interval");
-        ARENA_COUNTDOWN             = config.getInt("countdown.arena.countdown");
-        ARENA_INTERVAL              = config.getInt("countdown.arena.interval");
-        ARENA_NO_INTERVAL           = config.getInt("countdown.arena.no-interval");
-        MAX_SCORE                   = config.getInt("Arena-Settings.Defaults.max-score");
-        ROUND_TIME                  = config.getInt("Arena-Settings.Defaults.time");
-        WIN_WAIT_TIME               = config.getInt("Arena-Settings.Defaults.win-waiting-time");
-        PER_TEAM_CHAT               = config.getBoolean("Arena-Settings.Defaults.per-team-chat");
-        OPEN_KILLCOIN_MENU          = config.getBoolean("Arena-Settings.Defaults."); // TODO: remove this option; no kits
-        GIVE_WOOL_HELMET_ARENA      = config.getBoolean("Arena-Settings.Defaults.Join-Arena.give-wool-helmet");
-        COLOR_PLAYER_TITLE_ARENA    = config.getBoolean("Arena-Settings.Defaults.Join-Arena.color-player-title");
-        GIVE_WOOL_HELMET_LOBBY      = config.getBoolean("Arena-Settings.Defaults.Join-Lobby.give-wool-helmet");
-        COLOR_PLAYER_TITLE_LOBBY    = config.getBoolean("Arena-Settings.Defaults.Join-Lobby.color-player-title");
-        GIVE_TEAM_SWITCHER          = config.getBoolean("Arena-Settings.Defaults.Join-Lobby.give-team-switcher");
-        KILLCOIN_PER_KILL           = config.getInt("Arena-Settings.Rewards.Kill-Coins.per-kill");
-        KILLCOIN_PER_DEATH          = config.getInt("Arena-Settings.Rewards.Kill-Coins.per-death");
-        MONEY_PER_KILL              = config.getInt("Arena-Settings.Rewards.Money.per-kill");
-        MONEY_PER_DEATH             = config.getInt("Arena-Settings.Rewards.Money.per-death");
-        MONEY_PER_WIN               = config.getInt("Arena-Settings.Rewards.Money.per-win");
-        MONEY_PER_DEFEAT            = config.getInt("Arena-Settings.Rewards.Money.per-defeat");
-        USE_ARENA_CHAT              = config.getBoolean("Arena-Settings.Chat.arena-chat");
-        BROADCAST_WINNER            = config.getBoolean("Arena-Settings.Chat.broadcast-winner");
-        SPEC_CHAT = ChatColor.translateAlternateColorCodes('&', config.getString("Chat.spectator-chat"));
-        ARENA_CHAT = ChatColor.translateAlternateColorCodes('&', config.getString("Chat.arena-chat"));
 
         for (String colorcode : config.getConfigurationSection("Teams").getKeys(false)) {
             TEAM_NAMES.put(ChatColor.getByChar(colorcode), config.getString("Teams." + colorcode) + "");
@@ -169,20 +116,41 @@ public class Settings {
 
     // Adds a new arena to config.yml with values default
     public void addNewConfigSection(Arena a) {
-        FileConfiguration config = this.pb.getConfig();
+        FileConfiguration config = pb.getConfig();
         List<String> valuesToSet = new ArrayList<String>() {{
-            this.add("kills-to-win");
-            this.add("time-to-win");
-            this.add("Join-Arena.open-kit-menu");
+            this.add("max-score");
+            this.add("time");
+            this.add("win-waiting-time");
+            this.add("kill-coin-shop");
+
             this.add("Join-Arena.give-wool-helmet");
+            this.add("Join-Arena.color-player-title");
+            this.add("Join-Arena.per-team-chat");
+
             this.add("Join-Lobby.give-wool-helmet");
             this.add("Join-Lobby.color-player-title");
+            this.add("Join-Lobby.give-team-switcher");
+            this.add("Join-Lobby.per-team-chat");
+
             this.add("Rewards.Kill-Coins.per-kill");
             this.add("Rewards.Kill-Coins.per-death");
             this.add("Rewards.Money.per-kill");
             this.add("Rewards.Money.per-death");
             this.add("Rewards.Money.per-win");
             this.add("Rewards.Money.per-defeat");
+
+            this.add("Chat.arena-chat");
+            this.add("Chat.broadcast-winner");
+            this.add("Chat.spectator-chat");
+            this.add("Chat.arena-chat");
+
+            this.add("Countdown.lobby.countdown");
+            this.add("Countdown.lobby.interval");
+            this.add("Countdown.lobby.no-interval");
+
+            this.add("Countdown.arena.countdown");
+            this.add("Countdown.arena.interval");
+            this.add("Countdown.arena.no-interval");
         }};
 
         for (String value : valuesToSet) {
@@ -192,8 +160,8 @@ public class Settings {
     }
 
     public void removeArenaConfigSection(Arena a) {
-        this.pb.getConfig().set("Arena-Settings." + "Arenas." + a.getDefaultName(), null);
-        this.pb.saveConfig();
+        pb.getConfig().set("Arena-Settings." + "Arenas." + a.getDefaultName(), null);
+        pb.saveConfig();
     }
 
     public FileConfiguration getConfig() {

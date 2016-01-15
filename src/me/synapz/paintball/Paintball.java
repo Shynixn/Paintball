@@ -110,6 +110,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             Metrics metrics = new Metrics(this);
             metrics.start();
 
+            /*
             Metrics.Graph playersInArenaGraph = metrics.createGraph("Players In Arena");
 
             playersInArenaGraph.addPlotter(new Metrics.Plotter() {
@@ -118,7 +119,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
                     return 22;
                 }
             });
-
+            */
         } catch (IOException exc) {
 
         }

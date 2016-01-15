@@ -27,8 +27,35 @@ import java.util.*;
 
 public class Arena {
 
-    public final int TIME = Settings.getSettings().getConfig().getInt("Arena-Settings.Arenas." + getDefaultName() + ".time", Settings.ARENA_TIME);
-    public final int MAX_SCORE = Settings.getSettings().getConfig().getInt("Arena-Settings.Arenas." + getDefaultName() + ".max-score", Settings.MAX_SCORE);
+    public final int MAX_SCORE                      = loadInt("max-score");
+    public final int TIME                           = loadInt("time");
+    public final int WIN_WAIT_TIME                  = loadInt("win-waiting-time");
+    public final int ARENA_COUNTDOWN                = loadInt("countdown.arena.countdown");
+    public final int ARENA_INTERVAL                 = loadInt("countdown.arena.interval");
+    public final int ARENA_NO_INTERVAL              = loadInt("countdown.arena.no-interval");
+    public final int LOBBY_COUNTDOWN                = loadInt("countdown.lobby.countdown");
+    public final int LOBBY_INTERVAL                 = loadInt("countdown.lobby.interval");
+    public final int LOBBY_NO_INTERVAL              = loadInt("countdown.lobby.no-interval");
+    public final int KILLCOIN_PER_KILL              = loadInt("Rewards.Kill-Coins.per-kill");
+    public final int KILLCOIN_PER_DEATH             = loadInt("Rewards.Kill-Coins.per-death");
+    public final int MONEY_PER_KILL                 = loadInt("Rewards.Money.per-kill");
+    public final int MONEY_PER_DEATH                = loadInt("Rewards.Money.per-death");
+    public final int MONEY_PER_WIN                  = loadInt("Rewards.Money.per-win");
+    public final int MONEY_PER_DEFEAT               = loadInt("Rewards.Money.per-defeat");
+
+    public final String ARENA_CHAT; // TODO: fix this
+    public final String SPEC_CHAT ;
+
+    public final boolean BROADCAST_WINNER           = loadBoolean("Chat.broadcast-winner");
+    public final boolean PER_TEAM_CHAT_LOBBY        = loadBoolean("Join-Lobby.per-team-chat");
+    public final boolean PER_TEAM_CHAT_ARENA        = loadBoolean("Join-Arena.per-team-chat");
+    public final boolean KILL_COIN_SHOP             = loadBoolean("Defaults.kill-coin-shop");
+    public final boolean GIVE_WOOL_HELMET_ARENA     = loadBoolean("Join-Arena.give-wool-helmet");
+    public final boolean GIVE_WOOL_HELMET_LOBBY     = loadBoolean("Join-Lobby.give-wool-helmet");
+    public final boolean COLOR_PLAYER_TITLE_LOBBY   = loadBoolean("Join-Lobby.color-player-title");
+    public final boolean COLOR_PLAYER_TITLE_ARENA   = loadBoolean("Join-Arena.color-player-title");
+    public final boolean GIVE_TEAM_SWITCHER         = loadBoolean("Join-Lobby.give-team-switcher");
+    public final boolean USE_ARENA_CHAT             = loadBoolean("Chat.arena-chat");
 
     // All the players in the arena (Lobby, Spec, InGame) linked to the player which is linked to the PaintballPLayer
     private Map<Player, PaintballPlayer> allPlayers = new HashMap<Player, PaintballPlayer>();
@@ -65,10 +92,16 @@ public class Arena {
      * @param name Arenas current name, used to show the name of the arena
      * @param currentName Arenas name when setup, used to access paths
      */
-    public Arena(String name, String currentName) {
+    public Arena(String name, String currentName, boolean addToConfig) {
         this.currentName = currentName;
         this.defaultName = name;
 
+        if (addToConfig) {
+            Settings.ARENA.addNewArenaToFile(this);
+        }
+
+        ARENA_CHAT = loadString("Chat.arena-chat");
+        SPEC_CHAT  = loadString("Chat.spectator-chat");
         // Go through each arena inside the arena (located in config) and add it to the team list
         for (Team team : Settings.ARENA.getTeamsList(this)) {
             teams.put(team, 0);
@@ -316,6 +349,14 @@ public class Arena {
     public String getPath() {
         return "Arenas." + defaultName + ".";
     }
+
+    public String getConfigPath(String item) {
+        return "Per-Arena-Settings." + defaultName + "." + item;
+    }
+
+    public String getDefaultConfigPath(String item) {
+        return "Per-Arena-Settings.Defaults." + item;
+    }
     
     public void joinLobby(Player player, Team team) {
         new LobbyPlayer(this, team == null ? getTeamWithLessPlayers() : team, player);
@@ -346,13 +387,13 @@ public class Arena {
 
     // Called when a team wins
     public void win(Team team) {
-        if (Settings.BROADCAST_WINNER) {
+        if (BROADCAST_WINNER) {
             // TODO: broadcast to server / network (except for those in game, they get a different message)
         }
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
             if (arenaPlayer.getTeam() == team)
                 arenaPlayer.setWon();
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), true, ChatColor.GREEN, "$" + arenaPlayer.getMoneyEarned(), "Kills: " + arenaPlayer.getKills(), "Deaths: " + arenaPlayer.getDeaths(), "Killstreak: " + arenaPlayer.getKillStreak(), "KD: " + arenaPlayer.getKd(), "Your team " + (arenaPlayer.getTeam() == team ? "won" : "lost")); // TODO: get Vault currency instead of $ and check to make sure vault is enabled
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.GREEN, "$" + arenaPlayer.getMoneyEarned(), "Kills: " + arenaPlayer.getKills(), "Deaths: " + arenaPlayer.getDeaths(), "Killstreak: " + arenaPlayer.getKillStreak(), "KD: " + arenaPlayer.getKd(), "Your team " + (arenaPlayer.getTeam() == team ? "won" : "lost")); // TODO: get Vault currency instead of $ and check to make sure vault is enabled
         }
         broadcastMessage(GREEN, "The " + team.getChatColor() + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
         broadcastMessage(GREEN, ChatColor.STRIKETHROUGH + Settings.THEME + "                              ", "");
@@ -512,6 +553,35 @@ public class Arena {
         }
     }
 
+    private int loadInt(String item) {
+        if (Settings.ARENA_FILE.getString(getConfigPath(item)) != null && Settings.ARENA_FILE.getString(getConfigPath(item)).equalsIgnoreCase("default")) {
+            System.out.println(Settings.ARENA_FILE.getInt(getDefaultConfigPath(item)));
+            return Settings.ARENA_FILE.getInt(getDefaultConfigPath(item));
+        } else {
+            System.out.println(Settings.ARENA_FILE.getInt(getConfigPath(item)));
+            return Settings.ARENA_FILE.getInt(getConfigPath(item));
+        }
+    }
+
+    private String loadString(String item) {
+        if (Settings.ARENA_FILE.getString(getConfigPath(item)) != null && Settings.ARENA_FILE.getString(getConfigPath(item)).equalsIgnoreCase("default")) {
+            System.out.println(ChatColor.translateAlternateColorCodes('&', Settings.ARENA_FILE.getString(getDefaultConfigPath(item)))); // todo: remove these printlns
+            return ChatColor.translateAlternateColorCodes('&', Settings.ARENA_FILE.getString(getDefaultConfigPath(item)));
+        } else {
+            System.out.println(ChatColor.translateAlternateColorCodes('&', Settings.ARENA_FILE.getString(getConfigPath(item))));
+            return ChatColor.translateAlternateColorCodes('&', Settings.ARENA_FILE.getString(getConfigPath(item)));
+        }
+    }
+
+    private boolean loadBoolean(String item) {
+        if (Settings.ARENA_FILE.getString(getConfigPath(item)) != null && Settings.ARENA_FILE.getString(getConfigPath(item)).equalsIgnoreCase("default")) {
+            System.out.println(Settings.ARENA_FILE.getBoolean(getDefaultConfigPath(item)));
+            return Settings.ARENA_FILE.getBoolean(getDefaultConfigPath(item));
+        } else {
+            System.out.println(Settings.ARENA_FILE.getBoolean(getConfigPath(item)));
+            return Settings.ARENA_FILE.getBoolean(getConfigPath(item));
+        }
+    }
 
     // TODO: add events so players can't teleport and stuff inside arena
 }

@@ -42,12 +42,12 @@ public final class LobbyPlayer extends PaintballPlayer {
         team.playerJoinTeam();
 
         if (arena.canStartTimer()) {
-            Utils.countdown(LOBBY_COUNTDOWN, LOBBY_INTERVAL, LOBBY_NO_INTERVAL, arena, GREEN + "Waiting for more players. " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Waiting for more players\n" + GRAY + "%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
+            Utils.countdown(arena.LOBBY_COUNTDOWN, arena.LOBBY_INTERVAL, arena.LOBBY_NO_INTERVAL, arena, GREEN + "Waiting for more players. " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Waiting for more players\n" + GRAY + "%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
         }
     }
 
     protected String getChatLayout() {
-        return ARENA_CHAT;
+        return arena.ARENA_CHAT;
     }
 
     private void giveItems() {

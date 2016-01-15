@@ -87,24 +87,21 @@ Kill-Coin-Shop:
     # Weather or not the item will be shown in the KillCoin Shop
     shown: true
 
-# Uses TitleAPI to show countdown in the middle of the screen instead of just chat
-countdown:
-   # Lobby countdown configuration-- how long to wait for more players after the minimum is reached
-   lobby:
-     # How long it will take until players are teleported to their spawnpoints. The longer the more players may join. 0 for no countdown
-     countdown: 60
-     # The interval when showing the numbers. Ex. 60...50...40...
-     # Set interval the same as the countdown to remove any countdown messages
-     interval: 10
-     # The number at which there will be no delay in showing numbers. Ex. 15...10...5......3...2...1...
-     no-interval: 10
-   # Arena countdown configuration - after players have been set to their team spawnpoints, a countdown begins
-   arena:
-     countdown: 10
-     interval: 1
-     no-interval: 0
+###############################
+#        Arena Settings       #
+###############################
+#messages list, "%killer% shot %player%
+#how fast paintballs shoot
+#
+#
+#
+#
 
-Arena-Settings:
+
+###############################
+#      Per-Arena Settings     #
+###############################
+Per-Arena-Settings:
   # The default settings for each arena. Set an arena setting to "default" in order to use this default value ex: kills-to-win: default
   # Arenas will auto-generate with values "default" whenever a new arena is created
   Defaults:
@@ -114,17 +111,15 @@ Arena-Settings:
     time: 300
     # How much time (in seconds) to wait after a team wins before players will be sent out of the arena. In this time players can see their scores and who won
     win-waiting-time: 10
-    # True - Chat will only send to players on the same team. False - Chat will send to whole arena
-    per-team-chat: true
+    # True - KillCoin Shop is enabled for the arena. False - No KillCoin Shop
+    kill-coin-shop: true
     # Settings for when a player joins an arena
     Join-Arena:
-      # True - opens a kit menu with default kits. False - no kit menu will open
-      open-kit-menu: true
       # True - give a wool helmet based on their team color. False - instead of wool, there will be a colored leather helmet
       give-wool-helmet: true
       # True - colors player's nametag based on their team color. False - no color
       color-player-title: true
-      # True - Chat will only send to players on the same team. False - Chat will send to whole arena
+      # True - Chat will only send to players on the same team. False - Chat will send to whole arena (only for when in lobby)
       per-team-chat: true
 
     # Settings for when a player joins a lobby
@@ -135,6 +130,8 @@ Arena-Settings:
       color-player-title: true
       # True - will give the player a item that allows them to switch team. False - player will not be able to switch team unless they leave and join
       give-team-switcher: true
+      # True - Chat will only send to players on the same team. False - Chat will send to whole arena (in arena)
+      per-team-chat: true
 
     # Default rewards
     Rewards:
@@ -149,6 +146,7 @@ Arena-Settings:
         per-death: -10
         per-win: 100
         per-defeat: -50
+
     # Settings to do with chat aspects of Paintball-- when players are in the arena
     Chat:
       # True - use arena chat which can only be viewed by arena players. False - will use global chat
@@ -159,5 +157,19 @@ Arena-Settings:
       spectator-chat: "&7[Spectator] %PLAYER%: %MSG%"
       # Chat format for lobby players and in game players. Tags: %ARENA%, %PLAYER%, %MSG%, %TEAMCOLOR%, %TEAMNAME%, %PREFIX%
       arena-chat: "%PREFIX%&8-%TEAMCOLOR%%TEAMNAME%&8- &a%PLAYER%&7: %MSG%"
-      # True - only players on the same team will see a sent message. False - all arena players can see a message
-      per-team-chat: false
+
+    Countdown:
+       # Lobby countdown configuration-- how long to wait for more players after the minimum is reached
+       lobby:
+         # How long it will take until players are teleported to their spawnpoints. The longer the more players may join. 0 for no countdown
+         countdown: 60
+         # The interval when showing the numbers. Ex. 60...50...40...
+         # Set interval the same as the countdown to remove any countdown messages
+         interval: 10
+         # The number at which there will be no delay in showing numbers. Ex. 15...10...5......3...2...1...
+         no-interval: 10
+       # Arena countdown configuration - after players have been set to their team spawnpoints, a countdown begins
+       arena:
+         countdown: 10
+         interval: 1
+         no-interval: 0

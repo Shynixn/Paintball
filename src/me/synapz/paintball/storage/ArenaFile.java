@@ -72,7 +72,7 @@ public class ArenaFile extends PaintballFile {
             String name = fileConfig.getString("Arenas." + arenaName + ".Name");
             try {
                 // add each arena to the server
-                a = new Arena(arenaName, name);
+                a = new Arena(arenaName, name, false);
                 // set the value of that arena
                 a.loadValues();
             }catch (Exception e) {

@@ -4,17 +4,14 @@ import com.google.common.base.Joiner;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.Bukkit;
 
 import static me.synapz.paintball.storage.Settings.PLAYERDATA;
 import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.*;
-import static me.synapz.paintball.locations.SignLocation.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.*;

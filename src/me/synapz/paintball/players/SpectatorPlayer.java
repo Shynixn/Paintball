@@ -26,11 +26,11 @@ public final class SpectatorPlayer extends PaintballPlayer {
     }
 
     protected String getChatLayout() {
-        return SPEC_CHAT;
+        return arena.SPEC_CHAT;
     }
 
     public void chat(String message) {
-        String chat = SPEC_CHAT;
+        String chat = getChatLayout();
 
         chat = chat.replace("%MSG%", message);
         chat = chat.replace("%PREFIX%", PREFIX);
