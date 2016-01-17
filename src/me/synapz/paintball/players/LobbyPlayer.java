@@ -7,6 +7,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,10 @@ public final class LobbyPlayer extends PaintballPlayer {
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team));
         giveItems();
         giveWoolHelmet();
+        Scoreboard sb = Team.getPluginScoreboard();
+        final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
+        playerTeam.addPlayer(player);
+        player.setScoreboard(sb);
     }
 
     protected void initPlayer() {

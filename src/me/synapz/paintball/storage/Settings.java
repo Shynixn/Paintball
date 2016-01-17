@@ -112,6 +112,10 @@ public class Settings {
     public void reloadConfig() {
         pb.reloadConfig();
         loadEverything();
+
+        for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
+            a.loadConfigValues();
+        }
     }
 
     // Adds a new arena to config.yml with values default
@@ -154,13 +158,13 @@ public class Settings {
         }};
 
         for (String value : valuesToSet) {
-            config.set("Arena-Settings." + "Arenas." + a.getDefaultName() + "." + value, "default");
+            config.set(a.getConfigPath(value), "default");
         }
-        this.pb.saveConfig();
+        pb.saveConfig();
     }
 
     public void removeArenaConfigSection(Arena a) {
-        pb.getConfig().set("Arena-Settings." + "Arenas." + a.getDefaultName(), null);
+        pb.getConfig().set("Per-Arena-Settings." + "Arenas." + a.getDefaultName(), null);
         pb.saveConfig();
     }
 

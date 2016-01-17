@@ -127,7 +127,6 @@ public class KillCoinItem extends ItemStack {
 
         if (!forKillCoinShop) { // if this isnt for the shop but for being placed in their inventory, add spaces to make the item different than others with same name
             setItemDisplayName(arenaPlayer.getPlayer().getInventory());
-            setItemDisplayName(arenaPlayer.getPlayer().getInventory());
         }
 
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.getItemName(!forKillCoinShop)));
@@ -146,6 +145,7 @@ public class KillCoinItem extends ItemStack {
         if (requiresMoney())
             newLore.add(Settings.THEME + "Cost: " + Settings.SECONDARY + getMoney()); // todo: implement currency so $amount
 
+        // TODO: if 2+ people in arena and one buys an item without killcoins, the other players has it lock up and they cant buy the item even if it dont require killcoins
         if (requiresKillCoins())
             newLore.add(Settings.THEME + "KillCoins: " + Settings.SECONDARY + getKillCoins());
 
@@ -166,7 +166,7 @@ public class KillCoinItem extends ItemStack {
         } else {
             System.out.println("Player coins: " + player.getKillCoins() + " Required: " + this.getKillCoins());
             if (player.getKillCoins() < this.getKillCoins())
-            builder.append("You don't have enough KillCoins ");
+                builder.append("You don't have enough KillCoins ");
 
             // if (arenaPlayer.getMoney() < getMoney() // TODO: import Vault for this
             // builder.append(", Money");
@@ -190,7 +190,7 @@ public class KillCoinItem extends ItemStack {
         }
     }
 
-    // Checks to see if this KillCoinItem equals an ItemStack by looking at its name a lore
+    // Checks to see if this KillCoinItem equals an ItemStack by looking at its name and lore
     public boolean equals(ItemStack itemStack) {
         if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
             ItemMeta itemStackMeta = itemStack.getItemMeta();
@@ -239,8 +239,7 @@ public class KillCoinItem extends ItemStack {
     }
 
     // Checks to see if the item requires any killcoins
-    public
-    boolean requiresKillCoins() {
+    public boolean requiresKillCoins() {
         return !(killcoins <= 0);
     }
 

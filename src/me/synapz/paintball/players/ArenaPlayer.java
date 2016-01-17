@@ -1,6 +1,7 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.*;
+import me.synapz.paintball.Team;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.locations.TeamLocation;
@@ -18,7 +19,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.*;
 
 import static me.synapz.paintball.storage.Settings.*;
 
@@ -127,6 +128,17 @@ public final class ArenaPlayer extends PaintballPlayer {
         return killStreak;
     }
 
+    public void updateSideScoreboard() {
+        Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
+
+        Objective objective = sb.registerNewObjective(team.getTitleName(), "dummy");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        Score score = objective.getScore(ChatColor.GREEN + "Kills:"); //Get a fake offline player
+        score.setScore(1);
+
+        player.setScoreboard(sb);
+    }
+
     private void giveItems() {
         player.getInventory().clear();
         player.getInventory().setItem(0, Utils.makeItem(Material.SNOW_BALL, Settings.THEME + "Paintball", 64));
@@ -140,6 +152,7 @@ public final class ArenaPlayer extends PaintballPlayer {
         Scoreboard sb = Team.getPluginScoreboard();
         final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
         playerTeam.addPlayer(player);
+        playerTeam.setAllowFriendlyFire(false); // TODO: does this work?
         player.setScoreboard(sb);
     }
 

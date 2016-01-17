@@ -91,6 +91,7 @@ public class KillCoinListeners implements Listener {
                     break;
             }
         } else {
+            // TODO: if item has a " " in it for distinguisihing, it doesnt get valled normally
             killCoinItem.onClickItem(e);
         }
     }

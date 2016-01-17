@@ -6,6 +6,7 @@ import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
@@ -74,13 +75,13 @@ public class ExpirationTime extends BukkitRunnable {
             if (times.get(inv.getItemInHand().getItemMeta().getDisplayName()).getCounter() == counter) {
                 ActionBarAPI.sendActionBar(player, Settings.THEME + "Expires in: " + Settings.SECONDARY + (int)counter + Settings.THEME + " seconds");
             }
-        } else if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) { // TODO: meta and displyanme checks
+        } else if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
             // this means the item in the hand is an expiration time, so dont remove the action bar, it will update on its iteration
         } else {
             removeActionBar();
         }
 
-        if (!inv.contains(item)) {
+        if (player.getHealth() != 0 && !inventoryContainsItem()) {
             this.cancel();
         }
     }
@@ -91,5 +92,13 @@ public class ExpirationTime extends BukkitRunnable {
 
     private double getCounter() {
         return counter;
+    }
+
+    private boolean inventoryContainsItem() {
+        for (ItemStack itemStack : player.getInventory()) {
+            if (item.equals(itemStack))
+                return true;
+        }
+        return false;
     }
 }
