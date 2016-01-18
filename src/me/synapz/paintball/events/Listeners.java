@@ -205,7 +205,7 @@ public class Listeners implements Listener {
 
         Player source = snowball.getShooter() instanceof Player ? (Player) snowball.getShooter() : null;
 
-        if (source == null && !(isInArena(source) && isInArena(hitBySnowball))) // if the person who was hit by the snowball is null and the source is null and neither of them are in the arena, so cancel
+        if (source == null || !(isInArena(source) || !isInArena(hitBySnowball))) // if the person who was hit by the snowball is null and the source is null and neither of them are in the arena, so cancel
             return;
 
         Arena a = getArena(source);

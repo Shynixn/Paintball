@@ -3,6 +3,7 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
+import me.synapz.paintball.countdowns.ArenaCountdown;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
@@ -341,8 +342,8 @@ public class Arena {
     public void forceStart(boolean toStart) {
         if (toStart) {
             // in case there are any current countdown tasks in that arena (lobby countdown) we want to stop it
-            if (CountdownTask.tasks.get(this) != null)
-                CountdownTask.tasks.get(this).cancel();
+            if (ArenaCountdown.tasks.get(this) != null)
+                ArenaCountdown.tasks.get(this).cancel();
             startGame();
         } else {
             state = ArenaState.WAITING;
@@ -381,32 +382,7 @@ public class Arena {
             new ArenaPlayer(this, p.getTeam(), p.getPlayer());
         }
         lobby.removeAll(lobby);
-        Utils.countdown(ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", false);
-        new BukkitRunnable() {
-            int counter = TIME+ARENA_COUNTDOWN;
-            @Override
-            public void run() {
-                if (counter == 0) {
-                    Team winningTeam = (Team) getArenaTeamList().toArray()[0]; // just gets the first name as a starting point
-                    int score = getTeamScore(winningTeam);
-                    for (Team t : getArenaTeamList()) {
-                        if (score < getTeamScore(t)) {
-                            winningTeam = t;
-                            score = getTeamScore(winningTeam);
-                        } else if (score == getTeamScore(t) && t != winningTeam) {
-                            // TODO: it is a tie
-                        }
-                    }
-                    win(winningTeam);
-                    this.cancel();
-                } else {
-                    for (ArenaPlayer player : getAllArenaPlayers()) {
-                        player.updateSideScoreboard();
-                    }
-                    counter--;
-                }
-            }
-        }.runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 20);
+        new ArenaCountdown(ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", false);
     }
     
     // Used for server reload and arena force stops, so no messages will be sent

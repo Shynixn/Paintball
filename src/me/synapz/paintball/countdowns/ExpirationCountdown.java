@@ -1,28 +1,28 @@
-package me.synapz.paintball;
+package me.synapz.paintball.countdowns;
 
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
+import me.synapz.paintball.Message;
 import me.synapz.paintball.killcoin.KillCoinItem;
-import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class ExpirationTime extends BukkitRunnable {
+public class ExpirationCountdown extends PaintballCountdown {
 
-    private static Map<String, ExpirationTime> times = new HashMap<>();
+    /*
+    This Countdown class is responsible for KillCoinItems which have an ExpirationTime
+     */
+
+    protected double decrement = 0.5;
+
+    private static Map<String, ExpirationCountdown> times = new HashMap<>();
 
     private final ArenaPlayer arenaPlayer;
     private final Player player;
@@ -30,7 +30,8 @@ public class ExpirationTime extends BukkitRunnable {
     private final KillCoinItem item;
     private final PlayerInventory inv;
 
-    public ExpirationTime(KillCoinItem item, ArenaPlayer arenaPlayer, double counter) {
+    public ExpirationCountdown(KillCoinItem item, ArenaPlayer arenaPlayer, double counter) {
+        super(counter);
         this.counter = counter;
         this.arenaPlayer = arenaPlayer;
         this.player = arenaPlayer.getPlayer();
@@ -41,14 +42,33 @@ public class ExpirationTime extends BukkitRunnable {
     }
 
     @Override
-    public void run() {
-        if (arenaPlayer == null || counter <= 0) {
-            this.cancel();
-            return;
+    public void onFinish() {
+        return;
+    }
+
+    @Override
+    public void onIteration() {
+        ItemStack itemInHand = inv.getItemInHand();
+        if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && item.equals(itemInHand) && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
+            // TODO: if actionbar is installed and true in config
+            if (times.get(inv.getItemInHand().getItemMeta().getDisplayName()).getCounter() == counter) {
+                ActionBarAPI.sendActionBar(player, Settings.THEME + "Expires in: " + Settings.SECONDARY + (int)counter + Settings.THEME + " seconds");
+            }
+        } else if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
         } else {
-            updateItem();
+            removeActionBar();
         }
-        counter -= 0.5; // it isn't 1 bwcause we want this to run every .5 seconds so we can easily update inventories ActionBars faster
+    }
+
+    @Override
+    public boolean stop() {
+        // Will stop if... The player is null (left), the counter is finished, the player's health isn't 0 (aren't dead), and the inventory contains the item
+        return player == null || arenaPlayer == null || counter <= 0 || player.getHealth() != 0 && !inventoryContainsItem();
+    }
+
+    @Override
+    public boolean intervalCheck() {
+        return true;
     }
 
     // Overrides cancel so that it cancels the task AND removes the item from inventory (if it is in the inventory)
@@ -63,35 +83,13 @@ public class ExpirationTime extends BukkitRunnable {
             }
             Message.getMessenger().msg(player.getPlayer(), true, ChatColor.RED, Settings.THEME + "Item " + Settings.SECONDARY + item.getItemName(false) + Settings.THEME + " has expired!");
         }
-        times.remove(item.getItemName(true), item);
+        times.remove(item.getItemName(true)); // TODO: does this work..?
         removeActionBar();
         super.cancel();
     }
 
-    private void updateItem() {
-        ItemStack itemInHand = inv.getItemInHand();
-        if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && item.equals(itemInHand) && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
-            // TODO: if actionbar is installed and true in config
-            if (times.get(inv.getItemInHand().getItemMeta().getDisplayName()).getCounter() == counter) {
-                ActionBarAPI.sendActionBar(player, Settings.THEME + "Expires in: " + Settings.SECONDARY + (int)counter + Settings.THEME + " seconds");
-            }
-        } else if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
-            // this means the item in the hand is an expiration time, so dont remove the action bar, it will update on its iteration
-        } else {
-            removeActionBar();
-        }
-
-        if (player.getHealth() != 0 && !inventoryContainsItem()) {
-            this.cancel();
-        }
-    }
-
     private void removeActionBar() {
         ActionBarAPI.sendActionBar(player, "");
-    }
-
-    private double getCounter() {
-        return counter;
     }
 
     private boolean inventoryContainsItem() {

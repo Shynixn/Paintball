@@ -1,6 +1,7 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.*;
+import me.synapz.paintball.countdowns.ArenaCountdown;
 import me.synapz.paintball.locations.TeamLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -47,7 +48,7 @@ public final class LobbyPlayer extends PaintballPlayer {
         team.playerJoinTeam();
 
         if (arena.canStartTimer()) {
-            Utils.countdown(arena.LOBBY_COUNTDOWN, arena.LOBBY_INTERVAL, arena.LOBBY_NO_INTERVAL, arena, GREEN + "Waiting for more players. " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Waiting for more players\n" + GRAY + "%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
+            new ArenaCountdown(arena.LOBBY_COUNTDOWN, arena.LOBBY_INTERVAL, arena.LOBBY_NO_INTERVAL, arena, GREEN + "Waiting for more players. " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Waiting for more players\n" + GRAY + "%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
         }
     }
 

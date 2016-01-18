@@ -1,7 +1,6 @@
 package me.synapz.paintball;
 
-import me.synapz.paintball.players.LobbyPlayer;
-import me.synapz.paintball.players.PaintballPlayer;
+import me.synapz.paintball.countdowns.ArenaCountdown;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -65,14 +64,6 @@ public class Utils {
                 return GameMode.SPECTATOR;
             default: // in case Minecraft adds new GameMode, don't want errors in console.
                 return GameMode.SURVIVAL;
-        }
-    }
-
-    // Starts a countdown
-    public static void countdown(int counter, int interval, int noInterval, Arena a, String chatMessage, String screenMessage, String finishedMessage, boolean isLobbyCountDown) {
-        if (CountdownTask.tasks.get(a) == null) {
-            Plugin plugin = Bukkit.getPluginManager().getPlugin("Paintball");
-            new CountdownTask(counter, interval, noInterval, a, chatMessage, screenMessage, finishedMessage, isLobbyCountDown).runTaskTimer(plugin, 0, 20);
         }
     }
 

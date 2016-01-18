@@ -2,7 +2,7 @@ package me.synapz.paintball.killcoin;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
-import me.synapz.paintball.ExpirationTime;
+import me.synapz.paintball.countdowns.ExpirationCountdown;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
@@ -185,8 +185,7 @@ public class KillCoinItem extends ItemStack {
         KillCoinItem itemToGive = new KillCoinItem(this);
         playerToGetItem.getPlayer().getInventory().addItem(itemToGive.getItemStack(playerToGetItem, false));
         if (this.hasExpirationTime()) {
-            new ExpirationTime(itemToGive, playerToGetItem, getExpirationTime()).runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 10
-            );
+            new ExpirationCountdown(itemToGive, playerToGetItem, getExpirationTime());
         }
     }
 

@@ -2,6 +2,7 @@ package me.synapz.paintball.players;
 
 import me.synapz.paintball.*;
 import me.synapz.paintball.Team;
+import me.synapz.paintball.countdowns.GameCountdown;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.locations.TeamLocation;
@@ -133,8 +134,13 @@ public final class ArenaPlayer extends PaintballPlayer {
 
         Objective objective = sb.registerNewObjective(team.getTitleName(), "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        Score score = objective.getScore(ChatColor.GREEN + "Kills:"); //Get a fake offline player
-        score.setScore(1);
+        objective.setDisplayName(Settings.THEME + "Paintball");
+
+        Score timeLeft = objective.getScore(team.getChatColor() + "Time Left: ");
+        timeLeft.setScore((int) GameCountdown.gameCountdowns.get(arena).getCounter());
+
+        Score teamScore = objective.getScore(team.getChatColor() + "Score: "); //Get a fake offline player
+        teamScore.setScore(arena.getTeamScore(team));
 
         player.setScoreboard(sb);
     }
