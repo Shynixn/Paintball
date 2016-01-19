@@ -1,6 +1,7 @@
 package me.synapz.paintball.events;
 
 import me.synapz.paintball.*;
+import me.synapz.paintball.countdowns.NoHitCountdown;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -184,6 +185,7 @@ public class Listeners implements Listener {
                 return;
 
             e.setRespawnLocation(arena.getLocation(TeamLocation.TeamLocations.SPAWN, arenaPlayer.getTeam()));
+            new NoHitCountdown(arena.SAFE_TIME, arenaPlayer);
         }
     }
 
@@ -201,6 +203,7 @@ public class Listeners implements Listener {
             if (isInArena(hitBySnowball)) {
                 event.setCancelled(true);
             }
+            return;
         }
 
         Player source = snowball.getShooter() instanceof Player ? (Player) snowball.getShooter() : null;
@@ -218,10 +221,21 @@ public class Listeners implements Listener {
         if (arenaPlayer == hitPlayer) // player hit themself
             return;
 
-        Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
-        hitBySnowball.setHealth(0);
-        hitPlayer.die();
-        arenaPlayer.kill(hitPlayer);
+        String hitPlayerName = hitPlayer.getPlayer().getName();
+        String shooterPlayerName = arenaPlayer.getPlayer().getName();
+
+        if(NoHitCountdown.godPlayers.keySet().contains(hitPlayerName)) {
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "That player is currently safe from Paintballs. Protection: " + (int) NoHitCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
+            event.setCancelled(true);
+        } else if (NoHitCountdown.godPlayers.keySet().contains(shooterPlayerName)) {
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "You cannot hit players while you are protected. Protection: " + (int) NoHitCountdown.godPlayers.get(shooterPlayerName).getCounter() + " seconds");
+            event.setCancelled(true);
+        } else {
+            Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
+            hitBySnowball.setHealth(0);
+            hitPlayer.die();
+            arenaPlayer.kill(hitPlayer);
+        }
     }
 
     @EventHandler

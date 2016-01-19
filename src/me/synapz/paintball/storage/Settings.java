@@ -126,7 +126,8 @@ public class Settings {
             this.add("time");
             this.add("win-waiting-time");
             this.add("kill-coin-shop");
-
+            this.add("safe-time");
+            
             this.add("Join-Arena.give-wool-helmet");
             this.add("Join-Arena.color-player-title");
             this.add("Join-Arena.per-team-chat");

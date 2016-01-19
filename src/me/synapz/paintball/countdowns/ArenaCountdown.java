@@ -48,8 +48,8 @@ public class ArenaCountdown extends PaintballCountdown {
             a.startGame();
         } else {
             a.setState(Arena.ArenaState.IN_PROGRESS);
+            new GameCountdown(a);
         }
-        new GameCountdown(a);
     }
 
     @Override

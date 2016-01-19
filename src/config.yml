@@ -113,6 +113,8 @@ Per-Arena-Settings:
     win-waiting-time: 10
     # True - KillCoin Shop is enabled for the arena. False - No KillCoin Shop
     kill-coin-shop: true
+    # Time in seconds players have after they die before they can be killed by a snowball
+    safe-time: 5
     # Settings for when a player joins an arena
     Join-Arena:
       # True - give a wool helmet based on their team color. False - instead of wool, there will be a colored leather helmet

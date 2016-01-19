@@ -45,6 +45,7 @@ public class Arena {
     public int MONEY_PER_DEATH;
     public int MONEY_PER_WIN;
     public int MONEY_PER_DEFEAT;
+    public int SAFE_TIME;
 
     public String ARENA_CHAT; // TODO: fix this
     public String SPEC_CHAT;
@@ -615,6 +616,7 @@ public class Arena {
         MONEY_PER_DEATH             = loadInt("Rewards.Money.per-death");
         MONEY_PER_WIN               = loadInt("Rewards.Money.per-win");
         MONEY_PER_DEFEAT            = loadInt("Rewards.Money.per-defeat");
+        SAFE_TIME                   = loadInt("safe-time");
 
         BROADCAST_WINNER           = loadBoolean("Chat.broadcast-winner");
         PER_TEAM_CHAT_LOBBY        = loadBoolean("Join-Lobby.per-team-chat");
