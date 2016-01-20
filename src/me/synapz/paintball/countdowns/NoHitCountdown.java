@@ -1,5 +1,6 @@
 package me.synapz.paintball.countdowns;
 
+import me.synapz.paintball.Arena;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.entity.Player;
 
@@ -37,7 +38,7 @@ public class NoHitCountdown extends PaintballCountdown {
     }
 
     public boolean stop() {
-        return (player == null || arenaPlayer == null);
+        return (player == null || arenaPlayer == null || arenaPlayer.getArena() == null || arenaPlayer.getArena() != null && arenaPlayer.getArena().getState() != Arena.ArenaState.IN_PROGRESS);
     }
 
     public boolean intervalCheck() {

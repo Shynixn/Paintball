@@ -1,7 +1,9 @@
 package me.synapz.paintball.events;
 
 import me.synapz.paintball.*;
+import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.NoHitCountdown;
+import me.synapz.paintball.countdowns.PaintballCountdown;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -223,6 +225,12 @@ public class Listeners implements Listener {
 
         String hitPlayerName = hitPlayer.getPlayer().getName();
         String shooterPlayerName = arenaPlayer.getPlayer().getName();
+
+        if (GameFinishCountdown.arenasFinishing.contains(a)) {
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "Game is already finished.");
+            event.setCancelled(true);
+            return;
+        }
 
         if(NoHitCountdown.godPlayers.keySet().contains(hitPlayerName)) {
             Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "That player is currently safe from Paintballs. Protection: " + (int) NoHitCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");

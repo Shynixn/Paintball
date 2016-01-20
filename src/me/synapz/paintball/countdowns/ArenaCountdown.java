@@ -3,6 +3,7 @@ package me.synapz.paintball.countdowns;
 import static org.bukkit.ChatColor.*;
 
 import me.synapz.paintball.Arena;
+import me.synapz.paintball.ArenaManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,8 +65,7 @@ public class ArenaCountdown extends PaintballCountdown {
 
     @Override
     public boolean stop() {
-        // Countdown will auto cancel if... size is lower than the min (someone left), the state is not in progress and not starting
-        return (a.getLobbyPlayers().size() < a.getMin() && a.getState() != Arena.ArenaState.IN_PROGRESS && a.getState() != Arena.ArenaState.STARTING);
+        return (a == null || a != null && (a.getState() != Arena.ArenaState.IN_PROGRESS && a.getState() != Arena.ArenaState.STARTING && a.getState() != Arena.ArenaState.WAITING) || isLobbyCountdown && (a.getLobbyPlayers().size() < a.getMin()));
     }
 
     @Override
@@ -77,6 +77,6 @@ public class ArenaCountdown extends PaintballCountdown {
     @Override
     public void cancel() {
         super.cancel();
-        tasks.remove(a); // TODO: this work?
+        tasks.remove(a, this);
     }
 }

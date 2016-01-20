@@ -139,8 +139,10 @@ public final class ArenaPlayer extends PaintballPlayer {
         Score timeLeft = objective.getScore(team.getChatColor() + "Time Left: ");
         timeLeft.setScore((int) GameCountdown.gameCountdowns.get(arena).getCounter());
 
-        Score teamScore = objective.getScore(team.getChatColor() + "Score: "); //Get a fake offline player
-        teamScore.setScore(arena.getTeamScore(team));
+        for (Team team : arena.getArenaTeamList()) {
+            Score teamScore = objective.getScore(team.getChatColor() + "Score: "); //Get a fake offline player
+            teamScore.setScore(arena.getTeamScore(team));
+        }
 
         player.setScoreboard(sb);
     }

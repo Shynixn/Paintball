@@ -47,7 +47,7 @@ public class GameCountdown extends PaintballCountdown {
     }
 
     public boolean stop() {
-        return false;
+        return a == null || a != null && a.getState() != Arena.ArenaState.IN_PROGRESS;
     }
 
     public boolean intervalCheck() {

@@ -72,8 +72,7 @@ public class Team {
         @param a - arena being set to
         @param colorCode - color of the team
      **/
-    public Team (Arena a, String colorCode) {
-
+    public Team(Arena a, String colorCode) {
         this.arena = a;
         this.color = ChatColor.getByChar(colorCode.charAt(1));
 

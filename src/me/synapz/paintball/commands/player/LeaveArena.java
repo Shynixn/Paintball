@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class LeaveArena extends Command {
 
     public void onCommand(Player player, String[] args) {
-        Arena a = null;
+        Arena a;
         try {
             a = ArenaManager.getArenaManager().getArena(player);
             a.getName(); // used to see if it returns null

@@ -4,6 +4,8 @@ package me.synapz.paintball;
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
 import me.synapz.paintball.countdowns.ArenaCountdown;
+import me.synapz.paintball.countdowns.GameFinishCountdown;
+import me.synapz.paintball.countdowns.PaintballCountdown;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
@@ -47,7 +49,7 @@ public class Arena {
     public int MONEY_PER_DEFEAT;
     public int SAFE_TIME;
 
-    public String ARENA_CHAT; // TODO: fix this
+    public String ARENA_CHAT;
     public String SPEC_CHAT;
 
     public boolean BROADCAST_WINNER;
@@ -78,8 +80,6 @@ public class Arena {
 
     private Map<Location, SignLocation> signLocations = new HashMap<>();
 
-    private Map<Team, Objective> objectives = new HashMap<>();
-
     public enum ArenaState {
         NOT_SETUP,
         WAITING,
@@ -91,10 +91,6 @@ public class Arena {
         public String toString() {
             return super.toString().toLowerCase().replace("_", " ").replace(super.toString().toLowerCase().toCharArray()[0], super.toString().toUpperCase().toCharArray()[0]);
         }
-    }
-
-    public Map<Team, Objective> getObjectives() {
-        return objectives;
     }
 
     /**
@@ -111,14 +107,6 @@ public class Arena {
         }
 
         loadConfigValues();
-        // Go through each arena inside the arena (located in config) and add it to the team list
-        for (Team team : Settings.ARENA.getTeamsList(this)) {
-            teams.put(team, 0);
-            Objective objective = Team.getPluginScoreboard().registerNewObjective(team.getTitleName(), "dummy");
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-            objective.setDisplayName("Display Name");
-            objectives.put(team, objective);
-        }
     }
 
     // Returns the current name of the arena (Arenas.Syn.name)
@@ -299,6 +287,7 @@ public class Arena {
             signLocations.put(signLoc.getLocation(), signLoc);
         }
 
+        setArenaTeamList(ARENA.getTeamsList(this));
         // TODO: add things from config.yml like time etc if they aren't defaulted
         if (isSetup() && isEnabled()) {
             state = ArenaState.WAITING;
@@ -396,6 +385,7 @@ public class Arena {
         lobby = new ArrayList<>();
         spectators = new ArrayList<>();
         inGame = new ArrayList<>();
+        this.resetTeamScores();
     }
 
     // Called when a team wins
@@ -406,23 +396,11 @@ public class Arena {
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
             if (arenaPlayer.getTeam() == team)
                 arenaPlayer.setWon();
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.GREEN, "$" + arenaPlayer.getMoneyEarned(), "Kills: " + arenaPlayer.getKills(), "Deaths: " + arenaPlayer.getDeaths(), "Killstreak: " + arenaPlayer.getKillStreak(), "KD: " + arenaPlayer.getKd(), "Your team " + (arenaPlayer.getTeam() == team ? "won" : "lost")); // TODO: get Vault currency instead of $ and check to make sure vault is enabled
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.GREEN, (arenaPlayer.getMoneyEarned() < 0 ? "-" : "") + "$" + Math.abs(arenaPlayer.getMoneyEarned()), "Kills: " + arenaPlayer.getKills(), "Deaths: " + arenaPlayer.getDeaths(), "Killstreak: " + arenaPlayer.getKillStreak(), "KD: " + arenaPlayer.getKd(), "Your team " + (arenaPlayer.getTeam() == team ? "won" : "lost")); // TODO: get Vault currency instead of $ and check to make sure vault is enabled
         }
         broadcastMessage(GREEN, "The " + team.getChatColor() + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
         broadcastMessage(GREEN, ChatColor.STRIKETHROUGH + Settings.THEME + "                              ", "");
-        new BukkitRunnable() {
-            int counter = WIN_WAIT_TIME;
-            @Override
-            public void run() {
-                if (counter == 0) {
-                    forceRemovePlayers();
-                    this.cancel();
-                } else {
-                    counter--;
-                }
-            }
-        }.runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 20);
-        resetTeamScores();
+        new GameFinishCountdown(WIN_WAIT_TIME, this);
     }
 
     // Broadcasts a message to the whole arena
@@ -461,7 +439,9 @@ public class Arena {
 
     public void resetTeamScores() {
         for (Team team : getArenaTeamList()) {
-            teams.replace(team, getTeamScore(team), 0);
+            // teams.remove(team, teams.get(team));
+            // teams.put(team, 0);
+            teams.replace(team, teams.get(team), 0);
         }
     }
 
