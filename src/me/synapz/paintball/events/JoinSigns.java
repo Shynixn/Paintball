@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -30,7 +31,7 @@ import static org.bukkit.ChatColor.*;
 public class JoinSigns implements Listener {
 
     // TODO: MAJOR, add permissions for adding signs
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSignCreate(SignChangeEvent e) {
         // paintball.sign.use
         if (e.getLines().length == 0 || !e.getLine(0).equalsIgnoreCase("pb") || e.getLine(1).equalsIgnoreCase("lb"))
@@ -71,7 +72,7 @@ public class JoinSigns implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onArenaTryToJoinOnClick(PlayerInteractEvent e) {
         if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN)
             return;
@@ -120,7 +121,7 @@ public class JoinSigns implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onSignBreak(BlockBreakEvent e) {
         // Check to make sure it is a sign
         try {

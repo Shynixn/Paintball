@@ -10,6 +10,7 @@ import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -49,11 +50,15 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     @Override
     protected void initPlayer() {
+        Scoreboard sb = Team.getPluginScoreboard();
+        final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
+        playerTeam.addPlayer(player);
+        player.setScoreboard(sb);
+
         arena.addPlayer(this);
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team));
         giveItems();
         giveArmour();
-        colorPlayerTitle();
         giveWoolHelmet();
         // TODO: openKit menu, stop from being able to move
     }
@@ -147,21 +152,17 @@ public final class ArenaPlayer extends PaintballPlayer {
         player.setScoreboard(sb);
     }
 
+    public void respawn() {
+        giveItems();
+        giveArmour();
+        giveWoolHelmet();
+    }
+
     private void giveItems() {
         player.getInventory().clear();
         player.getInventory().setItem(0, Utils.makeItem(Material.SNOW_BALL, Settings.THEME + "Paintball", 64));
         player.getInventory().setItem(8, Utils.makeItem(Material.DOUBLE_PLANT, ChatColor.GOLD + "KillCoin Shop", 1));
-
-    }
-
-    private void colorPlayerTitle() {
-        //if (!Settings.COLOR_PLAYER_TITLE)
-        //    return;
-        Scoreboard sb = Team.getPluginScoreboard();
-        final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
-        playerTeam.addPlayer(player);
-        playerTeam.setAllowFriendlyFire(false); // TODO: does this work?
-        player.setScoreboard(sb);
+        player.updateInventory();
     }
 
     private void giveArmour() {

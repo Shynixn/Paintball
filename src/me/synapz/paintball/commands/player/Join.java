@@ -33,8 +33,8 @@ public class Join extends Command {
                 return;
             }
         }
-        if (arena.getLobbyPlayers().size() == arena.getMax()) {
-            Message.getMessenger().msg(player, false, RED, this.toString() + RED + " is full!");
+        if (arena.getLobbyPlayers().size() == arena.getMax() && arena.getMax() > 0) {
+            Message.getMessenger().msg(player, false, RED, arena.toString() + RED + " is full!");
             return;
         }
         switch (arena.getState()) {

@@ -17,6 +17,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -44,7 +45,7 @@ import static me.synapz.paintball.storage.Settings.THEME;
 public class Listeners implements Listener {
 
     // When ever a player leaves the game, make them leave the arena so they get their stuff
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onArenaQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(player);
@@ -54,21 +55,21 @@ public class Listeners implements Listener {
     }
 
     // Don't let players break blocks in arena
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreakInArena(BlockBreakEvent e) {
         if (stopAction(e.getPlayer(), "You are not allowed to break blocks while in the arena!"))
             e.setCancelled(true);
     }
 
     // Don't let players place blocks in arena
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlaceInArena(BlockPlaceEvent e) {
         if (stopAction(e.getPlayer(), "You are not allowed to place blocks while in the arena!"))
             e.setCancelled(true);
     }
 
     // Whenever a player clicks an item in an arena, handles snowballs, game switches, everything
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void clickItemInArena(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         ItemStack item = e.getItem();
@@ -80,7 +81,7 @@ public class Listeners implements Listener {
             if (gamePlayer instanceof LobbyPlayer) {
                 LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (item != null && item.hasItemMeta() && item.getItemMeta().getDisplayName().contains("Join")) { // check to make sure it is a team changing object
+                    if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().contains("Join")) { // check to make sure it is a team changing object
                         for (Team t : a.getArenaTeamList()) {
                             if (item.getItemMeta().getDisplayName().contains(t.getTitleName())) {
                                 if (!t.isFull()) {
@@ -119,7 +120,7 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onItemMoveInArena(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         ItemStack clickedItem = e.getCurrentItem();
@@ -156,7 +157,7 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onShootItemFromInventoryInArena(PlayerDropItemEvent e) {
         Player player = e.getPlayer();
 
@@ -165,17 +166,17 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDeathInArena(PlayerDeathEvent e) {
         Player target = e.getEntity();
         Player source = target.getKiller();
         if (isInArena(target) && isInArena(source)) {
-                e.setDeathMessage("");
+            e.setDeathMessage("");
         }
     }
 
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onRespawnInArena(PlayerRespawnEvent e) {
         Player player = e.getPlayer();
 
@@ -186,12 +187,13 @@ public class Listeners implements Listener {
             if (arenaPlayer == null)
                 return;
 
+            arenaPlayer.respawn();
             e.setRespawnLocation(arena.getLocation(TeamLocation.TeamLocations.SPAWN, arenaPlayer.getTeam()));
             new NoHitCountdown(arena.SAFE_TIME, arenaPlayer);
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         // TODO: add check to make sure to disallow friendly fire!
         Snowball snowball = event.getDamager() instanceof Snowball ? (Snowball) event.getDamager() : null;
@@ -240,13 +242,15 @@ public class Listeners implements Listener {
             event.setCancelled(true);
         } else {
             Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
+            hitBySnowball.getInventory().clear();
+            hitBySnowball.getInventory().setArmorContents(null);
             hitBySnowball.setHealth(0);
             hitPlayer.die();
             arenaPlayer.kill(hitPlayer);
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamageAsLobbyOrSpectator(EntityDamageEvent e) {
         Player player = e.getEntity() instanceof Player ? (Player) e.getEntity() : null;
         if (player != null && isInArena(player)) {

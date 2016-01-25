@@ -302,7 +302,7 @@ public class Arena {
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
         for (SignLocation signLoc : getSignLocations().values()) {
             Location loc = signLoc.getLocation();
-            if (!(loc.getBlock().getState() instanceof Sign)) {
+            if (loc != null && loc.getBlock() != null && loc.getBlock().getState() != null && !(loc.getBlock().getState() instanceof Sign)) {
                 signLoc.removeSign();
                 return;
             }
@@ -366,13 +366,15 @@ public class Arena {
 
     // Starts the game, turns all LobbyPlayers into ArenaPlayers
     public void startGame() {
+        HashMap<Player, Location> startLocs = new HashMap<>();
         state = ArenaState.STARTING;
         for (LobbyPlayer p : lobby) {
             allPlayers.remove(p.getPlayer(), p);
-            new ArenaPlayer(this, p.getTeam(), p.getPlayer());
+            ArenaPlayer player = new ArenaPlayer(this, p.getTeam(), p.getPlayer());
+            startLocs.put(player.getPlayer(), player.getPlayer().getLocation());
         }
         lobby.removeAll(lobby);
-        new ArenaCountdown(ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", false);
+        new ArenaCountdown(ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", startLocs, false);
     }
     
     // Used for server reload and arena force stops, so no messages will be sent

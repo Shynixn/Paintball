@@ -4,6 +4,9 @@ import static org.bukkit.ChatColor.*;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.players.ArenaPlayer;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +28,10 @@ public class ArenaCountdown extends PaintballCountdown {
     private boolean isLobbyCountdown; // if it is a lobbyCountdown this is true
     private String chatMessage; // message to be sent in chat
     private String screenMessage; // message to be sent in middle of screen using title api
+    private HashMap<Player, Location> startLocations;
 
     // Creates a new countdown
-    public ArenaCountdown(int counter, int interval, int noInterval, Arena a, String chatMessage, String screenMessage, String finishedMessage, boolean isLobbyCountdown) {
+    public ArenaCountdown(int counter, int interval, int noInterval, Arena a, String chatMessage, String screenMessage, String finishedMessage, HashMap<Player, Location> startLocations, boolean isLobbyCountdown) {
         super(counter);
         this.a = a;
         this.counter = counter;
@@ -37,6 +41,7 @@ public class ArenaCountdown extends PaintballCountdown {
         this.screenMessage = screenMessage;
         this.finishedMessage = finishedMessage;
         this.isLobbyCountdown = isLobbyCountdown;
+        this.startLocations = startLocations;
 
         tasks.put(a, this);
     }
@@ -70,6 +75,9 @@ public class ArenaCountdown extends PaintballCountdown {
 
     @Override
     public boolean intervalCheck() {
+        if (!isLobbyCountdown) {
+            tpAllPlayersBack(); // this method will get called every second since intervalCheck is called every second
+        }
         return counter <= noInterval || counter % interval == 0;
     }
 
@@ -78,5 +86,16 @@ public class ArenaCountdown extends PaintballCountdown {
     public void cancel() {
         super.cancel();
         tasks.remove(a, this);
+    }
+
+    private void tpAllPlayersBack() {
+        for (ArenaPlayer arenaPlayer : a.getAllArenaPlayers()) {
+            Location playerLoc = arenaPlayer.getPlayer().getLocation();
+            Location spawnLoc = startLocations.get(arenaPlayer.getPlayer());
+
+            if (playerLoc != spawnLoc) { // TODO: only check x's and y's
+                arenaPlayer.getPlayer().teleport(spawnLoc);
+            }
+        }
     }
 }

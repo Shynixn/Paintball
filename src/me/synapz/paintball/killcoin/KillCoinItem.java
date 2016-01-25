@@ -125,7 +125,7 @@ public class KillCoinItem extends ItemStack {
             return null;
         }
 
-        if (!forKillCoinShop) { // if this isnt for the shop but for being placed in their inventory, add spaces to make the item different than others with same name
+        if (!forKillCoinShop) { // if this isn't for the shop but for being placed in their inventory, add spaces to make the item different than others with same name
             setItemDisplayName(arenaPlayer.getPlayer().getInventory());
         }
 
@@ -164,8 +164,7 @@ public class KillCoinItem extends ItemStack {
         if (this.hasPermission() && !player.getPlayer().hasPermission(permission)) {
             builder.append("You don't have permission to use this item!");
         } else {
-            System.out.println("Player coins: " + player.getKillCoins() + " Required: " + this.getKillCoins());
-            if (player.getKillCoins() < this.getKillCoins())
+            if (this.requiresKillCoins() && player.getKillCoins() < this.getKillCoins())
                 builder.append("You don't have enough KillCoins ");
 
             // if (arenaPlayer.getMoney() < getMoney() // TODO: import Vault for this

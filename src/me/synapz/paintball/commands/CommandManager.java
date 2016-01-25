@@ -5,6 +5,7 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.commands.arena.*;
 import me.synapz.paintball.commands.player.*;
 import me.synapz.paintball.commands.admin.*;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,7 +51,7 @@ public class CommandManager implements CommandExecutor{
             }
 
             else if (args.length >= 1) {
-                Command command = COMMANDS.get(args[0]);
+                Command command = COMMANDS.get(args[0].toLowerCase());
 
                 if (nullCheck(command, player)) {
                     return true;
@@ -59,13 +60,16 @@ public class CommandManager implements CommandExecutor{
                 if (command.getName().equalsIgnoreCase("admin") || command.getName().equalsIgnoreCase("arena")) {
                     if (args.length == 1) {
                         dispatchCommand(command, player, args);
-                    }
-                    else {
-                        Command command1 = COMMANDS.get(args[1]);
+                    } else {
+                        Command command1 = COMMANDS.get(args[1].toLowerCase());
+
                         if (nullCheck(command1, player)) {
                             return true;
                         }
-                        dispatchCommand(command1, player, args);
+                        if (command1.getCommandType() == command.getCommandType())
+                            dispatchCommand(command1, player, args);
+                        else
+                            Message.getMessenger().msg(sender, false, ChatColor.RED, "Wrong command type.", "Did you mean " + command1.getCorrectUsage().replace("Usage: ", ""));
                     }
                     return true;
                 }

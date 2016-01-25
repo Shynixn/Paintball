@@ -24,7 +24,7 @@ public abstract class PaintballLocation {
     public PaintballLocation(Arena a, String locationFromFile) {
         String[] rawLocation = locationFromFile.split(",");
         // TODO: replace world with rawLocation[0]
-        Location location = new Location(Bukkit.getWorld("world"), Double.parseDouble(rawLocation[1]), Double.parseDouble(rawLocation[2]), Double.parseDouble(rawLocation[3]), Float.parseFloat(rawLocation[4]), Float.parseFloat(rawLocation[5]));
+        Location location = new Location(Bukkit.getWorld(rawLocation[0]), Double.parseDouble(rawLocation[1]), Double.parseDouble(rawLocation[2]), Double.parseDouble(rawLocation[3]), Float.parseFloat(rawLocation[4]), Float.parseFloat(rawLocation[5]));
         this.arena = a;
         this.loc = location;
     }

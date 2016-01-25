@@ -88,7 +88,7 @@ public class Team {
 
     // Return the team's specific path in config.
     public String getPath(TeamLocation.TeamLocations type) {
-        return "Arenas." + arena.getDefaultName() + "." + type.toString() + "." + this.getTitleName();
+        return "Arenas." + arena.getDefaultName() + "." + type.toString() + "." + this.getConfigName();
     }
 
     // Return the team's specific ChatColor associated with it, ex: ChatColor.RED.
@@ -130,5 +130,9 @@ public class Team {
 
     public int getSize() {
        return size;
+    }
+
+    private String getConfigName() {
+        return this.getTitleName().toLowerCase().replace(" ", "");
     }
 }

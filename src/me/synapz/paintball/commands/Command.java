@@ -44,6 +44,12 @@ public abstract class Command {
     // Checks to see if a team is invalid, if it is it sends the sender the list of valid teams
     protected boolean teamCheck(Arena a, String teamString, Player sender) {
         String validTeams = " ";
+
+        if (a.getArenaTeamList().isEmpty()) {
+            Message.getMessenger().msg(sender, false, ChatColor.RED, a.getName() + ChatColor.RED + "'s teams have not been setup!");
+            return false;
+        }
+
         for (Team team : a.getArenaTeamList()) {
             validTeams += ChatColor.stripColor(team.getTitleName().toLowerCase().replace(" ", "") + " ");
         }

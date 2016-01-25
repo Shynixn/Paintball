@@ -37,6 +37,11 @@ public final class LobbyPlayer extends PaintballPlayer {
     }
 
     protected void initPlayer() {
+        Scoreboard sb = Team.getPluginScoreboard();
+        final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
+        playerTeam.addPlayer(player);
+        player.setScoreboard(sb);
+
         PLAYERDATA.savePlayerInformation(player);
         arena.addPlayer(this);
 
@@ -47,8 +52,8 @@ public final class LobbyPlayer extends PaintballPlayer {
         giveWoolHelmet();
         team.playerJoinTeam();
 
-        if (arena.canStartTimer()) {
-            new ArenaCountdown(arena.LOBBY_COUNTDOWN, arena.LOBBY_INTERVAL, arena.LOBBY_NO_INTERVAL, arena, GREEN + "Waiting for more players. " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Waiting for more players\n" + GRAY + "%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", true);
+        if (arena.canStartTimer() && ArenaCountdown.tasks.get(this) == null) {
+            new ArenaCountdown(arena.LOBBY_COUNTDOWN, arena.LOBBY_INTERVAL, arena.LOBBY_NO_INTERVAL, arena, GREEN + "Waiting for more players. " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Waiting for more players\n" + GRAY + "%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", null, true);
         }
     }
 
@@ -81,6 +86,7 @@ public final class LobbyPlayer extends PaintballPlayer {
             int spot = items.indexOf(item);
             player.getInventory().setItem(spot, items.get(spot));
         }
+        player.updateInventory();
     }
 
     private void displayMessages() {

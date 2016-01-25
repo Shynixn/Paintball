@@ -10,6 +10,7 @@ import java.util.List;
 public abstract class PaintballCountdown extends BukkitRunnable {
 
     protected double decrement = 1;
+    protected int end = 0;
     protected double counter;
 
     public PaintballCountdown(int counter) {
@@ -27,7 +28,7 @@ public abstract class PaintballCountdown extends BukkitRunnable {
         if (stop())
             cancel();
 
-        if ((int) counter <= 0) {
+        if ((int) counter <= end) {
             onFinish();
             cancel();
         } else {
