@@ -69,9 +69,6 @@ Bugs
 - [ ] Add arena autojoin to join most ready arena
 - [ ] Make arenas.yml file smaller (1 line locations, 1 line values, etc)-- Longer .yml files may lag so this will help to read files faster
 - [ ] Big bug where if the team and max aren't multiples of each other, the teams won't be evenly distrobuted. Ex: If max is 16 and there are 12 teams, 16/12 = 0.75 which rounds to 1 per team, so the plugin is currently making it 1 per team
-- [ ] add config option to change the amount of hits for someone to die and add it under their nametag
-- [ ] fix nametag colors
-- [ ] per arena team names?
 
 ####KillCoin API
 Paintball has a powerful, built-in, object-oriented API for creating new KillCoins, giving you a higher ability to expand and customize your server.
