@@ -109,15 +109,12 @@ public class JoinSigns implements Listener {
             Message.getMessenger().msg(player, false, RED, "No arena named " + sign.getLine(1) + " found.");
             return;
         }
-        for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
-            if (sign.getLine(1).contains(a.getName())) {
-                if (a.getStateAsString().contains("Waiting")) {
-                    a.joinLobby(player, null);
-                    return;
-                } else {
-                    Message.getMessenger().msg(player, false, RED, a.toString() + RED + " is not available to join!");
-                }
-            }
+        Arena arenaToJoin = ArenaManager.getArenaManager().getArenas().get(sign.getLine(1));
+
+        if (arenaToJoin != null) {
+            arenaToJoin.joinLobby(player, null);
+        } else {
+            Message.getMessenger().msg(player, false, RED, "Error arena is not available to join!");
         }
     }
 

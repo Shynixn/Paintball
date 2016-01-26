@@ -50,14 +50,9 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     @Override
     protected void initPlayer() {
-        Scoreboard sb = Team.getPluginScoreboard();
-        final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
-        playerTeam.addPlayer(player);
-        player.setScoreboard(sb);
-
         arena.addPlayer(this);
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team));
-        giveItems();
+        player.getInventory().clear();
         giveArmour();
         giveWoolHelmet();
         // TODO: openKit menu, stop from being able to move
@@ -158,7 +153,7 @@ public final class ArenaPlayer extends PaintballPlayer {
         giveWoolHelmet();
     }
 
-    private void giveItems() {
+    public void giveItems() {
         player.getInventory().clear();
         player.getInventory().setItem(0, Utils.makeItem(Material.SNOW_BALL, Settings.THEME + "Paintball", 64));
         player.getInventory().setItem(8, Utils.makeItem(Material.DOUBLE_PLANT, ChatColor.GOLD + "KillCoin Shop", 1));

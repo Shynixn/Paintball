@@ -14,6 +14,8 @@ import java.util.Map;
 
 public class NoHitCountdown extends PaintballCountdown {
 
+    // TODO: make classes final
+
     public static Map<String, NoHitCountdown> godPlayers = new HashMap<>();
 
     private String name;
@@ -21,7 +23,7 @@ public class NoHitCountdown extends PaintballCountdown {
     private Player player;
 
     public NoHitCountdown(int counter, ArenaPlayer player) {
-        super(counter);
+        super(counter+1); // adds 1 so to human eyes it goes from 5 to 1 instead of 4 to 0
         end = 1;
         this.name = player.getPlayer().getName();
         this.arenaPlayer = player;
@@ -35,7 +37,7 @@ public class NoHitCountdown extends PaintballCountdown {
 
     public void onFinish() {
         godPlayers.remove(name, this);
-        Message.getMessenger().msg(this.player, true, ChatColor.GREEN, "Your protection has expired!");
+        Message.getMessenger().msg(this.player, true, ChatColor.GREEN, Settings.SECONDARY + "Your protection has expired!");
     }
 
     // Called every iteration of run()

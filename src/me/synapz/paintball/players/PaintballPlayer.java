@@ -101,8 +101,10 @@ public abstract class PaintballPlayer {
         if (arena.getAllArenaPlayers().size() == 1) {
             arena.getAllArenaPlayers().get(0).leaveArena(); // get the last final player and make them leave (can't play alone)
             arena.setState(Arena.ArenaState.WAITING);
+            arena.resetTeamScores();
         } else if (arena.getAllArenaPlayers().size() <= 0) {
             arena.setState(Arena.ArenaState.WAITING);
+            arena.resetTeamScores();
         }
     }
 

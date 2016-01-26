@@ -5,6 +5,7 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.DisplaySlot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,10 @@ public class GameCountdown extends PaintballCountdown {
         super(a.TIME);
         this.a = a;
         gameCountdowns.put(a, this);
+
+        for (ArenaPlayer player : a.getAllArenaPlayers()) {
+            player.giveItems();
+        }
     }
 
     public void onFinish() {
@@ -38,6 +43,10 @@ public class GameCountdown extends PaintballCountdown {
         }
         a.win(winningTeam);
         gameCountdowns.remove(a, this);
+
+        for (ArenaPlayer player : a.getAllArenaPlayers()) {
+            player.getPlayer().getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+        }
     }
 
     public void onIteration() {
