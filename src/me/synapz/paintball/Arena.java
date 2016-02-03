@@ -338,7 +338,7 @@ public class Arena {
         } else {
             state = ArenaState.WAITING;
             this.broadcastMessage(RED, this.toString() + RED + " has been force stopped.", "");
-            this.forceRemovePlayers();
+            this.forceLeaveArena();
         }
     }
 
@@ -369,6 +369,7 @@ public class Arena {
         HashMap<Player, Location> startLocs = new HashMap<>();
         state = ArenaState.STARTING;
         for (LobbyPlayer p : lobby) {
+            p.removeScoreboard();
             allPlayers.remove(p.getPlayer(), p);
             ArenaPlayer player = new ArenaPlayer(this, p.getTeam(), p.getPlayer());
             startLocs.put(player.getPlayer(), player.getPlayer().getLocation());
@@ -378,8 +379,9 @@ public class Arena {
     }
     
     // Used for server reload and arena force stops, so no messages will be sent
-    public void forceRemovePlayers() {
+    public void stopGame() {
         state = ArenaState.WAITING;
+
         for (PaintballPlayer player : allPlayers.values()) {
             player.forceLeaveArena();
         }
@@ -387,21 +389,39 @@ public class Arena {
         lobby = new ArrayList<>();
         spectators = new ArrayList<>();
         inGame = new ArrayList<>();
+
+        this.resetTeamScores();
+    }
+
+    public void forceLeaveArena() {
+        state = ArenaState.WAITING;
+
+        for (ArenaPlayer player : inGame) {
+            player.forceLeaveArena();
+            allPlayers.remove(player.getPlayer(), (PaintballPlayer) player);
+        }
+
+        inGame = new ArrayList<>();
         this.resetTeamScores();
     }
 
     // Called when a team wins
-    public void win(Team team) {
+    public void win(List<Team> teams) {
         if (BROADCAST_WINNER) {
             // TODO: broadcast to server / network (except for those in game, they get a different message)
         }
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
-            if (arenaPlayer.getTeam() == team)
+            if (teams.contains(arenaPlayer.getTeam()))
                 arenaPlayer.setWon();
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.GREEN, (arenaPlayer.getMoneyEarned() < 0 ? "-" : "") + "$" + Math.abs(arenaPlayer.getMoneyEarned()), "Kills: " + arenaPlayer.getKills(), "Deaths: " + arenaPlayer.getDeaths(), "Killstreak: " + arenaPlayer.getKillStreak(), "KD: " + arenaPlayer.getKd(), "Your team " + (arenaPlayer.getTeam() == team ? "won" : "lost")); // TODO: get Vault currency instead of $ and check to make sure vault is enabled
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.GREEN, (arenaPlayer.getMoneyEarned() < 0 ? "-" : "") + "$" + Math.abs(arenaPlayer.getMoneyEarned()), "Kills: " + arenaPlayer.getKills(), "Deaths: " + arenaPlayer.getDeaths(), "Killstreak: " + arenaPlayer.getKillStreak(), "KD: " + arenaPlayer.getKd(), "Your team " + (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost")); // TODO: get Vault currency instead of $ and check to make sure vault is enabled
         }
-        broadcastMessage(GREEN, "The " + team.getChatColor() + team.getTitleName() + GREEN + " has won!", "The " + team.getTitleName() + GREEN + " has won!");
-        broadcastMessage(GREEN, ChatColor.STRIKETHROUGH + Settings.THEME + "                              ", "");
+
+        StringBuilder formattedWinnerList = new StringBuilder();
+        for (Team winningTeam : teams) {
+            formattedWinnerList.append(winningTeam.getChatColor()).append(winningTeam.getTitleName()).append(Settings.THEME).append(", ");
+        }
+        String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", ")); // TODO: might throw out of bounds exc?
+        broadcastMessage(ChatColor.GREEN, (teams.size() == 1 ? "The " + list + " team has won!": "There was a tie between " + formattedWinnerList.toString()), ""); // TODO: some kind of title message?
         new GameFinishCountdown(WIN_WAIT_TIME, this);
     }
 
@@ -609,7 +629,7 @@ public class Arena {
         COLOR_PLAYER_TITLE_LOBBY   = loadBoolean("Join-Lobby.color-player-title");
         COLOR_PLAYER_TITLE_ARENA   = loadBoolean("Join-Arena.color-player-title");
         GIVE_TEAM_SWITCHER         = loadBoolean("Join-Lobby.give-team-switcher");
-        USE_ARENA_CHAT             = loadBoolean("Chat.arena-chat");
+        USE_ARENA_CHAT             = loadBoolean("Chat.use-arena-chat");
 
         ARENA_CHAT                 = loadString("Chat.arena-chat");
         SPEC_CHAT                  = loadString("Chat.spectator-chat");

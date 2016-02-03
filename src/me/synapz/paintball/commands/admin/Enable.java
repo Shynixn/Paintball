@@ -5,32 +5,30 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Utils;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.ArenaCommand;
+import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class Enable extends Command{
+public class Enable extends ArenaCommand {
 
-    public void onCommand(Player player, String[] args) {
-        Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
-
+    public void onCommand() {
         if (!args[1].equalsIgnoreCase("enable")) {
             Message.getMessenger().msg(player, false, ChatColor.RED, args[1] + " is an invalid choice. Use either enable/disable");
             return;
         }
 
-        if (Utils.nullCheck(args[2], arena, player)) {
-            if (!arena.isSetup()) {
-                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been setup.");
-                return;
-            }
-            if (arena.isEnabled()) {
-                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is already enabled.");
-                return;
-            }
-            Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + " has been enabled!");
-            arena.setEnabled(true);
+        if (!arena.isSetup()) {
+            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been setup.");
+            return;
         }
+        if (arena.isEnabled()) {
+            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is already enabled.");
+            return;
+        }
+        Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + " has been enabled!");
+        arena.setEnabled(true);
     }
 
     public String getArgs() {
@@ -50,8 +48,8 @@ public class Enable extends Command{
         return "Enable an Arena";
     }
 
-    public Command.CommandType getCommandType() {
-        return Command.CommandType.ADMIN;
+    public CommandType getCommandType() {
+        return CommandType.ADMIN;
     }
 
     public int getMaxArgs() {
@@ -60,5 +58,9 @@ public class Enable extends Command{
 
     public int getMinArgs() {
         return 3;
+    }
+
+    protected int getArenaArg() {
+        return 2;
     }
 }

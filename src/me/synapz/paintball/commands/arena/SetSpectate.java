@@ -2,23 +2,15 @@ package me.synapz.paintball.commands.arena;
 
 
 import me.synapz.paintball.Message;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Utils;
-import me.synapz.paintball.commands.Command;
-import me.synapz.paintball.locations.TeamLocation;
+import me.synapz.paintball.commands.ArenaCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
-public class SetSpectate extends Command {
+public class SetSpectate extends ArenaCommand {
 
-    public void onCommand(Player player, String[] args) {
-        Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
-
-        if (Utils.nullCheck(args[2], arena, player)) {
-            arena.setSpectatorLocation(player.getLocation());
-            Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + ChatColor.GREEN + " spectate location set!", arena.getSteps());
-        }
+    public void onCommand() {
+        arena.setSpectatorLocation(player.getLocation());
+        Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + ChatColor.GREEN + " spectate location set!", arena.getSteps());
     }
 
     public String getArgs() {
@@ -48,5 +40,9 @@ public class SetSpectate extends Command {
 
     public int getMinArgs() {
         return 3;
+    }
+
+    protected int getArenaArg() {
+        return 2;
     }
 }

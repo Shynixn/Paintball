@@ -1,6 +1,8 @@
 package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.Arena;
+import me.synapz.paintball.players.ArenaPlayer;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +21,12 @@ public class GameFinishCountdown extends PaintballCountdown {
 
     public void onFinish() {
         arena.setState(Arena.ArenaState.WAITING);
-        arena.forceRemovePlayers();
+        arena.forceLeaveArena();
         arenasFinishing.remove(arena);
+
+        for (ArenaPlayer player : arena.getAllArenaPlayers()) {
+            player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        }
     }
 
     public void onIteration() {

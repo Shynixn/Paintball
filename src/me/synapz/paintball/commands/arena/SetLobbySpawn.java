@@ -2,27 +2,16 @@ package me.synapz.paintball.commands.arena;
 
 
 import me.synapz.paintball.*;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.TeamCommand;
+import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.locations.TeamLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
-public class SetLobbySpawn extends Command{
+public class SetLobbySpawn extends TeamCommand {
 
-    public void onCommand(Player player, String[] args) {
+    public void onCommand() {
         Location spawn = player.getLocation();
-        Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
-        String teamString = args[3];
-        Team team;
-
-        if (!Utils.nullCheck(args[2], arena, player)) return;
-
-        if (arena.getArenaTeamList().isEmpty()) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " does not have any teams set!");
-            return;
-        }
 
         if (args[3].equalsIgnoreCase("all")) {
             for (Team t : arena.getArenaTeamList()) {
@@ -31,13 +20,8 @@ public class SetLobbySpawn extends Command{
             Message.getMessenger().msg(player, false, ChatColor.GREEN, "Set " + arena.getName() + "'s lobby spawns set to your location.", arena.getSteps());
             return;
         }
-        if (teamCheck(arena, teamString, player)) {
-            team = Utils.stringToTeam(arena, teamString);
-            arena.setLocation(TeamLocation.TeamLocations.LOBBY, spawn, team);
-            Message.getMessenger().msg(player, false, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " lobby spawn for " + arena.toString() + " set!", arena.getSteps());
-        } else {
-            return;
-        }
+        arena.setLocation(TeamLocation.TeamLocations.LOBBY, spawn, team);
+        Message.getMessenger().msg(player, false, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " lobby spawn for " + arena.toString() + " set!", arena.getSteps());
     }
 
     public String getArgs() {
@@ -69,4 +53,11 @@ public class SetLobbySpawn extends Command{
         return 4;
     }
 
+    protected int getTeamArg() {
+        return 3;
+    }
+
+    protected int getArenaArg() {
+        return 2;
+    }
 }

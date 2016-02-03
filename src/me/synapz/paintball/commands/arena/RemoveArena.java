@@ -2,24 +2,16 @@ package me.synapz.paintball.commands.arena;
 
 
 import me.synapz.paintball.Message;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Utils;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.ArenaCommand;
 
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
-public class RemoveArena extends Command{
+public class RemoveArena extends ArenaCommand {
 
-    public void onCommand(Player player, String[] args) {
-        String arenaName = args[2];
-        Arena arena = ArenaManager.getArenaManager().getArena(arenaName);
-
-        if (Utils.nullCheck(arenaName, arena, player)) {
-            arena.removeArena();
-            Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + " successfully removed!");
-        }
+    public void onCommand() {
+        arena.removeArena();
+        Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + " successfully removed!");
     }
 
     public String getName() {
@@ -38,8 +30,8 @@ public class RemoveArena extends Command{
         return "paintball.arena.remove";
     }
 
-    public Command.CommandType getCommandType() {
-        return Command.CommandType.ADMIN;
+    public CommandType getCommandType() {
+        return CommandType.ADMIN;
     }
 
     public int getMaxArgs() {
@@ -50,5 +42,7 @@ public class RemoveArena extends Command{
         return 3;
     }
 
-
+    protected int getArenaArg() {
+        return 2;
+    }
 }

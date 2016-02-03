@@ -1,26 +1,18 @@
 package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.Message;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.ArenaCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.RED;
 
-public class SetMin extends Command{
+public class SetMin extends ArenaCommand {
 
-    public void onCommand(Player player, String[] args) {
-        Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
+    public void onCommand() {
         String minString = args[3];
         int min;
-
-        if (arena == null) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, args[2] + " is an invalid arena.");
-            return;
-        }
 
         try {
             min = Integer.parseInt(minString);
@@ -69,5 +61,9 @@ public class SetMin extends Command{
 
     public int getMinArgs() {
         return 4;
+    }
+
+    protected int getArenaArg() {
+        return 2;
     }
 }

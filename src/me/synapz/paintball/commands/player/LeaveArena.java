@@ -4,11 +4,12 @@ package me.synapz.paintball.commands.player;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class LeaveArena extends Command {
+public class LeaveArena extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         Arena a;

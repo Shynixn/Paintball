@@ -172,6 +172,8 @@ public class Listeners implements Listener {
         Player source = target.getKiller();
         if (isInArena(target) && isInArena(source)) {
             e.setDeathMessage("");
+            e.setKeepInventory(true);
+            // TODO, maually give them their ekillcoinitems
         }
     }
 
@@ -212,7 +214,7 @@ public class Listeners implements Listener {
 
         Player source = snowball.getShooter() instanceof Player ? (Player) snowball.getShooter() : null;
 
-        if (source == null || !(isInArena(source) || !isInArena(hitBySnowball))) // if the person who was hit by the snowball is null and the source is null and neither of them are in the arena, so cancel
+        if (source == null || hitBySnowball == null || !isInArena(source) || !isInArena(hitBySnowball)) // if the person who was hit by the snowball is null and the source is null and neither of them are in the arena, so cancel
             return;
 
         Arena a = getArena(source);
@@ -254,12 +256,7 @@ public class Listeners implements Listener {
     public void onDamageAsLobbyOrSpectator(EntityDamageEvent e) {
         Player player = e.getEntity() instanceof Player ? (Player) e.getEntity() : null;
         if (player != null && isInArena(player)) {
-            Arena a = getArena(player);
-            PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
-
-            if (gamePlayer instanceof LobbyPlayer || gamePlayer instanceof SpectatorPlayer) {
-                e.setCancelled(true);
-            }
+            e.setCancelled(true);
         }
     }
 

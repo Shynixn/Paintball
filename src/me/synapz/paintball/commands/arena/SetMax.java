@@ -1,23 +1,17 @@
 package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.Message;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.ArenaCommand;
+
 import static org.bukkit.ChatColor.*;
-import org.bukkit.entity.Player;
 
-public class SetMax extends Command{
+import me.synapz.paintball.enums.CommandType;
 
-    public void onCommand(Player player, String[] args) {
-        Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
+public class SetMax extends ArenaCommand {
+
+    public void onCommand() {
         String maxString = args[3];
         int max;
-
-        if (arena == null) {
-            Message.getMessenger().msg(player, false, RED, args[2] + " is an invalid arena.");
-            return;
-        }
 
         try {
             max = Integer.parseInt(maxString);
@@ -70,5 +64,9 @@ public class SetMax extends Command{
 
     public int getMinArgs() {
         return 4;
+    }
+
+    protected int getArenaArg() {
+        return 2;
     }
 }

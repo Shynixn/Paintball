@@ -24,6 +24,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.ByteArrayInputStream;
@@ -40,6 +42,9 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
 
         CommandManager commandManager = new CommandManager();
         commandManager.init();
+
+        // TODD: on timer end check for winners
+        // TODO: end time dont work
 
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
@@ -59,42 +64,7 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             }
         }, 0L, (long) Settings.SIGN_UPDATE_TIME);
 
-        /*
-        Adds a diamond axe, with the name Forward, a 2-lined description that describes what it does.
-        A worth of $0, so it requires no money (This requires Vault if you want it to be worth something)
-        A worth of 10 KillCoins, so requires and removes 10 KillCoins when bought
-        An expiration time of 300 seconds (5 minutes)
-        Requires permission "paintball.item.forward"
-        Sets the amount to 1
-        And is shown in the inventory, true
-
-        You can set KillCoins, expiration time, or money to 0 to remove requiring it
-        You can also set permission, or description safely to null in order to remove a description or required permission
-         */
-        new KillCoinItem(Material.DIAMOND_AXE, "Jumper", "Gives you the ability to jump\n5 blocks up!", 0, 0, 10, "paintball.item.sneaker", 3, true) {
-            int currentAmount = this.getAmount();
-            @Override
-            public void onClickItem(PlayerInteractEvent event) {
-                Player player = event.getPlayer();
-                Action action = event.getAction();
-                currentAmount = player.getItemInHand().getAmount();
-
-                if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-                    // teleport the player 5 blocks up
-                    player.teleport(player.getLocation().add(0, 5, 0));
-
-                    // remove 1 item from their inventory
-                    currentAmount--;
-                    if (currentAmount == 0) {
-                        player.getInventory().remove(player.getItemInHand());
-                    } else {
-                        player.getItemInHand().setAmount(currentAmount);
-                    }
-                }
-            }
-        };
-
-        new KillCoinItem(Material.SNOW_BALL, "Unlimited Paintballs", "Gives an unlimited paintball", 0, 0, 60, "paintball.item.unlimited", 2, true) {
+        new KillCoinItem(Material.DIAMOND_BARDING, "Unlimited Paintballs", "Gives an unlimited paintball", 0, 0, 60, "", 1, true) {
             @Override
             public void onClickItem(PlayerInteractEvent event) {
                 Player player = event.getPlayer();
@@ -102,7 +72,20 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
 
                 if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
                     player.launchProjectile(Snowball.class);
-                    event.setCancelled(true);
+                }
+            }
+        };
+
+        new KillCoinItem(Material.SUGAR, "Sugar Overdose", "Gives you a x2 speed boost for one minute", 0, 0, 0, "", 1, true) {
+            @Override
+            public void onClickItem(PlayerInteractEvent event) {
+                Player player = event.getPlayer();
+                Action action = event.getAction();
+                ItemStack itemInHand = player.getItemInHand();
+
+                if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, (60*20), 2));
+                    player.getInventory().remove(itemInHand);
                 }
             }
         };

@@ -2,34 +2,18 @@ package me.synapz.paintball.commands.arena;
 
 
 import me.synapz.paintball.*;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.TeamCommand;
+import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.locations.TeamLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
-public class SetSpawn extends Command {
+public class SetSpawn extends TeamCommand {
 
-    public void onCommand(Player player, String[] args) {
+    public void onCommand() {
         Location spawn = player.getLocation();
-        Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
-
-        if (arena == null) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, args[2] + " is an invalid arena.");
-            return;
-        }
-        Team team = Utils.stringToTeam(arena, args[3]);
-
-        if (arena.getArenaTeamList().isEmpty()) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " does not have any teams set!");
-            return;
-        }
-
-        if (teamCheck(arena, args[3], player)) {
-            arena.setLocation(TeamLocation.TeamLocations.SPAWN, spawn, team);
-            Message.getMessenger().msg(player, false, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " spawn for " + arena.toString() + " set!", arena.getSteps());
-        }
+        arena.setLocation(TeamLocation.TeamLocations.SPAWN, spawn, team);
+        Message.getMessenger().msg(player, false, ChatColor.GREEN, team.getChatColor() + team.getTitleName() + ChatColor.GREEN + " spawn for " + arena.toString() + " set!", arena.getSteps());
     }
 
     public String getArgs() {
@@ -59,5 +43,13 @@ public class SetSpawn extends Command {
 
     public int getMinArgs() {
         return 4;
+    }
+
+    protected int getArenaArg() {
+        return 2;
+    }
+
+    protected int getTeamArg() {
+        return 3;
     }
 }

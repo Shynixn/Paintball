@@ -5,6 +5,8 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.commands.arena.*;
 import me.synapz.paintball.commands.player.*;
 import me.synapz.paintball.commands.admin.*;
+import me.synapz.paintball.commands.player.List;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,27 +16,26 @@ import static org.bukkit.ChatColor.*;
 import static me.synapz.paintball.storage.Settings.*;
 
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommandManager implements CommandExecutor{
 
 
-    private static Map<String, Command> COMMANDS = new HashMap<String, Command>();
+    private static Map<String, PaintballCommand> COMMANDS = new HashMap<String, PaintballCommand>();
 
     private static final String NO_CONSOLE_PERMS = "Console does not have access to that command!";
     private static final String COMMAND_NOT_FOUND = "Unknown Command! Type /paintball for a list of commands.";
 
 
     public void init() {
-    	addCommands(new Join(), new LeaveArena(), new Spectate(), new Stats(), new Leaderboard(), new List(), new Admin(Command.CommandType.PLAYER),
+    	addCommands(new Join(), new LeaveArena(), new Spectate(), new Stats(), new Leaderboard(), new List(), new Admin(CommandType.PLAYER),
     			new CreateArena(), new RemoveArena(), new SetLobbySpawn(), new SetSpawn(), new SetSpectate(), new SetMin(),
     			new SetMax(), new SetTeams(), new ForceStart(), new ForceStop(), new Rename(), new Enable(), new Disable(),
-    			new Steps(),  new Info(), new Reload(), new Admin(Command.CommandType.ADMIN), new Arena(Command.CommandType.ARENA));
+    			new Steps(),  new Info(), new Reload(), new Admin(CommandType.ADMIN), new Arena(CommandType.ARENA));
     }
 
-
-    
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String commandLabel, String[] args) {
 
         if (cmd.getName().equalsIgnoreCase("paintball")) {
@@ -46,12 +47,12 @@ public class CommandManager implements CommandExecutor{
             Player player = (Player) sender;
 
             if (args.length == 0) {
-                displayHelp(player, Command.CommandType.PLAYER);
+                displayHelp(player, CommandType.PLAYER);
                 return true;
             }
 
             else if (args.length >= 1) {
-                Command command = COMMANDS.get(args[0].toLowerCase());
+                PaintballCommand command = COMMANDS.get(args[0].toLowerCase());
 
                 if (nullCheck(command, player)) {
                     return true;
@@ -61,7 +62,7 @@ public class CommandManager implements CommandExecutor{
                     if (args.length == 1) {
                         dispatchCommand(command, player, args);
                     } else {
-                        Command command1 = COMMANDS.get(args[1].toLowerCase());
+                        PaintballCommand command1 = COMMANDS.get(args[1].toLowerCase());
 
                         if (nullCheck(command1, player)) {
                             return true;
@@ -79,7 +80,7 @@ public class CommandManager implements CommandExecutor{
         return false;
     }
 
-    private boolean nullCheck(Command command, CommandSender sender) {
+    private boolean nullCheck(PaintballCommand command, CommandSender sender) {
         try{
             command.getName();
             return false;
@@ -91,23 +92,23 @@ public class CommandManager implements CommandExecutor{
 
 
     // TODO: add command ARENA help
-    public static void displayHelp(Player player, Command.CommandType type) {
-        boolean isPlayerType = type == Command.CommandType.PLAYER;
-        boolean isArenatype = type == Command.CommandType.ARENA;
+    public static void displayHelp(Player player, CommandType type) {
+        boolean isPlayerType = type == CommandType.PLAYER;
+        boolean isArenatype = type == CommandType.ARENA;
         player.sendMessage(Message.getMessenger().getHelpTitle(type));
 
         String beginning = isPlayerType ? THEME + "/pb ": isArenatype ? THEME + "/pb arena " : THEME + "/pb admin ";
-        for (Command command : COMMANDS.values()) {
+        for (PaintballCommand command : COMMANDS.values()) {
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
             if (command.getCommandType() == type || command.getName().equals("admin") && player.hasPermission("paintball.admin.help") || command.getName().equals("arena") && player.hasPermission("paintball.arena.help")) {
-                player.sendMessage((command.getName().equals("arena") && type == Command.CommandType.ADMIN ? THEME + "/pb arena" : command.getName().equals("admin") && type == Command.CommandType.ARENA ? THEME + "/pb admin" : beginning) + ((command.getName().equals("admin") || command.getName().equals("arena")) && type != Command.CommandType.PLAYER ? "" : command.getName()) + args + WHITE + " - " + SECONDARY + command.getInfo());
+                player.sendMessage((command.getName().equals("arena") && type == CommandType.ADMIN ? THEME + "/pb arena" : command.getName().equals("admin") && type == CommandType.ARENA ? THEME + "/pb admin" : beginning) + ((command.getName().equals("admin") || command.getName().equals("arena")) && type != CommandType.PLAYER ? "" : command.getName()) + args + WHITE + " - " + SECONDARY + command.getInfo());
 
             }
         }
     }
 
     // Sends out the command if: The player has the permission, correct arguments, and fails if there is an exception then sends the player the error
-    private void dispatchCommand(Command command, Player player, String[] args) {
+    private void dispatchCommand(PaintballCommand command, Player player, String[] args) {
         try {
             if (!Message.getMessenger().permissionValidator(player, command.getPermission())) {
                 return;
@@ -122,7 +123,7 @@ public class CommandManager implements CommandExecutor{
     }
 
     // Checks arguments of a command
-    private boolean argumentChecker(Command command, Player player, String[] args) {
+    private boolean argumentChecker(PaintballCommand command, Player player, String[] args) {
         if (command.getMaxArgs() == command.getMinArgs()) {
             if (args.length < command.getMinArgs()) {
                 Message.getMessenger().wrongUsage(command, player, Message.Usage.NOT_ENOUGH_ARGS);
@@ -144,8 +145,8 @@ public class CommandManager implements CommandExecutor{
     }
 
     // Add a list of commands to the COMMANDS list
-    private void addCommands(Command...cmds) {
-    	for (Command cmd : cmds) {
+    private void addCommands(PaintballCommand...cmds) {
+    	for (PaintballCommand cmd : cmds) {
     		COMMANDS.put(cmd.getName(), cmd);
     	}
     }

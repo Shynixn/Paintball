@@ -1,14 +1,15 @@
 package me.synapz.paintball.commands.arena;
 
-import me.synapz.paintball.commands.Command;
 import me.synapz.paintball.commands.CommandManager;
+import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.entity.Player;
 
-public class Arena extends Command {
+public class Arena extends PaintballCommand {
 
-    private Command.CommandType type = CommandType.ARENA;
+    private CommandType type = CommandType.ARENA;
 
-    public Arena(Command.CommandType t) {
+    public Arena(CommandType t) {
         this.type = t;
     }
 
@@ -33,7 +34,7 @@ public class Arena extends Command {
         return "Display all Paintball Arena setup commands";
     }
 
-    public Command.CommandType getCommandType() {
+    public CommandType getCommandType() {
         return type;
     }
 

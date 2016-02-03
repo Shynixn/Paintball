@@ -23,11 +23,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import static me.synapz.paintball.storage.Settings.*;
 
 
 public final class ArenaPlayer extends PaintballPlayer {
 
+    private Map<String, Integer> oldScores;
     private int killStreak = 0;
     private int killCoins = 0;
     private int kills = 0;
@@ -35,6 +41,7 @@ public final class ArenaPlayer extends PaintballPlayer {
     private int moneyEarned;
     private boolean won = false;
 
+    private String killCoinsName = Settings.THEME + "KillCoins: ";
     public ArenaPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
     }
@@ -50,19 +57,21 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     @Override
     protected void initPlayer() {
+        oldScores = new HashMap<>();
         arena.addPlayer(this);
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team));
         player.getInventory().clear();
         giveArmour();
         giveWoolHelmet();
-        // TODO: openKit menu, stop from being able to move
+
+        oldScores.put(Settings.THEME + "KillCoins: ", 0);
     }
 
     @Override
-    public void leaveArena() {
-        super.leaveArena();
+    public void forceLeaveArena() {
         team.playerLeaveTeam();
         Settings.PLAYERDATA.incrementStat(StatType.GAMES_PLAYED, this);
+        super.forceLeaveArena();
     }
 
     public void setWon() {
@@ -71,7 +80,11 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     public void die() {
         killStreak = 0;
-        killCoins--; // TODO: check arena settings for per death
+
+        // TODO: Add config.yml option for negative killcoins
+        if (killCoins - arena.KILLCOIN_PER_DEATH > 0)
+            killCoins = killCoins - arena.KILLCOIN_PER_DEATH;
+
         moneyEarned--; // TODO: check per death and subtract
         deaths++;
         Settings.PLAYERDATA.incrementStat(StatType.DEATHS, this);
@@ -79,16 +92,15 @@ public final class ArenaPlayer extends PaintballPlayer {
 
     public void kill(ArenaPlayer target) {
         killStreak++;
-        killCoins++; // TODO: instead of just add one, check arena settings for per kill
+        killCoins = killCoins + arena.KILLCOIN_PER_KILL;
         moneyEarned++; // TODO: check arena settings for per kill money
         kills++;
         arena.incrementTeamScore(team);
         Settings.PLAYERDATA.incrementStat(StatType.KILLS, this);
         Settings.PLAYERDATA.incrementStat(StatType.HIGEST_KILL_STREAK, this);
-        arena.broadcastMessage(ChatColor.GREEN, Settings.THEME + player.getName() + " shot " + target.getPlayer().getName() + ". Team score now " + arena.getTeamScore(team) + "/" + arena.MAX_SCORE, "");
-        // TODO: kill messages
+        arena.broadcastMessage(ChatColor.GREEN, THEME + player.getName() + SECONDARY + " shot " + THEME + target.getPlayer().getName(), "");
         if (reachedGoal()) {
-            arena.win(team);
+            arena.win(Arrays.asList(team));
         }
     }
 
@@ -105,7 +117,7 @@ public final class ArenaPlayer extends PaintballPlayer {
     }
     // This will look into config.yml for the arena, if the time or kills is reached, they reahced the goal
     private boolean reachedGoal() {
-        return arena.MAX_SCORE == arena.getTeamScore(team); // TODO: make sure when the game ends no one can be killed
+        return arena.MAX_SCORE == arena.getTeamScore(team);
     }
 
     public int getMoneyEarned() {
@@ -129,24 +141,6 @@ public final class ArenaPlayer extends PaintballPlayer {
         return killStreak;
     }
 
-    public void updateSideScoreboard() {
-        Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-
-        Objective objective = sb.registerNewObjective(team.getTitleName(), "dummy");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        objective.setDisplayName(Settings.THEME + "Paintball");
-
-        Score timeLeft = objective.getScore(team.getChatColor() + "Time Left: ");
-        timeLeft.setScore((int) GameCountdown.gameCountdowns.get(arena).getCounter());
-
-        for (Team team : arena.getArenaTeamList()) {
-            Score teamScore = objective.getScore(team.getChatColor() + "Score: "); //Get a fake offline player
-            teamScore.setScore(arena.getTeamScore(team));
-        }
-
-        player.setScoreboard(sb);
-    }
-
     public void respawn() {
         giveItems();
         giveArmour();
@@ -158,6 +152,51 @@ public final class ArenaPlayer extends PaintballPlayer {
         player.getInventory().setItem(0, Utils.makeItem(Material.SNOW_BALL, Settings.THEME + "Paintball", 64));
         player.getInventory().setItem(8, Utils.makeItem(Material.DOUBLE_PLANT, ChatColor.GOLD + "KillCoin Shop", 1));
         player.updateInventory();
+    }
+
+    public void updateScoreboard() {
+        int size = arena.getArenaTeamList().size()-1;
+        Objective objective = sb.getObjective(DisplaySlot.SIDEBAR);
+
+        objective.setDisplayName(Settings.THEME + "     Paintball " + Settings.SECONDARY + convertToNumberFormat() + "     ");
+
+        int oldKills = oldScores.get(killCoinsName);
+        sb.resetScores(Bukkit.getOfflinePlayer(killCoinsName + oldKills));
+
+        Score killCoins = objective.getScore(Settings.THEME + "KillCoins: " + getKillCoins());
+
+        killCoins.setScore(size+7);
+    }
+
+    @Override
+    protected void loadScoreboard() {
+        super.loadScoreboard();
+        int size = 0;
+
+        Objective objective = sb.registerNewObjective(arena.getName(), "dummy");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        Score killCoins = objective.getScore(Settings.THEME + "KillCoins: 0");
+        Score killStreak = objective.getScore(Settings.THEME +"KillStreak: 0");
+        Score kills = objective.getScore(Settings.THEME +     "Kills: 0");
+        Score kd = objective.getScore(Settings.THEME +        "K/D: 0");
+        Score money = objective.getScore(Settings.THEME +     "Money: 0");
+        Score line = objective.getScore(Settings.SECONDARY +  ChatColor.STRIKETHROUGH + "                         ");
+
+        objective.setDisplayName(Settings.THEME + "     Paintball " + "     ");
+
+        for (int i = 0; i < arena.getArenaTeamList().size(); i++, size++) {
+            Team t = (Team) arena.getArenaTeamList().toArray()[i];
+            Score teamScore = objective.getScore(t.getChatColor() + t.getTitleName() + ": " + Settings.SECONDARY + arena.getTeamScore(t));
+            teamScore.setScore(size);
+        }
+
+        // TODO: set money here
+        killCoins.setScore(size+6);
+        killStreak.setScore(size+5);
+        kills.setScore(size+4);
+        kd.setScore(size+3);
+        money.setScore(size+2);
+        line.setScore(size+1);
     }
 
     private void giveArmour() {
@@ -177,5 +216,12 @@ public final class ArenaPlayer extends PaintballPlayer {
             editedItems[location] = armour; location++;
         }
         return editedItems;
+    }
+
+    private String convertToNumberFormat() {
+        int timeLeft = (int) GameCountdown.gameCountdowns.get(arena).getCounter();
+        int minutes = timeLeft/60;
+        int seconds = timeLeft%60;
+        return String.format("%d:" + (seconds < 10 ? "0" : "") + "%d", minutes, seconds);
     }
 }

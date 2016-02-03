@@ -2,31 +2,15 @@ package me.synapz.paintball.commands.player;
 
 
 import me.synapz.paintball.*;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.TeamCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import static org.bukkit.ChatColor.RED;
 
-public class Join extends Command {
+public class Join extends TeamCommand {
 
-    public void onCommand(Player player, String[] args) {
-        Arena arena = ArenaManager.getArenaManager().getArena(args[1]);
-        Team team = null;
-
-        if (arena == null) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, "Invalid arena.");
-            return;
-        }
-
-        if (args.length == 3) {
-            if (teamCheck(arena, args[2], player)) {
-                team = Utils.stringToTeam(arena, args[2]);
-            } else {
-                return;
-            }
-        }
-
+    public void onCommand() {
         for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
             if (a.containsPlayer(player)) {
                 Message.getMessenger().msg(player, false, ChatColor.RED, "You are already in " + a.toString() + ChatColor.RED + ".");
@@ -84,5 +68,13 @@ public class Join extends Command {
 
     public int getMinArgs() {
         return 2;
+    }
+
+    protected int getTeamArg() {
+        return 2;
+    }
+
+    protected int getArenaArg() {
+        return 1;
     }
 }

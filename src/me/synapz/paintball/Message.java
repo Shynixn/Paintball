@@ -2,7 +2,8 @@ package me.synapz.paintball;
 
 
 import com.connorlinfoot.titleapi.TitleAPI;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -68,7 +69,7 @@ public class Message {
     }
 
     // Sends a message if there is some type of wrong usage
-    public void wrongUsage(Command command, Player player, Usage usage) {
+    public void wrongUsage(PaintballCommand command, Player player, Usage usage) {
         if (usage.equals(Usage.TO_MANY_ARGS)) {
             Message.getMessenger().msg(player, false, RED, "To many arguments!", command.getCorrectUsage());
         } else {
@@ -77,11 +78,11 @@ public class Message {
     }
 
     // Get's the help associated with the command type
-    public String getHelpTitle(Command.CommandType type) {
+    public String getHelpTitle(CommandType type) {
         String title = "Paintball";
-        if (type == Command.CommandType.ADMIN) {
+        if (type == CommandType.ADMIN) {
             title += " Admin";
-        } else if (type == Command.CommandType.ARENA) {
+        } else if (type == CommandType.ARENA) {
             title += " Arena";
         }
         return SECONDARY + STRIKETHROUGH + "                       " + RESET + THEME + " " + title + " " + SECONDARY + STRIKETHROUGH + "                       ";

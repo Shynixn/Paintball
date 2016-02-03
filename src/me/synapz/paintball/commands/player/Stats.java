@@ -1,13 +1,12 @@
 package me.synapz.paintball.commands.player;
 
 import me.synapz.paintball.Message;
-import me.synapz.paintball.Paintball;
+import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.commands.Command;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import static org.bukkit.ChatColor.*;
 import static me.synapz.paintball.storage.Settings.*;
@@ -15,7 +14,7 @@ import static me.synapz.paintball.storage.Settings.*;
 import java.util.Map;
 import java.util.UUID;
 
-public class Stats extends Command {
+public class Stats extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         UUID target = args.length == 1 ? player.getUniqueId() : Bukkit.getPlayer(args[1]) == null ? Bukkit.getOfflinePlayer(args[1]).getUniqueId() : Bukkit.getPlayer(args[1]).getUniqueId();
@@ -47,8 +46,8 @@ public class Stats extends Command {
         return "paintball.stats";
     }
 
-    public Command.CommandType getCommandType() {
-        return Command.CommandType.PLAYER;
+    public CommandType getCommandType() {
+        return CommandType.PLAYER;
     }
 
     public int getMaxArgs() {

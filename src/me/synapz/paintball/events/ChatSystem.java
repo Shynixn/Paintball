@@ -17,8 +17,10 @@ public class ChatSystem implements Listener {
         Arena a = ArenaManager.getArenaManager().getArena(player);
 
         if (a != null && a.containsPlayer(player)) {
-            a.getPaintballPlayer(player).chat(e.getMessage());
-            e.setCancelled(true);
+            if (a.USE_ARENA_CHAT) {
+                a.getPaintballPlayer(player).chat(e.getMessage());
+                e.setCancelled(true);
+            }
         }
     }
 }

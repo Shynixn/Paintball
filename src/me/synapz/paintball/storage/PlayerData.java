@@ -114,6 +114,7 @@ public final class PlayerData extends PaintballFile {
 
         List<Double> statValues = new ArrayList<Double>();
         for (String stat : uuidList.values()) {
+            stat = stat.replace("%", "");
             statValues.add(Double.parseDouble(stat));
         }
         Collections.sort(statValues);
@@ -122,7 +123,7 @@ public final class PlayerData extends PaintballFile {
             return result;
         }
         for (String uuid : uuidList.keySet()) {
-            double value = Double.parseDouble(uuidList.get(uuid));
+            double value = Double.parseDouble(uuidList.get(uuid).replace("%", ""));
             if (statValues.get(rank - 1) == value) {
                 result.clear(); // remove all entries so we know there will only be 1 set of things returning
                 if (Bukkit.getServer().getPlayer(UUID.fromString(uuid)) == null) {

@@ -2,46 +2,40 @@ package me.synapz.paintball.players;
 
 import me.synapz.paintball.*;
 import me.synapz.paintball.countdowns.ArenaCountdown;
+import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.locations.TeamLocation;
+import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.bukkit.ChatColor.*;
 import static me.synapz.paintball.storage.Settings.*;
 
 public final class LobbyPlayer extends PaintballPlayer {
 
+    private String pastToStartString;
+    private String pastTeam;
+    private Map<Team, Integer> pastScores = new HashMap<>();
+
     public LobbyPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
     }
 
-    public void setTeam(Team newTeam) {
-        team.playerLeaveTeam();
-        team = newTeam;
-        team.playerJoinTeam();
-        Message.getMessenger().msg(player, true, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
-        player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team));
-        giveItems();
-        giveWoolHelmet();
-        Scoreboard sb = Team.getPluginScoreboard();
-        final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
-        playerTeam.addPlayer(player);
-        player.setScoreboard(sb);
-    }
+    // TODO: what happens with 16 teams on scoreboard?
 
     protected void initPlayer() {
-        Scoreboard sb = Team.getPluginScoreboard();
-        final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
-        playerTeam.addPlayer(player);
-        player.setScoreboard(sb);
-
+        new LobbyCountdown(1, arena);
         PLAYERDATA.savePlayerInformation(player);
         arena.addPlayer(this);
 
@@ -52,13 +46,147 @@ public final class LobbyPlayer extends PaintballPlayer {
         giveWoolHelmet();
         team.playerJoinTeam();
 
-        if (arena.canStartTimer() && ArenaCountdown.tasks.get(this) == null) {
+        if (arena.canStartTimer() && ArenaCountdown.tasks.get(arena) == null) {
             new ArenaCountdown(arena.LOBBY_COUNTDOWN, arena.LOBBY_INTERVAL, arena.LOBBY_NO_INTERVAL, arena, GREEN + "Waiting for more players. " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Waiting for more players\n" + GRAY + "%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", null, true);
         }
     }
 
+    @Override
+    protected void loadScoreboard() {
+        super.loadScoreboard();
+        pastScores = new HashMap<>();
+        int playersLeftOStart = (arena.getMin() - arena.getLobbyPlayers().size());
+        Objective objective = sb.getObjective(DisplaySlot.SIDEBAR);
+        String toStartString = (arena.getMin() - arena.getLobbyPlayers().size()) > 0 ? Settings.SECONDARY + playersLeftOStart + Settings.THEME + " more player" + (playersLeftOStart == 1 ? "" : "s") + " to start": Settings.THEME + "Starting in " + Settings.SECONDARY + (int)ArenaCountdown.tasks.get(arena).getCounter() + " seconds!";
+        String teamString = Settings.THEME + "Team: " + Settings.SECONDARY + this.team.getChatColor() + this.team.getTitleName();
+        String lineString = Settings.SECONDARY +  ChatColor.STRIKETHROUGH + Utils.makeSpaces(Settings.THEME + "     Paintball " + "     ");
+
+        Score state = objective.getScore(Settings.THEME + "Waiting");
+        Score toStart = objective.getScore(toStartString);
+        Score team = objective.getScore(teamString);
+        Score line = objective.getScore(lineString);
+
+        objective.setDisplayName(Settings.THEME + "     Paintball " + "     ");
+
+        int size = 0;
+        // Sets all the scores
+        for (int i = size; i < arena.getArenaTeamList().size(); i++, size++) {
+            Team t = (Team) arena.getArenaTeamList().toArray()[i];
+            int teamSize = t.getSize();
+            Score teamScore = objective.getScore(t.getChatColor() + t.getTitleName() + ": " + Settings.SECONDARY + (t.isFull() ? "Full" : teamSize));
+            teamScore.setScore(size);
+            pastScores.put(t, teamSize);
+        }
+
+        // TODO: set money here
+        state.setScore(size+3);
+        toStart.setScore(size+2);
+        team.setScore(size+1);
+        line.setScore(size);
+
+        pastToStartString = toStartString;
+        pastTeam = teamString;
+
+        player.setScoreboard(sb);
+    }
+
+    public void updateScoreboard() {
+        if (ArenaCountdown.tasks.get(arena) == null)
+            return;
+
+        int playersLeftOStart = (arena.getMin() - arena.getLobbyPlayers().size());
+        Objective objective = sb.getObjective(DisplaySlot.SIDEBAR);
+
+        String toStartString = (playersLeftOStart) > 0 ? Settings.SECONDARY + playersLeftOStart + Settings.THEME + " more player" + (playersLeftOStart == 1 ? "" : "s") + " to start": Settings.THEME + "Starting in " + Settings.SECONDARY + (int)ArenaCountdown.tasks.get(arena).getCounter() + " seconds!";
+        String teamString = Settings.THEME + "Team: " + Settings.SECONDARY + this.team.getChatColor() + this.team.getTitleName();
+
+        int size = 0;
+            for (int i = 0; i < arena.getArenaTeamList().size(); i++, size++) {
+                Team t = (Team) arena.getArenaTeamList().toArray()[i];
+                int teamSize = t.getSize();
+                int pastTeamSize = pastScores.get(t) == null ? 0 : pastScores.get(t);
+
+                sb.resetScores(Bukkit.getOfflinePlayer(t.getChatColor() + t.getTitleName() + ": " + Settings.SECONDARY + (t.isFull() ? "Full" : pastTeamSize)));
+                Score teamScore = objective.getScore(t.getChatColor() + t.getTitleName() + ": " + Settings.SECONDARY + (t.isFull() ? "Full" : teamSize));
+                teamScore.setScore(size);
+                pastScores.replace(t, pastTeamSize, teamSize);
+            }
+
+        if (size == 0) {
+            size = arena.getArenaTeamList().size();
+        }
+
+        if (!pastToStartString.equals(toStartString)) {
+            sb.resetScores(Bukkit.getOfflinePlayer(pastToStartString));
+            Score toStart = objective.getScore(toStartString);
+            toStart.setScore(size+3);
+            pastToStartString = toStartString;
+        }
+
+        if (!pastTeam.equals(teamString)) {
+            sb.resetScores(Bukkit.getOfflinePlayer(pastTeam));
+            Score team = objective.getScore(teamString);
+            team.setScore(size+2);
+            pastTeam = teamString;
+        }
+
+        player.setScoreboard(sb);
+    }
+
+    public void removeScoreboard() {
+        sb.getObjective(DisplaySlot.SIDEBAR).unregister();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     protected String getChatLayout() {
         return arena.ARENA_CHAT;
+    }
+
+
+    public void setTeam(Team newTeam) {
+        team.playerLeaveTeam();
+        team = newTeam;
+        team.playerJoinTeam();
+        Message.getMessenger().msg(player, true, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
+        player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team));
+        giveItems();
+        giveWoolHelmet();
+
+        final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(team.getTitleName());
+        playerTeam.addPlayer(player);
+        updateScoreboard();
+        player.setScoreboard(sb);
     }
 
     private void giveItems() {
@@ -111,6 +239,7 @@ public final class LobbyPlayer extends PaintballPlayer {
 
     @Override
     public void leaveArena() {
+        removeScoreboard();
         team.playerLeaveTeam();
         super.leaveArena();
     }

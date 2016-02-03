@@ -4,11 +4,16 @@ import me.synapz.paintball.Arena;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class GameCountdown extends PaintballCountdown {
 
@@ -31,6 +36,7 @@ public class GameCountdown extends PaintballCountdown {
     }
 
     public void onFinish() {
+        List<Team> teamsWhoWon = new ArrayList<>();
         Team winningTeam = (Team) a.getArenaTeamList().toArray()[0]; // just gets the first name as a starting point
         int score = a.getTeamScore(winningTeam);
         for (Team t : a.getArenaTeamList()) {
@@ -41,17 +47,23 @@ public class GameCountdown extends PaintballCountdown {
                 // TODO: it is a tie
             }
         }
-        a.win(winningTeam);
+
+        // Checks for ties
+        for (Team t : a.getArenaTeamList()) {
+            if (a.getTeamScore(t) == a.getTeamScore(winningTeam)) {
+                teamsWhoWon.add(t);
+            }
+        }
+
+        a.win(teamsWhoWon);
         gameCountdowns.remove(a, this);
 
-        for (ArenaPlayer player : a.getAllArenaPlayers()) {
-            player.getPlayer().getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-        }
+        // TODO: unreigster all objectives
     }
 
     public void onIteration() {
         for (ArenaPlayer player : a.getAllArenaPlayers()) {
-            player.updateSideScoreboard();
+            player.updateScoreboard();
         }
     }
 

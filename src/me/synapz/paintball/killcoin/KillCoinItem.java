@@ -243,7 +243,7 @@ public class KillCoinItem extends ItemStack {
 
     // Checks to see if the player requires any permissions
     public boolean hasPermission() {
-        return !(permission.equals("none"));
+        return !(permission.equalsIgnoreCase("none") || permission.equals(""));
     }
 
     // Important method that if the player has 2 of the same item names in their inventory, will rename this one to the name, with a space so ExpirationTime doesn't get confused on which is which

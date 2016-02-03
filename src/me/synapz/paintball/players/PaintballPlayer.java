@@ -4,11 +4,18 @@ import me.synapz.paintball.Arena;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
+import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +33,7 @@ public abstract class PaintballPlayer {
     protected Arena arena;
     protected Player player;
     protected Team team;
+    protected Scoreboard sb;
 
     /*
     -----
@@ -37,6 +45,7 @@ public abstract class PaintballPlayer {
         this.team = t;
         this.player = p;
 
+        loadScoreboard();
         initPlayer();
     }
 
@@ -112,5 +121,32 @@ public abstract class PaintballPlayer {
         if (Team.getPluginScoreboard().getTeam(team.getTitleName()) != null)
             Team.getPluginScoreboard().getTeam(team.getTitleName()).removePlayer(player);
         Settings.PLAYERDATA.restorePlayerInformation(player);
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+    }
+
+    protected void loadScoreboard() {
+        sb = Bukkit.getScoreboardManager().getNewScoreboard();
+        org.bukkit.scoreboard.Team playerTeam = null;
+
+        // Registers all teams with their color. Used for changing color of name tag
+        for (Team team : arena.getArenaTeamList()) {
+            sb.registerNewTeam(team.getTitleName()).setPrefix(team.getChatColor() + "");
+            playerTeam = sb.getTeam(team.getTitleName());
+            playerTeam.setAllowFriendlyFire(false);
+        }
+        playerTeam.addPlayer(player);
+        // Everything having to do with the SIDEBAR Objective
+        StringBuilder objName = new StringBuilder(player.getName());
+
+        if (this instanceof LobbyPlayer)
+            objName.append("Lobby");
+        else if (this instanceof ArenaPlayer)
+            objName.append("Arena");
+        else if (this instanceof SpectatorPlayer)
+            objName.append("Spectator");
+
+        Objective objective = sb.registerNewObjective(objName.toString(), "dummy");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        player.setScoreboard(sb);
     }
 }

@@ -2,14 +2,15 @@ package me.synapz.paintball.commands.admin;
 
 
 import me.synapz.paintball.Message;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.entity.Player;
 
 import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.*;
 
 
-public class Info extends Command{
+public class Info extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         player.sendMessage(Message.getMessenger().getHelpTitle(CommandType.PLAYER));
@@ -34,7 +35,7 @@ public class Info extends Command{
         return "Get plugin info";
     }
 
-    public Command.CommandType getCommandType() {
+    public CommandType getCommandType() {
         return CommandType.ADMIN;
     }
 

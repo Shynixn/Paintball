@@ -4,27 +4,24 @@ package me.synapz.paintball.commands.arena;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Message;
-import me.synapz.paintball.commands.Command;
-import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class CreateArena extends Command{
+public class CreateArena extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         String arenaName = args[2];
+        Arena newArena = ArenaManager.getArenaManager().getArena(arenaName);
 
-        try {
-            Arena a = ArenaManager.getArenaManager().getArena(arenaName);
-            a.getName(); // test to see if the arena exists by getting its name
+        if (newArena != null) {
             Message.getMessenger().msg(player, false, ChatColor.RED, "An arena named " + arenaName + " already exists!");
             return;
-        }catch (NullPointerException e) {
-            // Arena doesn't except in the list of arenas therefore you can make it...
+        } else {
+            Arena a = new Arena(arenaName, arenaName, true);
+            Message.getMessenger().msg(player, false, ChatColor.GREEN, a.toString() + " successfully created!", a.getSteps());
         }
-
-        Arena a = new Arena(arenaName, arenaName, true);
-        Message.getMessenger().msg(player, false, ChatColor.GREEN, a.toString() + " successfully created!", a.getSteps());
     }
 
     public String getName() {

@@ -2,19 +2,18 @@ package me.synapz.paintball.commands.player;
 
 
 import me.synapz.paintball.Message;
-import me.synapz.paintball.Paintball;
+import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.commands.Command;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collections;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class Leaderboard extends Command{
+public class Leaderboard extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         StatType statType = null;
@@ -62,8 +61,8 @@ public class Leaderboard extends Command{
         return "View a stat's leaderboard.";
     }
 
-    public Command.CommandType getCommandType() {
-        return Command.CommandType.PLAYER;
+    public CommandType getCommandType() {
+        return CommandType.PLAYER;
     }
 
     public int getMaxArgs() {

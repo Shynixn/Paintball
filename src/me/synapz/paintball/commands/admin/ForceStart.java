@@ -3,51 +3,45 @@ package me.synapz.paintball.commands.admin;
 
 import me.synapz.paintball.*;
 
-import static me.synapz.paintball.Arena.ArenaState.*;
-
-import me.synapz.paintball.commands.Command;
-import static org.bukkit.ChatColor.*;
-
+import me.synapz.paintball.commands.ArenaCommand;
+import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class ForceStart extends Command{
+public class ForceStart extends ArenaCommand {
 
-    public void onCommand(Player player, String[] args) {
-        Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
-
-        if (Utils.nullCheck(args[2], arena, player)) {
-            String msg;
-            ChatColor color = ChatColor.RED;
-            switch (arena.getState()) {
-                case WAITING:
-                    if (arena.getLobbyPlayers().size() < arena.getMin()) {
-                        msg = "does not have enough players.";
-                        break;
-                    } else {
-                        color = ChatColor.GREEN;
-                        msg = "has been force started!";
-                        arena.forceStart(true);
-                        break;
-                    }
-                case DISABLED:
-                    msg = "has not been enabled.";
+    public void onCommand() {
+        String msg;
+        ChatColor color = ChatColor.RED;
+        switch (arena.getState()) {
+            case WAITING:
+                if (arena.getLobbyPlayers().size() < arena.getMin()) {
+                    msg = "does not have enough players.";
                     break;
-                case NOT_SETUP:
-                    msg = "has not been setup.";
+                } else {
+                    color = ChatColor.GREEN;
+                    msg = "has been force started!";
+                    arena.forceStart(true);
                     break;
-                case IN_PROGRESS:
-                    msg = "is already in progress";
-                    break;
-                case STARTING:
-                    msg = "is already in progress";
-                    break;
-                default:
-                    msg = "has encountered an unexpected error.";
-                    break;
+                }
+            case DISABLED:
+                msg = "has not been enabled.";
+                break;
+            case NOT_SETUP:
+                msg = "has not been setup.";
+                break;
+            case IN_PROGRESS:
+                msg = "is already in progress";
+                break;
+            case STARTING:
+                msg = "is already in progress";
+                break;
+            default:
+                msg = "has encountered an unexpected error.";
+                break;
             }
-            Message.getMessenger().msg(player, false, color, arena.toString() + color + " " + msg);
-        }
+        Message.getMessenger().msg(player, false, color, arena.toString() + color + " " + msg);
     }
 
     public String getArgs() {
@@ -77,5 +71,9 @@ public class ForceStart extends Command{
 
     public int getMinArgs() {
         return 3;
+    }
+
+    protected int getArenaArg() {
+        return 2;
     }
 }

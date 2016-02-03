@@ -5,11 +5,12 @@ import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Utils;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class Steps extends Command{
+public class Steps extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
@@ -36,8 +37,8 @@ public class Steps extends Command{
         return "List steps of an Arena";
     }
 
-    public Command.CommandType getCommandType() {
-        return Command.CommandType.ARENA;
+    public CommandType getCommandType() {
+        return CommandType.ARENA;
     }
 
     public int getMaxArgs() {

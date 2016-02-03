@@ -4,9 +4,17 @@ import static org.bukkit.ChatColor.*;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.Team;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +24,6 @@ public class ArenaCountdown extends PaintballCountdown {
     /*
     This Countdown class is responsible for lobby and arena countdowns
      */
-
 
     // used to check if there is a current instance of CountdownTask running for an arena; we don't want double messages!
     public static Map<Arena, ArenaCountdown> tasks = new HashMap<Arena, ArenaCountdown>();
@@ -53,6 +60,7 @@ public class ArenaCountdown extends PaintballCountdown {
         if (isLobbyCountdown) {
             a.startGame();
         } else {
+            tpAllPlayersBack();
             a.setState(Arena.ArenaState.IN_PROGRESS);
             new GameCountdown(a);
         }
@@ -93,7 +101,14 @@ public class ArenaCountdown extends PaintballCountdown {
             Location playerLoc = arenaPlayer.getPlayer().getLocation();
             Location spawnLoc = startLocations.get(arenaPlayer.getPlayer());
 
-            if (playerLoc != spawnLoc) { // TODO: only check x's and y's
+            int playerX = playerLoc.getBlockX();
+            int playerZ = playerLoc.getBlockZ();
+            int playerY = playerLoc.getBlockY();
+            int spawnX = spawnLoc.getBlockX();
+            int spawnY = spawnLoc.getBlockY();
+            int spawnZ = spawnLoc.getBlockZ();
+
+            if (playerX != spawnX || playerY != spawnY || playerZ != spawnZ) {
                 arenaPlayer.getPlayer().teleport(spawnLoc);
             }
         }

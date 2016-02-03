@@ -140,7 +140,7 @@ Per-Arena-Settings:
       # Rewards having to do with kill coins. Kill coins are basically coins recived on a kill, which can be used to buy special items. Kill coins are reset every game.
       Kill-Coins:
         per-kill: 1
-        per-death: 0
+        per-death: 0 # This number should be negative
       # Rewards having to do with money. Money can also be used to buy special items and doesn't reset every game.
       # Requires Vault and config setting as vault: true
       Money:
@@ -149,10 +149,11 @@ Per-Arena-Settings:
         per-win: 100
         per-defeat: -50
 
+    # TODO: cooldown time when clicking wool to change team
     # Settings to do with chat aspects of Paintball-- when players are in the arena
     Chat:
       # True - use arena chat which can only be viewed by arena players. False - will use global chat
-      arena-chat: true
+      use-arena-chat: true
       # True - broadcasts winning teams to all players on the server. False - only players in arena will see who won
       broadcast-winner: false
       # Chat format for specators. Tags: %ARENA%, %PLAYER%, %MSG%, %PREFIX%, %STATS%??

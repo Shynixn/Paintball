@@ -16,7 +16,7 @@ import java.util.*;
 
 public class Utils {
 
-    // Gets the inventory list of a player
+    // Gets the inventory list of a player. Specifically filters out all null items
     public static List<ItemStack> getInventoryList(Player p, boolean isArmourList) {
         ItemStack[] list = isArmourList ? p.getInventory().getArmorContents() : p.getInventory().getContents();
         List<ItemStack> returnList = new ArrayList<ItemStack>();
@@ -25,16 +25,6 @@ public class Utils {
                 returnList.add(item);
         }
         return returnList;
-    }
-
-    // Turns a string like 'red' in to a team
-    public static Team stringToTeam(Arena a, String team) {
-        for (Team t : a.getArenaTeamList()) {
-            if (t.getTitleName().equalsIgnoreCase(team) || t.getTitleName().replace(" ", "").equalsIgnoreCase(team)) {
-                return t;
-            }
-        }
-        return null;
     }
 
     // Checks to see if the arena is null
@@ -166,5 +156,17 @@ public class Utils {
             Message.getMessenger().msg(Bukkit.getConsoleSender(), true, ChatColor.RED, "Error starting SQL. Falling back to storing values in playerdata.yml. Check config.yml's SQL settings.");
             e.printStackTrace();
         }
+    }
+
+    public static String makeSpaces(int spaces) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < spaces; i++) {
+            builder.append(" ");
+        }
+        return builder.toString();
+    }
+
+    public static String makeSpaces(String fromString) {
+        return makeSpaces(fromString.length());
     }
 }

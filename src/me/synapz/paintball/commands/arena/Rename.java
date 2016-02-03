@@ -3,61 +3,56 @@ package me.synapz.paintball.commands.arena;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Utils;
-import me.synapz.paintball.commands.Command;
+import me.synapz.paintball.commands.ArenaCommand;
 
+import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
-public class Rename extends Command{
-	 public void onCommand(Player player, String[] args) {
-	        Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
-	        String newName = args[3];
+public class Rename extends ArenaCommand {
 
+	 public void onCommand() {
+		 String newName = args[3];
+		 Arena newArena = ArenaManager.getArenaManager().getArena(args[3]);
 
-	        
-	        if (Utils.nullCheck(args[2], arena, player)) {
-	        	
-		        try {
-		            Arena a = ArenaManager.getArenaManager().getArena(args[3]);
-                    a.getName();
-		            Message.getMessenger().msg(player, false, ChatColor.RED, "An arena named " + newName + " already exists!");
-		            return;
-		        }catch (NullPointerException e) {
-		            // Arena doesn't exist in the list of arenas therefore you can make it...
-		        }
-		        
-	            arena.rename(newName);
-	            Message.getMessenger().msg(player, false, ChatColor.GREEN, "Successfully renamed Arena " + ChatColor.GRAY + args[2] + ChatColor.GREEN + " to " + ChatColor.GRAY + newName);
-	        }
-	    }
+		 if (newArena != null) {
+			 Message.getMessenger().msg(player, false, ChatColor.RED, "An arena named " + newName + " already exists!");
+			 return;
+		 } else {
+			 arena.rename(newName);
+			 Message.getMessenger().msg(player, false, ChatColor.GREEN, "Successfully renamed Arena " + ChatColor.GRAY + args[2] + ChatColor.GREEN + " to " + ChatColor.GRAY + newName);
+		 }
+	 }
 
-	    public String getArgs() {
-	        String args = "<arena> <newName>";
-	        return args;
-	    }
+	public String getArgs() {
+		String args = "<arena> <newName>";
+		return args;
+	}
 
-	    public String getPermission() {
+	public String getPermission() {
 	        return "paintball.arena.rename";
 	    }
 
-	    public String getName() {
+	public String getName() {
 	        return "rename";
 	    }
 
-	    public String getInfo() {
+	public String getInfo() {
 	        return "Rename an Arena";
 	    }
 
-	    public Command.CommandType getCommandType() {
-	        return Command.CommandType.ARENA;
+	public CommandType getCommandType() {
+	        return CommandType.ARENA;
 	    }
 
-	    public int getMaxArgs() {
+	public int getMaxArgs() {
 	        return 4;
 	    }
 
-	    public int getMinArgs() {
+	public int getMinArgs() {
 	        return 4;
 	    }
+
+	protected int getArenaArg() {
+		return 2;
+	}
 }

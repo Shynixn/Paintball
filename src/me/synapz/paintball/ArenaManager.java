@@ -51,7 +51,7 @@ public class ArenaManager {
     // Stops all arenas
     public void stopArenas() {
         for (Arena a : getArenas().values()) {
-            a.forceRemovePlayers();
+            a.stopGame();
         }
     }
 
@@ -120,7 +120,7 @@ public class ArenaManager {
 
                     StatType type = null;
                     for (StatType t : StatType.values()) {
-                        if (t.getSignName().equalsIgnoreCase(sign.getLine(2))) {
+                        if (t.getSignName().equalsIgnoreCase(sign.getLine(2).replace(" ", ""))) {
                             type = t;
                         }
                     }
