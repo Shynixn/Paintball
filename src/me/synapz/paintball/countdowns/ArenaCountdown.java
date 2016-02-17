@@ -6,6 +6,8 @@ import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.players.PaintballPlayer;
+import me.synapz.paintball.players.ScoreboardPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -78,13 +80,19 @@ public class ArenaCountdown extends PaintballCountdown {
 
     @Override
     public boolean stop() {
-        return (a == null || a != null && (a.getState() != Arena.ArenaState.IN_PROGRESS && a.getState() != Arena.ArenaState.STARTING && a.getState() != Arena.ArenaState.WAITING) || isLobbyCountdown && (a.getLobbyPlayers().size() < a.getMin()));
+        return (a == null || a != null && (a.getState() != Arena.ArenaState.IN_PROGRESS && a.getState() != Arena.ArenaState.STARTING && a.getState() != Arena.ArenaState.WAITING && a.getState() != Arena.ArenaState.STOPPING) || isLobbyCountdown && (a.getLobbyPlayers().size() < a.getMin()));
     }
 
     @Override
     public boolean intervalCheck() {
         if (!isLobbyCountdown) {
             tpAllPlayersBack(); // this method will get called every second since intervalCheck is called every second
+        }
+        for (PaintballPlayer pbPlayer : a.getAllPlayers().values()) {
+            if (pbPlayer instanceof ScoreboardPlayer) {
+                ScoreboardPlayer sbPlayer =  (ScoreboardPlayer) pbPlayer;
+                    sbPlayer.updateDisplayName();
+            }
         }
         return counter <= noInterval || counter % interval == 0;
     }

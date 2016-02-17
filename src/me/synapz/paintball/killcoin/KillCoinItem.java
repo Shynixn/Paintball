@@ -1,19 +1,16 @@
 package me.synapz.paintball.killcoin;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import me.synapz.paintball.countdowns.ExpirationCountdown;
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +34,9 @@ public class KillCoinItem extends ItemStack {
     private final boolean showItem;
     private final boolean configItem;
     private final String type;
+    private final Sound sound;
 
-    public KillCoinItem(@NotNull Material material, @NotNull String name, @Nullable String description, @NotNull double money, @NotNull int killcoins, @Nullable int expirationTime, @Nullable String permission, @NotNull int amount, @NotNull boolean showItem) {
+    public KillCoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int killcoins, int expirationTime, String permission, Sound sound) {
         super(material, amount);
         this.name = name;
         this.nameWithSpaces = name;
@@ -50,6 +48,7 @@ public class KillCoinItem extends ItemStack {
         this.showItem = showItem;
         this.configItem = false;
         this.type = "";
+        this.sound = sound;
 
         KillCoinItemHandler.getHandler().addItem(this);
     }
@@ -67,6 +66,7 @@ public class KillCoinItem extends ItemStack {
         this.showItem = file.getBoolean(path + ".shown");
         this.configItem = true;
         this.type = file.getString(path + ".type");
+        this.sound = Sound.valueOf(file.getString(path + "sound"));
 
         KillCoinItemHandler.getHandler().addItem(this);
     }
@@ -83,6 +83,7 @@ public class KillCoinItem extends ItemStack {
         this.showItem = item.showItem();
         this.configItem = item.hasType();
         this.type = item.getItemType();
+        this.sound = item.getSound();
     }
 
     // Gets the item name
@@ -181,11 +182,7 @@ public class KillCoinItem extends ItemStack {
     // Adds a copy of the KillCoinItem to the player's inventory
     public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
         // TODO: subtract their money and killcoins
-        KillCoinItem itemToGive = new KillCoinItem(this);
-        playerToGetItem.getPlayer().getInventory().addItem(itemToGive.getItemStack(playerToGetItem, false));
-        if (this.hasExpirationTime()) {
-            new ExpirationCountdown(itemToGive, playerToGetItem, getExpirationTime());
-        }
+        playerToGetItem.addItem(this);
     }
 
     // Checks to see if this KillCoinItem equals an ItemStack by looking at its name and lore
@@ -209,6 +206,10 @@ public class KillCoinItem extends ItemStack {
     // If there is an error when adding the item to the inventory (player doesn't have enough killcoins, permission, etc)
     public boolean hasError(ArenaPlayer player) {
         return !(getError(player) == null);
+    }
+
+    public Sound getSound() {
+        return sound;
     }
 
     // Checks to see if this KillCoinItem is a configItem
@@ -241,6 +242,9 @@ public class KillCoinItem extends ItemStack {
         return !(killcoins <= 0);
     }
 
+    public boolean hasSound() {
+        return sound != null;
+    }
     // Checks to see if the player requires any permissions
     public boolean hasPermission() {
         return !(permission.equalsIgnoreCase("none") || permission.equals(""));

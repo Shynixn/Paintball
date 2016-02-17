@@ -46,8 +46,6 @@ public class Settings {
     public static PlayerData PLAYERDATA;
     public static FileConfiguration ARENA_FILE;
 
-    public static final Map<ChatColor, String> TEAM_NAMES = new HashMap<ChatColor, String>();
-
     // Variables
     private static Settings instance;
     private Plugin pb;
@@ -103,10 +101,6 @@ public class Settings {
         TITLE_API                   = config.getBoolean("Options.title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
         VAULT                       = config.getBoolean("Options.vault");
         SQL                         = config.getBoolean("Options.SQL");
-
-        for (String colorcode : config.getConfigurationSection("Teams").getKeys(false)) {
-            TEAM_NAMES.put(ChatColor.getByChar(colorcode), config.getString("Teams." + colorcode) + "");
-        }
     }
 
     public void reloadConfig() {
@@ -116,57 +110,6 @@ public class Settings {
         for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
             a.loadConfigValues();
         }
-    }
-
-    // Adds a new arena to config.yml with values default
-    public void addNewConfigSection(Arena a) {
-        FileConfiguration config = pb.getConfig();
-        List<String> valuesToSet = new ArrayList<String>() {{
-            this.add("max-score");
-            this.add("time");
-            this.add("win-waiting-time");
-            this.add("kill-coin-shop");
-            this.add("safe-time");
-            
-            this.add("Join-Arena.give-wool-helmet");
-            this.add("Join-Arena.color-player-title");
-            this.add("Join-Arena.per-team-chat");
-
-            this.add("Join-Lobby.give-wool-helmet");
-            this.add("Join-Lobby.color-player-title");
-            this.add("Join-Lobby.give-team-switcher");
-            this.add("Join-Lobby.per-team-chat");
-
-            this.add("Rewards.Kill-Coins.per-kill");
-            this.add("Rewards.Kill-Coins.per-death");
-            this.add("Rewards.Money.per-kill");
-            this.add("Rewards.Money.per-death");
-            this.add("Rewards.Money.per-win");
-            this.add("Rewards.Money.per-defeat");
-
-            this.add("Chat.arena-chat");
-            this.add("Chat.broadcast-winner");
-            this.add("Chat.spectator-chat");
-            this.add("Chat.arena-chat");
-
-            this.add("Countdown.lobby.countdown");
-            this.add("Countdown.lobby.interval");
-            this.add("Countdown.lobby.no-interval");
-
-            this.add("Countdown.arena.countdown");
-            this.add("Countdown.arena.interval");
-            this.add("Countdown.arena.no-interval");
-        }};
-
-        for (String value : valuesToSet) {
-            config.set(a.getConfigPath(value), "default");
-        }
-        pb.saveConfig();
-    }
-
-    public void removeArenaConfigSection(Arena a) {
-        pb.getConfig().set("Per-Arena-Settings." + "Arenas." + a.getDefaultName(), null);
-        pb.saveConfig();
     }
 
     public FileConfiguration getConfig() {

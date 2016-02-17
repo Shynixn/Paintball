@@ -1,7 +1,8 @@
 package me.synapz.paintball.commands;
 
 import me.synapz.paintball.*;
-import me.synapz.paintball.commands.arena.SetLobbySpawn;
+import me.synapz.paintball.commands.arena.DelLocation;
+import me.synapz.paintball.commands.arena.SetLocation;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -29,7 +30,7 @@ public abstract class TeamCommand extends ArenaCommand {
             return;
         }
 
-        if (this instanceof SetLobbySpawn && rawTeamName.equalsIgnoreCase("all")) {
+        if ((this instanceof SetLocation || this instanceof DelLocation) && rawTeamName.equalsIgnoreCase("all")) {
             onCommand();
             return;
         }

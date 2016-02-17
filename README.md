@@ -36,10 +36,11 @@
 * Kill coins
     * Earn killcoins per kill to buy items inside the KillCoin Shop
     * Comes with KillCoin API so you can add your own items to the KillCoin Shop
-
+* Scoreboard
+    * Show many values in game
+    * Does not break plugins like FeatherBoard which takes advantage of Scoreboards
 ###Soon to come features
 * Kill coins shop, buy weapons (grenades, snipers, etc)
-* Scoreboard Support?
 * SkyText Support (http://dev.bukkit.org/bukkit-plugins/skytext/)
 * Minema Recording of Paintball to feature on plugin page
 * McStats

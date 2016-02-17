@@ -1,17 +1,16 @@
 package me.synapz.paintball.commands.arena;
 
-
 import me.synapz.paintball.Message;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 
-public class SetSpectate extends ArenaCommand {
+public class DelSpectate extends ArenaCommand {
 
     public void onCommand() {
-        arena.setSpectatorLocation(player.getLocation());
-        Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + ChatColor.GREEN + " spectate location set: " + (Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator") == null ? 1 : Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator").getValues(false).size()), arena.getSteps());
+        arena.removeSpectatorLocation();
+        Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + ChatColor.GREEN + " spectate location deleted: " + (Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator") == null ? 1 : Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator").getValues(false).size()), arena.getSteps());
     }
 
     public String getArgs() {
@@ -20,15 +19,15 @@ public class SetSpectate extends ArenaCommand {
     }
 
     public String getPermission() {
-        return "paintball.arena.setspectate";
+        return "paintball.arena.delspectate";
     }
 
     public String getName() {
-        return "setspec";
+        return "delspec";
     }
 
     public String getInfo() {
-        return "Set Arena spectate location";
+        return "Delete Arena spectate location";
     }
 
     public CommandType getCommandType() {

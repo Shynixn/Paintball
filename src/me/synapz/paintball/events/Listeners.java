@@ -2,20 +2,15 @@ package me.synapz.paintball.events;
 
 import me.synapz.paintball.*;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
-import me.synapz.paintball.countdowns.NoHitCountdown;
-import me.synapz.paintball.countdowns.PaintballCountdown;
+import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.players.SpectatorPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,22 +20,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryPickupItemEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Colorable;
-import org.bukkit.material.Wool;
-import org.bukkit.projectiles.ProjectileSource;
-
-import static me.synapz.paintball.storage.Settings.SECONDARY;
-import static me.synapz.paintball.storage.Settings.THEME;
 
 public class Listeners implements Listener {
 
@@ -151,6 +134,7 @@ public class Listeners implements Listener {
                 e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
                 if (clickedItem != null && clickedItem.hasItemMeta() && clickedItem.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
+                    player.getInventory().addItem(clickedItem);
                     e.setCancelled(true);
                 }
             }
@@ -174,24 +158,6 @@ public class Listeners implements Listener {
             e.setDeathMessage("");
             e.setKeepInventory(true);
             // TODO, maually give them their ekillcoinitems
-        }
-    }
-
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onRespawnInArena(PlayerRespawnEvent e) {
-        Player player = e.getPlayer();
-
-        if (isInArena(player)) {
-            Arena arena = getArena(player);
-            ArenaPlayer arenaPlayer = arena.getPaintballPlayer(player) instanceof ArenaPlayer ? (ArenaPlayer) arena.getPaintballPlayer(player) : null;
-
-            if (arenaPlayer == null)
-                return;
-
-            arenaPlayer.respawn();
-            e.setRespawnLocation(arena.getLocation(TeamLocation.TeamLocations.SPAWN, arenaPlayer.getTeam()));
-            new NoHitCountdown(arena.SAFE_TIME, arenaPlayer);
         }
     }
 
@@ -230,32 +196,41 @@ public class Listeners implements Listener {
         String hitPlayerName = hitPlayer.getPlayer().getName();
         String shooterPlayerName = arenaPlayer.getPlayer().getName();
 
-        if (GameFinishCountdown.arenasFinishing.contains(a)) {
+        if (GameFinishCountdown.arenasFinishing.keySet().contains(a)) {
             Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "Game is already finished.");
             event.setCancelled(true);
             return;
         }
 
-        if(NoHitCountdown.godPlayers.keySet().contains(hitPlayerName)) {
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "That player is currently safe from Paintballs. Protection: " + (int) NoHitCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
+        if(ProtectionCountdown.godPlayers.keySet().contains(hitPlayerName)) {
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "That player is currently safe from Paintballs. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
             event.setCancelled(true);
-        } else if (NoHitCountdown.godPlayers.keySet().contains(shooterPlayerName)) {
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "You cannot hit players while you are protected. Protection: " + (int) NoHitCountdown.godPlayers.get(shooterPlayerName).getCounter() + " seconds");
+        } else if (ProtectionCountdown.godPlayers.keySet().contains(shooterPlayerName)) {
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "You cannot hit players while you are protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(shooterPlayerName).getCounter() + " seconds");
             event.setCancelled(true);
         } else {
             Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
-            hitBySnowball.getInventory().clear();
-            hitBySnowball.getInventory().setArmorContents(null);
-            hitBySnowball.setHealth(0);
-            hitPlayer.die();
-            arenaPlayer.kill(hitPlayer);
+
+            if (hitPlayer.die()) {
+                arenaPlayer.kill(hitPlayer);
+            } else {
+                Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
+            }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onDamageAsLobbyOrSpectator(EntityDamageEvent e) {
-        Player player = e.getEntity() instanceof Player ? (Player) e.getEntity() : null;
-        if (player != null && isInArena(player)) {
+        if (!(e.getEntity() instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) e.getEntity();
+        PaintballPlayer pbPlayer = null;
+        if (isInArena(player))
+            pbPlayer = getArena(player).getPaintballPlayer(player);
+
+        if (pbPlayer != null && isInArena(player) && (getArena(player).getLobbyPlayers().contains(pbPlayer) || getArena(player).getSpectators().contains(pbPlayer))) {
             e.setCancelled(true);
         }
     }

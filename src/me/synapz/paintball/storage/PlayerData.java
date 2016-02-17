@@ -1,13 +1,14 @@
 package me.synapz.paintball.storage;
 
 
-import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.ExperienceManager;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,7 +17,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scoreboard.Scoreboard;
+
 import java.sql.*;
 import java.util.*;
 
@@ -24,12 +28,18 @@ import static me.synapz.paintball.storage.Settings.*;
 
 public final class PlayerData extends PaintballFile {
 
-    FileConfiguration data;
+    private Map<UUID, Location> locations = new HashMap<>();
+    private Map<UUID, GameMode> gamemodes = new HashMap<>();
+    private Map<UUID, Integer> foodLevels = new HashMap<>();
+    private Map<UUID, Double> health = new HashMap<>();
+    private Map<UUID, ItemStack[]> inventories = new HashMap<>();
+    private Map<UUID, ItemStack[]> armour = new HashMap<>();
+    private Map<UUID, Integer> expLevels = new HashMap<>();
+    private Map<UUID, Scoreboard> scoreboards = new HashMap<>();
+    private Map<UUID, Boolean> flying = new HashMap<>();
 
     public PlayerData(Plugin pb) {
         super(pb, "playerdata.yml");
-
-        this.data = getFileConfig();
     }
 
     @Override
@@ -202,56 +212,14 @@ public final class PlayerData extends PaintballFile {
     public String getKD(UUID id) {
         int kills = getFileConfig().getInt(StatType.KILLS.getPath(id));
         int deaths = getFileConfig().getInt(StatType.DEATHS.getPath(id));
-        return String.format("%.2f", divide(kills, deaths));
+        return String.format("%.2f", Utils.divide(kills, deaths));
     }
 
     // Returns a player's accuracy by dividing shots and hits
     public String getAccuracy(UUID id) {
         int shots = getFileConfig().getInt(StatType.SHOTS.getPath(id));
         int hits = getFileConfig().getInt(StatType.HITS.getPath(id));
-        return String.format("%d%s", (int) Math.round(divide(hits, shots)*100), "%");
-    }
-
-    // Divides two numbers safely
-    private double divide(int numerator, int denominator) {
-        if (denominator == 0)
-            return numerator;
-
-        float n = (float) numerator;
-        float d = (float) denominator;
-        return (n / d);
-    }
-
-    // Saves player information to PlayerData file
-    // Called when the player enters an arena
-    // TODO: add exp and other missing values
-    public void savePlayerInformation(Player player) {
-        UUID id = player.getUniqueId();
-        data.set("Player-Data." + id + ".Info.Name", player.getName());
-        data.set("Player-Data." + id + ".Info.Location", player.getLocation());
-        data.set("Player-Data." + id + ".Info.GameMode", player.getGameMode().getValue());
-        data.set("Player-Data." + id + ".Info.FoodLevel", player.getFoodLevel());
-        data.set("Player-Data." + id + ".Info.Health", player.getHealth());
-        data.set("Player-Data." + id + ".Info.Inventory", Utils.getInventoryList(player, false));
-        data.set("Player-Data." + id + ".Info.Armour", Utils.getInventoryList(player, true));
-        addStatsIfNotYetAdded(id);
-
-        saveFile();
-    }
-
-    // Restores all of the player's settings, then sets the info to null
-    public void restorePlayerInformation(Player player) {
-        UUID id = player.getUniqueId();
-        player.getInventory().clear();
-        player.teleport((Location) data.get("Player-Data." + id + ".Info.Location"));
-        player.getInventory().setContents(getLastInventoryContents(id, ".Info.Inventory"));
-        player.getInventory().setArmorContents(getLastInventoryContents(id, ".Info.Armour"));
-        player.setFoodLevel(data.getInt("Player-Data." + id + ".FoodLevel"));
-        player.setHealth(data.getInt("Player-Data." + id + ".Info.Health"));
-        player.setGameMode(Utils.getLastGameMode(data.getInt("Player-Data." + id + ".Info.GameMode")));
-
-        data.set("Player-Data." + id + ".Info", null);
-        saveFile();
+        return String.format("%d%s", (int) Math.round(Utils.divide(hits, shots)*100), "%");
     }
 
     private FileConfiguration addStats(FileConfiguration yaml) {
@@ -290,18 +258,52 @@ public final class PlayerData extends PaintballFile {
         return yaml;
     }
 
+    // Saves player information to PlayerData file
+    // Called when the player enters an arena
+    // TODO: add exp and other missing values
+    public void savePlayerInformation(Player player) {
+        ExperienceManager exp = new ExperienceManager(player);
+        UUID id = player.getUniqueId();
+        player.sendMessage("saving scoreboard");
+        locations.put(id, player.getLocation());
+        gamemodes.put(id, player.getGameMode());
+        foodLevels.put(id, player.getFoodLevel());
+        health.put(id, player.getHealth());
+        inventories.put(id, player.getInventory().getContents());
+        armour.put(id, player.getInventory().getArmorContents());
+        expLevels.put(id, exp.getCurrentExp());
+        scoreboards.put(id, player.getScoreboard());
+        flying.put(id, player.isFlying() && player.getAllowFlight());
 
-    // Get the player's last inventory contents what were set in Player-Data
-    private ItemStack[] getLastInventoryContents(UUID id, String path) {
-        ItemStack[] items = new ItemStack[data.getList("Player-Data." + id + path).size()];
-        int count = 0;
-        for (Object item : data.getList("Player-Data." + id + path).toArray()) {
-            if (item instanceof ItemStack) {
-                items[count] = new ItemStack((ItemStack) item);
-                count++;
-            }
-        }
-        return items;
+        addStatsIfNotYetAdded(id);
+        saveFile();
+    }
+
+    // Restores all of the player's settings, then sets the info to null
+    public void restorePlayerInformation(Player player) {
+        ExperienceManager exp = new ExperienceManager(player);
+        UUID id = player.getUniqueId();
+
+        player.getInventory().clear();
+        player.teleport(locations.get(id));
+        player.getInventory().setContents(inventories.get(id));
+        player.getInventory().setArmorContents(armour.get(id));
+        player.setFoodLevel(foodLevels.get(id));
+        player.setHealth(health.get(id));
+        player.setGameMode(gamemodes.get(id));
+        player.setScoreboard(scoreboards.get(id));
+        player.setAllowFlight(flying.get(id));
+        player.setFlying(flying.get(id));
+        exp.setExp(expLevels.get(id));
+
+        locations.remove(id);
+        gamemodes.remove(id);
+        foodLevels.remove(id);
+        health.remove(id);
+        inventories.remove(id);
+        expLevels.remove(id);
+        scoreboards.remove(id);
+        flying.remove(id);
     }
 
     // Checks to make sure there is a configuration section, if it isn't it is created for that player

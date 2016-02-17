@@ -12,9 +12,12 @@ import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.ArenaFile;
 import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.block.Action;
@@ -31,6 +34,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -44,7 +48,9 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         commandManager.init();
 
         // TODD: on timer end check for winners
-        // TODO: end time dont work
+        // TODO: end time dont work, it should show on scoreboards, fixed this?
+        // spectate setting/removing al functional?
+            // no.. make sure they cant remove if it is under 0
 
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
@@ -56,15 +62,30 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
 
         getCommand("paintball").setExecutor(commandManager);
 
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-            @Override
-            public void run() {
-                ArenaManager.getArenaManager().updateAllSignsOnServer();
-                Paintball.this.bungeeUpdateSigns();
-            }
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            ArenaManager.getArenaManager().updateAllSignsOnServer();
+            Paintball.this.bungeeUpdateSigns();
         }, 0L, (long) Settings.SIGN_UPDATE_TIME);
 
-        new KillCoinItem(Material.DIAMOND_BARDING, "Unlimited Paintballs", "Gives an unlimited paintball", 0, 0, 60, "", 1, true) {
+        new KillCoinItem(Material.SNOW_BALL, ChatColor.RESET + Settings.THEME + "Paintball", 64, true, "Default Paintball Item", 0.0, 0, 0, "", Sound.CLICK);
+        // 2
+        new KillCoinItem(Material.SUGAR, "Sugar Overdose", 1, true, "Speeds up your movement by 2x", 0.0, 0, 0, "", Sound.BURP) {
+            @Override
+            public void onClickItem(PlayerInteractEvent event) {
+                Player player = event.getPlayer();
+                ItemStack itemInHand = player.getItemInHand();
+                Action action = event.getAction();
+
+
+                if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, (60*20), 2));
+                    player.getInventory().remove(itemInHand);
+                }
+            }
+        };
+
+        // 3
+        new KillCoinItem(Material.IRON_AXE, "Unlimited Paintballs", 1, true, "Receive an unlimited amount of Paintballs!", 0.0, 0, 120, "", Sound.CLICK) {
             @Override
             public void onClickItem(PlayerInteractEvent event) {
                 Player player = event.getPlayer();
@@ -76,18 +97,39 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             }
         };
 
-        new KillCoinItem(Material.SUGAR, "Sugar Overdose", "Gives you a x2 speed boost for one minute", 0, 0, 0, "", 1, true) {
+        // 7
+        new KillCoinItem(Material.IRON_BARDING, "Machine Gun", 1, true, "Shoot many Paintballs at a time", 0.0, 0, 120, "", Sound.WOOD_CLICK) {
             @Override
             public void onClickItem(PlayerInteractEvent event) {
                 Player player = event.getPlayer();
                 Action action = event.getAction();
-                ItemStack itemInHand = player.getItemInHand();
 
                 if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, (60*20), 2));
-                    player.getInventory().remove(itemInHand);
+                    for (int i = 0; i < 10; i++) {
+                        player.launchProjectile(Snowball.class);
+                    }
                 }
             }
+        };
+
+        // 10
+        new KillCoinItem(Material.DIAMOND_BARDING, "Rocket Launcher", 1, true, "Shoot a giant wave of Paintballs", 0.0, 0, 0, "", Sound.ENDERDRAGON_DEATH) {
+            @Override
+            public void onClickItem(PlayerInteractEvent event) {
+                Player player = event.getPlayer();
+                Action action = event.getAction();
+
+                if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+                    for (int i = 0; i < 50; i++) {
+                        player.launchProjectile(Snowball.class);
+                    }
+                    player.getInventory().remove(player.getItemInHand());
+                }
+            }
+        };
+
+        new KillCoinItem(Material.ANVIL, "Tank", 1, true, "Become a Tank! You will be invinsable, have unlimited Paintballs, but move\nslow like a Tank.", 0.0, 0, 0, "", Sound.AMBIENCE_THUNDER) {
+
         };
 
         try {

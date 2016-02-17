@@ -1,5 +1,6 @@
 package me.synapz.paintball;
 
+import com.connorlinfoot.actionbarapi.ActionBarAPI;
 import me.synapz.paintball.countdowns.ArenaCountdown;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.*;
@@ -90,6 +91,13 @@ public class Utils {
         return wool;
     }
 
+    public static String makeHealth(int health, int maxHealth) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = health; i < maxHealth; i++)
+            builder.append("◯");
+        return builder.toString();
+    }
+
     public static ItemStack makeItem(Material type, String name, int amount) {
         ItemStack item = new ItemStack(type, amount);
 
@@ -144,6 +152,22 @@ public class Utils {
         return null;
     }
 
+    // Divides two numbers safely
+    // TODO: negative KD?
+    public static double divide(int numerator, int denominator) {
+        if (denominator == 0)
+            return numerator;
+
+        float n = (float) numerator;
+        float d = (float) denominator;
+        return (n / d);
+    }
+
+    public static int randomNumber(int to) {
+        Random generator = new Random();
+        return 1+generator.nextInt(to);
+    }
+
     // TODO: for some reason this spams console like 6 times when it fails
     public static void executeQuery(String query) {
         Connection conn;
@@ -168,5 +192,38 @@ public class Utils {
 
     public static String makeSpaces(String fromString) {
         return makeSpaces(fromString.length());
+    }
+
+    public static void removeActionBar(Player player) {
+        ActionBarAPI.sendActionBar(player, "");
+    }
+
+    public static boolean canJoin(Player player, Arena arena) {
+        String error = "";
+        switch (arena.getState()) {
+            case IN_PROGRESS:
+                error = arena.toString() + ChatColor.RED + " is currently in progress.";
+                break;
+            case STOPPING:
+                error = arena.toString() + ChatColor.RED + " is currently in progress.";
+                break;
+            case STARTING:
+                error = arena.toString() + ChatColor.RED + " is currently in progress.";
+                break;
+            case NOT_SETUP:
+                error = arena.toString() + ChatColor.RED + " has not been fully setup.";
+                break;
+            case DISABLED:
+                error = arena.toString() + ChatColor.RED + " is disabled.";
+                break;
+            default:
+                break;
+        }
+        if (error.isEmpty()) {
+            return true;
+        } else {
+            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently in progress.");
+            return false;
+        }
     }
 }

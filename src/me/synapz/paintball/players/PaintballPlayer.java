@@ -5,6 +5,7 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,9 +45,8 @@ public abstract class PaintballPlayer {
         this.arena = a;
         this.team = t;
         this.player = p;
-
-        loadScoreboard();
         initPlayer();
+        loadScoreboard();
     }
 
     /*
@@ -103,8 +103,8 @@ public abstract class PaintballPlayer {
 
     // Leaves an arena (removes their color names, restores information, removes from lists, and checks to see if to force stop (1 player left)
     public void leaveArena() {
-        forceLeaveArena();
-        arena.removePlayer(this);
+        forceLeaveArena(); // puts items back (no messages)
+        arena.removePlayer(this); // removes player from all array lists
 
         // check to see if there is only one player left, if there is everyone else left
         if (arena.getAllArenaPlayers().size() == 1) {
@@ -118,35 +118,10 @@ public abstract class PaintballPlayer {
     }
 
     public void forceLeaveArena() {
-        if (Team.getPluginScoreboard().getTeam(team.getTitleName()) != null)
-            Team.getPluginScoreboard().getTeam(team.getTitleName()).removePlayer(player);
         Settings.PLAYERDATA.restorePlayerInformation(player);
-        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
 
     protected void loadScoreboard() {
         sb = Bukkit.getScoreboardManager().getNewScoreboard();
-        org.bukkit.scoreboard.Team playerTeam = null;
-
-        // Registers all teams with their color. Used for changing color of name tag
-        for (Team team : arena.getArenaTeamList()) {
-            sb.registerNewTeam(team.getTitleName()).setPrefix(team.getChatColor() + "");
-            playerTeam = sb.getTeam(team.getTitleName());
-            playerTeam.setAllowFriendlyFire(false);
-        }
-        playerTeam.addPlayer(player);
-        // Everything having to do with the SIDEBAR Objective
-        StringBuilder objName = new StringBuilder(player.getName());
-
-        if (this instanceof LobbyPlayer)
-            objName.append("Lobby");
-        else if (this instanceof ArenaPlayer)
-            objName.append("Arena");
-        else if (this instanceof SpectatorPlayer)
-            objName.append("Spectator");
-
-        Objective objective = sb.registerNewObjective(objName.toString(), "dummy");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        player.setScoreboard(sb);
     }
 }

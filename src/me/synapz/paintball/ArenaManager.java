@@ -74,6 +74,8 @@ public class ArenaManager {
                 case IN_PROGRESS:
                     color += RED;
                     break;
+                case STOPPING:
+                    color += RED;
                 case STARTING:
                     color += RED;
                 case DISABLED:

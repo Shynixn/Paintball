@@ -2,7 +2,10 @@ package me.synapz.paintball.players;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Message;
+import me.synapz.paintball.enums.ScoreboardLine;
+import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.TeamLocation;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
@@ -39,6 +42,13 @@ public final class SpectatorPlayer extends PaintballPlayer {
         for (Player player : arena.getAllPlayers().keySet()) {
             player.sendMessage(chat);
         }
+    }
+
+    @Override
+    public void forceLeaveArena() {
+        if (team != null)
+            team.playerLeaveTeam();
+        super.forceLeaveArena();
     }
 
     private void stripValues() {

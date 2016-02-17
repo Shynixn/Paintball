@@ -5,7 +5,9 @@ import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.locations.SignLocation;
+import me.synapz.paintball.locations.TeamLocation;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -43,8 +45,10 @@ public class ArenaFile extends PaintballFile {
     // Gets the team list for an arena, the Integer is that team's score
     public List<Team> getTeamsList(Arena a) {
         List<Team> teamList = new ArrayList<>();
-        for (String s : fileConfig.getStringList(a.getPath() + ".Teams")) {
-            teamList.add(new Team(a, s));
+        for (String rawItem : fileConfig.getStringList(a.getPath() + ".Teams")) {
+            String colorCode = rawItem.split(":")[0]; // rawItem will be stored as, colorCode:teamName like, &c:Red
+            String teamName = rawItem.split(":")[1];
+            teamList.add(new Team(a, colorCode, teamName));
         }
         return teamList;
     }
@@ -55,8 +59,53 @@ public class ArenaFile extends PaintballFile {
         fileConfig.set(arena.getPath() + "Enabled", false);
 
         ArenaManager.getArenaManager().getArenas().put(arena.getName(), arena);
-        Settings.getSettings().addNewConfigSection(arena);
+        addNewConfigSection(arena);
         saveFile();
+    }
+
+    // Adds a new arena to arena.yml with values default
+    public void addNewConfigSection(Arena a) {
+        List<String> valuesToSet = new ArrayList<String>() {{
+            this.add("max-score");
+            this.add("time");
+            this.add("win-waiting-time");
+            this.add("kill-coin-shop");
+            this.add("safe-time");
+            this.add("hits-to-kill");
+
+            this.add("Join-Arena.give-wool-helmet");
+            this.add("Join-Arena.color-player-title");
+            this.add("Join-Arena.per-team-chat");
+
+            this.add("Join-Lobby.give-wool-helmet");
+            this.add("Join-Lobby.color-player-title");
+            this.add("Join-Lobby.give-team-switcher");
+            this.add("Join-Lobby.per-team-chat");
+
+            this.add("Rewards.Kill-Coins.per-kill");
+            this.add("Rewards.Kill-Coins.per-death");
+            this.add("Rewards.Money.per-kill");
+            this.add("Rewards.Money.per-death");
+            this.add("Rewards.Money.per-win");
+            this.add("Rewards.Money.per-defeat");
+
+            this.add("Chat.arena-chat");
+            this.add("Chat.broadcast-winner");
+            this.add("Chat.spectator-chat");
+            this.add("Chat.arena-chat");
+
+            this.add("Countdown.lobby.countdown");
+            this.add("Countdown.lobby.interval");
+            this.add("Countdown.lobby.no-interval");
+
+            this.add("Countdown.arena.countdown");
+            this.add("Countdown.arena.interval");
+            this.add("Countdown.arena.no-interval");
+        }};
+
+        for (String value : valuesToSet) {
+            fileConfig.set(getConfigPath(value, a), "default");
+        }
     }
 
     // Load all arenas from arenas.yml
@@ -83,6 +132,31 @@ public class ArenaFile extends PaintballFile {
         }
     }
 
+    // TODO: put this stuff in the arenafile class
+    public int loadInt(String item, Arena arena) {
+        if (fileConfig.getString(getConfigPath(item, arena)) != null && fileConfig.getString(getConfigPath(item, arena)).equalsIgnoreCase("default")) {
+            return Settings.getSettings().getConfig().getInt(getArenaConfigPath(item));
+        } else {
+            return fileConfig.getInt(getConfigPath(item, arena));
+        }
+    }
+
+    public String loadString(String item, Arena arena) {
+        if (fileConfig.getString(getConfigPath(item, arena)) != null && fileConfig.getString(getConfigPath(item, arena)).equalsIgnoreCase("default")) {
+            return ChatColor.translateAlternateColorCodes('&', Settings.getSettings().getConfig().getString(getArenaConfigPath(item)));
+        } else {
+            return ChatColor.translateAlternateColorCodes('&', fileConfig.getString(getConfigPath(item, arena)));
+        }
+    }
+
+    public boolean loadBoolean(String item, Arena arena) {
+        if (fileConfig.getString(getConfigPath(item, arena)) != null && fileConfig.getString(getConfigPath(item, arena)).equalsIgnoreCase("default")) {
+            return Settings.getSettings().getConfig().getBoolean(getArenaConfigPath(item));
+        } else {
+            return fileConfig.getBoolean(getConfigPath(item, arena));
+        }
+    }
+
     private void loadSigns() {
         for (String rawLoc : fileConfig.getStringList("Signs.Autojoin")) {
             SignLocation signLoc = new SignLocation(SignLocation.SignLocations.AUTOJOIN, rawLoc);
@@ -93,5 +167,13 @@ public class ArenaFile extends PaintballFile {
             SignLocation signLoc = new SignLocation(SignLocation.SignLocations.LEADERBOARD, rawLoc);
             leaderboardAndJoinSigns.put(signLoc.getLocation(), signLoc);
         }
+    }
+
+    private String getConfigPath(String value, Arena arena) {
+        return arena.getPath() + ".Config." + value;
+    }
+
+    private String getArenaConfigPath(String value) {
+        return  "Per-Arena-Settings.Defaults." + value;
     }
 }

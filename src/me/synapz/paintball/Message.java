@@ -15,7 +15,12 @@ public class Message {
     
     // TODO remove static instance, it's really not needed...
     public static final String NO_PERMS = "You don't have access to that command!";
-    
+    public static final String SUFFIX = SECONDARY + " » ";
+    public static final String EXPIRATION_TIME = createPrefix("Expiration") + SECONDARY + "%time%" + THEME + " seconds";
+    public static final String EXPIRATION_END = createPrefix("Expiration") + SECONDARY + "Item %item% has expired";
+    public static final String PROTECTION_END = createPrefix("Protection") + SECONDARY + "Protection has expired";
+    public static final String PROTECTION_TIME = createPrefix("Protection") + SECONDARY + "%time% " + THEME + "seconds";
+
     private static Message instance = new Message();
     
     public static Message getMessenger() {
@@ -87,7 +92,11 @@ public class Message {
         }
         return SECONDARY + STRIKETHROUGH + "                       " + RESET + THEME + " " + title + " " + SECONDARY + STRIKETHROUGH + "                       ";
     }
-    
+
+    private static String createPrefix(String suffix){
+        return THEME + BOLD + suffix + SUFFIX;
+    }
+
     public enum Usage {
         TO_MANY_ARGS,
         NOT_ENOUGH_ARGS

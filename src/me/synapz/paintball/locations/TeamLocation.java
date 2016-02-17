@@ -30,14 +30,19 @@ public class TeamLocation extends PaintballLocation {
     }
 
     // Creates a new TeamLocation by looking inside of arenas.yml and grabbing it out
-    public TeamLocation(Arena arena, Team team, TeamLocations type) {
-        super(arena, Settings.ARENA_FILE.getString(team.getPath(type)));
+    public TeamLocation(Arena arena, Team team, TeamLocations type, int spawnNumber) {
+        super(arena, Settings.ARENA_FILE.getString(team.getPath(type, spawnNumber)));
         this.team = team;
         this.type = type;
     }
 
+    public void removeLocation() {
+        Settings.ARENA_FILE.set(team.getPath(type, team.getSpawnPointsSize(type)), null);
+        arena.advSave();
+    }
+
     protected void setLocation() {
-        Settings.ARENA_FILE.set(team.getPath(type), super.toString());
+        Settings.ARENA_FILE.set(team.getPath(type, team.getSpawnPointsSize(type)+1), super.toString());
         arena.advSave();
     }
 }

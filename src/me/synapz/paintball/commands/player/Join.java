@@ -21,22 +21,6 @@ public class Join extends TeamCommand {
             Message.getMessenger().msg(player, false, RED, arena.toString() + RED + " is full!");
             return;
         }
-        switch (arena.getState()) {
-            case IN_PROGRESS:
-                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently in progress.");
-                return;
-            case STARTING:
-                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently in progress.");
-                return;
-            case NOT_SETUP:
-                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been fully setup.");
-                return;
-            case DISABLED:
-                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is disabled.");
-                return;
-            default:
-                break;
-        }
 
         arena.joinLobby(player, team);
     }

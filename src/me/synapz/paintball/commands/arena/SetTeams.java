@@ -28,11 +28,11 @@ public class SetTeams extends ArenaCommand {
             return;
         }
         for (String color : colors) {
-            color = translateAlternateColorCodes('&', color);
-            if (!Team.LIST.contains(color)) {
+            if (!Team.DEFAULT_NAMES.containsKey(color)) {
                 Message.getMessenger().msg(player, false, RED, "Error parsing ChatColors. For example use,", "Usage: /pb admin setteam " + arena.getName() + " &1,&2,&6,&a");
                 return;
             }
+            color = translateAlternateColorCodes('&', color);
             // make sure no teams are duplicated
             if (added.contains(color)) {
                 if (colors.size() == 2) {

@@ -4,6 +4,7 @@ package me.synapz.paintball;
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
 import me.synapz.paintball.countdowns.ArenaCountdown;
+import me.synapz.paintball.countdowns.GameCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.PaintballCountdown;
 import me.synapz.paintball.locations.SignLocation;
@@ -19,6 +20,7 @@ import static me.synapz.paintball.locations.TeamLocation.*;
 import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.*;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -48,6 +50,7 @@ public class Arena {
     public int MONEY_PER_WIN;
     public int MONEY_PER_DEFEAT;
     public int SAFE_TIME;
+    public int HITS_TO_KILL;
 
     public String ARENA_CHAT;
     public String SPEC_CHAT;
@@ -85,6 +88,7 @@ public class Arena {
         WAITING,
         DISABLED,
         STARTING,
+        STOPPING,
         IN_PROGRESS;
 
         @Override
@@ -128,7 +132,6 @@ public class Arena {
     // Removes arena from list and from arenas.yml
     public void removeArena() {
         ARENA_FILE.set("Arenas." + this.getDefaultName(), null);
-        Settings.getSettings().removeArenaConfigSection(this);
         ArenaManager.getArenaManager().getArenas().remove(this.getDefaultName(), this);
         advSave();
     }
@@ -144,8 +147,8 @@ public class Arena {
     }
 
     // Gets the spawn of a team
-    public Location getLocation(TeamLocations type, Team team) {
-        return new TeamLocation(this, team, type).getLocation();
+    public Location getLocation(TeamLocations type, Team team, int spawnNumber) {
+        return new TeamLocation(this, team, type, spawnNumber).getLocation();
     }
 
     // Sets the spawn of a team in the arena to a location
@@ -153,8 +156,16 @@ public class Arena {
         new TeamLocation(this, team, location, type);
     }
 
+    public void delLocation(TeamLocations type, Team team, int spawnNumber) {
+        new TeamLocation(this, team, type, spawnNumber).removeLocation();
+    }
+
     public Location getSpectatorLocation() {
-        return new SpectatorLocation(this).getLocation();
+        return new SpectatorLocation(this, Utils.randomNumber(ARENA_FILE.getConfigurationSection(this.getPath() + "Spectator") == null ? 1 : ARENA_FILE.getConfigurationSection(this.getPath() + "Spectator").getValues(false).size())).getLocation();
+    }
+
+    public void removeSpectatorLocation() {
+        new SpectatorLocation(this, Utils.randomNumber(ARENA_FILE.getConfigurationSection(this.getPath() + "Spectator") == null ? 1 : ARENA_FILE.getConfigurationSection(this.getPath() + "Spectator").getValues(false).size())).removeLocation();
     }
 
     public void setSpectatorLocation(Location location) {
@@ -206,7 +217,7 @@ public class Arena {
         List<String> teamColors = new ArrayList<String>();
         this.teams = new HashMap<>();
         for (Team t : teamsToAdd) {
-            teamColors.add(t.getChatColor() + "");
+            teamColors.add(t.getChatColor() + ":" + t.getTitleName());
             this.teams.put(t, 0);
         }
         // sets the arena's teams to the list of teams in arena.yml
@@ -227,14 +238,13 @@ public class Arena {
         for (Team t : getArenaTeamList()) {
             String lobbyName = t.getTitleName().toLowerCase().replace(" ", "") + " (lobby)";
             String spawnName = t.getTitleName().toLowerCase().replace(" ", "") + " (spawn)";
-            steps.add(ARENA_FILE.getString(t.getPath(TeamLocations.LOBBY)) != null ? done + lobbyName + end : lobbyName);
-            steps.add(ARENA_FILE.getString(t.getPath(TeamLocations.SPAWN)) != null ? done + spawnName + end : spawnName);
+            steps.add(ARENA_FILE.getString(t.getPath(TeamLocations.LOBBY, 1)) != null ? done + lobbyName + end : lobbyName);
+            steps.add(ARENA_FILE.getString(t.getPath(TeamLocations.SPAWN, 1)) != null ? done + spawnName + end : spawnName);
         }
-        Utils.addItemsToArray(steps, (ARENA_FILE.getString(this.getPath() + "Spectator") != null ? done + "setspec" + end : "setspec"), isEnabled() ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "setteams" : "");
+        Utils.addItemsToArray(steps, (ARENA_FILE.getString(this.getPath() + "Spectator.1") != null ? done + "setspec" + end : "setspec"), isEnabled() ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "setteams" : "");
         finalString = GRAY + Joiner.on(", ").join(steps);
         
         return isSetup() && isEnabled() ? prefix + GRAY + "Complete. Arena is open!" : prefix + finalString;
-        
     }
 
     // Set the arena to be enabled/disabled
@@ -250,16 +260,16 @@ public class Arena {
     // Checks weather this arena is setup or not. In order to be setup max, min, spectator and all spawns must be set
     public boolean isSetup() {
         boolean spawnsSet = true;
-        boolean isSpectateSet = ARENA_FILE.getString(this.getPath() + "Spectator") != null;
+        boolean isSpectateSet = (ARENA_FILE.getString(this.getPath() + "Spectator.1") != null);
         if (getArenaTeamList().isEmpty()) {
             spawnsSet = false;
         }
         for (Team t : getArenaTeamList()) {
-            if (ARENA_FILE.getString(t.getPath(TeamLocations.SPAWN)) == null) {
+            if (ARENA_FILE.getString(t.getPath(TeamLocations.SPAWN, 1)) == null) {
                 spawnsSet = false;
             }
             // TODO make t.getPath(type) instead of boolean
-            if (ARENA_FILE.getString(t.getPath(TeamLocations.LOBBY))== null) {
+            if (ARENA_FILE.getString(t.getPath(TeamLocations.LOBBY, 1))== null) {
                 spawnsSet = false;
             }
         }
@@ -307,11 +317,11 @@ public class Arena {
                 return;
             }
             Sign sign = (Sign) loc.getBlock().getState();
-
+            int counter = (int) (ArenaCountdown.tasks.containsKey(this) ? ArenaCountdown.tasks.get(this).getCounter() : GameCountdown.gameCountdowns.containsKey(this) ? GameCountdown.gameCountdowns.get(this).getCounter() : GameFinishCountdown.arenasFinishing.containsKey(this) ? (int) GameFinishCountdown.arenasFinishing.get(this).getCounter() : 0);
             sign.setLine(0, prefix); // in case the prefix changes
             sign.setLine(1, getName()); // in case they rename it
-            sign.setLine(2, getStateAsString());
-            sign.setLine(3, (getState() == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "": getState() == ArenaState.IN_PROGRESS || getState() == ArenaState.STARTING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
+            sign.setLine(2, getStateAsString() + " " + (counter == 0 ? "" : counter + "s")); // TODO: put times here ;)
+            sign.setLine(3, getLobbyPlayers().size() == getMax() || getAllArenaPlayers().size() == getMax() ? RED + "Full" : (getState() == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "" : getState() == ArenaState.IN_PROGRESS || getState() == ArenaState.STARTING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
             sign.update();
         }
     }
@@ -352,16 +362,13 @@ public class Arena {
         return "Arenas." + defaultName + ".";
     }
 
-    public String getConfigPath(String item) {
-        return "Per-Arena-Settings.Arenas." + defaultName + "." + item;
-    }
-
     public String getDefaultConfigPath(String item) {
         return "Per-Arena-Settings.Defaults." + item;
     }
     
     public void joinLobby(Player player, Team team) {
-        new LobbyPlayer(this, team == null ? getTeamWithLessPlayers() : team, player);
+        if (Utils.canJoin(player, this))
+            new LobbyPlayer(this, team == null ? getTeamWithLessPlayers() : team, player);
     }
 
     // Starts the game, turns all LobbyPlayers into ArenaPlayers
@@ -369,7 +376,7 @@ public class Arena {
         HashMap<Player, Location> startLocs = new HashMap<>();
         state = ArenaState.STARTING;
         for (LobbyPlayer p : lobby) {
-            p.removeScoreboard();
+            // p.removeScoreboard();
             allPlayers.remove(p.getPlayer(), p);
             ArenaPlayer player = new ArenaPlayer(this, p.getTeam(), p.getPlayer());
             startLocs.put(player.getPlayer(), player.getPlayer().getLocation());
@@ -398,7 +405,7 @@ public class Arena {
 
         for (ArenaPlayer player : inGame) {
             player.forceLeaveArena();
-            allPlayers.remove(player.getPlayer(), (PaintballPlayer) player);
+            allPlayers.remove(player.getPlayer(), player);
         }
 
         inGame = new ArrayList<>();
@@ -413,7 +420,11 @@ public class Arena {
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
             if (teams.contains(arenaPlayer.getTeam()))
                 arenaPlayer.setWon();
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.GREEN, (arenaPlayer.getMoneyEarned() < 0 ? "-" : "") + "$" + Math.abs(arenaPlayer.getMoneyEarned()), "Kills: " + arenaPlayer.getKills(), "Deaths: " + arenaPlayer.getDeaths(), "Killstreak: " + arenaPlayer.getKillStreak(), "KD: " + arenaPlayer.getKd(), "Your team " + (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost")); // TODO: get Vault currency instead of $ and check to make sure vault is enabled
+            String spaces = Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(20);
+            String title = THEME + " Games Stats ";
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, false, spaces + title + spaces);
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, false, (arenaPlayer.getMoneyEarned() < 0 ? "-" : "") + "$" + Math.abs(arenaPlayer.getMoneyEarned()), "Kills: " + arenaPlayer.getKills(), "Deaths: " + arenaPlayer.getDeaths(), "Killstreak: " + arenaPlayer.getKillStreak(), "KD: " + arenaPlayer.getKd(), "Your team " + (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost")); // TODO: get Vault currency instead of $ and check to make sure vault is enabled
+            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, false, spaces + Utils.makeSpaces(title +  "123") + spaces);
         }
 
         StringBuilder formattedWinnerList = new StringBuilder();
@@ -499,10 +510,13 @@ public class Arena {
                 color = GREEN;
                 break;
             case IN_PROGRESS:
-                color = RED;
+                color = DARK_RED;
+                break;
+            case STOPPING:
+                color = DARK_RED;
                 break;
             case STARTING:
-                color = RED;
+                color = DARK_RED;
                 break;
             case NOT_SETUP:
                 color = GRAY;
@@ -567,72 +581,38 @@ public class Arena {
         }
     }
 
-    int loaded = 0;
-    // TODO: put this stuff in the arenafile class
-    private int loadInt(String item) {
-        FileConfiguration config = Settings.getSettings().getConfig();
-        if (config.getString(getConfigPath(item)) != null && config.getString(getConfigPath(item)).equalsIgnoreCase("default")) {
-            return config.getInt(getDefaultConfigPath(item));
-        } else {
-            loaded++;
-            System.out.println("Loading int " + item + ". Value: " + config.getInt(getConfigPath(item)));
-            return config.getInt(getConfigPath(item));
-        }
-    }
-
-    private String loadString(String item) {
-        FileConfiguration config = Settings.getSettings().getConfig();
-        if (config.getString(getConfigPath(item)) != null && config.getString(getConfigPath(item)).equalsIgnoreCase("default")) {
-            return ChatColor.translateAlternateColorCodes('&', config.getString(getDefaultConfigPath(item)));
-        } else {
-            loaded++;
-            System.out.println("Loading string " + item + ". Value: " + config.getString(getConfigPath(item)) + loaded);
-            return ChatColor.translateAlternateColorCodes('&', config.getString(getConfigPath(item)));
-        }
-    }
-
-    private boolean loadBoolean(String item) {
-        FileConfiguration config = Settings.getSettings().getConfig();
-        if (config.getString(getConfigPath(item)) != null && config.getString(getConfigPath(item)).equalsIgnoreCase("default")) {
-            return config.getBoolean(getDefaultConfigPath(item));
-        } else {
-            loaded++;
-            System.out.println("Loading boolean " + item + ". Value: " + config.getBoolean(getConfigPath(item)));
-            return config.getBoolean(getConfigPath(item));
-        }
-    }
-
     public void loadConfigValues() {
-        MAX_SCORE                   = loadInt("max-score");
-        TIME                        = loadInt("time");
-        WIN_WAIT_TIME               = loadInt("win-waiting-time");
-        ARENA_COUNTDOWN             = loadInt("Countdown.arena.countdown");
-        ARENA_INTERVAL              = loadInt("Countdown.arena.interval");
-        ARENA_NO_INTERVAL           = loadInt("Countdown.arena.no-interval");
-        LOBBY_COUNTDOWN             = loadInt("Countdown.lobby.countdown");
-        LOBBY_INTERVAL              = loadInt("Countdown.lobby.interval");
-        LOBBY_NO_INTERVAL           = loadInt("Countdown.lobby.no-interval");
-        KILLCOIN_PER_KILL           = loadInt("Rewards.Kill-Coins.per-kill");
-        KILLCOIN_PER_DEATH          = loadInt("Rewards.Kill-Coins.per-death");
-        MONEY_PER_KILL              = loadInt("Rewards.Money.per-kill");
-        MONEY_PER_DEATH             = loadInt("Rewards.Money.per-death");
-        MONEY_PER_WIN               = loadInt("Rewards.Money.per-win");
-        MONEY_PER_DEFEAT            = loadInt("Rewards.Money.per-defeat");
-        SAFE_TIME                   = loadInt("safe-time");
+        MAX_SCORE                   = ARENA.loadInt("max-score", this);
+        TIME                        = ARENA.loadInt("time", this);
+        WIN_WAIT_TIME               = ARENA.loadInt("win-waiting-time", this);
+        ARENA_COUNTDOWN             = ARENA.loadInt("Countdown.arena.countdown", this);
+        ARENA_INTERVAL              = ARENA.loadInt("Countdown.arena.interval", this);
+        ARENA_NO_INTERVAL           = ARENA.loadInt("Countdown.arena.no-interval", this);
+        LOBBY_COUNTDOWN             = ARENA.loadInt("Countdown.lobby.countdown", this);
+        LOBBY_INTERVAL              = ARENA.loadInt("Countdown.lobby.interval", this);
+        LOBBY_NO_INTERVAL           = ARENA.loadInt("Countdown.lobby.no-interval", this);
+        KILLCOIN_PER_KILL           = ARENA.loadInt("Rewards.Kill-Coins.per-kill", this);
+        KILLCOIN_PER_DEATH          = ARENA.loadInt("Rewards.Kill-Coins.per-death", this);
+        MONEY_PER_KILL              = ARENA.loadInt("Rewards.Money.per-kill", this);
+        MONEY_PER_DEATH             = ARENA.loadInt("Rewards.Money.per-death", this);
+        MONEY_PER_WIN               = ARENA.loadInt("Rewards.Money.per-win", this);
+        MONEY_PER_DEFEAT            = ARENA.loadInt("Rewards.Money.per-defeat", this);
+        SAFE_TIME                   = ARENA.loadInt("safe-time", this);
+        HITS_TO_KILL                = ARENA.loadInt("hits-to-kill", this);
 
-        BROADCAST_WINNER           = loadBoolean("Chat.broadcast-winner");
-        PER_TEAM_CHAT_LOBBY        = loadBoolean("Join-Lobby.per-team-chat");
-        PER_TEAM_CHAT_ARENA        = loadBoolean("Join-Arena.per-team-chat");
-        KILL_COIN_SHOP             = loadBoolean("kill-coin-shop");
-        GIVE_WOOL_HELMET_ARENA     = loadBoolean("Join-Arena.give-wool-helmet");
-        GIVE_WOOL_HELMET_LOBBY     = loadBoolean("Join-Lobby.give-wool-helmet");
-        COLOR_PLAYER_TITLE_LOBBY   = loadBoolean("Join-Lobby.color-player-title");
-        COLOR_PLAYER_TITLE_ARENA   = loadBoolean("Join-Arena.color-player-title");
-        GIVE_TEAM_SWITCHER         = loadBoolean("Join-Lobby.give-team-switcher");
-        USE_ARENA_CHAT             = loadBoolean("Chat.use-arena-chat");
+        BROADCAST_WINNER           = ARENA.loadBoolean("Chat.broadcast-winner", this);
+        PER_TEAM_CHAT_LOBBY        = ARENA.loadBoolean("Join-Lobby.per-team-chat", this);
+        PER_TEAM_CHAT_ARENA        = ARENA.loadBoolean("Join-Arena.per-team-chat", this);
+        KILL_COIN_SHOP             = ARENA.loadBoolean("kill-coin-shop", this);
+        GIVE_WOOL_HELMET_ARENA     = ARENA.loadBoolean("Join-Arena.give-wool-helmet", this);
+        GIVE_WOOL_HELMET_LOBBY     = ARENA.loadBoolean("Join-Lobby.give-wool-helmet", this);
+        COLOR_PLAYER_TITLE_LOBBY   = ARENA.loadBoolean("Join-Lobby.color-player-title", this);
+        COLOR_PLAYER_TITLE_ARENA   = ARENA.loadBoolean("Join-Arena.color-player-title", this);
+        GIVE_TEAM_SWITCHER         = ARENA.loadBoolean("Join-Lobby.give-team-switcher", this);
+        USE_ARENA_CHAT             = ARENA.loadBoolean("Chat.use-arena-chat", this);
 
-        ARENA_CHAT                 = loadString("Chat.arena-chat");
-        SPEC_CHAT                  = loadString("Chat.spectator-chat");
+        ARENA_CHAT                 = ARENA.loadString("Chat.arena-chat", this);
+        SPEC_CHAT                  = ARENA.loadString("Chat.spectator-chat", this);
     }
     // TODO: add events so players can't teleport and stuff inside arena
 }

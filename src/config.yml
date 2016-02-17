@@ -115,6 +115,8 @@ Per-Arena-Settings:
     kill-coin-shop: true
     # Time in seconds players have after they die before they can be killed by a snowball
     safe-time: 5
+    # How many hits to kill an Arena player
+    hits-to-kill: 3
     # Settings for when a player joins an arena
     Join-Arena:
       # True - give a wool helmet based on their team color. False - instead of wool, there will be a colored leather helmet

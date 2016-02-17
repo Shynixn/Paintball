@@ -63,7 +63,7 @@ public class GameCountdown extends PaintballCountdown {
 
     public void onIteration() {
         for (ArenaPlayer player : a.getAllArenaPlayers()) {
-            player.updateScoreboard();
+            player.updateDisplayName();
         }
     }
 

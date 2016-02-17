@@ -61,7 +61,7 @@ public class JoinSigns implements Listener {
             if (Utils.nullCheck(e.getLine(2), a, e.getPlayer())) {
                 e.setLine(0, prefix);
                 e.setLine(1, a.getName());
-                e.setLine(2, a.getStateAsString()); // TODO add timer
+                e.setLine(2, a.getStateAsString());
                 e.setLine(3, "");
                 Message.getMessenger().msg(e.getPlayer(), false, GREEN, a + " join sign successfully created!");
                 new SignLocation(a, e.getBlock().getLocation(), SignLocation.SignLocations.JOIN);

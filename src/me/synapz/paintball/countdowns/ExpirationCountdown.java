@@ -2,14 +2,13 @@ package me.synapz.paintball.countdowns;
 
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
 import me.synapz.paintball.Message;
+import me.synapz.paintball.Utils;
 import me.synapz.paintball.killcoin.KillCoinItem;
 import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,13 +19,10 @@ public class ExpirationCountdown extends PaintballCountdown {
     This Countdown class is responsible for KillCoinItems which have an ExpirationTime
      */
 
-    protected double decrement = 0.5;
-
     private static Map<String, ExpirationCountdown> times = new HashMap<>();
 
     private final ArenaPlayer arenaPlayer;
     private final Player player;
-    private double counter;
     private final KillCoinItem item;
     private final PlayerInventory inv;
 
@@ -49,14 +45,16 @@ public class ExpirationCountdown extends PaintballCountdown {
     @Override
     public void onIteration() {
         ItemStack itemInHand = inv.getItemInHand();
+        if (ProtectionCountdown.godPlayers.keySet().contains(player.getName()))
+            return; // Dont want it to double when it players
         if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && item.equals(itemInHand) && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
             // TODO: if actionbar is installed and true in config
             if (times.get(inv.getItemInHand().getItemMeta().getDisplayName()).getCounter() == counter) {
-                ActionBarAPI.sendActionBar(player, Settings.THEME + "Expires in: " + Settings.SECONDARY + (int)counter + Settings.THEME + " seconds");
+                ActionBarAPI.sendActionBar(player, Message.EXPIRATION_TIME.replace("%time%", String.valueOf((int)(counter-1))));
             }
         } else if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
         } else {
-            removeActionBar();
+            Utils.removeActionBar(player);
         }
     }
 
@@ -81,15 +79,13 @@ public class ExpirationCountdown extends PaintballCountdown {
                     break;
                 }
             }
-            Message.getMessenger().msg(player.getPlayer(), true, ChatColor.RED, Settings.THEME + "Item " + Settings.SECONDARY + item.getItemName(false) + Settings.THEME + " has expired!");
+            String endMessage = Message.EXPIRATION_END.replace("%item%", item.getItemName(false));
+            ActionBarAPI.sendActionBar(player, endMessage, 240);
+            Message.getMessenger().msg(player.getPlayer(), false, false, endMessage);
         }
         times.remove(item.getItemName(true)); // TODO: does this work..?
-        removeActionBar();
+        Utils.removeActionBar(player);
         super.cancel();
-    }
-
-    private void removeActionBar() {
-        ActionBarAPI.sendActionBar(player, "");
     }
 
     private boolean inventoryContainsItem() {

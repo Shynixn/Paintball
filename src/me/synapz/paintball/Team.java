@@ -3,12 +3,15 @@ package me.synapz.paintball;
 import static me.synapz.paintball.storage.Settings.*;
 
 import me.synapz.paintball.locations.TeamLocation;
+import me.synapz.paintball.players.LobbyPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import static org.bukkit.Color.*;
 
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
@@ -24,7 +27,7 @@ public class Team {
         put(ChatColor.GOLD, DyeColor.ORANGE);
         put(ChatColor.GRAY, DyeColor.SILVER);
         put(ChatColor.DARK_GRAY, DyeColor.GRAY);
-        put(ChatColor.BLUE, DyeColor.LIGHT_BLUE);
+        put(ChatColor.BLUE, DyeColor.BLUE);
         put(ChatColor.BLACK, DyeColor.BLACK);
         put(ChatColor.GREEN, DyeColor.LIME);
         put(ChatColor.AQUA, DyeColor.CYAN);
@@ -53,15 +56,31 @@ public class Team {
         put(ChatColor.WHITE, WHITE);
     }};
 
-    // List of all available color codes
-    public static List<String> LIST = Arrays.asList("§1", "§2", "§3", "§4", "§5", "§6", "§7", "§8", "§9", "§0", "§a", "§b", "§c", "§d", "§e", "§f");
-    // Scoreboard (This is the only scoreboard for the plugin) and it is used for coloring player HUD
-    private static Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
+    public static final Map<String, String> DEFAULT_NAMES = new HashMap<String, String>() {{
+        put("&0", "Black");
+        put("&1", "Navy Blue");
+        put("&2", "Green");
+        put("&3", "Cyan");
+        put("&4", "Red");
+        put("&5", "Purple");
+        put("&6", "Orange");
+        put("&7", "Silver");
+        put("&8", "Gray");
+        put("&9", "Blue");
+        put("&a", "Lime");
+        put("&b", "Aqua");
+        put("&c", "Light Red");
+        put("&d", "Magenta");
+        put("&e", "Yellow");
+        put("&f", "White");
+    }};
 
     // Team's chat color
     private ChatColor color;
     // Team's arena it is set to
     private Arena arena;
+    // Team's name
+    private String name;
     // Amount of players on this team, incremented whenever someone joines the team
     int size = 0;
 
@@ -72,23 +91,25 @@ public class Team {
         @param a - arena being set to
         @param colorCode - color of the team
      **/
-    public Team(Arena a, String colorCode) {
+    public Team(Arena a, String colorCode, String name) {
         this.arena = a;
         this.color = ChatColor.getByChar(colorCode.charAt(1));
-
-        if (sb.getTeam(this.getTitleName()) == null) {
-            sb.registerNewTeam(this.getTitleName()).setPrefix(color + "");
-        }
+        this.name = name;
     }
 
-    // Return the one plugin's scoreboard instance
-    public static Scoreboard getPluginScoreboard() {
-        return sb;
+    public Team(Arena a, String colorCode) {
+        this(a, colorCode, DEFAULT_NAMES.get(colorCode.replace("§", "&")));
     }
 
     // Return the team's specific path in config.
-    public String getPath(TeamLocation.TeamLocations type) {
-        return "Arenas." + arena.getDefaultName() + "." + type.toString() + "." + this.getConfigName();
+    public String getPath(TeamLocation.TeamLocations type, int spawnNumber) {
+        return  "Arenas." + arena.getDefaultName() + "." + type.toString() + "." + this.getConfigName() + "." + spawnNumber;
+    }
+
+    public int getSpawnPointsSize(TeamLocation.TeamLocations type) {
+        String path = "Arenas." + arena.getDefaultName() + "." + type.toString() + "." + this.getConfigName();
+        ConfigurationSection section = ARENA_FILE.getConfigurationSection(path);
+        return section == null ? 0 : section.getValues(false).size();
     }
 
     // Return the team's specific ChatColor associated with it, ex: ChatColor.RED.
@@ -103,7 +124,7 @@ public class Team {
 
     // Returns Team's title name, basically the team's name. This value can be changed in config.yml, ex: "&6: Orange" this would return Orange
     public String getTitleName() {
-        return TEAM_NAMES.get(color);
+        return name;
     }
 
     // Returns dye color for this team, ex: DyeColor.BLUE;
@@ -113,6 +134,9 @@ public class Team {
 
     public void playerJoinTeam() {
         size++;
+        for (LobbyPlayer lobbyPlayer : arena.getLobbyPlayers()) {
+            lobbyPlayer.updateScoreboard();
+        }
     }
 
     public void playerLeaveTeam() {
@@ -133,6 +157,6 @@ public class Team {
     }
 
     private String getConfigName() {
-        return this.getTitleName().toLowerCase().replace(" ", "");
+        return DEFAULT_NAMES.get(String.valueOf(getChatColor()).replace("§", "&")).toLowerCase().replace(" ", "");
     }
 }

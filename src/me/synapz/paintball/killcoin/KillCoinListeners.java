@@ -75,7 +75,7 @@ public class KillCoinListeners implements Listener {
         if (arenaPlayer == null)
             return;
 
-        KillCoinItem killCoinItem = KillCoinItemHandler.getHandler().getAllItems().get(item.getItemMeta().getDisplayName());
+        KillCoinItem killCoinItem = arenaPlayer.getItemWithName(item.getItemMeta().getDisplayName());
 
         if (killCoinItem == null)
             return;
@@ -92,6 +92,9 @@ public class KillCoinListeners implements Listener {
             }
         } else {
             // TODO: if item has a " " in it for distinguisihing, it doesnt get valled normally
+            if (killCoinItem.hasSound()) {
+                player.playSound(player.getLocation(), killCoinItem.getSound(), 1, 1);
+            }
             killCoinItem.onClickItem(e);
         }
     }

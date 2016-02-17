@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.synapz</groupId>
     <artifactId>paintball</artifactId>
-    <version>Beta_3</version>
+    <version>1.0</version>
     <build>
         <finalName>${project.artifactId}</finalName>
         <defaultGoal>clean install</defaultGoal>

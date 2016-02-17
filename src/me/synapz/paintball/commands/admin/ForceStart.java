@@ -32,10 +32,12 @@ public class ForceStart extends ArenaCommand {
                 msg = "has not been setup.";
                 break;
             case IN_PROGRESS:
-                msg = "is already in progress";
+                msg = "is already in progress.";
                 break;
+            case STOPPING:
+                msg = "is already in progress.";
             case STARTING:
-                msg = "is already in progress";
+                msg = "is already in progress.";
                 break;
             default:
                 msg = "has encountered an unexpected error.";

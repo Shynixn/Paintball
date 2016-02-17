@@ -27,10 +27,6 @@ public class KillCoinItemHandler {
         items.put(ChatColor.translateAlternateColorCodes('&', item.getItemName(true)), item);
     }
 
-    public void removeItem(KillCoinItem item) {
-        items.remove(item.getItemName(true), item);
-    }
-
     public void showInventory(ArenaPlayer arenaPlayer) {
         Player player = arenaPlayer.getPlayer();
         Inventory inv = Bukkit.createInventory(null, 18, ChatColor.GOLD + "KillCoin Shop");
@@ -46,6 +42,8 @@ public class KillCoinItemHandler {
     }
 
     public void loadItemsFromConfig(FileConfiguration file) {
+        // TODO: Re-enable this.
+        /*
         if (!file.isConfigurationSection("Kill-Coin-Shop"))
             return;
 
@@ -54,5 +52,6 @@ public class KillCoinItemHandler {
         for (String rawItem : rawItems) {
             new KillCoinItem("Kill-Coin-Shop." + rawItem, file);
         }
+        */
     }
 }

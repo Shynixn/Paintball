@@ -1,35 +1,33 @@
 package me.synapz.paintball.countdowns;
 
+import com.connorlinfoot.actionbarapi.ActionBarAPI;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Message;
 import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class NoHitCountdown extends PaintballCountdown {
+public class ProtectionCountdown extends PaintballCountdown {
 
     // TODO: make classes final
 
-    public static Map<String, NoHitCountdown> godPlayers = new HashMap<>();
+    public static Map<String, ProtectionCountdown> godPlayers = new HashMap<>();
 
     private String name;
     private ArenaPlayer arenaPlayer;
     private Player player;
 
-    public NoHitCountdown(int counter, ArenaPlayer player) {
+    public ProtectionCountdown(int counter, ArenaPlayer player) {
         super(counter+1); // adds 1 so to human eyes it goes from 5 to 1 instead of 4 to 0
         end = 1;
         this.name = player.getPlayer().getName();
         this.arenaPlayer = player;
         this.player = player.getPlayer();
 
-        Message.getMessenger().msg(this.player, true, ChatColor.GREEN, Settings.SECONDARY + "You are being protected for " + Settings.THEME + counter + Settings.SECONDARY + " seconds!");
+        ActionBarAPI.sendActionBar(this.player, Message.PROTECTION_TIME.replace("%time%", String.valueOf(counter))); // TODO: last param in ticks or seconds?
         if (!godPlayers.keySet().contains(name)) {
             godPlayers.put(name, this);
         }
@@ -37,12 +35,14 @@ public class NoHitCountdown extends PaintballCountdown {
 
     public void onFinish() {
         godPlayers.remove(name, this);
-        Message.getMessenger().msg(this.player, true, ChatColor.GREEN, Settings.SECONDARY + "Your protection has expired!");
+        Message.getMessenger().msg(this.player, false, false, Message.PROTECTION_END);
+        ActionBarAPI.sendActionBar(this.player, Message.PROTECTION_END, 240);
     }
 
     // Called every iteration of run()
     public void onIteration() {
-
+        String protectionMessage = Message.PROTECTION_TIME.replace("%time%", String.valueOf((int) counter-1));
+        ActionBarAPI.sendActionBar(this.player, protectionMessage); // TODO: last param in ticks or seconds?
     }
 
     public boolean stop() {
