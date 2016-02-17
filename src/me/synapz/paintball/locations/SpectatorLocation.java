@@ -18,7 +18,7 @@ public class SpectatorLocation extends PaintballLocation {
 
     // Creates a new TeamLocation by looking inside of arenas.yml and grabbing it out
     public SpectatorLocation(Arena arena, int spawnNumber) {
-        super(arena, Settings.ARENA_FILE.getString(arena.getPath() + "Spectator"));
+        super(arena, Settings.ARENA_FILE.getString(arena.getPath() + "Spectator." + spawnNumber));
         this.spawnNumber = spawnNumber;
     }
 

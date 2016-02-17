@@ -6,7 +6,7 @@ theme-color: '&3'
 secondary-color: '&7'
 # Do not change this value, this is so the plugin can update your config to the latest while backing up the old one
 version: 1 #TODO: incorperate into plugin
-# Time, in ticks, to update the Join, Leaderboard, and Autojoin signs. Making this number bigger may decrease lag if you expirence any, but will take signs longer to change. Changing this will require a restart/reload
+# Time, in ticks, to update the Leaderboard (Stats, Player names), and Autojoin (Prefixes)signs. Making this number bigger may decrease lag if you experience any, but will take signs longer to change. Changing this will require a restart/reload
 # 20 Ticks = 1 Second
 sign-update-time: 40
 

@@ -23,6 +23,7 @@ public class GameFinishCountdown extends PaintballCountdown {
     }
 
     public void onFinish() {
+        arena.updateSigns();
         arena.setState(Arena.ArenaState.WAITING);
         arena.forceLeaveArena();
         arenasFinishing.remove(arena, this);
@@ -34,6 +35,7 @@ public class GameFinishCountdown extends PaintballCountdown {
     }
 
     public void onIteration() {
+        arena.updateSigns();
         for (ArenaPlayer player : arena.getAllArenaPlayers()) {
             player.updateDisplayName();
         }

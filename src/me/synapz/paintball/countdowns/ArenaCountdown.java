@@ -80,11 +80,12 @@ public class ArenaCountdown extends PaintballCountdown {
 
     @Override
     public boolean stop() {
-        return (a == null || a != null && (a.getState() != Arena.ArenaState.IN_PROGRESS && a.getState() != Arena.ArenaState.STARTING && a.getState() != Arena.ArenaState.WAITING && a.getState() != Arena.ArenaState.STOPPING) || isLobbyCountdown && (a.getLobbyPlayers().size() < a.getMin()));
+        return (a == null || a != null && (a.getState() != Arena.ArenaState.IN_PROGRESS && a.getState() != Arena.ArenaState.STARTING && a.getState() != Arena.ArenaState.WAITING && a.getState() != Arena.ArenaState.STOPPING) || isLobbyCountdown && (a.getLobbyPlayers().size() < a.getMin()) || !isLobbyCountdown && a.getAllArenaPlayers().size() == 0);
     }
 
     @Override
     public boolean intervalCheck() {
+        a.updateSigns();
         if (!isLobbyCountdown) {
             tpAllPlayersBack(); // this method will get called every second since intervalCheck is called every second
         }
@@ -102,6 +103,7 @@ public class ArenaCountdown extends PaintballCountdown {
     public void cancel() {
         super.cancel();
         tasks.remove(a, this);
+        a.updateSigns();
     }
 
     private void tpAllPlayersBack() {

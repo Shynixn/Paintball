@@ -78,10 +78,9 @@ public class Arena {
     // Team with their size
     private Map<Team, Integer> teams = new HashMap<>();
 
-    // Current state of the arena
-    private ArenaState state = ArenaState.NOT_SETUP;
-
     private Map<Location, SignLocation> signLocations = new HashMap<>();
+
+    private ArenaState state;
 
     public enum ArenaState {
         NOT_SETUP,
@@ -105,6 +104,7 @@ public class Arena {
     public Arena(String name, String currentName, boolean addToConfig) {
         this.currentName = currentName;
         this.defaultName = name;
+        setState(ArenaState.NOT_SETUP);
 
         if (addToConfig) {
             Settings.ARENA.addNewArenaToFile(this);
@@ -165,7 +165,7 @@ public class Arena {
     }
 
     public void removeSpectatorLocation() {
-        new SpectatorLocation(this, Utils.randomNumber(ARENA_FILE.getConfigurationSection(this.getPath() + "Spectator") == null ? 1 : ARENA_FILE.getConfigurationSection(this.getPath() + "Spectator").getValues(false).size())).removeLocation();
+        new SpectatorLocation(this, ARENA_FILE.getConfigurationSection(this.getPath() + "Spectator").getValues(false).size()).removeLocation();
     }
 
     public void setSpectatorLocation(Location location) {
@@ -243,16 +243,16 @@ public class Arena {
         }
         Utils.addItemsToArray(steps, (ARENA_FILE.getString(this.getPath() + "Spectator.1") != null ? done + "setspec" + end : "setspec"), isEnabled() ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "setteams" : "");
         finalString = GRAY + Joiner.on(", ").join(steps);
-        
+
         return isSetup() && isEnabled() ? prefix + GRAY + "Complete. Arena is open!" : prefix + finalString;
     }
 
     // Set the arena to be enabled/disabled
     public void setEnabled(boolean setEnabled) {
         if (setEnabled)
-            state = ArenaState.WAITING;
+           setState(ArenaState.WAITING);
         else
-            state = ArenaState.DISABLED;
+            setState(ArenaState.DISABLED);
         ARENA_FILE.set(getPath() + "Enabled", setEnabled);
         advSave();
     }
@@ -300,10 +300,10 @@ public class Arena {
         setArenaTeamList(ARENA.getTeamsList(this));
         // TODO: add things from config.yml like time etc if they aren't defaulted
         if (isSetup() && isEnabled()) {
-            state = ArenaState.WAITING;
+            setState(ArenaState.WAITING);
         } else {
             if (!isEnabled() && isSetup()) {
-                state = ArenaState.DISABLED;
+                setState(ArenaState.DISABLED);
             }
         }
     }
@@ -321,7 +321,7 @@ public class Arena {
             sign.setLine(0, prefix); // in case the prefix changes
             sign.setLine(1, getName()); // in case they rename it
             sign.setLine(2, getStateAsString() + " " + (counter == 0 ? "" : counter + "s")); // TODO: put times here ;)
-            sign.setLine(3, getLobbyPlayers().size() == getMax() || getAllArenaPlayers().size() == getMax() ? RED + "Full" : (getState() == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "" : getState() == ArenaState.IN_PROGRESS || getState() == ArenaState.STARTING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
+            sign.setLine(3, getMax() <= 0 ? "0/0" : getLobbyPlayers().size() == getMax() || getAllArenaPlayers().size() == getMax() ? RED + "Full" : (state == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "" : state == ArenaState.IN_PROGRESS || state == ArenaState.STARTING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
             sign.update();
         }
     }
@@ -346,7 +346,7 @@ public class Arena {
                 ArenaCountdown.tasks.get(this).cancel();
             startGame();
         } else {
-            state = ArenaState.WAITING;
+            setState(ArenaState.WAITING);
             this.broadcastMessage(RED, this.toString() + RED + " has been force stopped.", "");
             this.forceLeaveArena();
         }
@@ -374,7 +374,7 @@ public class Arena {
     // Starts the game, turns all LobbyPlayers into ArenaPlayers
     public void startGame() {
         HashMap<Player, Location> startLocs = new HashMap<>();
-        state = ArenaState.STARTING;
+        setState(ArenaState.STARTING);
         for (LobbyPlayer p : lobby) {
             // p.removeScoreboard();
             allPlayers.remove(p.getPlayer(), p);
@@ -387,7 +387,7 @@ public class Arena {
     
     // Used for server reload and arena force stops, so no messages will be sent
     public void stopGame() {
-        state = ArenaState.WAITING;
+        setState(ArenaState.WAITING);
 
         for (PaintballPlayer player : allPlayers.values()) {
             player.forceLeaveArena();
@@ -401,7 +401,7 @@ public class Arena {
     }
 
     public void forceLeaveArena() {
-        state = ArenaState.WAITING;
+        setState(ArenaState.WAITING);
 
         for (ArenaPlayer player : inGame) {
             player.forceLeaveArena();
@@ -489,7 +489,7 @@ public class Arena {
     // Gets the arenas current state
     public ArenaState getState() {
         if (!isSetup()) {
-            state = ArenaState.NOT_SETUP;
+            setState(ArenaState.NOT_SETUP);
         }
         return state;
     }
@@ -497,6 +497,8 @@ public class Arena {
     // Set the arena's state
     public void setState(ArenaState state) {
         this.state = state;
+        // Since state is changing, update arena's signs
+        this.updateSigns();
     }
 
     // Returns the color associated with the state with it's name
@@ -575,9 +577,11 @@ public class Arena {
          * be replaced with ArenaState.WAITING (or ArenaState.DISABLED) because the setup is complete.
          */
         if (isSetup() && isEnabled()) {
-            state = ArenaState.WAITING;
+            setState(ArenaState.WAITING);
         } else if (isSetup() && !isEnabled()) {
-            state = ArenaState.DISABLED;
+            setState(ArenaState.DISABLED);
+        } else if (!isSetup()) {
+            setState(ArenaState.NOT_SETUP);
         }
     }
 

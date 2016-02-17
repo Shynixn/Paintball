@@ -62,7 +62,7 @@ public class JoinSigns implements Listener {
                 e.setLine(0, prefix);
                 e.setLine(1, a.getName());
                 e.setLine(2, a.getStateAsString());
-                e.setLine(3, "");
+                e.setLine(3, "0/" + (a.getMax() <= 0 ? "0" : a.getMax()));
                 Message.getMessenger().msg(e.getPlayer(), false, GREEN, a + " join sign successfully created!");
                 new SignLocation(a, e.getBlock().getLocation(), SignLocation.SignLocations.JOIN);
             } else {
@@ -87,21 +87,12 @@ public class JoinSigns implements Listener {
         }
         if (sign.getLine(1).equals(GREEN + "Auto Join")) {
             // TODO: check if this works
-            int openArenas = 0; // arenas which are able to join, if it is still 0 non are open so send error message
-            HashMap<Integer, Arena> arenaSize = new HashMap<Integer, Arena>(); // a HashMap with the arena's lobby size to it's arena so you can easily fetch the arena from it's size
-            List<Integer> sizes = new ArrayList<Integer>(); // all the sizes, this way we can call Collections.max and fetch the largest size to be used, then use the hashmap to get the size hooked with the arena
-            for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
-                if (a.getState() == ArenaState.WAITING) {
-                    arenaSize.put(a.getLobbyPlayers().size(), a);
-                    sizes.add(a.getLobbyPlayers().size());
-                    openArenas++;
-                }
-            }
-            if (openArenas == 0) {
+            Arena arenaToJoin = ArenaManager.getArenaManager().getBestArena();
+            if (arenaToJoin == null) {
                 Message.getMessenger().msg(player, false, RED, "No arenas are currently opened.");
                 return;
             }
-            arenaSize.get(Collections.max(sizes)).joinLobby(player, null);
+            arenaToJoin.joinLobby(player, null);
             return;
         }
 

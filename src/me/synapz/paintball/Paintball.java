@@ -13,10 +13,7 @@ import me.synapz.paintball.storage.ArenaFile;
 import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -47,6 +44,9 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         CommandManager commandManager = new CommandManager();
         commandManager.init();
 
+        // fixed join signs so it joins arena with most players
+            // Add this to /pb join with arena and team as optional
+            // Do this same this when picking for teams?
         // TODD: on timer end check for winners
         // TODO: end time dont work, it should show on scoreboards, fixed this?
         // spectate setting/removing al functional?
@@ -128,8 +128,15 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             }
         };
 
-        new KillCoinItem(Material.ANVIL, "Tank", 1, true, "Become a Tank! You will be invinsable, have unlimited Paintballs, but move\nslow like a Tank.", 0.0, 0, 0, "", Sound.AMBIENCE_THUNDER) {
+        new KillCoinItem(Material.ANVIL, "Tank", 1, true, "Become a Tank! You will be \ninvisible, have unlimited Paintballs, and move\nslow like a Tank.", 0.0, 0, 0, "", Sound.AMBIENCE_THUNDER) {
+            @Override
+            public void onClickItem(PlayerInteractEvent event){
+                Player player = event.getPlayer();
 
+                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 2, 60));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 60));
+                player.setGameMode(GameMode.CREATIVE);
+            }
         };
 
         try {

@@ -36,6 +36,7 @@ public class GameCountdown extends PaintballCountdown {
     }
 
     public void onFinish() {
+        a.updateSigns();
         List<Team> teamsWhoWon = new ArrayList<>();
         Team winningTeam = (Team) a.getArenaTeamList().toArray()[0]; // just gets the first name as a starting point
         int score = a.getTeamScore(winningTeam);
@@ -62,6 +63,7 @@ public class GameCountdown extends PaintballCountdown {
     }
 
     public void onIteration() {
+        a.updateSigns();
         for (ArenaPlayer player : a.getAllArenaPlayers()) {
             player.updateDisplayName();
         }

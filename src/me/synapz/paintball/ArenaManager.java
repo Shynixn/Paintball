@@ -96,13 +96,27 @@ public class ArenaManager {
                 GREEN + "█-" + GRAY + "Joinable " + RED + "█-" + GRAY + "InProgress " + GRAY + "█-" + GRAY + "Disabled/Not-Setup");
     }
 
+    public Arena getBestArena() {
+        int currentSize = -1;
+        Arena greatestSizeArena = null;
+        for (Arena arena : getArenas().values()) {
+            if (arena.getState() == Arena.ArenaState.WAITING && currentSize < arena.getLobbyPlayers().size()) {
+                greatestSizeArena = arena;
+                currentSize = arena.getLobbyPlayers().size();
+            }
+        }
+        for (Arena arena : getArenas().values()) {
+            if (arena.getState() == Arena.ArenaState.WAITING && currentSize < arena.getLobbyPlayers().size()) {
+                greatestSizeArena = arena;
+                currentSize = arena.getLobbyPlayers().size();
+            }
+        }
+        return greatestSizeArena;
+    }
+
     // Updates every type of sign (Leaderboard, Join, Autojoin)
     public void updateAllSignsOnServer() {
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
-
-        for (Arena a : getArenas().values()) {
-            a.updateSigns();
-        }
 
         for (SignLocation signLoc : Settings.ARENA.getSigns().values()) {
             if (!(signLoc.getLocation().getBlock().getState() instanceof Sign)) {

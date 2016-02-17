@@ -45,8 +45,12 @@ public abstract class PaintballPlayer {
         this.arena = a;
         this.team = t;
         this.player = p;
+
         initPlayer();
         loadScoreboard();
+
+        // update the scoreboard now that they are added
+        arena.updateSigns();
     }
 
     /*
@@ -119,6 +123,7 @@ public abstract class PaintballPlayer {
 
     public void forceLeaveArena() {
         Settings.PLAYERDATA.restorePlayerInformation(player);
+        arena.updateSigns();
     }
 
     protected void loadScoreboard() {
