@@ -9,11 +9,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Wool;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.*;
+
+import static org.bukkit.ChatColor.RED;
 
 public class Utils {
 
@@ -91,10 +94,10 @@ public class Utils {
         return wool;
     }
 
-    public static String makeHealth(int health, int maxHealth) {
+    public static String makeHealth(int health) {
         StringBuilder builder = new StringBuilder();
-        for (int i = health; i < maxHealth; i++)
-            builder.append("◯");
+        for (int i = health; i != 0; i--)
+            builder.append("●");
         return builder.toString();
     }
 
@@ -199,31 +202,44 @@ public class Utils {
     }
 
     public static boolean canJoin(Player player, Arena arena) {
-        String error = "";
-        switch (arena.getState()) {
-            case IN_PROGRESS:
-                error = arena.toString() + ChatColor.RED + " is currently in progress.";
-                break;
-            case STOPPING:
-                error = arena.toString() + ChatColor.RED + " is currently in progress.";
-                break;
-            case STARTING:
-                error = arena.toString() + ChatColor.RED + " is currently in progress.";
-                break;
-            case NOT_SETUP:
-                error = arena.toString() + ChatColor.RED + " has not been fully setup.";
-                break;
-            case DISABLED:
-                error = arena.toString() + ChatColor.RED + " is disabled.";
-                break;
-            default:
-                break;
+        Arena.ArenaState state = arena.getState();
+
+        for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
+            if (a.containsPlayer(player)) {
+                Message.getMessenger().msg(player, false, ChatColor.RED, "You are already in " + a.toString() + ChatColor.RED + ".");
+                return false;
+            }
         }
-        if (error.isEmpty()) {
-            return true;
-        } else {
-            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is currently in progress.");
+
+        // Checks to see if the arena is full
+        if (arena.getLobbyPlayers().size() == arena.getMax() && arena.getMax() > 0) {
+            Message.getMessenger().msg(player, false, RED, arena.toString() + RED + " is full!");
             return false;
         }
+
+        if (state == Arena.ArenaState.WAITING) {
+            return true;
+        } else {
+            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is " + state.toString().toLowerCase() + ".");
+            return false;
+        }
+    }
+
+    public static void stripValues(Player player) {
+        ExperienceManager exp = new ExperienceManager(player);
+        player.getInventory().clear();
+        player.getInventory().setHelmet(null);
+        player.getInventory().setChestplate(null);
+        player.getInventory().setLeggings(null);
+        player.getInventory().setBoots(null);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setFlying(false);
+        player.setAllowFlight(false);
+        player.setFoodLevel(20);
+        player.setHealth(player.getMaxHealth());
+        player.setFireTicks(0);
+        exp.setExp(0);
+        for (PotionEffect effect : player.getActivePotionEffects())
+            player.removePotionEffect(effect.getType());
     }
 }

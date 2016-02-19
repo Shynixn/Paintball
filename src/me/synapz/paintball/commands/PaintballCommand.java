@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 
 public abstract class PaintballCommand {
 
+    public boolean handleConditionsInSuperClass = true;
+
     public abstract void onCommand(Player player, String[] args);
 
     public abstract String getName();

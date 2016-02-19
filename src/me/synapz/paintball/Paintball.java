@@ -5,37 +5,31 @@ import com.google.common.io.ByteStreams;
 import me.synapz.paintball.commands.CommandManager;
 import me.synapz.paintball.events.*;
 import me.synapz.paintball.killcoin.KillCoinItem;
-import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.killcoin.KillCoinListeners;
 import me.synapz.paintball.metrics.Metrics;
-import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.storage.ArenaFile;
-import me.synapz.paintball.storage.PlayerData;
+import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.storage.Settings;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
-import org.bukkit.block.Block;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.UUID;
-import java.util.Vector;
 
-public class Paintball extends JavaPlugin implements PluginMessageListener {
+public class Paintball extends JavaPlugin implements PluginMessageListener, Listener {
 
     @Override
     public void onEnable() {
@@ -44,19 +38,37 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
         CommandManager commandManager = new CommandManager();
         commandManager.init();
 
-        // fixed join signs so it joins arena with most players
-            // Add this to /pb join with arena and team as optional
-            // Do this same this when picking for teams?
-        // TODD: on timer end check for winners
-        // TODO: end time dont work, it should show on scoreboards, fixed this?
-        // spectate setting/removing al functional?
-            // no.. make sure they cant remove if it is under 0
+        /*
+        Important Things
+        - Auto join teams don't work right sometimes
+        - Listeners --
+        - Permissions
+        - More KilLCoins
+        - Config Options
+          - Stop changing teams - halfway done (need to implement) --
+          - Hits to die in config & scoreboard & under name -
+
+        Non-Important Things
+        - TitleAPI Flicker
+        - Better ActionBar (It flickers and don't work sometimes)
+        - Remove join signs on arena remove
+        - Command hovers
+        - Fix command order
+        - Better stat sign layout
+        - Fix leaderboard command
+        - Global ranks in /pb stats also
+        - Helmets don't show
+        - Sometimes stats don't get set back on /reload
+        - Team Pick bug where teams might not be an even number
+
+        */
 
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ChatSystem(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new LeaderboardSigns(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new KillCoinListeners(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(this, this);
         Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "PaintBall", this);
         Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, "PaintBall");
 
@@ -84,7 +96,30 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             }
         };
 
-        // 3
+        new KillCoinItem(Material.FIREBALL, "Flashbang", 1, true, "Throw the flashbang\nto stun your enemy.\n&lBe careful not to stun yourself!", 0.0, 0, 0, "", Sound.AMBIENCE_RAIN) {
+            @Override
+            public void onClickItem(PlayerInteractEvent event) {
+                Player player = event.getPlayer();
+                player.launchProjectile(Fireball.class);
+            }
+            @EventHandler
+            public void onFlashbangLand(ProjectileHitEvent e) {
+                e.getEntity().sendMessage("hi");
+                if (!(e.getEntity().getShooter() instanceof Player) && (ArenaManager.getArenaManager().getArena((Player) e.getEntity().getShooter()) == null))
+                    return;
+                Player player = (Player) e.getEntity().getShooter();
+                Arena arena = ArenaManager.getArenaManager().getArena(player);
+                PaintballPlayer pbPlayer = arena.getPaintballPlayer(player);
+
+                player.sendMessage("Name: ");
+                player.sendMessage("Custom Name: " + e.getEntity().getCustomName());
+                if (e.getEntity().getName().equals(hasItemMeta() && getItemMeta().hasDisplayName() ? getItemMeta().getDisplayName() : "")) {
+                    player.sendMessage("works");
+                }
+            }
+        };
+
+        // 5
         new KillCoinItem(Material.IRON_AXE, "Unlimited Paintballs", 1, true, "Receive an unlimited amount of Paintballs!", 0.0, 0, 120, "", Sound.CLICK) {
             @Override
             public void onClickItem(PlayerInteractEvent event) {
@@ -128,13 +163,13 @@ public class Paintball extends JavaPlugin implements PluginMessageListener {
             }
         };
 
-        new KillCoinItem(Material.ANVIL, "Tank", 1, true, "Become a Tank! You will be \ninvisible, have unlimited Paintballs, and move\nslow like a Tank.", 0.0, 0, 0, "", Sound.AMBIENCE_THUNDER) {
+        new KillCoinItem(Material.ANVIL, "Tank", 1, true, "Become a Tank! You will have\nhave unlimited Paintballs, limited range, and move\nslow like a Tank.", 0.0, 0, 0, "", Sound.AMBIENCE_THUNDER) {
             @Override
             public void onClickItem(PlayerInteractEvent event){
                 Player player = event.getPlayer();
 
-                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 2, 60));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 2, 60));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60*20, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60*20, 1));
                 player.setGameMode(GameMode.CREATIVE);
             }
         };

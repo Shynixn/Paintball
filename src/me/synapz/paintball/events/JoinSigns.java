@@ -141,7 +141,5 @@ public class JoinSigns implements Listener {
             }
         }
         // todo: replace with other permission validator
-
-        // TODO: add leaderboard and autojoin signs
     }
 }

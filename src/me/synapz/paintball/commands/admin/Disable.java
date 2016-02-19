@@ -27,7 +27,8 @@ public class Disable extends ArenaCommand {
                 Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is already disable.");
                 return;
             }
-            Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + " has been disabled!");
+            if (!arena.getAllPlayers().containsKey(player))
+                Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + " has been disabled!");
             arena.setEnabled(false);
         }
     }

@@ -35,7 +35,7 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
     private int deaths = 0;
     private int moneyEarned;
     private boolean won = false;
-    private int health = 0;
+    private int health = arena.HITS_TO_KILL;
 
     private final PaintballScoreboard sb;
 
@@ -52,7 +52,7 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
                 .addLine(ScoreboardLine.KILL_STREAK, 0)
                 .addLine(ScoreboardLine.KILLS, 0)
                 .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.HEALTH, Utils.makeHealth(health, arena.HITS_TO_KILL))
+                .addLine(ScoreboardLine.HEALTH, Utils.makeHealth(health))
                 .addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName())
                 .build();
     }
@@ -90,7 +90,8 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
                 .reloadLine(ScoreboardLine.KD, getKd(), size+3)
                 .reloadLine(ScoreboardLine.KILL_COIN, String.valueOf(getKillCoins()), size+4)
                 .reloadLine(ScoreboardLine.KILL_STREAK, String.valueOf(getKillStreak()), size+5)
-                .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6);
+                .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6)
+                .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8);
     }
 
     public void updateDisplayName() {
@@ -103,11 +104,11 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
     }
 
     public boolean die() {
-        health++;
-        if (health == arena.HITS_TO_KILL) {
+        health--;
+        if (health == 0) {
             // TODO: Add config.yml option for negative killcoins
             deaths++;
-            health = 0;
+            health = arena.HITS_TO_KILL;
             killStreak = 0;
             if (killCoins - arena.KILLCOIN_PER_DEATH > 0)
                 killCoins = killCoins - arena.KILLCOIN_PER_DEATH;
@@ -116,11 +117,12 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
             Settings.PLAYERDATA.incrementStat(StatType.DEATHS, this);
             player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
             new ProtectionCountdown(arena.SAFE_TIME, this);
+            updateScoreboard();
             return true;
         } else {
+            updateScoreboard();
             return false;
         }
-
     }
 
     public void kill(ArenaPlayer target) {
@@ -153,6 +155,9 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
         return playersKillCoinItems.get(displayName);
     }
 
+    public void setHealth(int newHealth) {
+        health = newHealth;
+    }
     public int getHealth() {
         return health;
     }

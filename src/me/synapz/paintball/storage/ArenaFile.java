@@ -89,7 +89,7 @@ public class ArenaFile extends PaintballFile {
             this.add("Rewards.Money.per-win");
             this.add("Rewards.Money.per-defeat");
 
-            this.add("Chat.arena-chat");
+            this.add("Chat.use-arena-chat");
             this.add("Chat.broadcast-winner");
             this.add("Chat.spectator-chat");
             this.add("Chat.arena-chat");

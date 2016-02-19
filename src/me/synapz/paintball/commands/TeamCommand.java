@@ -18,6 +18,7 @@ public abstract class TeamCommand extends ArenaCommand {
         if (arena == null)
             return;
 
+        // This means it is an optional argument since it wasn't specified
         try {
             this.rawTeamName = args[getTeamArg()];
         } catch (ArrayIndexOutOfBoundsException exc) {

@@ -4,6 +4,7 @@ import me.synapz.paintball.*;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
@@ -19,6 +20,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
@@ -44,6 +46,35 @@ public class Listeners implements Listener {
             e.setCancelled(true);
     }
 
+    // Blocks commands in arena
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onCommandSendInArena(PlayerCommandPreprocessEvent e) {
+        Player player = e.getPlayer();
+        String baseCommand = e.getMessage().split(" ")[0];
+
+        if (!e.getMessage().contains("/") || baseCommand == null)
+            return;
+
+        if (isInArena(player)){
+            Arena arena = getArena(player);
+
+            // If the command is in blocked commands, block it. If the command is in allowed commands, return.
+            if (arena.BLOCKED_COMMANDS.contains(baseCommand)){
+                e.setCancelled(true);
+                Message.getMessenger().msg(player, false, ChatColor.RED, "That command is disabled while in the arena.");
+                return;
+            } else if (arena.ALLOWED_COMMANDS.contains(baseCommand)){
+                return;
+            } else if (arena.ALL_PAINTBALL_COMMANDS && baseCommand.equals("/pb")){
+                return;
+            } else if (arena.DISABLE_ALL_COMMANDS) {
+                e.setCancelled(true);
+                Message.getMessenger().msg(player, false, ChatColor.RED, "That command is disabled while in the arena.");
+                return;
+            }
+        }
+    }
+
     // Don't let players place blocks in arena
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlaceInArena(BlockPlaceEvent e) {
@@ -56,6 +87,7 @@ public class Listeners implements Listener {
     public void clickItemInArena(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         ItemStack item = e.getItem();
+
         if (isInArena(player)) {
             Arena a = getArena(player);
             PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
@@ -142,6 +174,11 @@ public class Listeners implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
+    public void lossFoodInArena(FoodLevelChangeEvent e) {
+        e.setCancelled(e.getEntity() instanceof Player && isInArena((Player) e.getEntity()));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onShootItemFromInventoryInArena(PlayerDropItemEvent e) {
         Player player = e.getPlayer();
 
@@ -153,13 +190,27 @@ public class Listeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDeathInArena(PlayerDeathEvent e) {
         Player target = e.getEntity();
-        Player source = target.getKiller();
-        if (isInArena(target) && isInArena(source)) {
+        if (isInArena(target)) {
             e.setDeathMessage("");
             e.setKeepInventory(true);
-            // TODO, maually give them their ekillcoinitems
         }
     }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onRespawnInArena(PlayerRespawnEvent e) {
+        Player target = e.getPlayer();
+
+        if (isInArena(target)) {
+            Arena a = getArena(target);
+            TeamLocation.TeamLocations type = a.getState() == Arena.ArenaState.WAITING ? TeamLocation.TeamLocations.LOBBY : TeamLocation.TeamLocations.SPAWN;
+            Team team = a.getPaintballPlayer(target).getTeam();
+            int spawnNumber = Utils.randomNumber(team.getSpawnPointsSize(type));
+
+            Location spawnLoc = a.getLocation(type, team, spawnNumber);
+            e.setRespawnLocation(spawnLoc);
+        }
+    }
+
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
@@ -221,17 +272,20 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onDamageAsLobbyOrSpectator(EntityDamageEvent e) {
-        if (!(e.getEntity() instanceof Player)) {
-            return;
-        }
-
         Player player = (Player) e.getEntity();
-        PaintballPlayer pbPlayer = null;
-        if (isInArena(player))
-            pbPlayer = getArena(player).getPaintballPlayer(player);
 
-        if (pbPlayer != null && isInArena(player) && (getArena(player).getLobbyPlayers().contains(pbPlayer) || getArena(player).getSpectators().contains(pbPlayer))) {
-            e.setCancelled(true);
+        if (isInArena(player)) {
+            Arena arena = getArena(player);
+            PaintballPlayer pbPlayer = arena.getPaintballPlayer(player);
+
+            // If the player is a ArenaPlayer, and the damage was not from a snowball and the attacker is not a player, cancel.
+            if (arena.getAllArenaPlayers().contains(pbPlayer) && e.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) {
+                e.setCancelled(true);
+            }
+
+            // If the player is a LobbyPlayer or Spectator player, cancel all damage.
+            if (arena.getLobbyPlayers().contains(pbPlayer) || arena.getSpectators().contains(pbPlayer))
+                e.setCancelled(true);
         }
     }
 

@@ -141,6 +141,9 @@ public class Team {
 
     public void playerLeaveTeam() {
         size--;
+        for (LobbyPlayer lobbyPlayer : arena.getLobbyPlayers()) {
+            lobbyPlayer.updateScoreboard();
+        }
     }
 
     // Returns if the team is full or not, if there are 100 max players, only 25 can go in per team

@@ -11,22 +11,22 @@ import static org.bukkit.ChatColor.RED;
 public class Join extends TeamCommand {
 
     public void onCommand() {
-        for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
-            if (a.containsPlayer(player)) {
-                Message.getMessenger().msg(player, false, ChatColor.RED, "You are already in " + a.toString() + ChatColor.RED + ".");
+        // If the player types in /pb join
+        if (arena == null) {
+            Arena arena = ArenaManager.getArenaManager().getBestArena();
+            if (arena == null) {
+                Message.getMessenger().msg(player, false, RED, "No arenas are currently opened.");
                 return;
             }
-        }
-        if (arena.getLobbyPlayers().size() == arena.getMax() && arena.getMax() > 0) {
-            Message.getMessenger().msg(player, false, RED, arena.toString() + RED + " is full!");
+            arena.joinLobby(player, null);
             return;
         }
-
+        //Joins the arena
         arena.joinLobby(player, team);
     }
 
     public String getArgs() {
-        String args = "<arena> [team]";
+        String args = "[arena] [team]";
         return args;
     }
 
@@ -51,7 +51,7 @@ public class Join extends TeamCommand {
     }
 
     public int getMinArgs() {
-        return 2;
+        return 1;
     }
 
     protected int getTeamArg() {

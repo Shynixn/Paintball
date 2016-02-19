@@ -37,7 +37,7 @@ public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlay
         arena.addPlayer(this);
 
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
-        stripValues();
+        Utils.stripValues(player);
         giveItems();
         displayMessages();
         giveWoolHelmet();
@@ -84,6 +84,9 @@ public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlay
     private void giveItems() {
         player.getInventory().clear();
 
+        if (!arena.GIVE_TEAM_SWITCHER)
+            return;
+
         // For if the amount of teams are larger than 9 slots (how would they click the 10th or 11th? The -1 is because the player is on 1 team, we don't show that team
         if (arena.getArenaTeamList().size()-1 > 9) {
             // Just creates a wool item, which when you click will open a change menu
@@ -112,22 +115,6 @@ public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlay
     private void displayMessages() {
         arena.broadcastMessage(GREEN, team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + arena.getLobbyPlayers().size() + "/" + arena.getMax(), GREEN + "Joined arena " + GRAY + arena.getLobbyPlayers().size() + "/" + arena.getMax());
         Message.getMessenger().msg(player, true, true, GREEN + "You have joined the arena!");
-    }
-
-    private void stripValues() {
-        ExperienceManager exp = new ExperienceManager(player);
-        player.getInventory().clear();
-        player.getInventory().setHelmet(null);
-        player.getInventory().setChestplate(null);
-        player.getInventory().setLeggings(null);
-        player.getInventory().setBoots(null);
-        player.setGameMode(GameMode.SURVIVAL);
-        player.setFlying(false);
-        player.setAllowFlight(false);
-        player.setFoodLevel(20);
-        player.setHealth(player.getMaxHealth());
-        player.setFireTicks(0);
-        exp.setExp(0);
     }
 
     @Override

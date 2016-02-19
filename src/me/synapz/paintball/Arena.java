@@ -65,6 +65,11 @@ public class Arena {
     public boolean COLOR_PLAYER_TITLE_ARENA;
     public boolean GIVE_TEAM_SWITCHER;
     public boolean USE_ARENA_CHAT;
+    public boolean DISABLE_ALL_COMMANDS;
+    public boolean ALL_PAINTBALL_COMMANDS;
+
+    public List<String> BLOCKED_COMMANDS;
+    public List<String> ALLOWED_COMMANDS;
 
     // All the players in the arena (Lobby, Spec, InGame) linked to the player which is linked to the PaintballPLayer
     private Map<Player, PaintballPlayer> allPlayers = new HashMap<Player, PaintballPlayer>();
@@ -92,7 +97,8 @@ public class Arena {
 
         @Override
         public String toString() {
-            return super.toString().toLowerCase().replace("_", " ").replace(super.toString().toLowerCase().toCharArray()[0], super.toString().toUpperCase().toCharArray()[0]);
+            // This giant line replaces _ with a space, and makes the first letter capital
+            return super.toString().toLowerCase().replace("_", " ").replaceFirst(String.valueOf(super.toString().toLowerCase().toCharArray()[0]), String.valueOf(super.toString().toUpperCase().toCharArray()[0]));
         }
     }
 
@@ -249,10 +255,14 @@ public class Arena {
 
     // Set the arena to be enabled/disabled
     public void setEnabled(boolean setEnabled) {
-        if (setEnabled)
-           setState(ArenaState.WAITING);
-        else
+        if (setEnabled) {
+            setState(ArenaState.WAITING);
+        } else {
+            broadcastMessage(ChatColor.RED, toString() + RED + " has been disabled.", "");
+            for (PaintballPlayer player : getAllPlayers().values())
+                player.forceLeaveArena();
             setState(ArenaState.DISABLED);
+        }
         ARENA_FILE.set(getPath() + "Enabled", setEnabled);
         advSave();
     }
@@ -362,10 +372,6 @@ public class Arena {
         return "Arenas." + defaultName + ".";
     }
 
-    public String getDefaultConfigPath(String item) {
-        return "Per-Arena-Settings.Defaults." + item;
-    }
-    
     public void joinLobby(Player player, Team team) {
         if (Utils.canJoin(player, this))
             new LobbyPlayer(this, team == null ? getTeamWithLessPlayers() : team, player);
@@ -586,6 +592,8 @@ public class Arena {
     }
 
     public void loadConfigValues() {
+        FileConfiguration config = Settings.getSettings().getConfig();
+
         MAX_SCORE                   = ARENA.loadInt("max-score", this);
         TIME                        = ARENA.loadInt("time", this);
         WIN_WAIT_TIME               = ARENA.loadInt("win-waiting-time", this);
@@ -604,7 +612,6 @@ public class Arena {
         SAFE_TIME                   = ARENA.loadInt("safe-time", this);
         HITS_TO_KILL                = ARENA.loadInt("hits-to-kill", this);
 
-        BROADCAST_WINNER           = ARENA.loadBoolean("Chat.broadcast-winner", this);
         PER_TEAM_CHAT_LOBBY        = ARENA.loadBoolean("Join-Lobby.per-team-chat", this);
         PER_TEAM_CHAT_ARENA        = ARENA.loadBoolean("Join-Arena.per-team-chat", this);
         KILL_COIN_SHOP             = ARENA.loadBoolean("kill-coin-shop", this);
@@ -614,9 +621,15 @@ public class Arena {
         COLOR_PLAYER_TITLE_ARENA   = ARENA.loadBoolean("Join-Arena.color-player-title", this);
         GIVE_TEAM_SWITCHER         = ARENA.loadBoolean("Join-Lobby.give-team-switcher", this);
         USE_ARENA_CHAT             = ARENA.loadBoolean("Chat.use-arena-chat", this);
+        BROADCAST_WINNER           = ARENA.loadBoolean("Chat.broadcast-winner", this);
+
+        DISABLE_ALL_COMMANDS       = config.getBoolean("Commands.disable-all-commands");
+        ALL_PAINTBALL_COMMANDS     = config.getBoolean("Commands.all-paintball-commands");
 
         ARENA_CHAT                 = ARENA.loadString("Chat.arena-chat", this);
         SPEC_CHAT                  = ARENA.loadString("Chat.spectator-chat", this);
+
+        BLOCKED_COMMANDS           = config.getStringList("Commands.Blocked");
+        ALLOWED_COMMANDS           = config.getStringList("Commands.Allowed");
     }
-    // TODO: add events so players can't teleport and stuff inside arena
 }

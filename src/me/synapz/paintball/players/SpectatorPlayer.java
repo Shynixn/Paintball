@@ -2,6 +2,7 @@ package me.synapz.paintball.players;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Message;
+import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.TeamLocation;
@@ -23,7 +24,7 @@ public final class SpectatorPlayer extends PaintballPlayer {
         PLAYERDATA.savePlayerInformation(player);
         arena.addPlayer(this);
         player.teleport(arena.getSpectatorLocation());
-        stripValues();
+        Utils.stripValues(player);
         giveItems();
         displayMessages();
     }
@@ -49,21 +50,6 @@ public final class SpectatorPlayer extends PaintballPlayer {
         if (team != null)
             team.playerLeaveTeam();
         super.forceLeaveArena();
-    }
-
-    private void stripValues() {
-        // todo: exp saves
-        player.getInventory().clear();
-        player.getInventory().setHelmet(null);
-        player.getInventory().setChestplate(null);
-        player.getInventory().setLeggings(null);
-        player.getInventory().setBoots(null);
-        player.setGameMode(GameMode.SURVIVAL);
-        player.setFlying(false);
-        player.setAllowFlight(false);
-        player.setFoodLevel(20);
-        player.setHealth(player.getMaxHealth());
-        player.setFireTicks(0);
     }
 
     private void giveItems() {

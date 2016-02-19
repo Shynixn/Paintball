@@ -17,10 +17,18 @@ public abstract class ArenaCommand extends PaintballCommand {
     public void onCommand(Player player, String[] args) {
         this.player = player;
         this.args = args;
-        this.rawArenaName = args[getArenaArg()];
+
+        // This means specifying an arena is optional (/pb join)
+        try {
+            this.rawArenaName = args[getArenaArg()];
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            onCommand();
+            return;
+        }
+
         this.arena = ArenaManager.getArenaManager().getArena(rawArenaName);
 
-        if (arena == null) {
+        if (arena == null && handleConditionsInSuperClass) {
             Message.getMessenger().msg(player, false, ChatColor.RED, rawArenaName + " is an invalid arena.");
             return;
         }

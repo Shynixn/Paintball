@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.sql.*;
@@ -28,15 +29,16 @@ import static me.synapz.paintball.storage.Settings.*;
 
 public final class PlayerData extends PaintballFile {
 
-    private Map<UUID, Location> locations = new HashMap<>();
-    private Map<UUID, GameMode> gamemodes = new HashMap<>();
-    private Map<UUID, Integer> foodLevels = new HashMap<>();
-    private Map<UUID, Double> health = new HashMap<>();
-    private Map<UUID, ItemStack[]> inventories = new HashMap<>();
-    private Map<UUID, ItemStack[]> armour = new HashMap<>();
-    private Map<UUID, Integer> expLevels = new HashMap<>();
-    private Map<UUID, Scoreboard> scoreboards = new HashMap<>();
-    private Map<UUID, Boolean> flying = new HashMap<>();
+    private Map<String, Location> locations = new HashMap<>();
+    private Map<String, GameMode> gamemodes = new HashMap<>();
+    private Map<String, Integer> foodLevels = new HashMap<>();
+    private Map<String, Double> health = new HashMap<>();
+    private Map<String, ItemStack[]> inventories = new HashMap<>();
+    private Map<String, ItemStack[]> armour = new HashMap<>();
+    private Map<String, Integer> expLevels = new HashMap<>();
+    private Map<String, Scoreboard> scoreboards = new HashMap<>();
+    private Map<String, Boolean> flying = new HashMap<>();
+    private Map<String, Collection<PotionEffect>> potions = new HashMap<>();
 
     public PlayerData(Plugin pb) {
         super(pb, "playerdata.yml");
@@ -263,8 +265,7 @@ public final class PlayerData extends PaintballFile {
     // TODO: add exp and other missing values
     public void savePlayerInformation(Player player) {
         ExperienceManager exp = new ExperienceManager(player);
-        UUID id = player.getUniqueId();
-        player.sendMessage("saving scoreboard");
+        String id = player.getName();
         locations.put(id, player.getLocation());
         gamemodes.put(id, player.getGameMode());
         foodLevels.put(id, player.getFoodLevel());
@@ -272,17 +273,18 @@ public final class PlayerData extends PaintballFile {
         inventories.put(id, player.getInventory().getContents());
         armour.put(id, player.getInventory().getArmorContents());
         expLevels.put(id, exp.getCurrentExp());
-        scoreboards.put(id, player.getScoreboard());
+        scoreboards.put(id, player.getScoreboard() == null ? Bukkit.getScoreboardManager().getNewScoreboard() : player.getScoreboard());
         flying.put(id, player.isFlying() && player.getAllowFlight());
+        potions.put(id, player.getActivePotionEffects());
 
-        addStatsIfNotYetAdded(id);
+        addStatsIfNotYetAdded(player.getUniqueId());
         saveFile();
     }
 
     // Restores all of the player's settings, then sets the info to null
     public void restorePlayerInformation(Player player) {
         ExperienceManager exp = new ExperienceManager(player);
-        UUID id = player.getUniqueId();
+        String id = player.getName();
 
         player.getInventory().clear();
         player.teleport(locations.get(id));
@@ -295,6 +297,7 @@ public final class PlayerData extends PaintballFile {
         player.setAllowFlight(flying.get(id));
         player.setFlying(flying.get(id));
         exp.setExp(expLevels.get(id));
+        player.addPotionEffects(potions.get(id));
 
         locations.remove(id);
         gamemodes.remove(id);

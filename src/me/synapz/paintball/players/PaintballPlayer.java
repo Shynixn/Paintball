@@ -1,28 +1,14 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.Arena;
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
-import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static me.synapz.paintball.storage.Settings.PREFIX;
-import static me.synapz.paintball.storage.Settings.getSettings;
 
 public abstract class PaintballPlayer {
 

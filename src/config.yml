@@ -40,24 +40,19 @@ Bungeecord:
 Kits:
 Special-Items:
 
-# Team names of each color code
-Teams:
-   0: "Black"
-   1: "Navy Blue"
-   2: "Green"
-   3: "Cyan"
-   4: "Red"
-   5: "Purple"
-   6: "Orange"
-   7: "Silver"
-   8: "Gray"
-   9: "Blue"
-   a: "Lime"
-   b: "Aqua"
-   c: "Light Red"
-   d: "Magenta"
-   e: "Yellow"
-   f: "White"
+Commands:
+  # If true, disables all commands in arena except for: Allowed commands and (if all-paintball-commands is true) Paintball commands.
+  disable-all-commands: true
+  # If true, allows ALL Paintball commands to be entered
+  all-paintball-commands: true
+  # Commands that will always be blocked while in the arena
+  Blocked:
+  - /god
+  - /enchant
+   # Commands that will always be allowed while in the arena. Usually put commands in here that will not affect game play in any way
+  Allowed:
+  - /money
+  - /time
 
 ###############################
 #        KillCoin Shop        #
@@ -161,7 +156,7 @@ Per-Arena-Settings:
       # Chat format for specators. Tags: %ARENA%, %PLAYER%, %MSG%, %PREFIX%, %STATS%??
       spectator-chat: "&7[Spectator] %PLAYER%: %MSG%"
       # Chat format for lobby players and in game players. Tags: %ARENA%, %PLAYER%, %MSG%, %TEAMCOLOR%, %TEAMNAME%, %PREFIX%
-      arena-chat: "%PREFIX%&8-%TEAMCOLOR%%TEAMNAME%&8- &a%PLAYER%&7: %MSG%"
+      arena-chat: "&8-%TEAMCOLOR%%TEAMNAME%&8- &a%PLAYER%&7: %MSG%"
 
     Countdown:
        # Lobby countdown configuration-- how long to wait for more players after the minimum is reached
