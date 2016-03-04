@@ -1,34 +1,31 @@
 package me.synapz.paintball.commands.admin;
 
 
-import me.synapz.paintball.Message;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 public class Disable extends ArenaCommand {
 
     public void onCommand() {
         if (!args[1].equalsIgnoreCase("disable")) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, args[1] + " is an invalid choice. Use either enable/disable");
+            Messenger.error(player, args[1] + " is an invalid choice. Use either enable/disable");
             return;
         }
 
         if (Utils.nullCheck(args[2], arena, player)) {
             if (!arena.isSetup()) {
-                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " has not been setup.");
+                Messenger.error(player, arena.toString() + ChatColor.RED + " has not been setup.");
                 return;
             }
             if (!arena.isEnabled()) {
-                Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is already disable.");
+                Messenger.error(player, arena.toString() + ChatColor.RED + " is already disable.");
                 return;
             }
             if (!arena.getAllPlayers().containsKey(player))
-                Message.getMessenger().msg(player, false, ChatColor.GREEN, arena.toString() + " has been disabled!");
+                Messenger.success(player, arena.toString() + " has been disabled!");
             arena.setEnabled(false);
         }
     }

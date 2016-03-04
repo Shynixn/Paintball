@@ -1,7 +1,7 @@
 package me.synapz.paintball.commands.admin;
 
 
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.storage.Settings;
@@ -12,7 +12,7 @@ public class Reload extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         Settings.getSettings().reloadConfig();
-        Message.getMessenger().msg(player, false, ChatColor.GREEN, "Successfully reloaded configuration files.");
+        Messenger.success(player, "Successfully reloaded configuration files.");
     }
 
     public String getName() {

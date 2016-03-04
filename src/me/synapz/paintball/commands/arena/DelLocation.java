@@ -1,13 +1,12 @@
 package me.synapz.paintball.commands.arena;
 
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 
 public class DelLocation extends TeamCommand {
 
@@ -15,7 +14,7 @@ public class DelLocation extends TeamCommand {
         TeamLocation.TeamLocations type = stringToLocationType(args[3]);
 
         if (type == null) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, "Value " + args[3] + " is not a valid type.", "Choose either <spawn/lobby>");
+            Messenger.error(player, "Value " + args[3] + " is not a valid type.", "Choose either <spawn/lobby>");
             return;
         }
 
@@ -29,17 +28,17 @@ public class DelLocation extends TeamCommand {
                     }
                 }
             }
-            Message.getMessenger().msg(player, false, ChatColor.GREEN, "Deleted all " + arena.getName() + "'s " + (type.toString().toLowerCase().equals("spawn") ? "arena" : "lobby") + " spawns.", arena.getSteps());
+            Messenger.success(player, "Deleted all " + arena.getName() + "'s " + (type.toString().toLowerCase().equals("spawn") ? "arena" : "lobby") + " spawns.", arena.getSteps());
             return;
         }
 
         if (team.getSpawnPointsSize(type) == 0) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, "There are no more " + type.toString().toLowerCase() + " spawns to be deleted.");
+            Messenger.error(player, "There are no more " + type.toString().toLowerCase() + " spawns to be deleted.");
             return;
         }
 
         arena.delLocation(type, team, team.getSpawnPointsSize(type));
-        Message.getMessenger().msg(player, false, ChatColor.GREEN, "Deleted " + arena.getName() + "'s " + type.toString().toLowerCase() + " spawn to your location: " + Settings.SECONDARY + team.getSpawnPointsSize(type), arena.getSteps());
+        Messenger.success(player, "Deleted " + arena.getName() + "'s " + type.toString().toLowerCase() + " spawn to your location: " + Settings.SECONDARY + team.getSpawnPointsSize(type), arena.getSteps());
     }
 
     public String getArgs() {
@@ -48,7 +47,7 @@ public class DelLocation extends TeamCommand {
     }
 
     public String getPermission() {
-        return "paintball.arena.delteamlocation";
+        return "paintball.arena.dellocation";
     }
 
     public String getName() {

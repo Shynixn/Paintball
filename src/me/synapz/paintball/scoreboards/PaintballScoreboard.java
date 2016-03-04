@@ -9,6 +9,7 @@ import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.players.SpectatorPlayer;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,9 +18,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
@@ -28,7 +27,7 @@ import static me.synapz.paintball.storage.Settings.THEME;
 public class PaintballScoreboard {
 
     private static int id = 0;
-    private static final String DISPLAY_NAME = THEME + ChatColor.BOLD + "     Paintball " + ChatColor.RESET + SECONDARY +  "%time%     ";
+    private static final String DISPLAY_NAME = THEME + ChatColor.BOLD + "  Paintball " + ChatColor.RESET + SECONDARY +  "%time%  ";
 
     private final PaintballPlayer pbPlayer;
     private final Player player;
@@ -52,7 +51,11 @@ public class PaintballScoreboard {
             if (sb.getTeam(team.getTitleName()) == null)
                 sb.registerNewTeam(team.getTitleName());
         }
-        updateNametags();
+        // Registers the Spectator team is the player is a spectator
+        if (sb.getTeam("Spectator") == null)
+            sb.registerNewTeam("Spectator");
+
+        updateNametags(true);
     }
 
     public void setDisplayNameCounter(int time) {
@@ -84,6 +87,7 @@ public class PaintballScoreboard {
             lines.put(index, name);
             index++;
         }
+        updateNametags(true);
         return this;
     }
 
@@ -99,16 +103,29 @@ public class PaintballScoreboard {
             lines.replace(size, oldValue, newValue);
             size++;
         }
-        updateNametags();
+        updateNametags(false);
         return this;
     }
 
-    private PaintballScoreboard updateNametags() {
-        for (PaintballPlayer player : pbPlayer.getArena().getAllPlayers().values()) {
-            final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(player.getTeam().getTitleName());
+    public PaintballScoreboard updateNametags(boolean firstTime) {
+        for (ArenaPlayer arenaPlayer : pbPlayer.getArena().getAllArenaPlayers()) {
+            final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(arenaPlayer.getTeam().getTitleName());
             playerTeam.setAllowFriendlyFire(false);
-            playerTeam.setPrefix(String.valueOf(player.getTeam().getChatColor()));
-            playerTeam.addPlayer(player.getPlayer());
+            playerTeam.setPrefix(String.valueOf(arenaPlayer.getTeam().getChatColor()));
+            playerTeam.setSuffix(" " + Settings.THEME + (firstTime ? arenaPlayer.getArena().HITS_TO_KILL : arenaPlayer.getHealth()) + ChatColor.RED + "❤");
+            playerTeam.addPlayer(arenaPlayer.getPlayer());
+        }
+        for (LobbyPlayer lobbyPlayer : pbPlayer.getArena().getLobbyPlayers()) {
+            final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(lobbyPlayer.getTeam().getTitleName());
+            playerTeam.setAllowFriendlyFire(false);
+            playerTeam.setPrefix(String.valueOf(lobbyPlayer.getTeam().getChatColor()));
+            playerTeam.addPlayer(lobbyPlayer.getPlayer());
+        }
+        for (SpectatorPlayer spectatorPlayer : pbPlayer.getArena().getSpectators()) {
+            final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(spectatorPlayer.getTeam().getTitleName());
+            playerTeam.setAllowFriendlyFire(false);
+            playerTeam.setPrefix(ChatColor.GRAY + String.valueOf(spectatorPlayer.getTeam().getChatColor()));
+            playerTeam.addPlayer(spectatorPlayer.getPlayer());
         }
         player.setScoreboard(sb);
         return this;
@@ -126,8 +143,15 @@ public class PaintballScoreboard {
         return this;
     }
 
+    public PaintballScoreboard reloadLine(ScoreboardLine sbLine, String score, int line, boolean condition) {
+        if (condition)
+            reloadLine(sbLine, score, line);
+        return this;
+    }
+
     public PaintballScoreboard build() {
         player.setScoreboard(sb);
+        updateNametags(false);
         return this;
     }
 

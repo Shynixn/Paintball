@@ -1,7 +1,7 @@
 package me.synapz.paintball.commands;
 
 
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.commands.arena.*;
 import me.synapz.paintball.commands.player.*;
 import me.synapz.paintball.commands.admin.*;
@@ -16,7 +16,6 @@ import static org.bukkit.ChatColor.*;
 import static me.synapz.paintball.storage.Settings.*;
 
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,17 +29,17 @@ public class CommandManager implements CommandExecutor{
 
 
     public void init() {
-    	addCommands(new Join(), new LeaveArena(), new Spectate(), new Stats(), new Leaderboard(), new List(), new Admin(CommandType.PLAYER),
-    			new CreateArena(), new RemoveArena(), new SetLocation(), new DelLocation(), new SetSpectate(), new DelSpectate(), new SetMin(),
-    			new SetMax(), new SetTeams(), new ForceStart(), new ForceStop(), new Rename(), new Enable(), new Disable(),
-    			new Steps(),  new Info(), new Reload(), new Admin(CommandType.ADMIN), new Arena(CommandType.ARENA));
+    	addCommands(new Join(), new Leave(), new Spectate(), new Stats(), new Leaderboard(), new List(), new Admin(CommandType.PLAYER),
+    			new Create(), new Remove(), new SetLocation(), new DelLocation(), new SetSpectate(), new DelSpectate(), new SetMin(),
+    			new SetMax(), new SetTeams(), new Start(), new Stop(), new Rename(), new Enable(), new Disable(),
+    			new Steps(), new Reload(), new Admin(CommandType.ADMIN), new Arena(CommandType.ARENA));
     }
 
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String commandLabel, String[] args) {
 
         if (cmd.getName().equalsIgnoreCase("paintball")) {
             if (!(sender instanceof Player)) {
-                Message.getMessenger().msg(sender, false, RED, NO_CONSOLE_PERMS);
+                Messenger.error(sender, NO_CONSOLE_PERMS);
                 return true;
             }
 
@@ -70,7 +69,7 @@ public class CommandManager implements CommandExecutor{
                         if (command1.getCommandType() == command.getCommandType())
                             dispatchCommand(command1, player, args);
                         else
-                            Message.getMessenger().msg(sender, false, ChatColor.RED, "Wrong command type.", "Did you mean " + command1.getCorrectUsage().replace("Usage: ", ""));
+                            Messenger.error(sender, "Wrong command type.", "Did you mean " + command1.getCorrectUsage().replace("Usage: ", ""));
                     }
                     return true;
                 }
@@ -85,7 +84,7 @@ public class CommandManager implements CommandExecutor{
             command.getName();
             return false;
         }catch(Exception e) {
-            Message.getMessenger().msg(sender, false, RED, COMMAND_NOT_FOUND);
+            Messenger.error(sender, COMMAND_NOT_FOUND);
             return true;
         }
     }
@@ -95,7 +94,7 @@ public class CommandManager implements CommandExecutor{
     public static void displayHelp(Player player, CommandType type) {
         boolean isPlayerType = type == CommandType.PLAYER;
         boolean isArenatype = type == CommandType.ARENA;
-        player.sendMessage(Message.getMessenger().getHelpTitle(type));
+        player.sendMessage(Messenger.getHelpTitle(type));
 
         String beginning = isPlayerType ? THEME + "/pb ": isArenatype ? THEME + "/pb arena " : THEME + "/pb admin ";
         for (PaintballCommand command : COMMANDS.values()) {
@@ -110,14 +109,14 @@ public class CommandManager implements CommandExecutor{
     // Sends out the command if: The player has the permission, correct arguments, and fails if there is an exception then sends the player the error
     private void dispatchCommand(PaintballCommand command, Player player, String[] args) {
         try {
-            if (!Message.getMessenger().permissionValidator(player, command.getPermission())) {
+            if (!Messenger.permissionValidator(player, command.getPermission())) {
                 return;
             }
             if (argumentChecker(command, player, args)) {
                 command.onCommand(player, args);
             }
         }catch (Exception e) {
-            Message.getMessenger().msg(player, false, RED, "An internal error occurred: " + e.getMessage());
+            Messenger.error(player, "An internal error occurred: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -126,18 +125,18 @@ public class CommandManager implements CommandExecutor{
     private boolean argumentChecker(PaintballCommand command, Player player, String[] args) {
         if (command.getMaxArgs() == command.getMinArgs()) {
             if (args.length < command.getMinArgs()) {
-                Message.getMessenger().wrongUsage(command, player, Message.Usage.NOT_ENOUGH_ARGS);
+                Messenger.wrongUsage(command, player, Messenger.Usage.NOT_ENOUGH_ARGS);
                 return false;
             } else if (args.length > command.getMaxArgs()) {
-                Message.getMessenger().wrongUsage(command, player, Message.Usage.TO_MANY_ARGS);
+                Messenger.wrongUsage(command, player, Messenger.Usage.TO_MANY_ARGS);
                 return false;
             }
         } else {
             if (args.length < command.getMinArgs()) {
-                Message.getMessenger().wrongUsage(command, player, Message.Usage.NOT_ENOUGH_ARGS);
+                Messenger.wrongUsage(command, player, Messenger.Usage.NOT_ENOUGH_ARGS);
                 return false;
             } else if (args.length > command.getMaxArgs()) {
-                Message.getMessenger().wrongUsage(command, player, Message.Usage.TO_MANY_ARGS);
+                Messenger.wrongUsage(command, player, Messenger.Usage.TO_MANY_ARGS);
                 return false;
             }
         }

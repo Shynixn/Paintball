@@ -33,28 +33,15 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
     private int killCoins = 0;
     private int kills = 0;
     private int deaths = 0;
-    private int moneyEarned;
+    private int money;
     private boolean won = false;
     private int health = arena.HITS_TO_KILL;
+    private int lives = arena.LIVES;
 
-    private final PaintballScoreboard sb;
-
-    // TODO: turn these into enums :D
+    private PaintballScoreboard sb;
 
     public ArenaPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
-        sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
-                .addTeams(true)
-                .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.MONEY, 0) // TODO: vault.getMoney(Player) ?
-                .addLine(ScoreboardLine.KD, "0.00")
-                .addLine(ScoreboardLine.KILL_COIN, 0)
-                .addLine(ScoreboardLine.KILL_STREAK, 0)
-                .addLine(ScoreboardLine.KILLS, 0)
-                .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.HEALTH, Utils.makeHealth(health))
-                .addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName())
-                .build();
     }
 
     public boolean won() {
@@ -68,7 +55,6 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
 
     @Override
     protected void initPlayer() {
-        arena.addPlayer(this);
         // TODO: dont make random!
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
         player.getInventory().clear();
@@ -77,13 +63,27 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
     }
 
     @Override
-    public void forceLeaveArena() {
-        team.playerLeaveTeam();
-        Settings.PLAYERDATA.incrementStat(StatType.GAMES_PLAYED, this);
+    public void leaveArena() {
         super.forceLeaveArena();
+        team.playerLeaveTeam();
+
+        // TODO: instead of check
+        for (Team team : arena.getArenaTeamList()) {
+            if (team.getSize() == 0) {
+                // TODO: get winner
+                arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
+                break;
+            }
+        }
+
+        Settings.PLAYERDATA.incrementStat(StatType.GAMES_PLAYED, this);
     }
 
+    @Override
     public void updateScoreboard() {
+        if (sb == null)
+            return;
+
         int size = arena.getArenaTeamList().size()-1;
         sb.reloadTeams(true)
                 .reloadLine(ScoreboardLine.MONEY, "1", size+2)
@@ -91,12 +91,33 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
                 .reloadLine(ScoreboardLine.KILL_COIN, String.valueOf(getKillCoins()), size+4)
                 .reloadLine(ScoreboardLine.KILL_STREAK, String.valueOf(getKillStreak()), size+5)
                 .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6)
-                .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8);
+                .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8)
+                .reloadLine(ScoreboardLine.LIVES, Utils.makeHealth(lives), size+9, arena.LIVES > 0);
     }
 
+    @Override
     public void updateDisplayName() {
-        int time = (int) (ArenaCountdown.tasks.get(arena) == null ? GameCountdown.gameCountdowns.get(arena) == null ? GameFinishCountdown.arenasFinishing.get(arena).getCounter() : GameCountdown.gameCountdowns.get(arena).getCounter() : ArenaCountdown.tasks.get(arena).getCounter());
-        sb.setDisplayNameCounter(time);
+        if (sb != null)
+            sb.setDisplayNameCounter(Utils.getCurrentCounter(arena));
+    }
+
+    @Override
+    public void createScoreboard() {
+        sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
+                .addTeams(true)
+                .addLine(ScoreboardLine.LINE)
+                .addLine(ScoreboardLine.MONEY, 0) // TODO: vault.getMoney(Player) ?
+                .addLine(ScoreboardLine.KD, "0.00")
+                .addLine(ScoreboardLine.KILL_COIN, 0)
+                .addLine(ScoreboardLine.KILL_STREAK, 0)
+                .addLine(ScoreboardLine.KILLS, 0)
+                .addLine(ScoreboardLine.LINE)
+                .addLine(ScoreboardLine.HEALTH, Utils.makeHealth(arena.HITS_TO_KILL));
+        if (arena.LIVES > 0)
+            sb.addLine(ScoreboardLine.LIVES, Utils.makeHealth(arena.LIVES));
+
+        sb.addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName());
+        sb.build();
     }
 
     public void setWon() {
@@ -104,36 +125,29 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
     }
 
     public boolean die() {
-        health--;
-        if (health == 0) {
-            // TODO: Add config.yml option for negative killcoins
-            deaths++;
-            health = arena.HITS_TO_KILL;
-            killStreak = 0;
-            if (killCoins - arena.KILLCOIN_PER_DEATH > 0)
-                killCoins = killCoins - arena.KILLCOIN_PER_DEATH;
-
-            moneyEarned--; // TODO: check per death and subtract
-            Settings.PLAYERDATA.incrementStat(StatType.DEATHS, this);
-            player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
-            new ProtectionCountdown(arena.SAFE_TIME, this);
-            updateScoreboard();
-            return true;
-        } else {
-            updateScoreboard();
+        int newHealth = health--;
+        sb.updateNametags(false);
+        if (newHealth != 1) {
+            arena.updateAllScoreboard();
             return false;
+        } else {
+            setHealth(newHealth);
+            return true;
         }
     }
 
     public void kill(ArenaPlayer target) {
+        if (arena.getTeamScore(team) == arena.MAX_SCORE)
+            return;
+
         killStreak++;
         killCoins = killCoins + arena.KILLCOIN_PER_KILL;
-        moneyEarned++; // TODO: check arena settings for per kill money
+        money++; // TODO: check arena settings for per kill money
         kills++;
         arena.incrementTeamScore(team);
         Settings.PLAYERDATA.incrementStat(StatType.KILLS, this);
         Settings.PLAYERDATA.incrementStat(StatType.HIGEST_KILL_STREAK, this);
-        arena.broadcastMessage(ChatColor.GREEN, THEME + player.getName() + SECONDARY + " shot " + THEME + target.getPlayer().getName(), "");
+        arena.broadcastMessage(THEME + player.getName() + SECONDARY + " shot " + THEME + target.getPlayer().getName());
 
         for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
             arenaPlayer.updateScoreboard();
@@ -157,7 +171,38 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
 
     public void setHealth(int newHealth) {
         health = newHealth;
+        sb.updateNametags(false);
+
+        if (health == 1) {
+            deaths++;
+            lives--;
+
+            if (killCoins - arena.KILLCOIN_PER_DEATH > 0 || killCoins - arena.KILLCOIN_PER_DEATH < 0 && arena.KILL_COINS_NEGATIVE)
+                killCoins = killCoins - arena.KILLCOIN_PER_DEATH;
+            else
+                killCoins = 0;
+
+            if (money - arena.KILLCOIN_PER_DEATH > 0 || killCoins - arena.KILLCOIN_PER_DEATH < 0 && arena.KILL_COINS_NEGATIVE)
+                killCoins = killCoins - arena.KILLCOIN_PER_DEATH;
+            else
+                killCoins = 0;
+
+            Settings.PLAYERDATA.incrementStat(StatType.DEATHS, this);
+
+            if (arena.LIVES > 0 && lives == 0) {
+                this.forceLeaveArena();
+                new SpectatorPlayer(this);
+                return;
+            } else {
+                health = arena.HITS_TO_KILL;
+                killStreak = 0;
+                player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
+                new ProtectionCountdown(arena.SAFE_TIME, this);
+                updateScoreboard();
+            }
+        }
     }
+
     public int getHealth() {
         return health;
     }
@@ -178,8 +223,8 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
         return arena.MAX_SCORE == arena.getTeamScore(team);
     }
 
-    public int getMoneyEarned() {
-        return moneyEarned;
+    public int getMoney() {
+        return money;
     }
 
     public int getKills() {

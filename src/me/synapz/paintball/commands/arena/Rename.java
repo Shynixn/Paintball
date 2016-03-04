@@ -1,6 +1,6 @@
 package me.synapz.paintball.commands.arena;
 
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.commands.ArenaCommand;
@@ -15,11 +15,11 @@ public class Rename extends ArenaCommand {
 		 Arena newArena = ArenaManager.getArenaManager().getArena(args[3]);
 
 		 if (newArena != null) {
-			 Message.getMessenger().msg(player, false, ChatColor.RED, "An arena named " + newName + " already exists!");
+			 Messenger.error(player, "An arena named " + newName + " already exists!");
 			 return;
 		 } else {
 			 arena.rename(newName);
-			 Message.getMessenger().msg(player, false, ChatColor.GREEN, "Successfully renamed Arena " + ChatColor.GRAY + args[2] + ChatColor.GREEN + " to " + ChatColor.GRAY + newName);
+			 Messenger.success(player, "Successfully renamed Arena " + ChatColor.GRAY + args[2] + ChatColor.GREEN + " to " + ChatColor.GRAY + newName);
 		 }
 	 }
 

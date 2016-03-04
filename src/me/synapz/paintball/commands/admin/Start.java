@@ -4,12 +4,10 @@ package me.synapz.paintball.commands.admin;
 import me.synapz.paintball.*;
 
 import me.synapz.paintball.commands.ArenaCommand;
-import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
-public class ForceStart extends ArenaCommand {
+public class Start extends ArenaCommand {
 
     public void onCommand() {
         String msg;
@@ -36,6 +34,7 @@ public class ForceStart extends ArenaCommand {
                 break;
             case STOPPING:
                 msg = "is already in progress.";
+                break;
             case STARTING:
                 msg = "is already in progress.";
                 break;
@@ -43,7 +42,7 @@ public class ForceStart extends ArenaCommand {
                 msg = "has encountered an unexpected error.";
                 break;
             }
-        Message.getMessenger().msg(player, false, color, arena.toString() + color + " " + msg);
+        Messenger.info(player, color + arena.toString() + color + " " + msg);
     }
 
     public String getArgs() {

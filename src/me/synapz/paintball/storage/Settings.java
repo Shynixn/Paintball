@@ -7,16 +7,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Settings {
 
@@ -59,6 +59,22 @@ public class Settings {
 
     public static Settings getSettings() {
         return instance;
+    }
+
+    public void backupConfig() {
+        Messenger.msg(Bukkit.getPlayer("Synapz_"), "backuping");
+        Map<String, File> allFiles = new HashMap<String, File>(){{
+            for (File file : pb.getDataFolder().listFiles())
+                put(file.getName(), file);
+        }};
+        File oldConfig = allFiles.get("config.yml");
+        int suffix = 1;
+
+        while (allFiles.keySet().contains("config_backup" + suffix + ".yml"))
+            suffix++;
+
+        oldConfig.renameTo(new File(pb.getDataFolder(), "config_backup" + suffix + ".yml"));
+        init(JavaPlugin.getProvidingPlugin(Paintball.class));
     }
 
     private void init(Plugin pb) {
@@ -106,7 +122,6 @@ public class Settings {
     public void reloadConfig() {
         pb.reloadConfig();
         loadEverything();
-
         for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
             a.loadConfigValues();
         }
@@ -164,7 +179,7 @@ public class Settings {
             yaml.save(file);
         } catch (SQLException | IOException e) {
             e.printStackTrace();
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), false, ChatColor.RED, "Failed to download SQL backup!");
+            Messenger.error(Bukkit.getConsoleSender(), "Failed to download SQL backup!");
         }
     }
 }

@@ -1,7 +1,7 @@
 package me.synapz.paintball.commands.player;
 
 
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.commands.PaintballCommand;
@@ -9,7 +9,7 @@ import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class LeaveArena extends PaintballCommand {
+public class Leave extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         Arena a;
@@ -17,12 +17,12 @@ public class LeaveArena extends PaintballCommand {
             a = ArenaManager.getArenaManager().getArena(player);
             a.getName(); // used to see if it returns null
         }catch (NullPointerException e) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, "You are not in an arena.");
+            Messenger.error(player, "You are not in an arena.");
             return;
         }
 
         a.getAllPlayers().get(player).leaveArena();
-        Message.getMessenger().msg(player, true, ChatColor.GREEN, "Successfully left arena.");
+        Messenger.success(player, "Successfully left arena.");
     }
 
     public String getArgs() {

@@ -7,6 +7,7 @@ import me.synapz.paintball.events.*;
 import me.synapz.paintball.killcoin.KillCoinItem;
 import me.synapz.paintball.killcoin.KillCoinListeners;
 import me.synapz.paintball.metrics.Metrics;
+import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.*;
@@ -44,15 +45,17 @@ public class Paintball extends JavaPlugin implements PluginMessageListener, List
         - Listeners --
         - Permissions
         - More KilLCoins
-        - Config Options
-          - Stop changing teams - halfway done (need to implement) --
-          - Hits to die in config & scoreboard & under name -
+        - lives / hits under name --
+        - Make it so if the config values are not found it sets it in. - (Still does not work for things not in default
+        - Switch team wool numbers is wrong
+        - they can buy items by just clicking on them... make sure the item isnt in their inventory...
+        - on win set the scoreboard to the stopping timer
+        - Faster snowballs
 
         Non-Important Things
-        - TitleAPI Flicker
+        - TitleAPI Flicker--
         - Better ActionBar (It flickers and don't work sometimes)
         - Remove join signs on arena remove
-        - Command hovers
         - Fix command order
         - Better stat sign layout
         - Fix leaderboard command
@@ -60,8 +63,22 @@ public class Paintball extends JavaPlugin implements PluginMessageListener, List
         - Helmets don't show
         - Sometimes stats don't get set back on /reload
         - Team Pick bug where teams might not be an even number
+        - Join Cooldown
+        - If player location is under 0 then kill them?
+        - Only update arena's values if it is not in progress
 
+        Future Features
+        - Ranks
+        - More KillCoins
+        - Command hovers
+            - Arena hovers, (who is in the arena, setup, etc)
+        - Spectate Autojoin and signs
         */
+
+        // void die --
+        // exp time countdown not working and count at 0
+        // win message no prefix--
+        // can move items in inventory in game
 
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
@@ -171,6 +188,23 @@ public class Paintball extends JavaPlugin implements PluginMessageListener, List
                 player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60*20, 1));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60*20, 1));
                 player.setGameMode(GameMode.CREATIVE);
+            }
+        };
+
+        new KillCoinItem(Material.TNT, "Nuke", 1, true, "Click to kill everyone\n on the other team!", 0.0, 0, 0, "", Sound.ZOMBIE_REMEDY) {
+            @Override
+            public void onClickItem(PlayerInteractEvent event) {
+                Player player = event.getPlayer();
+                Arena arena = ArenaManager.getArenaManager().getArena(player);
+                ArenaPlayer arenaPlayer = (ArenaPlayer) arena.getPaintballPlayer(player);
+                Team safeTeam = arenaPlayer.getTeam();
+
+                for (ArenaPlayer gamePlayer : arena.getAllArenaPlayers()) {
+                    if (gamePlayer.getTeam() != safeTeam)
+                        arenaPlayer.kill(gamePlayer);
+                }
+                player.getInventory().remove(player.getItemInHand());
+                event.setCancelled(true);
             }
         };
 

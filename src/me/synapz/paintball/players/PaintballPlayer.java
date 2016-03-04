@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.Arrays;
+
 import static me.synapz.paintball.storage.Settings.PREFIX;
 
 public abstract class PaintballPlayer {
@@ -31,7 +33,7 @@ public abstract class PaintballPlayer {
         this.arena = a;
         this.team = t;
         this.player = p;
-
+        arena.addPlayer(this);
         initPlayer();
         loadScoreboard();
 
@@ -74,6 +76,7 @@ public abstract class PaintballPlayer {
         //if (!Settings.WOOL_HELMET)
           //  return;
         player.getInventory().setHelmet(Utils.makeWool(team.getChatColor() + team.getTitleName() + " Team", team.getDyeColor()));
+        player.updateInventory();
     }
 
     // Formats a message with the config, then sends a chat message to all
@@ -94,25 +97,18 @@ public abstract class PaintballPlayer {
     // Leaves an arena (removes their color names, restores information, removes from lists, and checks to see if to force stop (1 player left)
     public void leaveArena() {
         forceLeaveArena(); // puts items back (no messages)
-        arena.removePlayer(this); // removes player from all array lists
-
-        // check to see if there is only one player left, if there is everyone else left
-        if (arena.getAllArenaPlayers().size() == 1) {
-            arena.getAllArenaPlayers().get(0).leaveArena(); // get the last final player and make them leave (can't play alone)
-            arena.setState(Arena.ArenaState.WAITING);
-            arena.resetTeamScores();
-        } else if (arena.getAllArenaPlayers().size() <= 0) {
-            arena.setState(Arena.ArenaState.WAITING);
-            arena.resetTeamScores();
-        }
     }
 
     public void forceLeaveArena() {
+        arena.removePlayer(this); // removes player from all array lists
         Settings.PLAYERDATA.restorePlayerInformation(player);
         arena.updateSigns();
     }
 
     protected void loadScoreboard() {
         sb = Bukkit.getScoreboardManager().getNewScoreboard();
+
+        if (this instanceof ScoreboardPlayer)
+            ((ScoreboardPlayer) this).createScoreboard();
     }
 }

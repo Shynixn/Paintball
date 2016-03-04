@@ -2,7 +2,10 @@ package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.players.PaintballPlayer;
+import me.synapz.paintball.players.ScoreboardPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.scoreboard.Score;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,22 +26,24 @@ public class GameFinishCountdown extends PaintballCountdown {
     }
 
     public void onFinish() {
-        arena.updateSigns();
-        arena.setState(Arena.ArenaState.WAITING);
-        arena.forceLeaveArena();
+        arena.stopGame();
         arenasFinishing.remove(arena, this);
 
         for (ArenaPlayer player : arena.getAllArenaPlayers()) {
-            // TODO: put back old stored scoreboard
             player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }
     }
 
     public void onIteration() {
         arena.updateSigns();
-        for (ArenaPlayer player : arena.getAllArenaPlayers()) {
-            player.updateDisplayName();
-        }
+        arena.updateAllScoreboardTimes();
+    }
+
+    @Override
+    public void cancel() {
+        super.cancel();
+        arenasFinishing.remove(arena, this);
+        arena.updateSigns();
     }
 
     // if the arena is not in progress then just stop the counter

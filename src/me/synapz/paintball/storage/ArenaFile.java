@@ -1,17 +1,16 @@
 package me.synapz.paintball.storage;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Message;
-import me.synapz.paintball.Team;
+import me.synapz.paintball.*;
 import me.synapz.paintball.locations.SignLocation;
-import me.synapz.paintball.locations.TeamLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.*;
 
 import static org.bukkit.ChatColor.RED;
@@ -68,7 +67,9 @@ public class ArenaFile extends PaintballFile {
         List<String> valuesToSet = new ArrayList<String>() {{
             this.add("max-score");
             this.add("time");
+            this.add("lives");
             this.add("win-waiting-time");
+            this.add("kill-coin-shop");
             this.add("kill-coin-shop");
             this.add("safe-time");
             this.add("hits-to-kill");
@@ -125,7 +126,7 @@ public class ArenaFile extends PaintballFile {
                 // set the value of that arena
                 a.loadValues();
             }catch (Exception e) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), false, RED, "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
+                Messenger.error(Bukkit.getConsoleSender(), "Error loading " + arenaName + " in arenas.yml. Stacktrace: ");
                 e.printStackTrace();
             }
             ArenaManager.getArenaManager().getArenas().put(a.getName(), a);
@@ -134,27 +135,43 @@ public class ArenaFile extends PaintballFile {
 
     // TODO: put this stuff in the arenafile class
     public int loadInt(String item, Arena arena) {
-        if (fileConfig.getString(getConfigPath(item, arena)) != null && fileConfig.getString(getConfigPath(item, arena)).equalsIgnoreCase("default")) {
-            return Settings.getSettings().getConfig().getInt(getArenaConfigPath(item));
-        } else {
-            return fileConfig.getInt(getConfigPath(item, arena));
-        }
+        return (int) loadValue(item, arena);
     }
 
     public String loadString(String item, Arena arena) {
-        if (fileConfig.getString(getConfigPath(item, arena)) != null && fileConfig.getString(getConfigPath(item, arena)).equalsIgnoreCase("default")) {
-            return ChatColor.translateAlternateColorCodes('&', Settings.getSettings().getConfig().getString(getArenaConfigPath(item)));
-        } else {
-            return ChatColor.translateAlternateColorCodes('&', fileConfig.getString(getConfigPath(item, arena)));
-        }
+        return ChatColor.translateAlternateColorCodes('&', (String) loadValue(item, arena));
     }
 
     public boolean loadBoolean(String item, Arena arena) {
-        if (fileConfig.getString(getConfigPath(item, arena)) != null && fileConfig.getString(getConfigPath(item, arena)).equalsIgnoreCase("default")) {
-            return Settings.getSettings().getConfig().getBoolean(getArenaConfigPath(item));
-        } else {
-            return fileConfig.getBoolean(getConfigPath(item, arena));
+        return (boolean) loadValue(item, arena);
+    }
+
+    private Object loadValue(String item, Arena arena) {
+        Map<String, File> allFiles = new HashMap<String, File>(){{
+            for (File file : JavaPlugin.getProvidingPlugin(Paintball.class).getDataFolder().listFiles())
+                put(file.getName(), file);
+        }};
+
+        String path = getConfigPath(item, arena);
+        boolean notFoundInArena = fileConfig.get(path) == null;
+        boolean notFoundInConfig = YamlConfiguration.loadConfiguration(allFiles.get("config.yml")).get(getArenaConfigPath(item)) == null;
+
+        if (notFoundInArena) {
+            fileConfig.set(path, "default");
         }
+
+        /*
+            Since config.yml cannot be saved or it removes its format,
+            rename the config file and make a new one
+        */
+        if (notFoundInConfig) {
+            Settings.getSettings().backupConfig();
+        }
+
+        if (fileConfig.getString(path).equalsIgnoreCase("default"))
+            return Settings.getSettings().getConfig().get(getArenaConfigPath(item));
+        else
+            return fileConfig.get(path);
     }
 
     private void loadSigns() {

@@ -4,7 +4,6 @@ package me.synapz.paintball.commands.player;
 import me.synapz.paintball.*;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
-import org.bukkit.ChatColor;
 
 import static org.bukkit.ChatColor.RED;
 
@@ -15,7 +14,7 @@ public class Join extends TeamCommand {
         if (arena == null) {
             Arena arena = ArenaManager.getArenaManager().getBestArena();
             if (arena == null) {
-                Message.getMessenger().msg(player, false, RED, "No arenas are currently opened.");
+                Messenger.error(player, "No arenas are currently opened.");
                 return;
             }
             arena.joinLobby(player, null);

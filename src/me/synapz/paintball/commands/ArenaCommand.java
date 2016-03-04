@@ -2,7 +2,7 @@ package me.synapz.paintball.commands;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -29,7 +29,7 @@ public abstract class ArenaCommand extends PaintballCommand {
         this.arena = ArenaManager.getArenaManager().getArena(rawArenaName);
 
         if (arena == null && handleConditionsInSuperClass) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, rawArenaName + " is an invalid arena.");
+            Messenger.error(player, rawArenaName + " is an invalid arena.");
             return;
         }
 

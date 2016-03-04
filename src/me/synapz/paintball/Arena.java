@@ -3,32 +3,25 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.titleapi.TitleAPI;
 import com.google.common.base.Joiner;
-import me.synapz.paintball.countdowns.ArenaCountdown;
+import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
-import me.synapz.paintball.countdowns.PaintballCountdown;
+import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
-import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.players.LobbyPlayer;
-import me.synapz.paintball.players.PaintballPlayer;
-import me.synapz.paintball.players.SpectatorPlayer;
+import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
 
 import static me.synapz.paintball.locations.TeamLocation.*;
 import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.*;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.*;
 
 import java.util.*;
 
@@ -51,6 +44,8 @@ public class Arena {
     public int MONEY_PER_DEFEAT;
     public int SAFE_TIME;
     public int HITS_TO_KILL;
+    public int LIVES;
+    public int TEAM_SWITCH_COOLDOWN;
 
     public String ARENA_CHAT;
     public String SPEC_CHAT;
@@ -67,6 +62,8 @@ public class Arena {
     public boolean USE_ARENA_CHAT;
     public boolean DISABLE_ALL_COMMANDS;
     public boolean ALL_PAINTBALL_COMMANDS;
+    public boolean KILL_COINS_NEGATIVE;
+    public boolean MONEY_NEGATIVE;
 
     public List<String> BLOCKED_COMMANDS;
     public List<String> ALLOWED_COMMANDS;
@@ -258,7 +255,7 @@ public class Arena {
         if (setEnabled) {
             setState(ArenaState.WAITING);
         } else {
-            broadcastMessage(ChatColor.RED, toString() + RED + " has been disabled.", "");
+            broadcastMessage(toString() + RED + " has been disabled.");
             for (PaintballPlayer player : getAllPlayers().values())
                 player.forceLeaveArena();
             setState(ArenaState.DISABLED);
@@ -327,7 +324,7 @@ public class Arena {
                 return;
             }
             Sign sign = (Sign) loc.getBlock().getState();
-            int counter = (int) (ArenaCountdown.tasks.containsKey(this) ? ArenaCountdown.tasks.get(this).getCounter() : GameCountdown.gameCountdowns.containsKey(this) ? GameCountdown.gameCountdowns.get(this).getCounter() : GameFinishCountdown.arenasFinishing.containsKey(this) ? (int) GameFinishCountdown.arenasFinishing.get(this).getCounter() : 0);
+            int counter = Utils.getCurrentCounter(this);
             sign.setLine(0, prefix); // in case the prefix changes
             sign.setLine(1, getName()); // in case they rename it
             sign.setLine(2, getStateAsString() + " " + (counter == 0 ? "" : counter + "s")); // TODO: put times here ;)
@@ -352,17 +349,20 @@ public class Arena {
     public void forceStart(boolean toStart) {
         if (toStart) {
             // in case there are any current countdown tasks in that arena (lobby countdown) we want to stop it
-            if (ArenaCountdown.tasks.get(this) != null)
-                ArenaCountdown.tasks.get(this).cancel();
+            if (LobbyCountdown.tasks.get(this) != null)
+                LobbyCountdown.tasks.get(this).cancel();
+            if (ArenaStartCountdown.tasks.get(this) != null)
+                ArenaStartCountdown.tasks.get(this).cancel();
             startGame();
         } else {
             setState(ArenaState.WAITING);
-            this.broadcastMessage(RED, this.toString() + RED + " has been force stopped.", "");
+            this.broadcastMessage(this.toString() + RED + " has been force stopped.");
             this.forceLeaveArena();
         }
     }
 
     // Put the arena to string ex: Arena Syn, where Syn is the arena name. At the end it is green so if you don't want it to be green change it after
+    // TODO: chat color support
     public String toString() {
         return "Arena " + GRAY + this.getName() + GREEN;
     }
@@ -382,39 +382,29 @@ public class Arena {
         HashMap<Player, Location> startLocs = new HashMap<>();
         setState(ArenaState.STARTING);
         for (LobbyPlayer p : lobby) {
-            // p.removeScoreboard();
             allPlayers.remove(p.getPlayer(), p);
             ArenaPlayer player = new ArenaPlayer(this, p.getTeam(), p.getPlayer());
             startLocs.put(player.getPlayer(), player.getPlayer().getLocation());
         }
         lobby.removeAll(lobby);
-        new ArenaCountdown(ARENA_COUNTDOWN, ARENA_INTERVAL, ARENA_NO_INTERVAL, this, "Paintball starting in " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Starting\n" + GRAY + "%time%" + GREEN + " seconds", GREEN + "Game started!", startLocs, false);
+        new ArenaStartCountdown(ARENA_COUNTDOWN, this, startLocs);
     }
     
     // Used for server reload and arena force stops, so no messages will be sent
     public void stopGame() {
         setState(ArenaState.WAITING);
+        this.forceLeaveArena();
+    }
 
-        for (PaintballPlayer player : allPlayers.values()) {
+    public void forceLeaveArena() {
+        List<PaintballPlayer> copiedList = new ArrayList<>(allPlayers.values());
+        for (PaintballPlayer player : copiedList)
             player.forceLeaveArena();
-        }
         allPlayers = new HashMap<>();
         lobby = new ArrayList<>();
         spectators = new ArrayList<>();
         inGame = new ArrayList<>();
-
-        this.resetTeamScores();
-    }
-
-    public void forceLeaveArena() {
-        setState(ArenaState.WAITING);
-
-        for (ArenaPlayer player : inGame) {
-            player.forceLeaveArena();
-            allPlayers.remove(player.getPlayer(), player);
-        }
-
-        inGame = new ArrayList<>();
+        updateSigns();
         this.resetTeamScores();
     }
 
@@ -423,34 +413,48 @@ public class Arena {
         if (BROADCAST_WINNER) {
             // TODO: broadcast to server / network (except for those in game, they get a different message)
         }
+
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
+            Player player = arenaPlayer.getPlayer();
             if (teams.contains(arenaPlayer.getTeam()))
                 arenaPlayer.setWon();
             String spaces = Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(20);
             String title = THEME + " Games Stats ";
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, false, spaces + title + spaces);
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, false, (arenaPlayer.getMoneyEarned() < 0 ? "-" : "") + "$" + Math.abs(arenaPlayer.getMoneyEarned()), "Kills: " + arenaPlayer.getKills(), "Deaths: " + arenaPlayer.getDeaths(), "Killstreak: " + arenaPlayer.getKillStreak(), "KD: " + arenaPlayer.getKd(), "Your team " + (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost")); // TODO: get Vault currency instead of $ and check to make sure vault is enabled
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, false, spaces + Utils.makeSpaces(title +  "123") + spaces);
+            Messenger.msg(player, spaces + title + spaces,
+                    (arenaPlayer.getMoney() < 0 ? "-" : "") + "$" + Math.abs(arenaPlayer.getMoney()),
+                    "Kills: " + arenaPlayer.getKills(),
+                    "Deaths: " + arenaPlayer.getDeaths(),
+                    "Killstreak: " + arenaPlayer.getKillStreak(),
+                    "KD: " + arenaPlayer.getKd(),
+                    "Your team " + (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost"),
+                    spaces + Utils.makeSpaces(title +  "123") + spaces);
         }
 
         StringBuilder formattedWinnerList = new StringBuilder();
         for (Team winningTeam : teams) {
             formattedWinnerList.append(winningTeam.getChatColor()).append(winningTeam.getTitleName()).append(Settings.THEME).append(", ");
         }
-        String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", ")); // TODO: might throw out of bounds exc?
-        broadcastMessage(ChatColor.GREEN, (teams.size() == 1 ? "The " + list + " team has won!": "There was a tie between " + formattedWinnerList.toString()), ""); // TODO: some kind of title message?
+        String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", "));
+        broadcastMessage((teams.size() == 1 ? "The " + list + " team won!": "There was a tie between " + formattedWinnerList.toString()));
+        for (PaintballPlayer player : getAllPlayers().values())
+            TitleAPI.sendTitle(player.getPlayer(), 20, 40, 20, THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost"): formattedWinnerList.toString()));
         new GameFinishCountdown(WIN_WAIT_TIME, this);
     }
 
     // Broadcasts a message to the whole arena
-    public void broadcastMessage(ChatColor color, String chatMessage, String screenMessage) {
-        for (PaintballPlayer pbPlayer : allPlayers.values()) {
-            if (!screenMessage.equals("") && TITLE_API) {
-                String[] messages = screenMessage.split("\n");
-                // TODO: get better numbers for fad in out etc
-                TitleAPI.sendTitle(pbPlayer.getPlayer(), 0, 10, 10, messages.length == 1 ? PREFIX : messages[0], messages.length == 1 ? screenMessage : messages[1]);
-            }
-            pbPlayer.getPlayer().sendMessage(PREFIX + color + chatMessage);
+    public void broadcastMessage(String... chatMessage) {
+        for (Player player : allPlayers.keySet()) {
+            for (String msg : chatMessage)
+                player.sendMessage(PREFIX + msg);
+        }
+    }
+
+    public void broadcastTitle(String header, String footer, int fadeIn, int stay, int fadeOut) {
+        if (!TITLE_API)
+            return;
+
+        for (Player player : allPlayers.keySet()) {
+            TitleAPI.sendTitle(player, fadeIn, stay, fadeOut, header, footer);
         }
     }
 
@@ -574,6 +578,20 @@ public class Arena {
         return allPlayers;
     }
 
+    public void updateAllScoreboard() {
+        for (PaintballPlayer player : getAllPlayers().values()) {
+            if (player instanceof ScoreboardPlayer)
+                ((ScoreboardPlayer) player).updateScoreboard();
+        }
+    }
+
+    public void updateAllScoreboardTimes() {
+        for (PaintballPlayer player : getAllPlayers().values()) {
+            if (player instanceof ScoreboardPlayer)
+                ((ScoreboardPlayer) player).updateDisplayName();
+        }
+    }
+
     // Saves arena file along with other checks
     public void advSave() {
         ARENA.saveFile();
@@ -611,6 +629,8 @@ public class Arena {
         MONEY_PER_DEFEAT            = ARENA.loadInt("Rewards.Money.per-defeat", this);
         SAFE_TIME                   = ARENA.loadInt("safe-time", this);
         HITS_TO_KILL                = ARENA.loadInt("hits-to-kill", this);
+        LIVES                       = ARENA.loadInt("lives", this);
+        TEAM_SWITCH_COOLDOWN        = ARENA.loadInt("team-switch-cooldown", this);
 
         PER_TEAM_CHAT_LOBBY        = ARENA.loadBoolean("Join-Lobby.per-team-chat", this);
         PER_TEAM_CHAT_ARENA        = ARENA.loadBoolean("Join-Arena.per-team-chat", this);
@@ -622,6 +642,8 @@ public class Arena {
         GIVE_TEAM_SWITCHER         = ARENA.loadBoolean("Join-Lobby.give-team-switcher", this);
         USE_ARENA_CHAT             = ARENA.loadBoolean("Chat.use-arena-chat", this);
         BROADCAST_WINNER           = ARENA.loadBoolean("Chat.broadcast-winner", this);
+        KILL_COINS_NEGATIVE        = ARENA.loadBoolean("Rewards.Kill-Coins.can-be-negative", this);
+        MONEY_NEGATIVE             = ARENA.loadBoolean("Rewards.Money.can-be-negative", this);
 
         DISABLE_ALL_COMMANDS       = config.getBoolean("Commands.disable-all-commands");
         ALL_PAINTBALL_COMMANDS     = config.getBoolean("Commands.all-paintball-commands");

@@ -1,7 +1,7 @@
 package me.synapz.paintball.commands.arena;
 
 
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Utils;
@@ -16,7 +16,7 @@ public class Steps extends PaintballCommand {
         Arena arena = ArenaManager.getArenaManager().getArena(args[2]);
 
         if (Utils.nullCheck(args[2], arena, player)) {
-            Message.getMessenger().msg(player, false, ChatColor.GRAY, arena.getSteps());
+            Messenger.info(player, ChatColor.GRAY + arena.getSteps());
         }
     }
 

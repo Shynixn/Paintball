@@ -1,6 +1,6 @@
 package me.synapz.paintball.commands.arena;
 
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -17,7 +17,7 @@ public class SetLocation extends TeamCommand {
         Location spawn = player.getLocation();
 
         if (type == null) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, "Value " + args[3] + " is not a valid type.", "Choose either <spawn/lobby>");
+            Messenger.error(player, "Value " + args[3] + " is not a valid type.", "Choose either <spawn/lobby>");
             return;
         }
 
@@ -25,11 +25,11 @@ public class SetLocation extends TeamCommand {
             for (Team t : arena.getArenaTeamList()) {
                 arena.setLocation(type, spawn, t);
             }
-            Message.getMessenger().msg(player, false, ChatColor.GREEN, "Set all " + arena.getName() + "'s " + (type.toString().toLowerCase().equals("spawn") ? "arena" : "lobby") + " spawns to your location." + Settings.SECONDARY, arena.getSteps());
+            Messenger.success(player, "Set all " + arena.getName() + "'s " + (type.toString().toLowerCase().equals("spawn") ? "arena" : "lobby") + " spawns to your location." + Settings.SECONDARY, arena.getSteps());
             return;
         }
         arena.setLocation(type, spawn, team);
-        Message.getMessenger().msg(player, false, ChatColor.GREEN, "Set " + arena.getName() + "'s " + type.toString().toLowerCase() + " spawn to your location: " + Settings.SECONDARY + team.getSpawnPointsSize(type), arena.getSteps());
+        Messenger.success(player, "Set " + arena.getName() + "'s " + type.toString().toLowerCase() + " spawn to your location: " + Settings.SECONDARY + team.getSpawnPointsSize(type), arena.getSteps());
     }
 
     public String getArgs() {
@@ -38,7 +38,7 @@ public class SetLocation extends TeamCommand {
     }
 
     public String getPermission() {
-        return "paintball.arena.setteamlocation";
+        return "paintball.arena.setlocation";
     }
 
     public String getName() {

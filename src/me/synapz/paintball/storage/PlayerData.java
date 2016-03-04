@@ -2,7 +2,7 @@ package me.synapz.paintball.storage;
 
 
 import me.synapz.paintball.ExperienceManager;
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -17,7 +17,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
@@ -56,9 +55,9 @@ public final class PlayerData extends PaintballFile {
     public void saveFile() {
         if (SQL) {
             try {
-                this.removeStats(fileConfig).save(file);
+                this.removeStats(fileConfig).save(this);
             }catch (Exception exc) {
-                Message.getMessenger().msg(Bukkit.getConsoleSender(), true, ChatColor.RED, "Error saving SQL. Check config.yml's SQL settings. Falling back to playerdata.yml's stats.");
+                Messenger.error(Bukkit.getConsoleSender(), "Error saving SQL. Check config.yml's SQL settings. Falling back to playerdata.yml's stats.");
                 exc.printStackTrace();
             }
         } else {
@@ -206,7 +205,7 @@ public final class PlayerData extends PaintballFile {
         int end = current + 8;
         // TODO: 11/20/15  add prefix
         for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
-            Message.getMessenger().msg(player, false, false, "#" + current + " - " + Bukkit.getPlayer(UUID.fromString(uuid)) == null ? Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() : Bukkit.getPlayer(UUID.fromString(uuid)).getName() + " Many: " + getPlayerStats(UUID.fromString(uuid)).get(type));
+            Messenger.info(player, "#" + current + " - " + Bukkit.getPlayer(UUID.fromString(uuid)) == null ? Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() : Bukkit.getPlayer(UUID.fromString(uuid)).getName() + " Many: " + getPlayerStats(UUID.fromString(uuid)).get(type));
         }
     }
 
@@ -283,10 +282,10 @@ public final class PlayerData extends PaintballFile {
 
     // Restores all of the player's settings, then sets the info to null
     public void restorePlayerInformation(Player player) {
+        Utils.stripValues(player);
         ExperienceManager exp = new ExperienceManager(player);
         String id = player.getName();
 
-        player.getInventory().clear();
         player.teleport(locations.get(id));
         player.getInventory().setContents(inventories.get(id));
         player.getInventory().setArmorContents(armour.get(id));

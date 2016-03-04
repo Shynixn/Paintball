@@ -4,6 +4,8 @@ import me.synapz.paintball.Arena;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.players.PaintballPlayer;
+import me.synapz.paintball.players.ScoreboardPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -64,9 +66,13 @@ public class GameCountdown extends PaintballCountdown {
 
     public void onIteration() {
         a.updateSigns();
-        for (ArenaPlayer player : a.getAllArenaPlayers()) {
-            player.updateDisplayName();
-        }
+        a.updateAllScoreboardTimes();
+    }
+
+    @Override
+    public void cancel() {
+        super.cancel();
+        a.updateSigns();
     }
 
     public boolean stop() {

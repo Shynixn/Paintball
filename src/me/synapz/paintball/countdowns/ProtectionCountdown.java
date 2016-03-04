@@ -2,17 +2,14 @@ package me.synapz.paintball.countdowns;
 
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
 import me.synapz.paintball.Arena;
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.players.ArenaPlayer;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProtectionCountdown extends PaintballCountdown {
-
-    // TODO: make classes final
 
     public static Map<String, ProtectionCountdown> godPlayers = new HashMap<>();
 
@@ -27,7 +24,7 @@ public class ProtectionCountdown extends PaintballCountdown {
         this.arenaPlayer = player;
         this.player = player.getPlayer();
 
-        ActionBarAPI.sendActionBar(this.player, Message.PROTECTION_TIME.replace("%time%", String.valueOf(counter))); // TODO: last param in ticks or seconds?
+        ActionBarAPI.sendActionBar(this.player, Messenger.PROTECTION_TIME.replace("%time%", String.valueOf(counter))); // TODO: last param in ticks or seconds?
         if (!godPlayers.keySet().contains(name)) {
             godPlayers.put(name, this);
         }
@@ -35,13 +32,13 @@ public class ProtectionCountdown extends PaintballCountdown {
 
     public void onFinish() {
         godPlayers.remove(name, this);
-        Message.getMessenger().msg(this.player, false, false, Message.PROTECTION_END);
-        ActionBarAPI.sendActionBar(this.player, Message.PROTECTION_END, 240);
+        Messenger.msg(this.player, Messenger.PROTECTION_END);
+        ActionBarAPI.sendActionBar(this.player, Messenger.PROTECTION_END, 240);
     }
 
     // Called every iteration of run()
     public void onIteration() {
-        String protectionMessage = Message.PROTECTION_TIME.replace("%time%", String.valueOf((int) counter-1));
+        String protectionMessage = Messenger.PROTECTION_TIME.replace("%time%", String.valueOf((int) counter-1));
         ActionBarAPI.sendActionBar(this.player, protectionMessage); // TODO: last param in ticks or seconds?
     }
 

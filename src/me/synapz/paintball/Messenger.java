@@ -4,86 +4,87 @@ package me.synapz.paintball;
 import com.connorlinfoot.titleapi.TitleAPI;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
+
 import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.*;
 
-public class Message {
+public class Messenger {
     
-    // TODO remove static instance, it's really not needed...
     public static final String NO_PERMS = "You don't have access to that command!";
     public static final String SUFFIX = SECONDARY + " » ";
     public static final String EXPIRATION_TIME = createPrefix("Expiration") + SECONDARY + "%time%" + THEME + " seconds";
     public static final String EXPIRATION_END = createPrefix("Expiration") + SECONDARY + "Item %item% has expired";
     public static final String PROTECTION_END = createPrefix("Protection") + SECONDARY + "Protection has expired";
     public static final String PROTECTION_TIME = createPrefix("Protection") + SECONDARY + "%time% " + THEME + "seconds";
-
-    private static Message instance = new Message();
-    
-    public static Message getMessenger() {
-        return instance;
+    public static final String TEAM_SWITCH_TIME = createPrefix("Team Switch") + SECONDARY + "%time%" + THEME + " seconds";
+    public static final String TEAM_SWITCH_END = createPrefix("Team Switch") + SECONDARY + "Team switching unlocked";
+    public static final String TEAM_SWITCH_ERROR = createPrefix("Team Switch") + SECONDARY + "Wait for the team switch cooldown to end.";
+    public static void error(CommandSender sender, String... msg) {
+        for (String str : msg)
+            info(sender, RED + str);
     }
 
-    // Message a player
-    // TODO: remove duplicated code
-    public void msg(CommandSender sender, boolean titleAPI, ChatColor color, String... msg){
-        String[] messages = msg;
-        
-        for (String string : messages) {
-            if (titleAPI && TITLE_API && sender instanceof Player) {
-                TitleAPI.sendTitle((Player)sender, 10, 10, 10, PREFIX, color + string);
-            }
-            sender.sendMessage(PREFIX + color + string);
-        }
+    public static void success(CommandSender sender, String... msg) {
+        for (String str : msg)
+            info(sender, GREEN + str);
     }
 
-    // Message a player with or without a prefix
-    public void msg(CommandSender sender, boolean prefix, boolean titleAPI, String... msg){
-        String[] messages = msg;
-        String strPrefix = prefix ? PREFIX : "";
-        for (String string : messages) {
-            if (titleAPI && TITLE_API && sender instanceof Player) {
-                TitleAPI.sendTitle((Player)sender, 10, 10, 10, PREFIX, string);
-            }
-            sender.sendMessage(strPrefix + string);
-        }
+    public static void info(CommandSender sender, String...msg) {
+        for (String str : msg)
+            sender.sendMessage(Settings.PREFIX + Settings.THEME + str);
+    }
+
+    public static void msg(CommandSender sender, String...msg) {
+        for (String str : msg)
+            sender.sendMessage(str);
+    }
+
+    public static void titleMsg(CommandSender sender, boolean inText, String msg) {
+        if (inText)
+            info(sender, msg);
+
+        if (TITLE_API && sender instanceof Player)
+            TitleAPI.sendTitle((Player)sender, 10, 10, 10, PREFIX, msg);
     }
 
     // Checks to see if a player has a permission, returns true if they do false if they don't
-    public boolean permissionValidator(Player player, String permission) {
+    public static boolean permissionValidator(Player player, String permission) {
         if (player.hasPermission(permission)) {
             return true;
         } else {
-            msg(player, false, RED, NO_PERMS);
+            error(player, NO_PERMS);
             return false;
         }
     }
 
     // Checks to see if a player has a permission to break/create a sign
     // TODO: make this better!!
-    public boolean signPermissionValidator(Player player, String permission) {
+    public static boolean signPermissionValidator(Player player, String permission) {
         if (player.hasPermission(permission)) {
             return true;
         } else {
-            msg(player, false, RED, "You don't have access to create that sign!");
+            error(player, "You don't have access to create that sign!");
             return false;
         }
     }
 
     // Sends a message if there is some type of wrong usage
-    public void wrongUsage(PaintballCommand command, Player player, Usage usage) {
+    public static void wrongUsage(PaintballCommand command, Player player, Usage usage) {
         if (usage.equals(Usage.TO_MANY_ARGS)) {
-            Message.getMessenger().msg(player, false, RED, "To many arguments!", command.getCorrectUsage());
+            error(player, "To many arguments!", command.getCorrectUsage());
         } else {
-            Message.getMessenger().msg(player, false, RED, "Not enough arguments!", command.getCorrectUsage());
+            error(player, "Not enough arguments!", command.getCorrectUsage());
         }
     }
 
     // Get's the help associated with the command type
-    public String getHelpTitle(CommandType type) {
+    public static String getHelpTitle(CommandType type) {
         String title = "Paintball";
         if (type == CommandType.ADMIN) {
             title += " Admin";

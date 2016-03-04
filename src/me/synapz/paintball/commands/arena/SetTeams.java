@@ -20,16 +20,16 @@ public class SetTeams extends ArenaCommand {
         List<String> added = new ArrayList<String>();
             // The amount of teams have to be greater than or equal to the max, this will only check if min was never set
         if (colors.size() > arena.getMax() && arena.getMax() != 0) {
-            Message.getMessenger().msg(player, false, RED, "The amount of teams (" + GRAY + colors.size()+ RED + ") must be greater than or equal to the max amount of players (" + GRAY + arena.getMax() + RED + ")!");
+            Messenger.error(player, "The amount of teams (" + GRAY + colors.size()+ RED + ") must be greater than or equal to the max amount of players (" + GRAY + arena.getMax() + RED + ")!");
             return;
         }
         if (colors.size() == 1) {
-            Message.getMessenger().msg(player, false, RED, arena.toString() + RED + " cannot have only one team!");
+            Messenger.error(player, arena.toString() + RED + " cannot have only one team!");
             return;
         }
         for (String color : colors) {
             if (!Team.DEFAULT_NAMES.containsKey(color)) {
-                Message.getMessenger().msg(player, false, RED, "Error parsing ChatColors. For example use,", "Usage: /pb admin setteam " + arena.getName() + " &1,&2,&6,&a");
+                Messenger.error(player, "Error parsing ChatColors. For example use,", "Usage: /pb admin setteam " + arena.getName() + " &1,&2,&6,&a");
                 return;
             }
             color = translateAlternateColorCodes('&', color);
@@ -37,7 +37,7 @@ public class SetTeams extends ArenaCommand {
             if (added.contains(color)) {
                 if (colors.size() == 2) {
                     // when two of the same teams are added as &1,&1
-                    Message.getMessenger().msg(player, false, RED, "Cannot have two of the same color.");
+                    Messenger.error(player, "Cannot have two of the same color.");
                     return;
                 }
                 // get out of this iteration of the loop this way the duplicated team doesn't get added
@@ -53,7 +53,7 @@ public class SetTeams extends ArenaCommand {
             out += t.getTitleName() + ", ";
         }
         out = out.substring(0, out.lastIndexOf(","));
-        Message.getMessenger().msg(player, false, GREEN, arena.toString() + "'s teams has been set to " + out + "!", arena.getSteps());
+        Messenger.success(player, arena.toString() + "'s teams has been set to " + out + "!", arena.getSteps());
     }
 
     public String getArgs() {
@@ -62,7 +62,7 @@ public class SetTeams extends ArenaCommand {
     }
 
     public String getPermission() {
-        return "paintball.arena.setteam";
+        return "paintball.arena.team";
     }
 
     public String getName() {

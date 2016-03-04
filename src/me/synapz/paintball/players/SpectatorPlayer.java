@@ -1,29 +1,47 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.Arena;
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
+import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.ScoreboardLine;
-import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.locations.TeamLocation;
-import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import static org.bukkit.ChatColor.*;
 import static me.synapz.paintball.storage.Settings.*;
 
-public final class SpectatorPlayer extends PaintballPlayer {
+public final class SpectatorPlayer extends PaintballPlayer implements ScoreboardPlayer {
 
+    private boolean asArenaPlayer;
+    private PaintballScoreboard sb;
+
+    /*
+    This constructor will be used when a player types /pb spectate.
+    Player -> SpectatorPlayer
+     */
     public SpectatorPlayer(Arena a, Player p) {
-        super(a, null, p);
+        super(a, new Team(a), p);
+        this.asArenaPlayer = false;
+        player.teleport(arena.getSpectatorLocation());
+    }
+
+    /*
+    When a player dies in the arena, they will be sent to spectate 3 blocks above their death spot.
+    ArenaPlayer -> SpectatorPlayer
+     */
+    public SpectatorPlayer(ArenaPlayer arenaPlayer) {
+        super(arenaPlayer.getArena(), new Team(arenaPlayer.getArena()), arenaPlayer.getPlayer());
+        this.asArenaPlayer = true;
+        player.teleport(player.getLocation().add(0, 3, 0));
     }
 
     protected void initPlayer() {
-        // TODO: set to arena spectate? invisable? idk
         PLAYERDATA.savePlayerInformation(player);
-        arena.addPlayer(this);
-        player.teleport(arena.getSpectatorLocation());
+
         Utils.stripValues(player);
         giveItems();
         displayMessages();
@@ -57,7 +75,29 @@ public final class SpectatorPlayer extends PaintballPlayer {
     }
 
     private void displayMessages() {
-        Message.getMessenger().msg(player, true, true, GREEN + "You are now spectating!");
+        Messenger.titleMsg(player, true, GREEN + "You are now spectating!");
+    }
+
+    @Override
+    public void createScoreboard() {
+        sb = new PaintballScoreboard(this, 1, "Spectator:")
+                .addTeams(true)
+                .build();
+        player.getScoreboard().getTeam(team.getTitleName()).setCanSeeFriendlyInvisibles(true);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
+        arena.updateAllScoreboard();
+    }
+
+    @Override
+    public void updateScoreboard() {
+        if (sb != null)
+            sb.reloadTeams(true);
+    }
+
+    @Override
+    public void updateDisplayName() {
+        if (sb != null)
+            sb.setDisplayNameCounter(Utils.getCurrentCounter(arena));
     }
 }
 

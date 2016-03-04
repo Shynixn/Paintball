@@ -1,14 +1,16 @@
 package me.synapz.paintball;
 
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
-import me.synapz.paintball.countdowns.ArenaCountdown;
+import me.synapz.paintball.countdowns.ArenaStartCountdown;
+import me.synapz.paintball.countdowns.GameCountdown;
+import me.synapz.paintball.countdowns.GameFinishCountdown;
+import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Wool;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 
 import java.sql.Connection;
@@ -20,17 +22,6 @@ import static org.bukkit.ChatColor.RED;
 
 public class Utils {
 
-    // Gets the inventory list of a player. Specifically filters out all null items
-    public static List<ItemStack> getInventoryList(Player p, boolean isArmourList) {
-        ItemStack[] list = isArmourList ? p.getInventory().getArmorContents() : p.getInventory().getContents();
-        List<ItemStack> returnList = new ArrayList<ItemStack>();
-        for (ItemStack item : list) {
-            if (item != null)
-                returnList.add(item);
-        }
-        return returnList;
-    }
-
     // Checks to see if the arena is null
     public static boolean nullCheck(String arenaName, Arena arena, Player sender) {
         if (arena == null) {
@@ -38,26 +29,10 @@ public class Utils {
             if (arenaName.isEmpty()) {
                 error = "Enter an arena on line 3.";
             }
-            Message.getMessenger().msg(sender, false, ChatColor.RED, error);
+            Messenger.error(sender, error);
             return false;
         } else {
             return true;
-        }
-    }
-
-    // Gets the game mode from an int
-    public static GameMode getLastGameMode(int gamemodeValue) {
-        switch (gamemodeValue) {
-            case 0:
-                return GameMode.SURVIVAL;
-            case 1:
-                return GameMode.CREATIVE;
-            case 2:
-                return GameMode.ADVENTURE;
-            case 3:
-                return GameMode.SPECTATOR;
-            default: // in case Minecraft adds new GameMode, don't want errors in console.
-                return GameMode.SURVIVAL;
         }
     }
 
@@ -96,7 +71,7 @@ public class Utils {
 
     public static String makeHealth(int health) {
         StringBuilder builder = new StringBuilder();
-        for (int i = health; i != 0; i--)
+        for (int i = health; i > 0; i--)
             builder.append("●");
         return builder.toString();
     }
@@ -155,8 +130,9 @@ public class Utils {
         return null;
     }
 
-    // Divides two numbers safely
-    // TODO: negative KD?
+    /*
+    Safely divides two numbers since the denominator can never be 0
+     */
     public static double divide(int numerator, int denominator) {
         if (denominator == 0)
             return numerator;
@@ -180,11 +156,14 @@ public class Utils {
             statement.executeQuery();
         } catch (Exception e) {
             Settings.SQL = false;
-            Message.getMessenger().msg(Bukkit.getConsoleSender(), true, ChatColor.RED, "Error starting SQL. Falling back to storing values in playerdata.yml. Check config.yml's SQL settings.");
+            Messenger.error(Bukkit.getConsoleSender(), "Error starting SQL. Falling back to storing values in playerdata.yml. Check config.yml's SQL settings.");
             e.printStackTrace();
         }
     }
 
+    /*
+    Creates a specific amount of spaces based on set amount of spaces
+     */
     public static String makeSpaces(int spaces) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < spaces; i++) {
@@ -193,38 +172,67 @@ public class Utils {
         return builder.toString();
     }
 
+    /*
+    Creates a specific amount of spaces of the length of a word
+     */
     public static String makeSpaces(String fromString) {
         return makeSpaces(fromString.length());
     }
 
+    /*
+    Removes an action bar if it is in a player
+     */
     public static void removeActionBar(Player player) {
         ActionBarAPI.sendActionBar(player, "");
     }
 
+    /*
+    Checks to see if a player can join if
+    - Already in the arena
+    - Arena is not full
+    - The state is not waiting
+     */
     public static boolean canJoin(Player player, Arena arena) {
         Arena.ArenaState state = arena.getState();
 
         for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
             if (a.containsPlayer(player)) {
-                Message.getMessenger().msg(player, false, ChatColor.RED, "You are already in " + a.toString() + ChatColor.RED + ".");
+                Messenger.error(player, "You are already in " + a.toString() + ChatColor.RED + ".");
                 return false;
             }
         }
 
         // Checks to see if the arena is full
         if (arena.getLobbyPlayers().size() == arena.getMax() && arena.getMax() > 0) {
-            Message.getMessenger().msg(player, false, RED, arena.toString() + RED + " is full!");
+            Messenger.error(player, arena.toString() + RED + " is full!");
             return false;
         }
 
         if (state == Arena.ArenaState.WAITING) {
             return true;
         } else {
-            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " is " + state.toString().toLowerCase() + ".");
+            Messenger.error(player, arena.toString() + ChatColor.RED + " is " + state.toString().toLowerCase() + ".");
             return false;
         }
     }
 
+    public static int getCurrentCounter(Arena arena) {
+        return (int) (ArenaStartCountdown.tasks.containsKey(arena) ? ArenaStartCountdown.tasks.get(arena).getCounter() : LobbyCountdown.tasks.containsKey(arena) ? LobbyCountdown.tasks.get(arena).getCounter() : GameCountdown.gameCountdowns.containsKey(arena) ? GameCountdown.gameCountdowns.get(arena).getCounter() : GameFinishCountdown.arenasFinishing.containsKey(arena) ? (int) GameFinishCountdown.arenasFinishing.get(arena).getCounter() : 0);
+
+    }
+
+    /*
+    Removes all values from a player including
+    - EXP Values
+    - Inventory
+    - Armour Contents
+    - GameMode
+    - Flying
+    - Food
+    - Fire ticks
+    - Health
+    - Potion effects
+     */
     public static void stripValues(Player player) {
         ExperienceManager exp = new ExperienceManager(player);
         player.getInventory().clear();

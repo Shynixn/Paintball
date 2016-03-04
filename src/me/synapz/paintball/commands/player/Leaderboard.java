@@ -1,7 +1,7 @@
 package me.synapz.paintball.commands.player;
 
 
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.StatType;
@@ -24,7 +24,7 @@ public class Leaderboard extends PaintballCommand {
                 statType = type;
         }
         if (statType == null) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, this.getCorrectUsage(), args[1] + " is an invalid statistic type.", "Choose either " + StatType.getReadableList());
+            Messenger.error(player, this.getCorrectUsage(), args[1] + " is an invalid statistic type.", "Choose either " + StatType.getReadableList());
             return;
         }
 
@@ -32,7 +32,7 @@ public class Leaderboard extends PaintballCommand {
         try {
             page = Integer.parseInt(args[2]);
         } catch (NumberFormatException exc) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, this.getCorrectUsage(), "Please specify a real number as the page.");
+            Messenger.error(player, this.getCorrectUsage(), "Please specify a real number as the page.");
             return;
         }
 

@@ -1,11 +1,9 @@
 package me.synapz.paintball.events;
 
 import me.synapz.paintball.Arena;
-import me.synapz.paintball.Arena.ArenaState;
 import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Utils;
-import me.synapz.paintball.commands.admin.Info;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Material;
@@ -18,11 +16,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 
 import static me.synapz.paintball.storage.Settings.THEME;
 import static me.synapz.paintball.storage.Settings.WEBSITE;
@@ -38,7 +31,7 @@ public class JoinSigns implements Listener {
             return;
 
         if (!e.getLine(1).equalsIgnoreCase("autojoin") && !e.getLine(1).equalsIgnoreCase("join")) {
-            Message.getMessenger().msg(e.getPlayer(), false, RED, "Wrong syntax for creating Paintball sign.", "For more information: " + WEBSITE);
+            Messenger.error(e.getPlayer(), "Wrong syntax for creating Paintball sign.", "For more information: " + WEBSITE);
             e.getBlock().breakNaturally();
             return;
         }
@@ -46,7 +39,7 @@ public class JoinSigns implements Listener {
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
         // For Auto joining
         if (e.getLine(1).equalsIgnoreCase("autojoin")) {
-            Message.getMessenger().msg(e.getPlayer(), false, GREEN, "Auto Join sign successfully created!");
+            Messenger.success(e.getPlayer(), "Auto Join sign successfully created!");
             e.setLine(0, prefix);
             e.setLine(1, GREEN + "Auto Join");
             e.setLine(2, "");
@@ -63,7 +56,7 @@ public class JoinSigns implements Listener {
                 e.setLine(1, a.getName());
                 e.setLine(2, a.getStateAsString());
                 e.setLine(3, "0/" + (a.getMax() <= 0 ? "0" : a.getMax()));
-                Message.getMessenger().msg(e.getPlayer(), false, GREEN, a + " join sign successfully created!");
+                Messenger.success(e.getPlayer(), a + " join sign successfully created!");
                 new SignLocation(a, e.getBlock().getLocation(), SignLocation.SignLocations.JOIN);
             } else {
                 e.getBlock().breakNaturally();
@@ -82,14 +75,14 @@ public class JoinSigns implements Listener {
         if (!sign.getLine(0).contains("Paintball") || sign.getLine(1) == null) return;
 
         if (ArenaManager.getArenaManager().getArena(player) != null) {
-            Message.getMessenger().msg(player, false, RED, "You are already in an arena!");
+            Messenger.error(player, "You are already in an arena!");
             return;
         }
         if (sign.getLine(1).equals(GREEN + "Auto Join")) {
             // TODO: check if this works
             Arena arenaToJoin = ArenaManager.getArenaManager().getBestArena();
             if (arenaToJoin == null) {
-                Message.getMessenger().msg(player, false, RED, "No arenas are currently opened.");
+                Messenger.error(player, "No arenas are currently opened.");
                 return;
             }
             arenaToJoin.joinLobby(player, null);
@@ -97,7 +90,7 @@ public class JoinSigns implements Listener {
         }
 
         if (ArenaManager.getArenaManager().getArena(sign.getLine(1)) == null) {
-            Message.getMessenger().msg(player, false, RED, "No arena named " + sign.getLine(1) + " found.");
+            Messenger.error(player, "No arena named " + sign.getLine(1) + " found.");
             return;
         }
         Arena arenaToJoin = ArenaManager.getArenaManager().getArenas().get(sign.getLine(1));
@@ -105,7 +98,7 @@ public class JoinSigns implements Listener {
         if (arenaToJoin != null) {
             arenaToJoin.joinLobby(player, null);
         } else {
-            Message.getMessenger().msg(player, false, RED, "Error arena is not available to join!");
+            Messenger.error(player, "Error arena is not available to join!");
         }
     }
 
@@ -120,7 +113,7 @@ public class JoinSigns implements Listener {
         }
 
         if (!e.getPlayer().hasPermission("paintball.sign.destroy"))
-            Message.getMessenger().msg(e.getPlayer(), false, RED, "You do not have permission to destroy Paintball signs!");
+            Messenger.error(e.getPlayer(), "You do not have permission to destroy Paintball signs!");
 
 
         Sign sign = (Sign) e.getBlock().getState();
@@ -128,18 +121,17 @@ public class JoinSigns implements Listener {
 
         if (autoJoinOrLbsign != null) {
             if (autoJoinOrLbsign.getType() == SignLocation.SignLocations.LEADERBOARD) {
-                Message.getMessenger().msg(e.getPlayer(), false, GREEN, "Leaderboard sign has been successfully removed!");
+                Messenger.success(e.getPlayer(), "Leaderboard sign has been successfully removed!");
             } else {
-                Message.getMessenger().msg(e.getPlayer(), false, GREEN, "Autojoin sign has been successfully removed!");
+                Messenger.success(e.getPlayer(), "Autojoin sign has been successfully removed!");
             }
             autoJoinOrLbsign.removeSign();
         } else {
             Arena a = ArenaManager.getArenaManager().getArena(sign.getLine(1));
             if (a != null) {
                 a.getSignLocations().get(sign.getLocation()).removeSign();
-                Message.getMessenger().msg(e.getPlayer(), false, GREEN, a + "'s join sign has been successfully removed!");
+                Messenger.success(e.getPlayer(), a + "'s join sign has been successfully removed!");
             }
         }
-        // todo: replace with other permission validator
     }
 }

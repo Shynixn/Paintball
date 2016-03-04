@@ -12,15 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
-
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
 
 public class LeaderboardSigns implements Listener {
 
@@ -32,7 +27,7 @@ public class LeaderboardSigns implements Listener {
     public void onSignCreate(SignChangeEvent e) {
         if (e.getLines().length <= 3 || !e.getLine(0).equalsIgnoreCase("pb") || !e.getLine(1).equalsIgnoreCase("lb")) return;
 
-        if (!Message.getMessenger().signPermissionValidator(e.getPlayer(), "paintball.leaderboard.create")) {
+        if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.leaderboard.create")) {
             return;
         }
 
@@ -50,13 +45,13 @@ public class LeaderboardSigns implements Listener {
             }
 
 
-            Message.getMessenger().msg(e.getPlayer(), false, ChatColor.RED, error, "Choose either " + StatType.getReadableList());
+            Messenger.error(e.getPlayer(), error, "Choose either " + StatType.getReadableList());
             e.getBlock().breakNaturally();
             return;
         }
 
         if (e.getLine(3).isEmpty()) {
-            Message.getMessenger().msg(e.getPlayer(), false, ChatColor.RED, "Line 4 cannot be blank.", "Choose a rank number, for example: 3");
+            Messenger.error(e.getPlayer(), "Line 4 cannot be blank.", "Choose a rank number, for example: 3");
             e.getBlock().breakNaturally();
             return;
         }
@@ -65,12 +60,12 @@ public class LeaderboardSigns implements Listener {
         try {
             i = Integer.parseInt(e.getLine(3));
         } catch (NumberFormatException ex) {
-            Message.getMessenger().msg(e.getPlayer(), false, ChatColor.RED, "Line 4 must be a valid number.");
+            Messenger.error(e.getPlayer(), "Line 4 must be a valid number.");
             e.getBlock().breakNaturally();
             return;
         }
 
-        Message.getMessenger().msg(e.getPlayer(), false, ChatColor.GREEN, "Leaderboard sign successfully created!");
+        Messenger.success(e.getPlayer(), "Leaderboard sign successfully created!");
         HashMap<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(i, type);
         e.setLine(0, "#" + i);
         e.setLine(1, playerAndStat.keySet().toArray()[0] + "");

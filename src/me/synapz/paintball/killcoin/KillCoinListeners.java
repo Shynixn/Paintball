@@ -2,7 +2,7 @@ package me.synapz.paintball.killcoin;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.enums.KillcoinTypes;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.ChatColor;
@@ -44,8 +44,9 @@ public class KillCoinListeners implements Listener {
         if (!e.getInventory().getName().contains("KillCoin Shop"))
             return;
 
+        // TODO: Bug where a player can click an item in their inventory and it will buy it.
         if (killCoinItem.hasError(arenaPlayer)) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, killCoinItem.getError(arenaPlayer));
+            Messenger.error(player, killCoinItem.getError(arenaPlayer));
         } else {
             killCoinItem.giveItemToPlayer(arenaPlayer);
             // TODO: give item to player and remove their killcoins, money, start timer, etc

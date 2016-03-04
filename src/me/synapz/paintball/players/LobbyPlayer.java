@@ -1,12 +1,12 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.*;
-import me.synapz.paintball.countdowns.ArenaCountdown;
+import me.synapz.paintball.countdowns.ChangeTeamCountdown;
+import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,23 +18,16 @@ import static me.synapz.paintball.storage.Settings.*;
 
 public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlayer {
 
-    private final PaintballScoreboard sb;
+    private PaintballScoreboard sb;
 
     public LobbyPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
-        sb = new PaintballScoreboard(this, arena.LOBBY_COUNTDOWN, "Lobby:")
-                .addTeams(false)
-                .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName())
-                .addLine(ScoreboardLine.STATUS, a.getStateAsString())
-                .build();
     }
 
     // TODO: what happens with 16 teams on scoreboard?
 
     protected void initPlayer() {
         PLAYERDATA.savePlayerInformation(player);
-        arena.addPlayer(this);
 
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
         Utils.stripValues(player);
@@ -43,8 +36,8 @@ public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlay
         giveWoolHelmet();
         team.playerJoinTeam();
 
-        if (arena.canStartTimer() && ArenaCountdown.tasks.get(arena) == null) {
-            new ArenaCountdown(arena.LOBBY_COUNTDOWN, arena.LOBBY_INTERVAL, arena.LOBBY_NO_INTERVAL, arena, GREEN + "Waiting for more players. " + GRAY + "%time%" + GREEN + " seconds!", GREEN + "Waiting for more players\n" + GRAY + "%time%" + GREEN + " seconds", ChatColor.GREEN + "Teleporting into arena...", null, true);
+        if (arena.canStartTimer() && LobbyCountdown.tasks.get(arena) == null) {
+            new LobbyCountdown(arena.LOBBY_COUNTDOWN, arena);
         }
     }
 
@@ -54,31 +47,48 @@ public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlay
 
 
     public void setTeam(Team newTeam) {
+        if (ChangeTeamCountdown.teamPlayers.containsKey(player.getName())) {
+            Messenger.msg(player, Messenger.TEAM_SWITCH_ERROR);
+            return;
+        }
         team.playerLeaveTeam();
         team = newTeam;
         team.playerJoinTeam();
-        Message.getMessenger().msg(player, true, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
+        // TODO: replace with the const and chat message
+        Messenger.titleMsg(player, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
         giveItems();
         giveWoolHelmet();
+        new ChangeTeamCountdown(arena.TEAM_SWITCH_COOLDOWN, player);
     }
 
+
+    @Override
+    public void createScoreboard() {
+        sb = new PaintballScoreboard(this, arena.LOBBY_COUNTDOWN, "Lobby:")
+                .addTeams(false)
+                .addLine(ScoreboardLine.LINE)
+                .addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName())
+                .addLine(ScoreboardLine.STATUS, arena.getStateAsString())
+                .build();
+    }
+
+    @Override
     public void updateScoreboard() {
-        if (hasScoreboard()) {
-            int size = arena.getArenaTeamList().size()-1;
-            sb.reloadTeams(false)
-                    .reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+2);
-        }
+        if (sb == null)
+            return;
+
+        int size = arena.getArenaTeamList().size()-1;
+        sb.reloadTeams(false)
+                .reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+2);
     }
 
+    @Override
     public void updateDisplayName() {
-        if (hasScoreboard()) {
-            sb.setDisplayNameCounter(ArenaCountdown.tasks.get(arena) == null ? arena.LOBBY_COUNTDOWN : (int) ArenaCountdown.tasks.get(arena).getCounter());
-        }
-    }
+        if (sb == null)
+            return;
 
-    private boolean hasScoreboard() {
-        return !(sb == null);
+        sb.setDisplayNameCounter(LobbyCountdown.tasks.get(arena) == null ? arena.LOBBY_COUNTDOWN : (int) LobbyCountdown.tasks.get(arena).getCounter());
     }
 
     private void giveItems() {
@@ -100,7 +110,7 @@ public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlay
             for (Team t : arena.getArenaTeamList()) {
                 // quick check to make sure we don't give them wool for their own team
                 if (!team.getTitleName().equals(t.getTitleName())) {
-                    add(Utils.makeWool(t.getChatColor() + "" + ChatColor.BOLD + "Click" + Message.SUFFIX + ChatColor.RESET + t.getChatColor() + "Join " + t.getTitleName(), t.getDyeColor(), t));
+                    add(Utils.makeWool(t.getChatColor() + "" + ChatColor.BOLD + "Click" + Messenger.SUFFIX + ChatColor.RESET + t.getChatColor() + "Join " + t.getTitleName(), t.getDyeColor(), t));
                 }
             }
         }};
@@ -113,8 +123,9 @@ public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlay
     }
 
     private void displayMessages() {
-        arena.broadcastMessage(GREEN, team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + arena.getLobbyPlayers().size() + "/" + arena.getMax(), GREEN + "Joined arena " + GRAY + arena.getLobbyPlayers().size() + "/" + arena.getMax());
-        Message.getMessenger().msg(player, true, true, GREEN + "You have joined the arena!");
+        arena.broadcastMessage(team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + arena.getLobbyPlayers().size() + "/" + arena.getMax());
+        arena.broadcastTitle(GREEN + "Joined arena", GRAY + "" + arena.getLobbyPlayers().size() + "/" + arena.getMax(), 20, 20, 20);
+        Messenger.titleMsg(player, true, GREEN + "You have joined the arena!");
     }
 
     @Override

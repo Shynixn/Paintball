@@ -27,7 +27,7 @@ public abstract class TeamCommand extends ArenaCommand {
         }
 
         if (arena.getArenaTeamList().isEmpty()) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, arena.toString() + ChatColor.RED + " does not have any teams set!");
+            Messenger.error(player, arena.toString() + ChatColor.RED + " does not have any teams set!");
             return;
         }
 
@@ -82,7 +82,7 @@ public abstract class TeamCommand extends ArenaCommand {
         if (!(validTeams.toString().contains(" " + teamString.toLowerCase() + " "))) {
             // remove last space and replace spaces with /. So it should be <red/blue/green>
             finalValidTeams = validTeams.substring(1, validTeams.lastIndexOf(" "));
-            Message.getMessenger().msg(player, false, ChatColor.RED, teamString + " is an invalid team. Choose either <" + finalValidTeams.toString().replace(" ", "/") + ">");
+            Messenger.error(player, teamString + " is an invalid team. Choose either <" + finalValidTeams.toString().replace(" ", "/") + ">");
             return false;
         } else {
             return true;

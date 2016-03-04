@@ -1,11 +1,10 @@
 package me.synapz.paintball.countdowns;
 
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.killcoin.KillCoinItem;
 import me.synapz.paintball.players.ArenaPlayer;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -27,12 +26,13 @@ public class ExpirationCountdown extends PaintballCountdown {
     private final PlayerInventory inv;
 
     public ExpirationCountdown(KillCoinItem item, ArenaPlayer arenaPlayer, double counter) {
-        super(counter);
+        super(counter+1);
         this.counter = counter;
         this.arenaPlayer = arenaPlayer;
         this.player = arenaPlayer.getPlayer();
         this.inv = arenaPlayer.getPlayer().getInventory();
         this.item = item;
+        this.end = 1;
 
         times.put(item.getItemMeta().getDisplayName(), this);
     }
@@ -50,7 +50,7 @@ public class ExpirationCountdown extends PaintballCountdown {
         if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && item.equals(itemInHand) && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
             // TODO: if actionbar is installed and true in config
             if (times.get(inv.getItemInHand().getItemMeta().getDisplayName()).getCounter() == counter) {
-                ActionBarAPI.sendActionBar(player, Message.EXPIRATION_TIME.replace("%time%", String.valueOf((int)(counter-1))));
+                ActionBarAPI.sendActionBar(player, Messenger.EXPIRATION_TIME.replace("%time%", String.valueOf((int)(counter-1))));
             }
         } else if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
         } else {
@@ -79,9 +79,9 @@ public class ExpirationCountdown extends PaintballCountdown {
                     break;
                 }
             }
-            String endMessage = Message.EXPIRATION_END.replace("%item%", item.getItemName(false));
+            String endMessage = Messenger.EXPIRATION_END.replace("%item%", item.getItemName(false));
             ActionBarAPI.sendActionBar(player, endMessage, 240);
-            Message.getMessenger().msg(player.getPlayer(), false, false, endMessage);
+            Messenger.msg(player.getPlayer(), endMessage);
         }
         times.remove(item.getItemName(true)); // TODO: does this work..?
         Utils.removeActionBar(player);

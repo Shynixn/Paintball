@@ -61,7 +61,7 @@ public class Listeners implements Listener {
             // If the command is in blocked commands, block it. If the command is in allowed commands, return.
             if (arena.BLOCKED_COMMANDS.contains(baseCommand)){
                 e.setCancelled(true);
-                Message.getMessenger().msg(player, false, ChatColor.RED, "That command is disabled while in the arena.");
+                Messenger.error(player, "That command is disabled while in the arena.");
                 return;
             } else if (arena.ALLOWED_COMMANDS.contains(baseCommand)){
                 return;
@@ -69,7 +69,7 @@ public class Listeners implements Listener {
                 return;
             } else if (arena.DISABLE_ALL_COMMANDS) {
                 e.setCancelled(true);
-                Message.getMessenger().msg(player, false, ChatColor.RED, "That command is disabled while in the arena.");
+                Messenger.error(player, "That command is disabled while in the arena.");
                 return;
             }
         }
@@ -102,7 +102,7 @@ public class Listeners implements Listener {
                                 if (!t.isFull()) {
                                     lobbyPlayer.setTeam(t);
                                 } else {
-                                    Message.getMessenger().msg(player, true, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
+                                    Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
                                     break;
                                 }
                             }
@@ -152,7 +152,7 @@ public class Listeners implements Listener {
                                 LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                                 lobbyPlayer.setTeam(t);
                             } else {
-                                Message.getMessenger().msg(player, true, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
+                                Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
                             }
                             break;
                         }
@@ -161,7 +161,7 @@ public class Listeners implements Listener {
                     e.setCancelled(true);
                 }
             } else if (gamePlayer instanceof SpectatorPlayer) {
-                Message.getMessenger().msg(player, true, ChatColor.RED, "You are not allowed to move items in your inventory!");
+                Messenger.error(player, "You are not allowed to move items in your inventory!");
                 player.closeInventory();
                 e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
@@ -248,16 +248,16 @@ public class Listeners implements Listener {
         String shooterPlayerName = arenaPlayer.getPlayer().getName();
 
         if (GameFinishCountdown.arenasFinishing.keySet().contains(a)) {
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "Game is already finished.");
+            Messenger.error(arenaPlayer.getPlayer(), "Game is already finished.");
             event.setCancelled(true);
             return;
         }
 
         if(ProtectionCountdown.godPlayers.keySet().contains(hitPlayerName)) {
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "That player is currently safe from Paintballs. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
+            Messenger.error(arenaPlayer.getPlayer(), "That player is currently safe from Paintballs. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
             event.setCancelled(true);
         } else if (ProtectionCountdown.godPlayers.keySet().contains(shooterPlayerName)) {
-            Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, "You cannot hit players while you are protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(shooterPlayerName).getCounter() + " seconds");
+            Messenger.error(arenaPlayer.getPlayer(), "You cannot hit players while you are protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(shooterPlayerName).getCounter() + " seconds");
             event.setCancelled(true);
         } else {
             Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
@@ -265,7 +265,7 @@ public class Listeners implements Listener {
             if (hitPlayer.die()) {
                 arenaPlayer.kill(hitPlayer);
             } else {
-                Message.getMessenger().msg(arenaPlayer.getPlayer(), false, ChatColor.RED, Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
+                Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
             }
         }
     }
@@ -280,7 +280,10 @@ public class Listeners implements Listener {
 
             // If the player is a ArenaPlayer, and the damage was not from a snowball and the attacker is not a player, cancel.
             if (arena.getAllArenaPlayers().contains(pbPlayer) && e.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) {
-                e.setCancelled(true);
+                if (player.getLocation().getBlockY() < 0) // in case they fall into the void let them die
+                    return;
+                else
+                    e.setCancelled(true);
             }
 
             // If the player is a LobbyPlayer or Spectator player, cancel all damage.
@@ -293,7 +296,7 @@ public class Listeners implements Listener {
     private boolean stopAction(Player player, String message) {
         Arena a = ArenaManager.getArenaManager().getArena(player);
         if (a != null) {
-            Message.getMessenger().msg(player, true, ChatColor.RED, message);
+            Messenger.error(player, message);
             return true;
         }
         return false;

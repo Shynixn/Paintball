@@ -1,6 +1,6 @@
 package me.synapz.paintball.commands.player;
 
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.StatType;
@@ -20,13 +20,13 @@ public class Stats extends PaintballCommand {
         UUID target = args.length == 1 ? player.getUniqueId() : Bukkit.getPlayer(args[1]) == null ? Bukkit.getOfflinePlayer(args[1]).getUniqueId() : Bukkit.getPlayer(args[1]).getUniqueId();
         Map<StatType, String> stats = Settings.PLAYERDATA.getPlayerStats(target);
 
-        Message.getMessenger().msg(player, false, false, SECONDARY + STRIKETHROUGH + "             " + RESET + " " + THEME + Bukkit.getOfflinePlayer(target).getName() + "'s Stats" + RESET + " " + SECONDARY + STRIKETHROUGH + "             ");
+        Messenger.msg(player, SECONDARY + STRIKETHROUGH + "             " + RESET + " " + THEME + Bukkit.getOfflinePlayer(target).getName() + "'s Stats" + RESET + " " + SECONDARY + STRIKETHROUGH + "             ");
 
         for (StatType type : StatType.values()) {
             String name = type.getName();
             if (type == StatType.SHOTS || type == StatType.HITS || type == StatType.KILLS || type == StatType.DEATHS || type == StatType.DEFEATS || type == StatType.WINS)
                 name = "  " + name;
-            Message.getMessenger().msg(player, false, false, THEME + name + ": " + SECONDARY + stats.get(type));
+            Messenger.msg(player, THEME + name + ": " + SECONDARY + stats.get(type));
         }
     }
 

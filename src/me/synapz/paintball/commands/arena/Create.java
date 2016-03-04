@@ -3,24 +3,24 @@ package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class CreateArena extends PaintballCommand {
+public class Create extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         String arenaName = args[2];
         Arena newArena = ArenaManager.getArenaManager().getArena(arenaName);
 
         if (newArena != null) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, "An arena named " + arenaName + " already exists!");
+            Messenger.error(player, "An arena named " + arenaName + " already exists!");
             return;
         } else {
             Arena a = new Arena(arenaName, arenaName, true);
-            Message.getMessenger().msg(player, false, ChatColor.GREEN, a.toString() + " successfully created!", a.getSteps());
+            Messenger.success(player, a.toString() + " successfully created!", a.getSteps());
         }
     }
 

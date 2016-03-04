@@ -10,7 +10,6 @@ import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.*;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
@@ -60,7 +59,7 @@ public class ArenaManager {
         List<String> list = new ArrayList<String>();
 
         if (getArenas().size() == 0) {
-            Message.getMessenger().msg(player, false, BLUE, "There are currently no arenas.");
+            Messenger.info(player, BLUE + "There are currently no arenas.");
             return;
         }
 
@@ -92,7 +91,7 @@ public class ArenaManager {
         }
 
         String out = Joiner.on(GRAY + ", ").join(list);
-        Message.getMessenger().msg(player, false, GRAY, BLUE + "Arenas: " + out,
+        Messenger.info(player, BLUE + "Arenas: " + out,
                 GREEN + "█-" + GRAY + "Joinable " + RED + "█-" + GRAY + "InProgress " + GRAY + "█-" + GRAY + "Disabled/Not-Setup");
     }
 

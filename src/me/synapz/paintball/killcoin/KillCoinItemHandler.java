@@ -1,14 +1,11 @@
 package me.synapz.paintball.killcoin;
 
-import me.synapz.paintball.Message;
 import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 

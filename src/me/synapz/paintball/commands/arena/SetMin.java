@@ -1,6 +1,6 @@
 package me.synapz.paintball.commands.arena;
 
-import me.synapz.paintball.Message;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
@@ -17,22 +17,22 @@ public class SetMin extends ArenaCommand {
         try {
             min = Integer.parseInt(minString);
         } catch (NumberFormatException e) {
-            Message.getMessenger().msg(player, false, ChatColor.RED, minString + " is not a valid number!");
+            Messenger.error(player, minString + " is not a valid number!");
             return;
         }
 
         if (arena.getMax() == 0 || min < arena.getMax()) {
             // TODO: make back to 1
             if (min <= 0) {
-                Message.getMessenger().msg(player, false, RED, "Min must be greater than 1!");
+                Messenger.error(player, "Min must be greater than 1!");
                 return;
             }
             arena.setMinPlayers(min);
         } else {
-            Message.getMessenger().msg(player, false, RED, "Your min (" + GRAY + min + RED + ") must be less than than your max (" + GRAY + arena.getMax() + RED + ") !");
+            Messenger.error(player, "Your min (" + GRAY + min + RED + ") must be less than than your max (" + GRAY + arena.getMax() + RED + ") !");
             return;
         }
-        Message.getMessenger().msg(player, false, ChatColor.GREEN, "Min players for " + arena.toString() + " set to " + ChatColor.GRAY + min, arena.getSteps());
+        Messenger.success(player, "Min players for " + arena.toString() + " set to " + ChatColor.GRAY + min, arena.getSteps());
     }
 
     public String getName() {
@@ -48,7 +48,7 @@ public class SetMin extends ArenaCommand {
     }
 
     public String getPermission() {
-        return "paintball.arena.setmin";
+        return "paintball.arena.min";
     }
 
     public CommandType getCommandType() {
