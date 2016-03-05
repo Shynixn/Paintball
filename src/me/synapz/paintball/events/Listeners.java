@@ -35,7 +35,7 @@ public class Listeners implements Listener {
         Player player = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(player);
         if (isInArena(player)) {
-            a.getAllPlayers().get(player).leaveArena();
+            a.getAllPlayers().get(player).leave();
         }
     }
 
@@ -262,7 +262,7 @@ public class Listeners implements Listener {
         } else {
             Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
 
-            if (hitPlayer.die()) {
+            if (hitPlayer.hit()) {
                 arenaPlayer.kill(hitPlayer);
             } else {
                 Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);

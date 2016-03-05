@@ -165,7 +165,7 @@ public class KillCoinItem extends ItemStack {
         if (this.hasPermission() && !player.getPlayer().hasPermission(permission)) {
             builder.append("You don't have permission to use this item!");
         } else {
-            if (this.requiresKillCoins() && player.getKillCoins() < this.getKillCoins())
+            if (this.requiresKillCoins() && player.getCoins() < this.getKillCoins())
                 builder.append("You don't have enough KillCoins ");
 
             // if (arenaPlayer.getMoney() < getMoney() // TODO: import Vault for this

@@ -257,7 +257,7 @@ public class Arena {
         } else {
             broadcastMessage(toString() + RED + " has been disabled.");
             for (PaintballPlayer player : getAllPlayers().values())
-                player.forceLeaveArena();
+                player.leave();
             setState(ArenaState.DISABLED);
         }
         ARENA_FILE.set(getPath() + "Enabled", setEnabled);
@@ -399,7 +399,7 @@ public class Arena {
     public void forceLeaveArena() {
         List<PaintballPlayer> copiedList = new ArrayList<>(allPlayers.values());
         for (PaintballPlayer player : copiedList)
-            player.forceLeaveArena();
+            player.leave();
         allPlayers = new HashMap<>();
         lobby = new ArrayList<>();
         spectators = new ArrayList<>();
@@ -542,6 +542,9 @@ public class Arena {
         lobby.remove(pbPlayer);
         inGame.remove(pbPlayer);
         spectators.remove(pbPlayer);
+        Settings.PLAYERDATA.restorePlayerInformation(pbPlayer.getPlayer());
+
+        updateSigns();
     }
 
     public void addPlayer(PaintballPlayer pbPlayer) {
@@ -549,13 +552,14 @@ public class Arena {
             allPlayers.put(pbPlayer.getPlayer(), pbPlayer);
         }
 
-        if (pbPlayer instanceof LobbyPlayer) {
+        if (pbPlayer instanceof LobbyPlayer && !lobby.contains(pbPlayer)) {
             lobby.add((LobbyPlayer) pbPlayer);
-        } else if (pbPlayer instanceof ArenaPlayer) {
+        } else if (pbPlayer instanceof ArenaPlayer && !inGame.contains(pbPlayer)) {
             inGame.add((ArenaPlayer) pbPlayer);
-        } else if (pbPlayer instanceof SpectatorPlayer) {
+        } else if (pbPlayer instanceof SpectatorPlayer && !spectators.contains(pbPlayer)) {
             spectators.add((SpectatorPlayer) pbPlayer);
         }
+        updateSigns();
     }
 
     // Get the list of lobby players
@@ -587,8 +591,7 @@ public class Arena {
 
     public void updateAllScoreboardTimes() {
         for (PaintballPlayer player : getAllPlayers().values()) {
-            if (player instanceof ScoreboardPlayer)
-                ((ScoreboardPlayer) player).updateDisplayName();
+                player.updateDisplayName();
         }
     }
 

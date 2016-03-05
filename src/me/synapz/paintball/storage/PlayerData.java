@@ -100,7 +100,7 @@ public final class PlayerData extends PaintballFile {
                 getFileConfig().set(StatType.HIGEST_KILL_STREAK.getPath(id), player.getKillStreak());
                 return;
             case GAMES_PLAYED:
-                if (player.won())
+                if (player.isWinner())
                     addOneToPath(StatType.WINS.getPath(id));
                 else
                     addOneToPath(StatType.DEFEATS.getPath(id));
@@ -277,6 +277,7 @@ public final class PlayerData extends PaintballFile {
         potions.put(id, player.getActivePotionEffects());
 
         addStatsIfNotYetAdded(player.getUniqueId());
+        Utils.stripValues(player);
         saveFile();
     }
 

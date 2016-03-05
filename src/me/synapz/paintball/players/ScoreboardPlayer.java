@@ -1,8 +1,10 @@
 package me.synapz.paintball.players;
 
+import me.synapz.paintball.scoreboards.PaintballScoreboard;
+
 public interface ScoreboardPlayer {
 
-    void createScoreboard();
+    PaintballScoreboard createScoreboard();
 
     void updateScoreboard();
 

@@ -14,7 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 import static org.bukkit.ChatColor.*;
 import static me.synapz.paintball.storage.Settings.*;
 
-public final class SpectatorPlayer extends PaintballPlayer implements ScoreboardPlayer {
+public final class SpectatorPlayer extends PaintballPlayer {
 
     private boolean asArenaPlayer;
     private PaintballScoreboard sb;
@@ -47,6 +47,11 @@ public final class SpectatorPlayer extends PaintballPlayer implements Scoreboard
         displayMessages();
     }
 
+    @Override
+    protected void showMessages() {
+
+    }
+
     protected String getChatLayout() {
         return arena.SPEC_CHAT;
     }
@@ -63,14 +68,13 @@ public final class SpectatorPlayer extends PaintballPlayer implements Scoreboard
         }
     }
 
-    @Override
     public void forceLeaveArena() {
         if (team != null)
             team.playerLeaveTeam();
-        super.forceLeaveArena();
+        // super.forceLeaveArena();
     }
 
-    private void giveItems() {
+    protected void giveItems() {
         // TODO: give item to leave and teleport
     }
 
@@ -79,13 +83,14 @@ public final class SpectatorPlayer extends PaintballPlayer implements Scoreboard
     }
 
     @Override
-    public void createScoreboard() {
-        sb = new PaintballScoreboard(this, 1, "Spectator:")
-                .addTeams(true)
-                .build();
+    public PaintballScoreboard createScoreboard() {
+
         player.getScoreboard().getTeam(team.getTitleName()).setCanSeeFriendlyInvisibles(true);
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
         arena.updateAllScoreboard();
+        return new PaintballScoreboard(this, 1, "Spectator:")
+                .addTeams(true)
+                .build();
     }
 
     @Override
