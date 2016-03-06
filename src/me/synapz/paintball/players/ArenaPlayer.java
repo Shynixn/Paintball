@@ -12,6 +12,7 @@ import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -93,7 +94,7 @@ public class ArenaPlayer extends PaintballPlayer {
 
     @Override
     public void updateScoreboard() {
-        if (sb == null)
+        if (pbSb == null)
             return;
 
         int size = arena.getArenaTeamList().size()-1;
@@ -149,7 +150,7 @@ public class ArenaPlayer extends PaintballPlayer {
     public boolean hit() {
         int newHealth = health--;
         pbSb.updateNametags(false);
-        if (newHealth <= 1) {
+        if (newHealth != 1) {
             arena.updateAllScoreboard();
             return false;
         } else {
@@ -206,7 +207,7 @@ public class ArenaPlayer extends PaintballPlayer {
         health = newHealth;
 
         // This will set the hearts to what they should be above their name
-        pbSb.updateNametags(false);
+        arena.updateAllScoreboard();
 
         // This means they died, it just changes all the values
         if (health == 1) {
@@ -227,7 +228,8 @@ public class ArenaPlayer extends PaintballPlayer {
 
             // If they have no more lives turn them into a spectator player until the game ends
             if (arena.LIVES > 0 && lives == 0) {
-                this.leave();
+                arena.removePlayer(this, false);
+                Utils.stripValues(player);
                 new SpectatorPlayer(this);
                 return;
             } else {

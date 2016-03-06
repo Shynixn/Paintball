@@ -72,7 +72,7 @@ public class LobbyPlayer extends PaintballPlayer {
      */
     @Override
     public void updateScoreboard() {
-        if (sb == null)
+        if (pbSb == null)
             return;
 
         int size = arena.getArenaTeamList().size()-1;

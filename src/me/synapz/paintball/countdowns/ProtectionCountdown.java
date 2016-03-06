@@ -16,6 +16,7 @@ public class ProtectionCountdown extends PaintballCountdown {
     private String name;
     private ArenaPlayer arenaPlayer;
     private Player player;
+    private Arena arena;
 
     public ProtectionCountdown(int counter, ArenaPlayer player) {
         super(counter+1); // adds 1 so to human eyes it goes from 5 to 1 instead of 4 to 0
@@ -23,6 +24,7 @@ public class ProtectionCountdown extends PaintballCountdown {
         this.name = player.getPlayer().getName();
         this.arenaPlayer = player;
         this.player = player.getPlayer();
+        this.arena = player.getArena();
 
         ActionBarAPI.sendActionBar(this.player, Messenger.PROTECTION_TIME.replace("%time%", String.valueOf(counter))); // TODO: last param in ticks or seconds?
         if (!godPlayers.keySet().contains(name)) {
@@ -43,7 +45,7 @@ public class ProtectionCountdown extends PaintballCountdown {
     }
 
     public boolean stop() {
-        return (player == null || arenaPlayer == null || arenaPlayer.getArena() == null || arenaPlayer.getArena() != null && arenaPlayer.getArena().getState() != Arena.ArenaState.IN_PROGRESS);
+        return (player == null || arenaPlayer == null || arena == null || arena != null && arena.getState() != Arena.ArenaState.IN_PROGRESS);
     }
 
     public boolean intervalCheck() {

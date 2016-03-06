@@ -49,8 +49,10 @@ public class PaintballScoreboard {
                 sb.registerNewTeam(team.getTitleName());
         }
         // Registers the Spectator team is the player is a spectator
-        if (sb.getTeam("Spectator") == null)
-            sb.registerNewTeam("Spectator");
+        if (sb.getTeam("Spectator") == null) {
+            org.bukkit.scoreboard.Team specTeam = sb.registerNewTeam("Spectator");
+            specTeam.setCanSeeFriendlyInvisibles(true);
+        }
 
         updateNametags(true);
     }

@@ -1,6 +1,7 @@
 package me.synapz.paintball.countdowns;
 
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
+import me.synapz.paintball.Arena;
 import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.killcoin.KillCoinItem;

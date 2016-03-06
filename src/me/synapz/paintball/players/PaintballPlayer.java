@@ -102,7 +102,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
 
     // Leaves an arena (removes their color names, restores information, removes from lists, and checks to see if to force stop (1 player left)
     public void leave() {
-        arena.removePlayer(this); // removes player from all array lists
+        arena.removePlayer(this, true); // removes player from all array lists
 
         // check to see if there is only one player left, if there is everyone else left
         if (arena.getAllArenaPlayers().size() == 1) {
@@ -123,7 +123,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
 
     @Override
     public void updateDisplayName() {
-        if (sb != null)
+        if (pbSb != null)
             pbSb.setDisplayNameCounter(Utils.getCurrentCounter(arena));
     }
 }

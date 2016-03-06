@@ -327,7 +327,7 @@ public class Arena {
             int counter = Utils.getCurrentCounter(this);
             sign.setLine(0, prefix); // in case the prefix changes
             sign.setLine(1, getName()); // in case they rename it
-            sign.setLine(2, getStateAsString() + " " + (counter == 0 ? "" : counter + "s")); // TODO: put times here ;)
+            sign.setLine(2, getStateAsString() + " " + (counter == -1 ? "" : counter + "s")); // TODO: put times here ;)
             sign.setLine(3, getMax() <= 0 ? "0/0" : getLobbyPlayers().size() == getMax() || getAllArenaPlayers().size() == getMax() ? RED + "Full" : (state == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "" : state == ArenaState.IN_PROGRESS || state == ArenaState.STARTING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
             sign.update();
         }
@@ -537,13 +537,15 @@ public class Arena {
         return color + state.toString();
     }
 
-    public void removePlayer(PaintballPlayer pbPlayer) {
+    public void removePlayer(PaintballPlayer pbPlayer, boolean restoreData) {
         allPlayers.remove(pbPlayer.getPlayer(), pbPlayer);
         lobby.remove(pbPlayer);
         inGame.remove(pbPlayer);
         spectators.remove(pbPlayer);
-        Settings.PLAYERDATA.restorePlayerInformation(pbPlayer.getPlayer());
 
+        // TODO: do checks
+        if (restoreData)
+            Settings.PLAYERDATA.restorePlayerInformation(pbPlayer.getPlayer());
         updateSigns();
     }
 
