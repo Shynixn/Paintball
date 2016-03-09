@@ -49,6 +49,7 @@ public class Arena {
 
     public String ARENA_CHAT;
     public String SPEC_CHAT;
+    public String CURRENCY;
 
     public boolean BROADCAST_WINNER;
     public boolean PER_TEAM_CHAT_LOBBY;
@@ -62,8 +63,6 @@ public class Arena {
     public boolean USE_ARENA_CHAT;
     public boolean DISABLE_ALL_COMMANDS;
     public boolean ALL_PAINTBALL_COMMANDS;
-    public boolean KILL_COINS_NEGATIVE;
-    public boolean MONEY_NEGATIVE;
 
     public List<String> BLOCKED_COMMANDS;
     public List<String> ALLOWED_COMMANDS;
@@ -404,7 +403,7 @@ public class Arena {
         lobby = new ArrayList<>();
         spectators = new ArrayList<>();
         inGame = new ArrayList<>();
-        updateSigns();
+        setState(ArenaState.WAITING);
         this.resetTeamScores();
     }
 
@@ -421,7 +420,7 @@ public class Arena {
             String spaces = Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(20);
             String title = THEME + " Games Stats ";
             Messenger.msg(player, spaces + title + spaces,
-                    (arenaPlayer.getMoney() < 0 ? "-" : "") + "$" + Math.abs(arenaPlayer.getMoney()),
+                    (arenaPlayer.getMoney() < 0 ? "-" : "+") + "$" + Math.abs(arenaPlayer.getMoney()),
                     "Kills: " + arenaPlayer.getKills(),
                     "Deaths: " + arenaPlayer.getDeaths(),
                     "Killstreak: " + arenaPlayer.getKillStreak(),
@@ -538,14 +537,12 @@ public class Arena {
     }
 
     public void removePlayer(PaintballPlayer pbPlayer, boolean restoreData) {
+        if (restoreData)
+            Settings.PLAYERDATA.restorePlayerInformation(pbPlayer.getPlayer());
         allPlayers.remove(pbPlayer.getPlayer(), pbPlayer);
         lobby.remove(pbPlayer);
         inGame.remove(pbPlayer);
         spectators.remove(pbPlayer);
-
-        // TODO: do checks
-        if (restoreData)
-            Settings.PLAYERDATA.restorePlayerInformation(pbPlayer.getPlayer());
         updateSigns();
     }
 
@@ -647,14 +644,13 @@ public class Arena {
         GIVE_TEAM_SWITCHER         = ARENA.loadBoolean("Join-Lobby.give-team-switcher", this);
         USE_ARENA_CHAT             = ARENA.loadBoolean("Chat.use-arena-chat", this);
         BROADCAST_WINNER           = ARENA.loadBoolean("Chat.broadcast-winner", this);
-        KILL_COINS_NEGATIVE        = ARENA.loadBoolean("Rewards.Kill-Coins.can-be-negative", this);
-        MONEY_NEGATIVE             = ARENA.loadBoolean("Rewards.Money.can-be-negative", this);
 
         DISABLE_ALL_COMMANDS       = config.getBoolean("Commands.disable-all-commands");
         ALL_PAINTBALL_COMMANDS     = config.getBoolean("Commands.all-paintball-commands");
 
         ARENA_CHAT                 = ARENA.loadString("Chat.arena-chat", this);
         SPEC_CHAT                  = ARENA.loadString("Chat.spectator-chat", this);
+        CURRENCY                   = ARENA.loadString("currency", this);
 
         BLOCKED_COMMANDS           = config.getStringList("Commands.Blocked");
         ALLOWED_COMMANDS           = config.getStringList("Commands.Allowed");

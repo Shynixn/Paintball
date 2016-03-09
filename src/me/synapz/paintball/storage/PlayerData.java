@@ -25,6 +25,8 @@ import java.sql.*;
 import java.util.*;
 
 import static me.synapz.paintball.storage.Settings.*;
+import static org.bukkit.ChatColor.RESET;
+import static org.bukkit.ChatColor.STRIKETHROUGH;
 
 public final class PlayerData extends PaintballFile {
 
@@ -279,6 +281,20 @@ public final class PlayerData extends PaintballFile {
         addStatsIfNotYetAdded(player.getUniqueId());
         Utils.stripValues(player);
         saveFile();
+    }
+
+    public void getStats(Player sender, String targetName) {
+        UUID target = Bukkit.getPlayer(targetName) == null ? Bukkit.getOfflinePlayer(targetName).getUniqueId() : Bukkit.getPlayer(targetName).getUniqueId();
+
+        Map<StatType, String> stats = Settings.PLAYERDATA.getPlayerStats(target);
+        Messenger.msg(sender, SECONDARY + STRIKETHROUGH + "             " + RESET + " " + THEME + Bukkit.getOfflinePlayer(target).getName() + "'s Stats" + RESET + " " + SECONDARY + STRIKETHROUGH + "             ");
+
+        for (StatType type : StatType.values()) {
+            String name = type.getName();
+            if (type == StatType.SHOTS || type == StatType.HITS || type == StatType.KILLS || type == StatType.DEATHS || type == StatType.DEFEATS || type == StatType.WINS)
+                name = "  " + name;
+            Messenger.msg(sender, THEME + name + ": " + SECONDARY + stats.get(type));
+        }
     }
 
     // Restores all of the player's settings, then sets the info to null

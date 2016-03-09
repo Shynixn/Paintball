@@ -17,17 +17,9 @@ import java.util.UUID;
 public class Stats extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
-        UUID target = args.length == 1 ? player.getUniqueId() : Bukkit.getPlayer(args[1]) == null ? Bukkit.getOfflinePlayer(args[1]).getUniqueId() : Bukkit.getPlayer(args[1]).getUniqueId();
-        Map<StatType, String> stats = Settings.PLAYERDATA.getPlayerStats(target);
+        String targetName = args.length == 1 ? player.getName() : args[1];
 
-        Messenger.msg(player, SECONDARY + STRIKETHROUGH + "             " + RESET + " " + THEME + Bukkit.getOfflinePlayer(target).getName() + "'s Stats" + RESET + " " + SECONDARY + STRIKETHROUGH + "             ");
-
-        for (StatType type : StatType.values()) {
-            String name = type.getName();
-            if (type == StatType.SHOTS || type == StatType.HITS || type == StatType.KILLS || type == StatType.DEATHS || type == StatType.DEFEATS || type == StatType.WINS)
-                name = "  " + name;
-            Messenger.msg(player, THEME + name + ": " + SECONDARY + stats.get(type));
-        }
+        PLAYERDATA.getStats(player, targetName);
     }
 
     public String getName() {

@@ -81,23 +81,14 @@ Kill-Coin-Shop:
     shown: true
 
 ###############################
-#        Arena Settings       #
-###############################
-#messages list, "%killer% shot %player%
-#how fast paintballs shoot
-#
-#
-#
-#
-
-
-###############################
 #      Per-Arena Settings     #
 ###############################
 Per-Arena-Settings:
   # The default settings for each arena. Set an arena setting to "default" in order to use this default value ex: kills-to-win: default
   # Arenas will auto-generate with values "default" whenever a new arena is created
   Defaults:
+    # The currency for money
+    currency: "$"
     # The score (amount of kills) a team must get to win
     max-score: 50
     # How much time (in seconds) the game lasts. If no one reaches the kills-to-win when this timer ends the team with most kills is the winner
@@ -106,7 +97,7 @@ Per-Arena-Settings:
     lives: 0
     # How much time (in seconds) to wait after a team wins before players will be sent out of the arena. In this time players can see their scores and who won
     win-waiting-time: 10
-    # True - KillCoin Shop is enabled for the arena. False - No KillCoin Shop
+    # True - Coin Shop is enabled for the arena. False - No Coin Shop and Coins are removed
     kill-coin-shop: true
     # Time in seconds players have after they die before they can be killed by a snowball
     safe-time: 5
@@ -140,18 +131,14 @@ Per-Arena-Settings:
       # Rewards having to do with kill coins. Kill coins are basically coins recived on a kill, which can be used to buy special items. Kill coins are reset every game.
       Kill-Coins:
         per-kill: 1
-        per-death: 0 # This number should be negative
-        # If Killcoins can be negative in game
-        can-be-negative: false
+        per-death: 0
       # Rewards having to do with money. Money can also be used to buy special items and doesn't reset every game.
       # Requires Vault and config setting as vault: true
       Money:
         per-kill: 15
-        per-death: -10
+        per-death: 10
         per-win: 100
-        per-defeat: -50
-        # If players can loose money when they do not get enough kills
-        can-be-negative: true
+        per-defeat: 50
 
     # TODO: cooldown time when clicking wool to change team
     # Settings to do with chat aspects of Paintball-- when players are in the arena

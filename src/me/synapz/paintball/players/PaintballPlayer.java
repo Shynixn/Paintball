@@ -26,6 +26,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
     protected Team team;
     protected Scoreboard sb;
     protected PaintballScoreboard pbSb;
+    protected boolean giveItems = true;
 
     /*
     -----
@@ -39,7 +40,8 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
 
         arena.addPlayer(this);
         initPlayer();
-        giveItems();
+        if (giveItems)
+            giveItems();
         showMessages();
         loadScoreboard();
     }
@@ -105,13 +107,8 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         arena.removePlayer(this, true); // removes player from all array lists
 
         // check to see if there is only one player left, if there is everyone else left
-        if (arena.getAllArenaPlayers().size() == 1) {
-            arena.getAllArenaPlayers().get(0).leave(); // get the last final player and make them leave (can't play alone)
-            arena.setState(Arena.ArenaState.WAITING);
-            arena.resetTeamScores();
-        } else if (arena.getAllArenaPlayers().size() <= 0) {
-            arena.setState(Arena.ArenaState.WAITING);
-            arena.resetTeamScores();
+        if (arena.getAllArenaPlayers().size() <= 1) {
+            arena.forceLeaveArena();
         }
     }
 

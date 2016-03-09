@@ -144,14 +144,17 @@ public class KillCoinItem extends ItemStack {
         }
 
         if (requiresMoney())
-            newLore.add(Settings.THEME + "Cost: " + Settings.SECONDARY + getMoney()); // todo: implement currency so $amount
+            newLore.add(Settings.THEME + "Cost: " + Settings.SECONDARY + arenaPlayer.getArena().CURRENCY + getMoney()); // todo: implement currency so $amount
 
         // TODO: if 2+ people in arena and one buys an item without killcoins, the other players has it lock up and they cant buy the item even if it dont require killcoins
         if (requiresKillCoins())
             newLore.add(Settings.THEME + "KillCoins: " + Settings.SECONDARY + getKillCoins());
 
-        if (hasError(arenaPlayer))
-            newLore.add(ChatColor.RED + "" + ChatColor.ITALIC + getError(arenaPlayer));
+        if (hasError(arenaPlayer)) {
+            getError(arenaPlayer).forEach((String lore) -> {
+                newLore.add(ChatColor.RED + "" + ChatColor.ITALIC + lore);
+            });
+        }
 
         meta.setLore(newLore);
         this.setItemMeta(meta);
@@ -159,21 +162,21 @@ public class KillCoinItem extends ItemStack {
     }
 
     // Gets the error the arena player has (not enough money, permission, or killcoins)
-    public String getError(ArenaPlayer player) {
-        StringBuilder builder = new StringBuilder();
+    public List<String> getError(ArenaPlayer player) {
+        List<String> builder = new ArrayList<>();
 
         if (this.hasPermission() && !player.getPlayer().hasPermission(permission)) {
-            builder.append("You don't have permission to use this item!");
+            builder.add("You don't have permission to use this item!");
         } else {
             if (this.requiresKillCoins() && player.getCoins() < this.getKillCoins())
-                builder.append("You don't have enough KillCoins ");
+                builder.add("You don't have enough coins ");
 
-            // if (arenaPlayer.getMoney() < getMoney() // TODO: import Vault for this
-            // builder.append(", Money");
+            if (this.requiresMoney() && Settings.ECONOMY.getBalance(player.getPlayer()) < getMoney())
+                builder.add("You don't have enough money");
         }
 
-        if (!builder.toString().isEmpty()) {
-            return builder.toString();
+        if (!builder.isEmpty()) {
+            return builder;
         } else {
             return null;
         }

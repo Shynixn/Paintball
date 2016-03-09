@@ -46,8 +46,10 @@ public class KillCoinListeners implements Listener {
 
         // TODO: Bug where a player can click an item in their inventory and it will buy it.
         if (killCoinItem.hasError(arenaPlayer)) {
-            Messenger.error(player, killCoinItem.getError(arenaPlayer));
+            Messenger.error(player, killCoinItem.getError(arenaPlayer).get(0));
         } else {
+            if (killCoinItem.requiresMoney() || killCoinItem.requiresKillCoins())
+                arena.updateAllScoreboard();
             killCoinItem.giveItemToPlayer(arenaPlayer);
             // TODO: give item to player and remove their killcoins, money, start timer, etc
         }
@@ -96,6 +98,7 @@ public class KillCoinListeners implements Listener {
             if (killCoinItem.hasSound()) {
                 player.playSound(player.getLocation(), killCoinItem.getSound(), 1, 1);
             }
+
             killCoinItem.onClickItem(e);
         }
     }

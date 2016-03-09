@@ -65,7 +65,9 @@ public abstract class PaintballCountdown extends BukkitRunnable {
 
     public void cancel() {
         super.cancel();
-        counter = 0D;
+        counter = -1D;
+        if (arena != null)
+            arena.updateSigns();
     }
 
     public double getCounter() {

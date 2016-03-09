@@ -12,7 +12,6 @@ import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,6 +26,7 @@ import java.util.Map;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
 import static me.synapz.paintball.storage.Settings.THEME;
+import static me.synapz.paintball.storage.Settings.VAULT;
 
 public class ArenaPlayer extends PaintballPlayer {
 
@@ -36,9 +36,9 @@ public class ArenaPlayer extends PaintballPlayer {
     private int coins;
     private int deaths;
     private int kills;
-    private int money;
-    private int health = arena.HITS_TO_KILL;
-    private int lives = arena.LIVES;
+    private double money;
+    private int health;
+    private int lives;
 
     private boolean isWinner;
 
@@ -61,6 +61,9 @@ public class ArenaPlayer extends PaintballPlayer {
         // TODO: Don't make random but instead have a counter
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
         giveWoolHelmet();
+        giveItems = false;
+        health = arena.HITS_TO_KILL;
+        lives = arena.LIVES;
     }
 
     @Override
@@ -78,9 +81,9 @@ public class ArenaPlayer extends PaintballPlayer {
         PaintballScoreboard sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
                 .addTeams(true)
                 .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.MONEY, 0) // TODO: vault.getMoney(Player) ?
+                .addLine(ScoreboardLine.MONEY, arena.CURRENCY + Settings.ECONOMY.getBalance(player), Settings.VAULT)
                 .addLine(ScoreboardLine.KD, "0.00")
-                .addLine(ScoreboardLine.KILL_COIN, 0)
+                .addLine(ScoreboardLine.KILL_COIN, 0, arena.KILL_COIN_SHOP)
                 .addLine(ScoreboardLine.KILL_STREAK, 0)
                 .addLine(ScoreboardLine.KILLS, 0)
                 .addLine(ScoreboardLine.LINE)
@@ -99,7 +102,7 @@ public class ArenaPlayer extends PaintballPlayer {
 
         int size = arena.getArenaTeamList().size()-1;
         pbSb.reloadTeams(true)
-                .reloadLine(ScoreboardLine.MONEY, "1", size+2)
+                .reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + Settings.ECONOMY.getBalance(player), size+2)
                 .reloadLine(ScoreboardLine.KD, getKd(), size+3)
                 .reloadLine(ScoreboardLine.KILL_COIN, String.valueOf(getCoins()), size+4)
                 .reloadLine(ScoreboardLine.KILL_STREAK, String.valueOf(getKillStreak()), size+5)
@@ -113,6 +116,11 @@ public class ArenaPlayer extends PaintballPlayer {
         super.leave();
         team.playerLeaveTeam();
         Settings.PLAYERDATA.incrementStat(StatType.GAMES_PLAYED, this);
+
+        if (isWinner)
+            Settings.ECONOMY.depositPlayer(player, arena.MONEY_PER_WIN);
+        else
+            Settings.ECONOMY.withdrawPlayer(player, arena.MONEY_PER_DEFEAT);
 
         // TODO: What if there is 5 teams with 1 with 0 players... Make it so it
         // TODO: So it also checks for arenas with players or if 1 player in the arena
@@ -149,7 +157,7 @@ public class ArenaPlayer extends PaintballPlayer {
      */
     public boolean hit() {
         int newHealth = health--;
-        pbSb.updateNametags(false);
+        pbSb.updateNametags();
         if (newHealth != 1) {
             arena.updateAllScoreboard();
             return false;
@@ -167,11 +175,14 @@ public class ArenaPlayer extends PaintballPlayer {
         // The game is already over and they won so just do not do anything
         if (arena.getTeamScore(team) == arena.MAX_SCORE)
             return;
-
-        killStreak++;
-        coins = coins + arena.KILLCOIN_PER_KILL;
-        money++; // TODO: check arena settings for per kill money
         kills++;
+        killStreak++;
+
+        arenaPlayer.withdraw(arena.MONEY_PER_DEATH);
+        arenaPlayer.withdrawCoin(arena.KILLCOIN_PER_DEATH);
+        deposit(arena.MONEY_PER_KILL);
+        depositCoin(arena.KILLCOIN_PER_KILL);
+
         arena.incrementTeamScore(team);
         Settings.PLAYERDATA.incrementStat(StatType.KILLS, this);
         Settings.PLAYERDATA.incrementStat(StatType.HIGEST_KILL_STREAK, this);
@@ -196,6 +207,15 @@ public class ArenaPlayer extends PaintballPlayer {
         if (item.hasExpirationTime()) {
             new ExpirationCountdown(item, this, item.getExpirationTime());
         }
+
+        if (item.requiresMoney()) {
+            withdraw(item.getMoney());
+            Settings.ECONOMY.withdrawPlayer(player, item.getMoney());
+        }
+
+        if (item.requiresKillCoins()) {
+            withdrawCoin(item.getKillCoins());
+        }
         coinItems.put(item.getItemName(true), item);
     }
 
@@ -214,21 +234,12 @@ public class ArenaPlayer extends PaintballPlayer {
             deaths++;
             lives--;
 
-            if (coins - arena.KILLCOIN_PER_DEATH > 0 || coins - arena.KILLCOIN_PER_DEATH < 0 && arena.KILL_COINS_NEGATIVE)
-                coins = coins - arena.KILLCOIN_PER_DEATH;
-            else
-                coins = 0;
-
-            if (money - arena.KILLCOIN_PER_DEATH > 0 || coins - arena.KILLCOIN_PER_DEATH < 0 && arena.KILL_COINS_NEGATIVE)
-                coins = coins - arena.KILLCOIN_PER_DEATH;
-            else
-                coins = 0;
-
             Settings.PLAYERDATA.incrementStat(StatType.DEATHS, this);
 
             // If they have no more lives turn them into a spectator player until the game ends
             if (arena.LIVES > 0 && lives == 0) {
                 arena.removePlayer(this, false);
+                team.playerLeaveTeam();
                 Utils.stripValues(player);
                 new SpectatorPlayer(this);
                 return;
@@ -282,6 +293,40 @@ public class ArenaPlayer extends PaintballPlayer {
         isWinner = true;
     }
 
+    /**
+     * Adds money to the player's balance and to their gained money
+     * @param amount Amount to be added to player's balance
+     */
+    public void deposit(double amount){
+        if (!VAULT)
+            return;
+
+        money += amount;
+        Settings.ECONOMY.depositPlayer(player, amount);
+    }
+
+    public void withdraw(double amount) {
+        if (!VAULT)
+            return;
+
+        money -= amount;
+        Settings.ECONOMY.withdrawPlayer(player, amount);
+    }
+
+    public void depositCoin(double amount){
+        if (!arena.KILL_COIN_SHOP)
+            return;
+
+        coins += amount;
+    }
+
+    public void withdrawCoin(double amount) {
+        if (!arena.KILL_COIN_SHOP)
+            return;
+
+        coins -= amount;
+    }
+
     /*
     Getters
      */
@@ -305,7 +350,7 @@ public class ArenaPlayer extends PaintballPlayer {
         return killStreak;
     }
 
-    public int getMoney() {
+    public double getMoney() {
         return money;
     }
 
