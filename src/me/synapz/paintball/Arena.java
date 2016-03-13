@@ -1,10 +1,9 @@
 package me.synapz.paintball;
 
 
-import com.connorlinfoot.titleapi.TitleAPI;
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 import com.google.common.base.Joiner;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
-import me.synapz.paintball.countdowns.GameCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.locations.SignLocation;
@@ -436,7 +435,7 @@ public class Arena {
         String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", "));
         broadcastMessage((teams.size() == 1 ? "The " + list + " team won!": "There was a tie between " + formattedWinnerList.toString()));
         for (PaintballPlayer player : getAllPlayers().values())
-            TitleAPI.sendTitle(player.getPlayer(), 20, 40, 20, THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost"): formattedWinnerList.toString()));
+            BountifulAPI.sendTitle(player.getPlayer(), 20, 40, 20, THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost"): formattedWinnerList.toString()));
         new GameFinishCountdown(WIN_WAIT_TIME, this);
     }
 
@@ -449,28 +448,14 @@ public class Arena {
     }
 
     public void broadcastTitle(String header, String footer, int fadeIn, int stay, int fadeOut) {
-        if (!TITLE_API)
-            return;
-
         for (Player player : allPlayers.keySet()) {
-            TitleAPI.sendTitle(player, fadeIn, stay, fadeOut, header, footer);
+            BountifulAPI.sendTitle(player, fadeIn, stay, fadeOut, header, footer);
         }
     }
 
     // Returns the team with less players for when someone joins
     private Team getTeamWithLessPlayers() {
-        // Make new HashMap with Team to Size, this way we can easily extract the largest size
-        HashMap<Team, Integer> size = new HashMap<Team, Integer>();
-        for (Team t : getArenaTeamList()) {
-            // set the team size to 0
-            size.put(t, 0);
-            for (LobbyPlayer lobbyPlayer : lobby) {
-                if (lobbyPlayer.getTeam().getTitleName().equals(t.getTitleName())) {
-                    size.put(t, size.get(t)+1);
-                }
-            }
-        }
-        return Utils.max(this, size);
+        return Utils.max(this);
     }
 
     // If we can start the lobby timer

@@ -43,8 +43,6 @@ public class GameCountdown extends PaintballCountdown {
 
         arena.win(teamsWhoWon);
         tasks.remove(arena, this);
-
-        // TODO: unreigster all objectives
     }
 
     public void onIteration() {

@@ -1,0 +1,169 @@
+# Prefix of the plugin, shown in all messages sent by the plugin
+prefix: '&8[&3Paintball&8] '
+# Theme color of messages. This is the main color used in main text. Set it to match your server
+theme-color: '&3'
+# Secondary color of messages. Used as a secondary color in with theme-color
+secondary-color: '&7'
+# Time, in ticks, to update the Leaderboard (Stats, Player names), and Autojoin (Prefixes)signs. Making this number bigger may decrease lag if you experience any, but will take signs longer to change. Changing this will require a restart/reload
+# 20 Ticks = 1 Second
+sign-update-time: 40
+
+Options:
+  # If TitleAPI plugin is installed and this is true, plugin will display some messages in the middle of the screen to the player
+  title-api: true
+  # If ActionBarAPI plugin is installed and this is true, plugin will take advantage of the action bar to show players additional information, like expiration time of an item
+  action-bar: true
+  # If Vault is installed and this is true, plugin will be able to make money transfers
+  vault: true
+  # Will enable SQL, make sure SQL-Settings is configured to work with your SQL server.
+  SQL: false
+  # Will allow Bungeecord (joining Paintball on other servers) and will make Bungeecord section functional. Requires additional Bungee plugin
+  bungeecord: false
+
+# Requires SQL to be true
+# If SQL is enabled the statistics of games will be backup to the SQL database below. This means you can sync stats between servers
+SQL-Settings:
+  host: localhost
+  port: 1433
+  user: root
+  pass: password123
+  database: Spigot
+
+# Requires bungeecord to be true
+Bungeecord:
+  # This ID must be unique across the network, it is used to send players from the hub plugin(make sure it can fit on a sign)
+  ServerID: Paint1
+
+
+Kits:
+Special-Items:
+
+Commands:
+  # If true, disables all commands in arena except for: Allowed commands and (if all-paintball-commands is true) Paintball commands.
+  disable-all-commands: true
+  # If true, allows ALL Paintball commands to be entered
+  all-paintball-commands: true
+  # Commands that will always be blocked while in the arena
+  Blocked:
+  - /god
+  - /enchant
+   # Commands that will always be allowed while in the arena. Usually put commands in here that will not affect game play in any way
+  Allowed:
+  - /money
+  - /time
+
+###############################
+#        KillCoin Shop        #
+###############################
+# You can make more KillCoinItems through the small API, with directions on plugin page #TODO plugin page here
+Kill-Coin-Shop:
+  double-snow-ball-shooter:
+    # The type of the KillCoin item, avaiable types: double_shooter, TODO: more types
+    # You are only limited to the default types unless you make more KillCoin items through the API
+    type: double_shooter
+    # The display name of the item (Supports chat colors &1,&2 etc)
+    name: "&6Double Paintball Shooter"
+    # The material the item. Must be in caps. For a list of materials look at: TOOD: list of materials here
+    material: "SNOW_BALL"
+    # The description (item lore) of what the item does (Supports chat colors and "\n"--which will add a new line to the description)
+    description: "&dGives you an extra speed Paintball launcher\n&dthat can shoot two paintballs at a time!"
+    # Permission required to buy item, set to "none" for no requiring no permission
+    permission-required: "paintball.shop.doubleshooter"
+    # Amount given of this item. Do not put greater than 64 # TODO: allow greater than 64
+    amount: 1
+    # Time, in seconds, until item expires, 0 for no expiration. Uses ActionBarAPI plugin to show expiration time to player
+    expiration-time: 0
+    # Money that will be spent for the item, requires Vault
+    money: 20
+    # KillCoins that will be spent for the item
+    killcoins: 2
+    # Weather or not the item will be shown in the KillCoin Shop
+    shown: true
+
+###############################
+#      Per-Arena Settings     #
+###############################
+Per-Arena-Settings:
+  # The default settings for each arena. Set an arena setting to "default" in order to use this default value ex: kills-to-win: default
+  # Arenas will auto-generate with values "default" whenever a new arena is created
+  Defaults:
+    # The currency for money
+    currency: "$"
+    # The score (amount of kills) a team must get to win
+    max-score: 50
+    # How much time (in seconds) the game lasts. If no one reaches the kills-to-win when this timer ends the team with most kills is the winner
+    time: 300
+    # How many lives a player has before they are set to a spectator. 0 for unlimited lives, where they play until the time or max-score is reached
+    lives: 0
+    # How much time (in seconds) to wait after a team wins before players will be sent out of the arena. In this time players can see their scores and who won
+    win-waiting-time: 10
+    # True - Coin Shop is enabled for the arena. False - No Coin Shop and Coins are removed
+    kill-coin-shop: true
+    # Time in seconds players have after they die before they can be killed by a snowball
+    safe-time: 5
+    # How many hits to kill an Arena player
+    hits-to-kill: 3
+    # Amount of seconds before a player can switch their team again (Prevents team switch spam)
+    team-switch-cooldown: 3
+
+    # Settings for when a player joins an arena
+    Join-Arena:
+      # True - give a wool helmet based on their team color. False - instead of wool, there will be a colored leather helmet
+      give-wool-helmet: true
+      # True - colors player's nametag based on their team color. False - no color
+      color-player-title: true
+      # True - Chat will only send to players on the same team. False - Chat will send to whole arena (only for when in lobby)
+      per-team-chat: true
+
+    # Settings for when a player joins a lobby
+    Join-Lobby:
+      # True - give a wool helmet based on their team color. False - instead of wool, there will be a colored leather helmet
+      give-wool-helmet: true
+      # True - colors player's nametag based on their team color. False - Doesn't color name tag
+      color-player-title: true
+      # True - will give the player a item that allows them to switch team. False - player will not be able to switch team unless they leave and join
+      give-team-switcher: true
+      # True - Chat will only send to players on the same team. False - Chat will send to whole arena (in arena)
+      per-team-chat: true
+
+    # Default rewards
+    Rewards:
+      # Rewards having to do with kill coins. Kill coins are basically coins recived on a kill, which can be used to buy special items. Kill coins are reset every game.
+      Kill-Coins:
+        per-kill: 1
+        per-death: 0
+      # Rewards having to do with money. Money can also be used to buy special items and doesn't reset every game.
+      # Requires Vault and config setting as vault: true
+      Money:
+        per-kill: 15
+        per-death: 10
+        per-win: 100
+        per-defeat: 50
+
+    # TODO: cooldown time when clicking wool to change team
+    # Settings to do with chat aspects of Paintball-- when players are in the arena
+    Chat:
+      # True - use arena chat which can only be viewed by arena players. False - will use global chat
+      use-arena-chat: true
+      # True - broadcasts winning teams to all players on the server. False - only players in arena will see who won
+      broadcast-winner: false
+      # Chat format for specators. Tags: %ARENA%, %PLAYER%, %MSG%, %PREFIX%, %STATS%??
+      spectator-chat: "&7[Spectator] %PLAYER%: %MSG%"
+      # Chat format for lobby players and in game players. Tags: %ARENA%, %PLAYER%, %MSG%, %TEAMCOLOR%, %TEAMNAME%, %PREFIX%
+      arena-chat: "&8-%TEAMCOLOR%%TEAMNAME%&8- &a%PLAYER%&7: %MSG%"
+
+    Countdown:
+       # Lobby countdown configuration-- how long to wait for more players after the minimum is reached
+       lobby:
+         # How long it will take until players are teleported to their spawnpoints. The longer the more players may join. 0 for no countdown
+         countdown: 60
+         # The interval when showing the numbers. Ex. 60...50...40...
+         # Set interval the same as the countdown to remove any countdown messages
+         interval: 10
+         # The number at which there will be no delay in showing numbers. Ex. 15...10...5......3...2...1...
+         no-interval: 10
+       # Arena countdown configuration - after players have been set to their team spawnpoints, a countdown begins
+       arena:
+         countdown: 10
+         interval: 1
+         no-interval: 0

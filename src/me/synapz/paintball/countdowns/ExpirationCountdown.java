@@ -1,7 +1,6 @@
 package me.synapz.paintball.countdowns;
 
-import com.connorlinfoot.actionbarapi.ActionBarAPI;
-import me.synapz.paintball.Arena;
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.killcoin.KillCoinItem;
@@ -51,7 +50,7 @@ public class ExpirationCountdown extends PaintballCountdown {
         if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && item.equals(itemInHand) && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
             // TODO: if actionbar is installed and true in config
             if (times.get(inv.getItemInHand().getItemMeta().getDisplayName()).getCounter() == counter) {
-                ActionBarAPI.sendActionBar(player, Messenger.EXPIRATION_TIME.replace("%time%", String.valueOf((int)(counter-1))));
+                BountifulAPI.sendActionBar(player, Messenger.EXPIRATION_TIME.replace("%time%", String.valueOf((int)(counter-1))));
             }
         } else if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
         } else {
@@ -81,10 +80,10 @@ public class ExpirationCountdown extends PaintballCountdown {
                 }
             }
             String endMessage = Messenger.EXPIRATION_END.replace("%item%", item.getItemName(false));
-            ActionBarAPI.sendActionBar(player, endMessage, 240);
+            BountifulAPI.sendActionBar(player, endMessage, 240);
             Messenger.msg(player.getPlayer(), endMessage);
         }
-        times.remove(item.getItemName(true)); // TODO: does this work..?
+        times.remove(item.getItemName(true), this);
         Utils.removeActionBar(player);
         super.cancel();
     }
