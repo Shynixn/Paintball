@@ -16,17 +16,12 @@ import static org.bukkit.ChatColor.GREEN;
 
 public class ArenaStartCountdown extends PaintballCountdown {
 
-    private final Arena arena;
     private Map<Player, Location> startLocations = new HashMap<>();
 
-    public static final Map<Arena, ArenaStartCountdown> tasks = new HashMap<>();
-
     public ArenaStartCountdown(int counter, Arena a, HashMap<Player, Location> startLocations) {
-        super(counter); // adds 1 so to human eyes it goes from 5 to 1 instead of 4 to 0
+        super(a, counter); // adds 1 so to human eyes it goes from 5 to 1 instead of 4 to 0
 
-        this.arena = a;
         this.startLocations = startLocations;
-        tasks.put(arena, this);
     }
 
     public void onFinish() {

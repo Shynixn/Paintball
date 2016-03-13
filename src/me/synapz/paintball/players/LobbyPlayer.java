@@ -1,6 +1,9 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.*;
+import me.synapz.paintball.Arena;
+import me.synapz.paintball.Messenger;
+import me.synapz.paintball.Team;
+import me.synapz.paintball.Utils;
 import me.synapz.paintball.countdowns.ChangeTeamCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
@@ -13,59 +16,50 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
-import static me.synapz.paintball.storage.Settings.*;
+import static me.synapz.paintball.storage.Settings.PLAYERDATA;
+import static me.synapz.paintball.storage.Settings.THEME;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
 
-public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlayer {
+public class LobbyPlayer extends PaintballPlayer {
 
-    private PaintballScoreboard sb;
+    // TODO: Deal with 16 teams on a scoreboard
 
-    public LobbyPlayer(Arena a, Team t, Player p) {
-        super(a, t, p);
+    /**
+     * Creates a new arena
+     * @param arena Arena the player is in
+     * @param team Team the player is in
+     * @param player The player the LobbyPlayer is
+     */
+    public LobbyPlayer(Arena arena, Team team, Player player) {
+        super(arena, team, player);
     }
 
-    // TODO: what happens with 16 teams on scoreboard?
-
+    /**
+     * Initialize the player
+     * Teleports them to a random lobby location, increments the team count, and checks to start the timer
+     */
+    @Override
     protected void initPlayer() {
         PLAYERDATA.savePlayerInformation(player);
 
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
-        Utils.stripValues(player);
-        giveItems();
-        displayMessages();
-        giveWoolHelmet();
         team.playerJoinTeam();
+        giveWoolHelmet();
 
+        // If the arena can start (enough players) AND the lobby does not already have one started
         if (arena.canStartTimer() && LobbyCountdown.tasks.get(arena) == null) {
             new LobbyCountdown(arena.LOBBY_COUNTDOWN, arena);
         }
     }
 
-    protected String getChatLayout() {
-        return arena.ARENA_CHAT;
-    }
-
-
-    public void setTeam(Team newTeam) {
-        if (ChangeTeamCountdown.teamPlayers.containsKey(player.getName())) {
-            Messenger.msg(player, Messenger.TEAM_SWITCH_ERROR);
-            return;
-        }
-        team.playerLeaveTeam();
-        team = newTeam;
-        team.playerJoinTeam();
-        // TODO: replace with the const and chat message
-        Messenger.titleMsg(player, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
-        player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
-        giveItems();
-        giveWoolHelmet();
-        new ChangeTeamCountdown(arena.TEAM_SWITCH_COOLDOWN, player);
-    }
-
-
+    /**
+     * Creates a PaintballScoreboard to be easily manipulated
+     * @return The new PaintballScoreboard that was made
+     */
     @Override
-    public void createScoreboard() {
-        sb = new PaintballScoreboard(this, arena.LOBBY_COUNTDOWN, "Lobby:")
+    public PaintballScoreboard createScoreboard() {
+        return new PaintballScoreboard(this, arena.LOBBY_COUNTDOWN, "Lobby:")
                 .addTeams(false)
                 .addLine(ScoreboardLine.LINE)
                 .addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName())
@@ -73,25 +67,44 @@ public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlay
                 .build();
     }
 
+    /**
+     * Manually updates the scoreboard with the new values
+     */
     @Override
     public void updateScoreboard() {
-        if (sb == null)
+        if (pbSb == null)
             return;
 
         int size = arena.getArenaTeamList().size()-1;
-        sb.reloadTeams(false)
+        pbSb.reloadTeams(false)
                 .reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+2);
     }
 
+    /**
+     * Calls super leave and removes a player from the team count
+     */
     @Override
-    public void updateDisplayName() {
-        if (sb == null)
-            return;
-
-        sb.setDisplayNameCounter(LobbyCountdown.tasks.get(arena) == null ? arena.LOBBY_COUNTDOWN : (int) LobbyCountdown.tasks.get(arena).getCounter());
+    public void leave() {
+        super.leave();
+        team.playerLeaveTeam(); // Also want to decrement the team size
     }
 
-    private void giveItems() {
+    /**
+     * Sends the player join messages that include a title and chat message
+     */
+    @Override
+    protected void showMessages() {
+        arena.broadcastMessage(team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + arena.getLobbyPlayers().size() + "/" + arena.getMax());
+        arena.broadcastTitle(GREEN + "Joined arena", GRAY + "" + arena.getLobbyPlayers().size() + "/" + arena.getMax(), 20, 20, 20);
+        Messenger.titleMsg(player, true, GREEN + "You have joined the arena!");
+    }
+
+    /**
+     * Gives the player join items including
+     * Team Switcher (If true in config), armour, and wool helmet
+     */
+    @Override
+    protected void giveItems() {
         player.getInventory().clear();
 
         if (!arena.GIVE_TEAM_SWITCHER)
@@ -122,16 +135,24 @@ public final class LobbyPlayer extends PaintballPlayer implements ScoreboardPlay
         player.updateInventory();
     }
 
-    private void displayMessages() {
-        arena.broadcastMessage(team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + arena.getLobbyPlayers().size() + "/" + arena.getMax());
-        arena.broadcastTitle(GREEN + "Joined arena", GRAY + "" + arena.getLobbyPlayers().size() + "/" + arena.getMax(), 20, 20, 20);
-        Messenger.titleMsg(player, true, GREEN + "You have joined the arena!");
-    }
-
-    @Override
-    public void leaveArena() {
-        // removeScoreboard();
+    /**
+     * Changes the player's team, teleports them to new team lobby location, sends them messages
+     * Refreshes their inventory, and creates a new ChangeTeamCountdown to block fast team switching
+     * @param newTeam Team to switch to
+     */
+    public void setTeam(Team newTeam) {
+        if (ChangeTeamCountdown.teamPlayers.containsKey(player.getName())) {
+            Messenger.msg(player, Messenger.TEAM_SWITCH_ERROR);
+            return;
+        }
         team.playerLeaveTeam();
-        super.leaveArena();
+        team = newTeam;
+        team.playerJoinTeam();
+        // TODO: replace with the const and chat message
+        Messenger.titleMsg(player, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
+        player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
+        giveItems();
+        giveWoolHelmet();
+        new ChangeTeamCountdown(arena.TEAM_SWITCH_COOLDOWN, player);
     }
 }

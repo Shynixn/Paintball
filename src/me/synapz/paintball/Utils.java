@@ -1,10 +1,7 @@
 package me.synapz.paintball;
 
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
-import me.synapz.paintball.countdowns.ArenaStartCountdown;
-import me.synapz.paintball.countdowns.GameCountdown;
-import me.synapz.paintball.countdowns.GameFinishCountdown;
-import me.synapz.paintball.countdowns.LobbyCountdown;
+import me.synapz.paintball.countdowns.*;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -217,8 +214,7 @@ public class Utils {
     }
 
     public static int getCurrentCounter(Arena arena) {
-        return (int) (ArenaStartCountdown.tasks.containsKey(arena) ? ArenaStartCountdown.tasks.get(arena).getCounter() : LobbyCountdown.tasks.containsKey(arena) ? LobbyCountdown.tasks.get(arena).getCounter() : GameCountdown.gameCountdowns.containsKey(arena) ? GameCountdown.gameCountdowns.get(arena).getCounter() : GameFinishCountdown.arenasFinishing.containsKey(arena) ? (int) GameFinishCountdown.arenasFinishing.get(arena).getCounter() : 0);
-
+        return (int) (PaintballCountdown.tasks.containsKey(arena) ? PaintballCountdown.tasks.get(arena).getCounter() : -1);
     }
 
     /*

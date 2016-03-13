@@ -4,15 +4,12 @@ import static me.synapz.paintball.storage.Settings.*;
 
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.LobbyPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import static org.bukkit.Color.*;
 
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.*;
 
@@ -89,7 +86,7 @@ public class Team {
         Specifically used in SetTeam's command class when we set the arena's teams
         Used when loading an already created arena, check's the arenas already-set teams then re-creates it in memory.
         @param a - arena being set to
-        @param colorCode - color of the team
+        @param  - color of the team
      **/
 
     public Team(Arena a) {

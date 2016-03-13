@@ -1,9 +1,6 @@
 package me.synapz.paintball.scoreboards;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.Team;
-import me.synapz.paintball.countdowns.GameCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
@@ -52,16 +49,29 @@ public class PaintballScoreboard {
                 sb.registerNewTeam(team.getTitleName());
         }
         // Registers the Spectator team is the player is a spectator
-        if (sb.getTeam("Spectator") == null)
-            sb.registerNewTeam("Spectator");
+        if (sb.getTeam("Spectator") == null) {
+            org.bukkit.scoreboard.Team specTeam = sb.registerNewTeam("Spectator");
+            specTeam.setCanSeeFriendlyInvisibles(true);
+        }
 
-        updateNametags(true);
+        updateNametags();
     }
 
     public void setDisplayNameCounter(int time) {
         String name = DISPLAY_NAME.replace("%time%", convertToNumberFormat(time));
         objective.setDisplayName(name);
         player.setScoreboard(sb);
+    }
+
+    public PaintballScoreboard addLine(ScoreboardLine sbLine, String startValue, boolean toAdd) {
+        if (toAdd)
+            return addLine(sbLine, startValue);
+        else
+            return this;
+    }
+
+    public PaintballScoreboard addLine(ScoreboardLine sbLine, int startValue, boolean toAdd) {
+        return addLine(sbLine, String.valueOf(startValue), toAdd);
     }
 
     public PaintballScoreboard addLine(ScoreboardLine sbLine) {
@@ -87,7 +97,7 @@ public class PaintballScoreboard {
             lines.put(index, name);
             index++;
         }
-        updateNametags(true);
+        updateNametags();
         return this;
     }
 
@@ -103,16 +113,16 @@ public class PaintballScoreboard {
             lines.replace(size, oldValue, newValue);
             size++;
         }
-        updateNametags(false);
+        updateNametags();
         return this;
     }
 
-    public PaintballScoreboard updateNametags(boolean firstTime) {
+    public PaintballScoreboard updateNametags() {
         for (ArenaPlayer arenaPlayer : pbPlayer.getArena().getAllArenaPlayers()) {
             final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(arenaPlayer.getTeam().getTitleName());
             playerTeam.setAllowFriendlyFire(false);
             playerTeam.setPrefix(String.valueOf(arenaPlayer.getTeam().getChatColor()));
-            playerTeam.setSuffix(" " + Settings.THEME + (firstTime ? arenaPlayer.getArena().HITS_TO_KILL : arenaPlayer.getHealth()) + ChatColor.RED + "❤");
+            playerTeam.setSuffix(" " + Settings.THEME + (arenaPlayer.getHealth()) + ChatColor.RED + "❤");
             playerTeam.addPlayer(arenaPlayer.getPlayer());
         }
         for (LobbyPlayer lobbyPlayer : pbPlayer.getArena().getLobbyPlayers()) {
@@ -151,7 +161,7 @@ public class PaintballScoreboard {
 
     public PaintballScoreboard build() {
         player.setScoreboard(sb);
-        updateNametags(false);
+        updateNametags();
         return this;
     }
 

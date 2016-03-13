@@ -3,6 +3,8 @@ package me.synapz.paintball.players;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
+import me.synapz.paintball.countdowns.LobbyCountdown;
+import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,7 +14,7 @@ import java.util.Arrays;
 
 import static me.synapz.paintball.storage.Settings.PREFIX;
 
-public abstract class PaintballPlayer {
+public abstract class PaintballPlayer implements ScoreboardPlayer {
 
     /*
     -----
@@ -23,6 +25,8 @@ public abstract class PaintballPlayer {
     protected Player player;
     protected Team team;
     protected Scoreboard sb;
+    protected PaintballScoreboard pbSb;
+    protected boolean giveItems = true;
 
     /*
     -----
@@ -33,12 +37,13 @@ public abstract class PaintballPlayer {
         this.arena = a;
         this.team = t;
         this.player = p;
+
         arena.addPlayer(this);
         initPlayer();
+        if (giveItems)
+            giveItems();
+        showMessages();
         loadScoreboard();
-
-        // update the scoreboard now that they are added
-        arena.updateSigns();
     }
 
     /*
@@ -46,9 +51,11 @@ public abstract class PaintballPlayer {
     Methods all PaintballPlayer objects must implement, each object type will perform different tasks in these methods
     -----
      */
-    protected abstract String getChatLayout();
-
     protected abstract void initPlayer();
+
+    protected abstract void giveItems();
+
+    protected abstract void showMessages();
 
     /*
     -----
@@ -70,6 +77,7 @@ public abstract class PaintballPlayer {
     public Arena getArena() {
         return arena;
     }
+
     // Gives the player a wool helmet based on their team
     protected void giveWoolHelmet() {
         // TODO: is this even a good setting?? ,-,
@@ -82,7 +90,7 @@ public abstract class PaintballPlayer {
     // Formats a message with the config, then sends a chat message to all
     public void chat(String message) {
         // TODO: check if chat is enabled in Settings, and then return
-        String chat = getChatLayout();
+        String chat = arena.getSpectators().contains(this) ? arena.SPEC_CHAT : arena.ARENA_CHAT;
 
         chat = chat.replace("%TEAMNAME%", team.getTitleName());
         chat = chat.replace("%TEAMCOLOR%", team.getChatColor() + "");
@@ -95,20 +103,24 @@ public abstract class PaintballPlayer {
     }
 
     // Leaves an arena (removes their color names, restores information, removes from lists, and checks to see if to force stop (1 player left)
-    public void leaveArena() {
-        forceLeaveArena(); // puts items back (no messages)
+    public void leave() {
+        arena.removePlayer(this, true); // removes player from all array lists
+
+        // check to see if there is only one player left, if there is everyone else left
+        if (arena.getAllArenaPlayers().size() <= 1) {
+            arena.forceLeaveArena();
+        }
     }
 
-    public void forceLeaveArena() {
-        arena.removePlayer(this); // removes player from all array lists
-        Settings.PLAYERDATA.restorePlayerInformation(player);
-        arena.updateSigns();
-    }
-
-    protected void loadScoreboard() {
+    private void loadScoreboard() {
         sb = Bukkit.getScoreboardManager().getNewScoreboard();
+        pbSb = createScoreboard();
+        sb = player.getScoreboard();
+    }
 
-        if (this instanceof ScoreboardPlayer)
-            ((ScoreboardPlayer) this).createScoreboard();
+    @Override
+    public void updateDisplayName() {
+        if (pbSb != null)
+            pbSb.setDisplayNameCounter(Utils.getCurrentCounter(arena));
     }
 }

@@ -3,6 +3,7 @@ package me.synapz.paintball.storage;
 
 import me.synapz.paintball.*;
 import me.synapz.paintball.killcoin.KillCoinItemHandler;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,6 +43,8 @@ public class Settings {
     public static boolean SQL;
     public static boolean BUNGEE_CORD;
 
+    public static Economy ECONOMY = null;
+
     public static ArenaFile ARENA;
     public static PlayerData PLAYERDATA;
     public static FileConfiguration ARENA_FILE;
@@ -62,7 +65,6 @@ public class Settings {
     }
 
     public void backupConfig() {
-        Messenger.msg(Bukkit.getPlayer("Synapz_"), "backuping");
         Map<String, File> allFiles = new HashMap<String, File>(){{
             for (File file : pb.getDataFolder().listFiles())
                 put(file.getName(), file);
@@ -115,7 +117,7 @@ public class Settings {
         CONFIG_VERSION              = config.getInt("version");
         SIGN_UPDATE_TIME            = config.getInt("sign-update-time");
         TITLE_API                   = config.getBoolean("Options.title-api") && Bukkit.getPluginManager().getPlugin("TitleAPI") != null;
-        VAULT                       = config.getBoolean("Options.vault");
+        VAULT                       = config.getBoolean("Options.vault") && Bukkit.getServer().getPluginManager().getPlugin("Vault") != null;
         SQL                         = config.getBoolean("Options.SQL");
     }
 

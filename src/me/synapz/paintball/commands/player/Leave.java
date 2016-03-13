@@ -21,7 +21,7 @@ public class Leave extends PaintballCommand {
             return;
         }
 
-        a.getAllPlayers().get(player).leaveArena();
+        a.getAllPlayers().get(player).leave();
         Messenger.success(player, "Successfully left arena.");
     }
 

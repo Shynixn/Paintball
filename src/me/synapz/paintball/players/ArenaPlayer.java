@@ -1,9 +1,10 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.*;
+import me.synapz.paintball.Arena;
 import me.synapz.paintball.Team;
-
-import me.synapz.paintball.countdowns.*;
+import me.synapz.paintball.Utils;
+import me.synapz.paintball.countdowns.ExpirationCountdown;
+import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.killcoin.KillCoinItem;
@@ -23,92 +24,66 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.synapz.paintball.storage.Settings.*;
+import static me.synapz.paintball.storage.Settings.SECONDARY;
+import static me.synapz.paintball.storage.Settings.THEME;
+import static me.synapz.paintball.storage.Settings.VAULT;
 
+public class ArenaPlayer extends PaintballPlayer {
 
-public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlayer {
+    private Map<String, KillCoinItem> coinItems = new HashMap<>();
 
-    private Map<String, KillCoinItem> playersKillCoinItems = new HashMap<>();
-    private int killStreak = 0;
-    private int killCoins = 0;
-    private int kills = 0;
-    private int deaths = 0;
-    private int money;
-    private boolean won = false;
-    private int health = arena.HITS_TO_KILL;
-    private int lives = arena.LIVES;
+    private int killStreak;
+    private int coins;
+    private int deaths;
+    private int kills;
+    private double money;
+    private int health;
+    private int lives;
 
-    private PaintballScoreboard sb;
+    private boolean isWinner;
 
+    /**
+     * Creates a new ArenaPlayer
+     * @param a Arena for them to be added in
+     * @param t Team they are on
+     * @param p Player they are connected to
+     */
     public ArenaPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
     }
 
-    public boolean won() {
-        return won;
-    }
-
-    @Override
-    protected String getChatLayout() {
-        return arena.ARENA_CHAT;
-    }
-
+    /**
+     * Teleports the player to an arena spawn point
+     * Gives the player a wool helmet
+     */
     @Override
     protected void initPlayer() {
-        // TODO: dont make random!
+        // TODO: Don't make random but instead have a counter
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
-        player.getInventory().clear();
-        giveArmour();
         giveWoolHelmet();
+        giveItems = false;
+        health = arena.HITS_TO_KILL;
+        lives = arena.LIVES;
     }
 
     @Override
-    public void leaveArena() {
-        super.forceLeaveArena();
-        team.playerLeaveTeam();
+    protected void showMessages() {
 
-        // TODO: instead of check
-        for (Team team : arena.getArenaTeamList()) {
-            if (team.getSize() == 0) {
-                // TODO: get winner
-                arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
-                break;
-            }
-        }
-
-        Settings.PLAYERDATA.incrementStat(StatType.GAMES_PLAYED, this);
     }
 
     @Override
-    public void updateScoreboard() {
-        if (sb == null)
-            return;
-
-        int size = arena.getArenaTeamList().size()-1;
-        sb.reloadTeams(true)
-                .reloadLine(ScoreboardLine.MONEY, "1", size+2)
-                .reloadLine(ScoreboardLine.KD, getKd(), size+3)
-                .reloadLine(ScoreboardLine.KILL_COIN, String.valueOf(getKillCoins()), size+4)
-                .reloadLine(ScoreboardLine.KILL_STREAK, String.valueOf(getKillStreak()), size+5)
-                .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6)
-                .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8)
-                .reloadLine(ScoreboardLine.LIVES, Utils.makeHealth(lives), size+9, arena.LIVES > 0);
+    protected void giveWoolHelmet() {
+        super.giveWoolHelmet();
     }
 
     @Override
-    public void updateDisplayName() {
-        if (sb != null)
-            sb.setDisplayNameCounter(Utils.getCurrentCounter(arena));
-    }
-
-    @Override
-    public void createScoreboard() {
-        sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
+    public PaintballScoreboard createScoreboard() {
+        PaintballScoreboard sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
                 .addTeams(true)
                 .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.MONEY, 0) // TODO: vault.getMoney(Player) ?
+                .addLine(ScoreboardLine.MONEY, arena.CURRENCY + Settings.ECONOMY.getBalance(player), Settings.VAULT)
                 .addLine(ScoreboardLine.KD, "0.00")
-                .addLine(ScoreboardLine.KILL_COIN, 0)
+                .addLine(ScoreboardLine.KILL_COIN, 0, arena.KILL_COIN_SHOP)
                 .addLine(ScoreboardLine.KILL_STREAK, 0)
                 .addLine(ScoreboardLine.KILLS, 0)
                 .addLine(ScoreboardLine.LINE)
@@ -117,16 +92,72 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
             sb.addLine(ScoreboardLine.LIVES, Utils.makeHealth(arena.LIVES));
 
         sb.addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName());
-        sb.build();
+        return sb.build();
     }
 
-    public void setWon() {
-        won = true;
+    @Override
+    public void updateScoreboard() {
+        if (pbSb == null)
+            return;
+
+        int size = arena.getArenaTeamList().size()-1;
+        pbSb.reloadTeams(true)
+                .reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + Settings.ECONOMY.getBalance(player), size+2)
+                .reloadLine(ScoreboardLine.KD, getKd(), size+3)
+                .reloadLine(ScoreboardLine.KILL_COIN, String.valueOf(getCoins()), size+4)
+                .reloadLine(ScoreboardLine.KILL_STREAK, String.valueOf(getKillStreak()), size+5)
+                .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6)
+                .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8)
+                .reloadLine(ScoreboardLine.LIVES, Utils.makeHealth(lives), size+9, arena.LIVES > 0);
     }
 
-    public boolean die() {
+    @Override
+    public void leave() {
+        super.leave();
+        team.playerLeaveTeam();
+        Settings.PLAYERDATA.incrementStat(StatType.GAMES_PLAYED, this);
+
+        if (isWinner)
+            Settings.ECONOMY.depositPlayer(player, arena.MONEY_PER_WIN);
+        else
+            Settings.ECONOMY.withdrawPlayer(player, arena.MONEY_PER_DEFEAT);
+
+        // TODO: What if there is 5 teams with 1 with 0 players... Make it so it
+        // TODO: So it also checks for arenas with players or if 1 player in the arena
+        // Looks in each team to see if there are 0 players in it...?
+        for (Team team : arena.getArenaTeamList()) {
+            if (team.getSize() == 0) {
+                // TODO: get winner
+                // arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
+                break;
+            }
+        }
+    }
+
+    /**
+     * Gives player a Paintball stack and Coin Shop (if it is true)
+     * This must be explicitly called since it is not overriding the subclass method
+     */
+    public void giveItems() {
+        PlayerInventory inv = player.getInventory();
+
+        inv.setArmorContents(colorLeatherItems(new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_HELMET)));
+        inv.setItem(0, Utils.makeItem(Material.SNOW_BALL, THEME + "Paintball", 64));
+
+        if (arena.KILL_COIN_SHOP)
+            inv.setItem(8, Utils.makeItem(Material.DOUBLE_PLANT, ChatColor.GOLD + "Coin Shop", 1));
+        player.updateInventory();
+    }
+
+    /**
+     * When a player is hit their health will go down one
+     * If their health is less than 1 or equal to one,  kill them and update all scoreboard with new score
+     * Otherwise just call setHealth() to do other stuff
+     * @return If they player should die (0 health) or just subtract their health
+     */
+    public boolean hit() {
         int newHealth = health--;
-        sb.updateNametags(false);
+        pbSb.updateNametags();
         if (newHealth != 1) {
             arena.updateAllScoreboard();
             return false;
@@ -136,64 +167,84 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
         }
     }
 
-    public void kill(ArenaPlayer target) {
+    /**
+     * When this ArenaPlayer kills another ArenaPlayer.
+     * @param arenaPlayer ArenaPlayer who was killed
+     */
+    public void kill(ArenaPlayer arenaPlayer) {
+        // The game is already over and they won so just do not do anything
         if (arena.getTeamScore(team) == arena.MAX_SCORE)
             return;
-
-        killStreak++;
-        killCoins = killCoins + arena.KILLCOIN_PER_KILL;
-        money++; // TODO: check arena settings for per kill money
         kills++;
+        killStreak++;
+
+        arenaPlayer.withdraw(arena.MONEY_PER_DEATH);
+        arenaPlayer.withdrawCoin(arena.KILLCOIN_PER_DEATH);
+        deposit(arena.MONEY_PER_KILL);
+        depositCoin(arena.KILLCOIN_PER_KILL);
+
         arena.incrementTeamScore(team);
         Settings.PLAYERDATA.incrementStat(StatType.KILLS, this);
         Settings.PLAYERDATA.incrementStat(StatType.HIGEST_KILL_STREAK, this);
-        arena.broadcastMessage(THEME + player.getName() + SECONDARY + " shot " + THEME + target.getPlayer().getName());
+        arena.broadcastMessage(THEME + player.getName() + SECONDARY + " shot " + THEME + arenaPlayer.getPlayer().getName());
 
-        for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
-            arenaPlayer.updateScoreboard();
+        // Updates all player's scoreboards
+        for (ArenaPlayer player : arena.getAllArenaPlayers()) {
+            player.updateScoreboard();
         }
+        // If the max score was reached set them to win
         if (reachedGoal()) {
             arena.win(Arrays.asList(team));
         }
     }
 
+    /**
+     * Adds a CoinItem to a player's inventory
+     * @param item CoinItem to be added to the inventory
+     */
     public void addItem(KillCoinItem item) {
         this.getPlayer().getInventory().addItem(item.getItemStack(this, false));
         if (item.hasExpirationTime()) {
             new ExpirationCountdown(item, this, item.getExpirationTime());
         }
-        playersKillCoinItems.put(item.getItemName(true), item);
+
+        if (item.requiresMoney()) {
+            withdraw(item.getMoney());
+            Settings.ECONOMY.withdrawPlayer(player, item.getMoney());
+        }
+
+        if (item.requiresKillCoins()) {
+            withdrawCoin(item.getKillCoins());
+        }
+        coinItems.put(item.getItemName(true), item);
     }
 
-    public KillCoinItem getItemWithName(String displayName) {
-        return playersKillCoinItems.get(displayName);
-    }
-
+    /**
+     * When ever someone changes the player's health do all this stuff
+     * @param newHealth Health to be set to
+     */
     public void setHealth(int newHealth) {
         health = newHealth;
-        sb.updateNametags(false);
 
+        // This will set the hearts to what they should be above their name
+        arena.updateAllScoreboard();
+
+        // This means they died, it just changes all the values
         if (health == 1) {
             deaths++;
             lives--;
 
-            if (killCoins - arena.KILLCOIN_PER_DEATH > 0 || killCoins - arena.KILLCOIN_PER_DEATH < 0 && arena.KILL_COINS_NEGATIVE)
-                killCoins = killCoins - arena.KILLCOIN_PER_DEATH;
-            else
-                killCoins = 0;
-
-            if (money - arena.KILLCOIN_PER_DEATH > 0 || killCoins - arena.KILLCOIN_PER_DEATH < 0 && arena.KILL_COINS_NEGATIVE)
-                killCoins = killCoins - arena.KILLCOIN_PER_DEATH;
-            else
-                killCoins = 0;
-
             Settings.PLAYERDATA.incrementStat(StatType.DEATHS, this);
 
+            // If they have no more lives turn them into a spectator player until the game ends
             if (arena.LIVES > 0 && lives == 0) {
-                this.forceLeaveArena();
+                arena.removePlayer(this, false);
+                team.playerLeaveTeam();
+                Utils.stripValues(player);
                 new SpectatorPlayer(this);
                 return;
             } else {
+                // Reloads their settings for them to go back... Sets their health, kill streak, location, protection and updates their scoreboard
                 health = arena.HITS_TO_KILL;
                 killStreak = 0;
                 player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
@@ -203,69 +254,138 @@ public final class ArenaPlayer extends PaintballPlayer implements ScoreboardPlay
         }
     }
 
-    public int getHealth() {
-        return health;
+    /**
+     * Gets the KD as a String
+     * @return Correctly formatted KD
+     */
+    public String getKd() {
+        return String.format("%.2f", Utils.divide(kills, deaths));
     }
 
-    public void shoot(PlayerInteractEvent event) {
-        Settings.PLAYERDATA.incrementStat(StatType.SHOTS, this);
-    }
-
+    /**
+     * Gives a player a Coin Shop
+     */
     public void giveShop() {
         KillCoinItemHandler.getHandler().showInventory(this);
     }
 
-    public int getKillCoins() {
-        return killCoins;
-    }
-    // This will look into config.yml for the arena, if the time or kills is reached, they reahced the goal
-    private boolean reachedGoal() {
-        return arena.MAX_SCORE == arena.getTeamScore(team);
-    }
-
-    public int getMoney() {
-        return money;
+    /**
+     * Called whenever someone shoots a Paintball and increments their score
+     * @param event The event when someone clicks an item
+     */
+    public void shoot(PlayerInteractEvent event) {
+        Settings.PLAYERDATA.incrementStat(StatType.SHOTS, this);
     }
 
-    public int getKills() {
-        return kills;
+    /**
+     * Gets a CoinItem item from a display name
+     * @param displayName Name of the CoinItem
+     * @return CoinItem which was found
+     */
+    public KillCoinItem getItemWithName(String displayName) {
+        return coinItems.get(displayName);
+    }
+
+    /**
+     * Sets that a player has one the game
+     */
+    public void setWon() {
+        isWinner = true;
+    }
+
+    /**
+     * Adds money to the player's balance and to their gained money
+     * @param amount Amount to be added to player's balance
+     */
+    public void deposit(double amount){
+        if (!VAULT)
+            return;
+
+        money += amount;
+        Settings.ECONOMY.depositPlayer(player, amount);
+    }
+
+    public void withdraw(double amount) {
+        if (!VAULT)
+            return;
+
+        money -= amount;
+        Settings.ECONOMY.withdrawPlayer(player, amount);
+    }
+
+    public void depositCoin(double amount){
+        if (!arena.KILL_COIN_SHOP)
+            return;
+
+        coins += amount;
+    }
+
+    public void withdrawCoin(double amount) {
+        if (!arena.KILL_COIN_SHOP)
+            return;
+
+        coins -= amount;
+    }
+
+    /*
+    Getters
+     */
+    public int getCoins() {
+        return coins;
     }
 
     public int getDeaths() {
         return deaths;
     }
 
-    public String getKd() {
-        return String.format("%.2f", Utils.divide(kills, deaths));
+    public int getHealth() {
+        return health;
+    }
+
+    public int getKills() {
+        return kills;
     }
 
     public int getKillStreak() {
         return killStreak;
     }
 
-    public void giveItems() {
-        player.getInventory().clear();
-        player.getInventory().setItem(0, Utils.makeItem(Material.SNOW_BALL, THEME + "Paintball", 64));
-        player.getInventory().setItem(8, Utils.makeItem(Material.DOUBLE_PLANT, ChatColor.GOLD + "KillCoin Shop", 1));
-        player.updateInventory();
+    public double getMoney() {
+        return money;
     }
 
-    private void giveArmour() {
-        PlayerInventory inv = player.getInventory();
-        inv.setArmorContents(colorLeatherItems(new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_HELMET)));
+    public int getLives() {
+        return lives;
     }
 
+    public boolean isWinner() {
+        return isWinner;
+    }
+
+    /**
+     * Colors a list of armour
+     *
+     * @param items Items to be dyed
+     * @return Edited items to be added
+     */
     private ItemStack[] colorLeatherItems(ItemStack... items) {
         int location = 0;
         ItemStack[] editedItems = new ItemStack[items.length];
         for (ItemStack item : items) {
             ItemStack armour = new ItemStack(item.getType(), 1);
-            LeatherArmorMeta lam = (LeatherArmorMeta)armour.getItemMeta();
+            LeatherArmorMeta lam = (LeatherArmorMeta) armour.getItemMeta();
             lam.setColor(team.getColor());
             lam.setDisplayName(team.getChatColor() + team.getTitleName() + " Team");
             armour.setItemMeta(lam);
-            editedItems[location] = armour; location++;
+            editedItems[location] = armour;
+            location++;
         }
         return editedItems;
     }
+
+    private boolean reachedGoal() {
+        return arena.MAX_SCORE == arena.getTeamScore(team);
+    }
+
+
 }

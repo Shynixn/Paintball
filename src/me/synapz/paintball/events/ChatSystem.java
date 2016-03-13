@@ -18,6 +18,8 @@ public class ChatSystem implements Listener {
 
         if (a != null && a.containsPlayer(player)) {
             if (a.USE_ARENA_CHAT) {
+                PaintballPlayer pbPlayer = a.getPaintballPlayer(player);
+
                 a.getPaintballPlayer(player).chat(e.getMessage());
                 e.setCancelled(true);
             }

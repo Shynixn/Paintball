@@ -3,8 +3,10 @@ package me.synapz.paintball.events;
 import me.synapz.paintball.*;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
+import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -16,6 +18,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class LeaderboardSigns implements Listener {
 
@@ -81,7 +85,10 @@ public class LeaderboardSigns implements Listener {
         Sign sign = (Sign) e.getClickedBlock().getState();
         Player player = e.getPlayer();
 
-        if (sign.getLine(0) == null || !sign.getLine(0).equals("Paintball Leaderboard") || sign.getLine(1) == null) return;
+        if (Settings.ARENA.getSigns().get(sign.getLocation()) == null)
+            return;
+
+        Settings.PLAYERDATA.getStats(player, sign.getLine(1));
 
         // todo: get player of clicked sign's all stats and show them all their stats
     }

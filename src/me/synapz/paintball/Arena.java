@@ -1,10 +1,9 @@
 package me.synapz.paintball;
 
 
-import com.connorlinfoot.titleapi.TitleAPI;
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 import com.google.common.base.Joiner;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
-import me.synapz.paintball.countdowns.GameCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.locations.SignLocation;
@@ -49,6 +48,7 @@ public class Arena {
 
     public String ARENA_CHAT;
     public String SPEC_CHAT;
+    public String CURRENCY;
 
     public boolean BROADCAST_WINNER;
     public boolean PER_TEAM_CHAT_LOBBY;
@@ -62,8 +62,6 @@ public class Arena {
     public boolean USE_ARENA_CHAT;
     public boolean DISABLE_ALL_COMMANDS;
     public boolean ALL_PAINTBALL_COMMANDS;
-    public boolean KILL_COINS_NEGATIVE;
-    public boolean MONEY_NEGATIVE;
 
     public List<String> BLOCKED_COMMANDS;
     public List<String> ALLOWED_COMMANDS;
@@ -257,7 +255,7 @@ public class Arena {
         } else {
             broadcastMessage(toString() + RED + " has been disabled.");
             for (PaintballPlayer player : getAllPlayers().values())
-                player.forceLeaveArena();
+                player.leave();
             setState(ArenaState.DISABLED);
         }
         ARENA_FILE.set(getPath() + "Enabled", setEnabled);
@@ -327,7 +325,7 @@ public class Arena {
             int counter = Utils.getCurrentCounter(this);
             sign.setLine(0, prefix); // in case the prefix changes
             sign.setLine(1, getName()); // in case they rename it
-            sign.setLine(2, getStateAsString() + " " + (counter == 0 ? "" : counter + "s")); // TODO: put times here ;)
+            sign.setLine(2, getStateAsString() + " " + (counter == -1 ? "" : counter + "s")); // TODO: put times here ;)
             sign.setLine(3, getMax() <= 0 ? "0/0" : getLobbyPlayers().size() == getMax() || getAllArenaPlayers().size() == getMax() ? RED + "Full" : (state == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "" : state == ArenaState.IN_PROGRESS || state == ArenaState.STARTING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
             sign.update();
         }
@@ -399,12 +397,12 @@ public class Arena {
     public void forceLeaveArena() {
         List<PaintballPlayer> copiedList = new ArrayList<>(allPlayers.values());
         for (PaintballPlayer player : copiedList)
-            player.forceLeaveArena();
+            player.leave();
         allPlayers = new HashMap<>();
         lobby = new ArrayList<>();
         spectators = new ArrayList<>();
         inGame = new ArrayList<>();
-        updateSigns();
+        setState(ArenaState.WAITING);
         this.resetTeamScores();
     }
 
@@ -421,7 +419,7 @@ public class Arena {
             String spaces = Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(20);
             String title = THEME + " Games Stats ";
             Messenger.msg(player, spaces + title + spaces,
-                    (arenaPlayer.getMoney() < 0 ? "-" : "") + "$" + Math.abs(arenaPlayer.getMoney()),
+                    (arenaPlayer.getMoney() < 0 ? "-" : "+") + "$" + Math.abs(arenaPlayer.getMoney()),
                     "Kills: " + arenaPlayer.getKills(),
                     "Deaths: " + arenaPlayer.getDeaths(),
                     "Killstreak: " + arenaPlayer.getKillStreak(),
@@ -437,7 +435,7 @@ public class Arena {
         String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", "));
         broadcastMessage((teams.size() == 1 ? "The " + list + " team won!": "There was a tie between " + formattedWinnerList.toString()));
         for (PaintballPlayer player : getAllPlayers().values())
-            TitleAPI.sendTitle(player.getPlayer(), 20, 40, 20, THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost"): formattedWinnerList.toString()));
+            BountifulAPI.sendTitle(player.getPlayer(), 20, 40, 20, THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost"): formattedWinnerList.toString()));
         new GameFinishCountdown(WIN_WAIT_TIME, this);
     }
 
@@ -450,28 +448,14 @@ public class Arena {
     }
 
     public void broadcastTitle(String header, String footer, int fadeIn, int stay, int fadeOut) {
-        if (!TITLE_API)
-            return;
-
         for (Player player : allPlayers.keySet()) {
-            TitleAPI.sendTitle(player, fadeIn, stay, fadeOut, header, footer);
+            BountifulAPI.sendTitle(player, fadeIn, stay, fadeOut, header, footer);
         }
     }
 
     // Returns the team with less players for when someone joins
     private Team getTeamWithLessPlayers() {
-        // Make new HashMap with Team to Size, this way we can easily extract the largest size
-        HashMap<Team, Integer> size = new HashMap<Team, Integer>();
-        for (Team t : getArenaTeamList()) {
-            // set the team size to 0
-            size.put(t, 0);
-            for (LobbyPlayer lobbyPlayer : lobby) {
-                if (lobbyPlayer.getTeam().getTitleName().equals(t.getTitleName())) {
-                    size.put(t, size.get(t)+1);
-                }
-            }
-        }
-        return Utils.max(this, size);
+        return Utils.max(this);
     }
 
     // If we can start the lobby timer
@@ -537,11 +521,14 @@ public class Arena {
         return color + state.toString();
     }
 
-    public void removePlayer(PaintballPlayer pbPlayer) {
+    public void removePlayer(PaintballPlayer pbPlayer, boolean restoreData) {
+        if (restoreData)
+            Settings.PLAYERDATA.restorePlayerInformation(pbPlayer.getPlayer());
         allPlayers.remove(pbPlayer.getPlayer(), pbPlayer);
         lobby.remove(pbPlayer);
         inGame.remove(pbPlayer);
         spectators.remove(pbPlayer);
+        updateSigns();
     }
 
     public void addPlayer(PaintballPlayer pbPlayer) {
@@ -549,13 +536,14 @@ public class Arena {
             allPlayers.put(pbPlayer.getPlayer(), pbPlayer);
         }
 
-        if (pbPlayer instanceof LobbyPlayer) {
+        if (pbPlayer instanceof LobbyPlayer && !lobby.contains(pbPlayer)) {
             lobby.add((LobbyPlayer) pbPlayer);
-        } else if (pbPlayer instanceof ArenaPlayer) {
+        } else if (pbPlayer instanceof ArenaPlayer && !inGame.contains(pbPlayer)) {
             inGame.add((ArenaPlayer) pbPlayer);
-        } else if (pbPlayer instanceof SpectatorPlayer) {
+        } else if (pbPlayer instanceof SpectatorPlayer && !spectators.contains(pbPlayer)) {
             spectators.add((SpectatorPlayer) pbPlayer);
         }
+        updateSigns();
     }
 
     // Get the list of lobby players
@@ -587,8 +575,7 @@ public class Arena {
 
     public void updateAllScoreboardTimes() {
         for (PaintballPlayer player : getAllPlayers().values()) {
-            if (player instanceof ScoreboardPlayer)
-                ((ScoreboardPlayer) player).updateDisplayName();
+                player.updateDisplayName();
         }
     }
 
@@ -642,14 +629,13 @@ public class Arena {
         GIVE_TEAM_SWITCHER         = ARENA.loadBoolean("Join-Lobby.give-team-switcher", this);
         USE_ARENA_CHAT             = ARENA.loadBoolean("Chat.use-arena-chat", this);
         BROADCAST_WINNER           = ARENA.loadBoolean("Chat.broadcast-winner", this);
-        KILL_COINS_NEGATIVE        = ARENA.loadBoolean("Rewards.Kill-Coins.can-be-negative", this);
-        MONEY_NEGATIVE             = ARENA.loadBoolean("Rewards.Money.can-be-negative", this);
 
         DISABLE_ALL_COMMANDS       = config.getBoolean("Commands.disable-all-commands");
         ALL_PAINTBALL_COMMANDS     = config.getBoolean("Commands.all-paintball-commands");
 
         ARENA_CHAT                 = ARENA.loadString("Chat.arena-chat", this);
         SPEC_CHAT                  = ARENA.loadString("Chat.spectator-chat", this);
+        CURRENCY                   = ARENA.loadString("currency", this);
 
         BLOCKED_COMMANDS           = config.getStringList("Commands.Blocked");
         ALLOWED_COMMANDS           = config.getStringList("Commands.Allowed");

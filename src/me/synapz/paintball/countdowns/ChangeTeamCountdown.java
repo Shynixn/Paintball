@@ -1,11 +1,9 @@
 package me.synapz.paintball.countdowns;
 
-import com.connorlinfoot.actionbarapi.ActionBarAPI;
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Messenger;
-import me.synapz.paintball.players.ArenaPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -19,8 +17,7 @@ public class ChangeTeamCountdown extends PaintballCountdown {
     private Player player;
 
     public ChangeTeamCountdown(int counter, Player player) {
-        super(counter+1); // adds 1 so to human eyes it goes from 5 to 1 instead of 4 to 0
-        end = 1;
+        super(counter);
         this.name = player.getName();
         this.player = player;
 
@@ -32,12 +29,12 @@ public class ChangeTeamCountdown extends PaintballCountdown {
 
     public void onFinish() {
         teamPlayers.remove(name, this);
-        // TODO: send message, or somehow package ActionBarAPI with plugin?
-        ActionBarAPI.sendActionBar(this.player, Messenger.TEAM_SWITCH_END, 240);
+        BountifulAPI.sendActionBar(this.player, Messenger.TEAM_SWITCH_END, 240);
     }
 
     // Called every iteration of run()
     public void onIteration() {
+        BountifulAPI.sendActionBar(this.player, Messenger.TEAM_SWITCH_TIME.replace("%time%", String.valueOf((int) counter)));
     }
 
     public boolean stop() {

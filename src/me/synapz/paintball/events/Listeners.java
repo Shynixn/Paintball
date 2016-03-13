@@ -29,13 +29,15 @@ import org.bukkit.inventory.ItemStack;
 
 public class Listeners implements Listener {
 
+    // TODO: move armour, and other items
+
     // When ever a player leaves the game, make them leave the arena so they get their stuff
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onArenaQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(player);
         if (isInArena(player)) {
-            a.getAllPlayers().get(player).leaveArena();
+            a.getAllPlayers().get(player).leave();
         }
     }
 
@@ -124,7 +126,7 @@ public class Listeners implements Listener {
                 ArenaPlayer arenaPlayer = (ArenaPlayer) gamePlayer;
 
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (item != null && item.getType() == Material.DOUBLE_PLANT && item.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
+                    if (item != null && item.getType() == Material.DOUBLE_PLANT && item.getItemMeta().getDisplayName().contains("Coin Shop")) {
                         arenaPlayer.giveShop();
                         e.setCancelled(true);
                         return;
@@ -247,7 +249,7 @@ public class Listeners implements Listener {
         String hitPlayerName = hitPlayer.getPlayer().getName();
         String shooterPlayerName = arenaPlayer.getPlayer().getName();
 
-        if (GameFinishCountdown.arenasFinishing.keySet().contains(a)) {
+        if (a.getState() == Arena.ArenaState.STOPPING) {
             Messenger.error(arenaPlayer.getPlayer(), "Game is already finished.");
             event.setCancelled(true);
             return;
@@ -262,7 +264,7 @@ public class Listeners implements Listener {
         } else {
             Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
 
-            if (hitPlayer.die()) {
+            if (hitPlayer.hit()) {
                 arenaPlayer.kill(hitPlayer);
             } else {
                 Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
@@ -272,6 +274,9 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onDamageAsLobbyOrSpectator(EntityDamageEvent e) {
+        if (!(e.getEntity() instanceof Player))
+            return;
+
         Player player = (Player) e.getEntity();
 
         if (isInArena(player)) {
