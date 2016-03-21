@@ -2,7 +2,8 @@ package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.Arena;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
 
 public class LobbyCountdown extends PaintballCountdown {
 
@@ -13,6 +14,7 @@ public class LobbyCountdown extends PaintballCountdown {
     public void onFinish() {
         arena.broadcastMessage(GREEN + "Teleporting into arena...");
         arena.startGame();
+        this.cancel();
     }
 
     // Called every iteration of run()

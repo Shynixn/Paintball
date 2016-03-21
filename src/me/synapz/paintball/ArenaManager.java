@@ -4,16 +4,17 @@ import com.google.common.base.Joiner;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
-
-import static me.synapz.paintball.storage.Settings.PLAYERDATA;
-import static me.synapz.paintball.storage.Settings.THEME;
-import static org.bukkit.ChatColor.*;
-
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static me.synapz.paintball.storage.Settings.PLAYERDATA;
+import static me.synapz.paintball.storage.Settings.THEME;
+import static org.bukkit.ChatColor.*;
 
 public class ArenaManager {
 
@@ -130,9 +131,6 @@ public class ArenaManager {
                     sign.update();
                     break;
                 case LEADERBOARD:
-                    // TODO: better way
-                    // TODO: lb signs not updating :(
-
                     StatType type = null;
                     for (StatType t : StatType.values()) {
                         if (t.getSignName().equalsIgnoreCase(sign.getLine(2).replace(" ", ""))) {

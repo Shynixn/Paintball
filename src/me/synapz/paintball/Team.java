@@ -1,17 +1,18 @@
 package me.synapz.paintball;
 
-import static me.synapz.paintball.storage.Settings.*;
-
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.LobbyPlayer;
 import org.bukkit.ChatColor;
-import static org.bukkit.Color.*;
-
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+
+import static me.synapz.paintball.storage.Settings.ARENA_FILE;
+import static org.bukkit.Color.*;
 
 public class Team {
 
@@ -138,16 +139,12 @@ public class Team {
 
     public void playerJoinTeam() {
         size++;
-        for (LobbyPlayer lobbyPlayer : arena.getLobbyPlayers()) {
-            lobbyPlayer.updateScoreboard();
-        }
+        arena.updateAllScoreboard();
     }
 
     public void playerLeaveTeam() {
         size--;
-        for (LobbyPlayer lobbyPlayer : arena.getLobbyPlayers()) {
-            lobbyPlayer.updateScoreboard();
-        }
+        arena.updateAllScoreboard();
     }
 
     // Returns if the team is full or not, if there are 100 max players, only 25 can go in per team

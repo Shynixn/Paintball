@@ -1,7 +1,6 @@
 package me.synapz.paintball.events;
 
 import me.synapz.paintball.*;
-import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.TeamLocation;
@@ -10,8 +9,12 @@ import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.players.SpectatorPlayer;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -90,17 +93,21 @@ public class Listeners implements Listener {
         Player player = e.getPlayer();
         ItemStack item = e.getItem();
 
+        if (!(item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName()))
+            return;
+
+        String name = item.getItemMeta().getDisplayName();
+
         if (isInArena(player)) {
             Arena a = getArena(player);
             PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
 
-            // TODO: check if they clicked on the team they are already on
             if (gamePlayer instanceof LobbyPlayer) {
                 LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().contains("Join")) { // check to make sure it is a team changing object
+                    if (name.contains("Join")) { // check to make sure it is a team changing object
                         for (Team t : a.getArenaTeamList()) {
-                            if (item.getItemMeta().getDisplayName().contains(t.getTitleName())) {
+                            if (name.contains(t.getTitleName())) {
                                 if (!t.isFull()) {
                                     lobbyPlayer.setTeam(t);
                                 } else {
@@ -110,7 +117,7 @@ public class Listeners implements Listener {
                             }
                         }
                         player.closeInventory();
-                    } else if (e.getItem() != null && e.getItem().hasItemMeta() && e.getItem().getItemMeta().getDisplayName().contains("Click to change team")) {
+                    } else if (name.contains("Click to change team")) {
                         Inventory inv = Bukkit.createInventory(null, 18, "Team Switcher");
                         for (Team t : a.getArenaTeamList()) {
                             // Make a new inventory and place all teams (except the one they are on) into it
@@ -126,13 +133,25 @@ public class Listeners implements Listener {
                 ArenaPlayer arenaPlayer = (ArenaPlayer) gamePlayer;
 
                 if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (item != null && item.getType() == Material.DOUBLE_PLANT && item.getItemMeta().getDisplayName().contains("Coin Shop")) {
+                    if (name.contains("Coin Shop")) {
                         arenaPlayer.giveShop();
                         e.setCancelled(true);
                         return;
                     }
                     arenaPlayer.shoot(e); // paintball item
+                    e.setCancelled(true);
                 }
+            } else if (gamePlayer instanceof SpectatorPlayer) {
+                SpectatorPlayer spectatorPlayer = (SpectatorPlayer) gamePlayer;
+
+                if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    if (name.equals(SpectatorPlayer.LEAVE_ARENA)) {
+                        spectatorPlayer.leave();
+                    } else if (name.equals(SpectatorPlayer.TELEPORTER)) {
+                        spectatorPlayer.openMenu();
+                    }
+                }
+                e.setCancelled(true);
             }
         }
     }
@@ -142,6 +161,12 @@ public class Listeners implements Listener {
         Player player = (Player) e.getWhoClicked();
         ItemStack clickedItem = e.getCurrentItem();
 
+
+        if (clickedItem == null || clickedItem.getType() == Material.AIR || clickedItem.hasItemMeta() && !clickedItem.getItemMeta().hasDisplayName())
+            return;
+
+        String name = clickedItem.getItemMeta().getDisplayName();
+
         if (isInArena(player)) {
             Arena a = getArena(player);
             PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
@@ -149,7 +174,7 @@ public class Listeners implements Listener {
             if (gamePlayer instanceof LobbyPlayer) {
                 if (e.getInventory().getName().contains("Team Switcher")) {
                     for (Team t : a.getArenaTeamList()) {
-                        if (clickedItem.hasItemMeta() && clickedItem.getItemMeta().getDisplayName().contains(t.getTitleName())) {
+                        if (name.contains(t.getTitleName())) {
                             if (!t.isFull()) {
                                 LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                                 lobbyPlayer.setTeam(t);
@@ -163,11 +188,18 @@ public class Listeners implements Listener {
                     e.setCancelled(true);
                 }
             } else if (gamePlayer instanceof SpectatorPlayer) {
-                Messenger.error(player, "You are not allowed to move items in your inventory!");
-                player.closeInventory();
+                if (clickedItem.getType() == Material.SKULL_ITEM) {
+                    String targetName = ChatColor.stripColor(name.split(" ")[4]);
+                    ArenaPlayer target = (ArenaPlayer) a.getPaintballPlayer(Bukkit.getPlayer(targetName));
+
+                    ((SpectatorPlayer) gamePlayer).spectate(target);
+                } else {
+                    Messenger.error(player, "You are not allowed to move items in your inventory!");
+                    player.closeInventory();
+                }
                 e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
-                if (clickedItem != null && clickedItem.hasItemMeta() && clickedItem.getItemMeta().getDisplayName().contains("KillCoin Shop")) {
+                if (clickedItem != null && clickedItem.hasItemMeta() && clickedItem.getItemMeta().getDisplayName().contains("Coin Shop")) {
                     player.getInventory().addItem(clickedItem);
                     e.setCancelled(true);
                 }
@@ -216,7 +248,6 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        // TODO: add check to make sure to disallow friendly fire!
         Snowball snowball = event.getDamager() instanceof Snowball ? (Snowball) event.getDamager() : null;
 
         Player hitBySnowball = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
@@ -272,7 +303,7 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamageAsLobbyOrSpectator(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player))
             return;
@@ -284,16 +315,31 @@ public class Listeners implements Listener {
             PaintballPlayer pbPlayer = arena.getPaintballPlayer(player);
 
             // If the player is a ArenaPlayer, and the damage was not from a snowball and the attacker is not a player, cancel.
-            if (arena.getAllArenaPlayers().contains(pbPlayer) && e.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) {
-                if (player.getLocation().getBlockY() < 0) // in case they fall into the void let them die
-                    return;
-                else
+            if (arena.getAllArenaPlayers().contains(pbPlayer) && e.getCause() != EntityDamageEvent.DamageCause.PROJECTILE)
                     e.setCancelled(true);
-            }
 
             // If the player is a LobbyPlayer or Spectator player, cancel all damage.
             if (arena.getLobbyPlayers().contains(pbPlayer) || arena.getSpectators().contains(pbPlayer))
                 e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onMoveInArena(PlayerMoveEvent e) {
+        Player player = e.getPlayer();
+        Arena arena = getArena(player);
+
+        if (player.getLocation().getBlockY() <= -1 && isInArena(player)) {
+            PaintballPlayer gamePlayer = arena.getPaintballPlayer(player);
+            Team team = gamePlayer.getTeam();
+
+            if (gamePlayer instanceof LobbyPlayer) {
+                player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
+            } else if (gamePlayer instanceof ArenaPlayer) {
+                player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
+            } else if (gamePlayer instanceof SpectatorPlayer) {
+                player.teleport(arena.getSpectatorLocation());
+            }
         }
     }
 

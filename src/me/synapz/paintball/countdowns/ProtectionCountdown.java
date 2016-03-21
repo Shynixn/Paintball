@@ -1,6 +1,6 @@
 package me.synapz.paintball.countdowns;
 
-import com.connorlinfoot.actionbarapi.ActionBarAPI;
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Messenger;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -26,7 +26,7 @@ public class ProtectionCountdown extends PaintballCountdown {
         this.player = player.getPlayer();
         this.arena = player.getArena();
 
-        ActionBarAPI.sendActionBar(this.player, Messenger.PROTECTION_TIME.replace("%time%", String.valueOf(counter))); // TODO: last param in ticks or seconds?
+        BountifulAPI.sendActionBar(this.player, Messenger.PROTECTION_TIME.replace("%time%", String.valueOf(counter)));
         if (!godPlayers.keySet().contains(name)) {
             godPlayers.put(name, this);
         }
@@ -35,13 +35,13 @@ public class ProtectionCountdown extends PaintballCountdown {
     public void onFinish() {
         godPlayers.remove(name, this);
         Messenger.msg(this.player, Messenger.PROTECTION_END);
-        ActionBarAPI.sendActionBar(this.player, Messenger.PROTECTION_END, 240);
+        BountifulAPI.sendActionBar(this.player, Messenger.PROTECTION_END, 240);
     }
 
     // Called every iteration of run()
     public void onIteration() {
         String protectionMessage = Messenger.PROTECTION_TIME.replace("%time%", String.valueOf((int) counter-1));
-        ActionBarAPI.sendActionBar(this.player, protectionMessage); // TODO: last param in ticks or seconds?
+        BountifulAPI.sendActionBar(this.player, protectionMessage);
     }
 
     public boolean stop() {

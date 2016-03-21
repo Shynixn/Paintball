@@ -3,7 +3,6 @@ package me.synapz.paintball.storage;
 
 import me.synapz.paintball.Messenger;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -26,6 +25,7 @@ public class PaintballFile extends File{
                 e.printStackTrace();
             }
         }
+
         this.fileConfig = YamlConfiguration.loadConfiguration(this);
         this.saveFile();
     }

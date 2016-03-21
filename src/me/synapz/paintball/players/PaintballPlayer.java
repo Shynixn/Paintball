@@ -3,14 +3,10 @@ package me.synapz.paintball.players;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
-import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
-
-import java.util.Arrays;
 
 import static me.synapz.paintball.storage.Settings.PREFIX;
 
@@ -37,6 +33,9 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         this.arena = a;
         this.team = t;
         this.player = p;
+
+        if (arena == null || team == null || player == null)
+            return;
 
         arena.addPlayer(this);
         initPlayer();
@@ -80,16 +79,12 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
 
     // Gives the player a wool helmet based on their team
     protected void giveWoolHelmet() {
-        // TODO: is this even a good setting?? ,-,
-        //if (!Settings.WOOL_HELMET)
-          //  return;
         player.getInventory().setHelmet(Utils.makeWool(team.getChatColor() + team.getTitleName() + " Team", team.getDyeColor()));
         player.updateInventory();
     }
 
     // Formats a message with the config, then sends a chat message to all
     public void chat(String message) {
-        // TODO: check if chat is enabled in Settings, and then return
         String chat = arena.getSpectators().contains(this) ? arena.SPEC_CHAT : arena.ARENA_CHAT;
 
         chat = chat.replace("%TEAMNAME%", team.getTitleName());
@@ -107,7 +102,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         arena.removePlayer(this, true); // removes player from all array lists
 
         // check to see if there is only one player left, if there is everyone else left
-        if (arena.getAllArenaPlayers().size() <= 1) {
+        if (arena.getState() == Arena.ArenaState.IN_PROGRESS || arena.getState() == Arena.ArenaState.STARTING && arena.getAllArenaPlayers().size() <= 1) {
             arena.forceLeaveArena();
         }
     }

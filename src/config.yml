@@ -7,36 +7,10 @@ secondary-color: '&7'
 # Time, in ticks, to update the Leaderboard (Stats, Player names), and Autojoin (Prefixes)signs. Making this number bigger may decrease lag if you experience any, but will take signs longer to change. Changing this will require a restart/reload
 # 20 Ticks = 1 Second
 sign-update-time: 40
-
-Options:
-  # If TitleAPI plugin is installed and this is true, plugin will display some messages in the middle of the screen to the player
-  title-api: true
-  # If ActionBarAPI plugin is installed and this is true, plugin will take advantage of the action bar to show players additional information, like expiration time of an item
-  action-bar: true
-  # If Vault is installed and this is true, plugin will be able to make money transfers
-  vault: true
-  # Will enable SQL, make sure SQL-Settings is configured to work with your SQL server.
-  SQL: false
-  # Will allow Bungeecord (joining Paintball on other servers) and will make Bungeecord section functional. Requires additional Bungee plugin
-  bungeecord: false
-
-# Requires SQL to be true
-# If SQL is enabled the statistics of games will be backup to the SQL database below. This means you can sync stats between servers
-SQL-Settings:
-  host: localhost
-  port: 1433
-  user: root
-  pass: password123
-  database: Spigot
-
-# Requires bungeecord to be true
-Bungeecord:
-  # This ID must be unique across the network, it is used to send players from the hub plugin(make sure it can fit on a sign)
-  ServerID: Paint1
-
-
-Kits:
-Special-Items:
+# Allows hooking into vault and doing money trnasfers
+vault: true
+# Allows hooking into BountifulAPI to send title messages that display in the middle of the screen
+title: true
 
 Commands:
   # If true, disables all commands in arena except for: Allowed commands and (if all-paintball-commands is true) Paintball commands.
@@ -87,6 +61,8 @@ Per-Arena-Settings:
   # The default settings for each arena. Set an arena setting to "default" in order to use this default value ex: kills-to-win: default
   # Arenas will auto-generate with values "default" whenever a new arena is created
   Defaults:
+    # How fast snowballs will shoot
+    speed: 3
     # The currency for money
     currency: "$"
     # The score (amount of kills) a team must get to win
@@ -98,29 +74,22 @@ Per-Arena-Settings:
     # How much time (in seconds) to wait after a team wins before players will be sent out of the arena. In this time players can see their scores and who won
     win-waiting-time: 10
     # True - Coin Shop is enabled for the arena. False - No Coin Shop and Coins are removed
-    kill-coin-shop: true
+    coin-shop: true
     # Time in seconds players have after they die before they can be killed by a snowball
     safe-time: 5
     # How many hits to kill an Arena player
     hits-to-kill: 3
     # Amount of seconds before a player can switch their team again (Prevents team switch spam)
     team-switch-cooldown: 3
-
+    # When a player switches team should they teleport to the lobby location
+    teleport-on-team-switch: true
     # Settings for when a player joins an arena
     Join-Arena:
-      # True - give a wool helmet based on their team color. False - instead of wool, there will be a colored leather helmet
-      give-wool-helmet: true
-      # True - colors player's nametag based on their team color. False - no color
-      color-player-title: true
       # True - Chat will only send to players on the same team. False - Chat will send to whole arena (only for when in lobby)
       per-team-chat: true
 
     # Settings for when a player joins a lobby
     Join-Lobby:
-      # True - give a wool helmet based on their team color. False - instead of wool, there will be a colored leather helmet
-      give-wool-helmet: true
-      # True - colors player's nametag based on their team color. False - Doesn't color name tag
-      color-player-title: true
       # True - will give the player a item that allows them to switch team. False - player will not be able to switch team unless they leave and join
       give-team-switcher: true
       # True - Chat will only send to players on the same team. False - Chat will send to whole arena (in arena)
@@ -128,8 +97,8 @@ Per-Arena-Settings:
 
     # Default rewards
     Rewards:
-      # Rewards having to do with kill coins. Kill coins are basically coins recived on a kill, which can be used to buy special items. Kill coins are reset every game.
-      Kill-Coins:
+      # Rewards having to do with coins. Coins are basically money recived on a kill, which can be used to buy special items. Coins are reset every game.
+      Coins:
         per-kill: 1
         per-death: 0
       # Rewards having to do with money. Money can also be used to buy special items and doesn't reset every game.
@@ -140,7 +109,6 @@ Per-Arena-Settings:
         per-win: 100
         per-defeat: 50
 
-    # TODO: cooldown time when clicking wool to change team
     # Settings to do with chat aspects of Paintball-- when players are in the arena
     Chat:
       # True - use arena chat which can only be viewed by arena players. False - will use global chat

@@ -34,8 +34,8 @@
     * Allows me to limit bugs, fix them faster, and add more features quicker
 * TitleAPI (1.8+)
 * Kill coins
-    * Earn killcoins per kill to buy items inside the KillCoin Shop
-    * Comes with KillCoin API so you can add your own items to the KillCoin Shop
+    * Earn coins per kill to buy items inside the Coin Shop
+    * Comes with Coin API so you can add your own items to the Coin Shop
 * Scoreboard
     * Show many values in game
     * Does not break plugins like FeatherBoard which takes advantage of Scoreboards
@@ -74,13 +74,13 @@ Bugs
 - [ ] fix nametag colors
 - [ ] per arena team names?
 
-####KillCoin API
-Paintball has a powerful, built-in, object-oriented API for creating new KillCoins, giving you a higher ability to expand and customize your server.
+####Coin API
+Paintball has a powerful, built-in, object-oriented API for creating new Coins, giving you a higher ability to expand and customize your server.
 
-There are two ways to create a new KillCoin item
+There are two ways to create a new Coin item
 1) Through Java - More functionality and customization
 First, create a Bukkit plugin and setup the plugin.yml
-Second, make a new KillCoinItem(material, name, description, money, killcoins, expirationTime, permission, amount, isShown)
+Second, make a new CoinItem(material, name, description, money, coins, expirationTime, permission, amount, isShown)
 An example is shown below
 ```java
 
@@ -90,16 +90,16 @@ An example is shown below
         /*
         Adds a diamond axe, with the name Forward, a 2-lined description that describes what it does.
         A worth of $0, so it requires no money (This requires Vault if you want it to be worth something)
-        A worth of 10 KillCoins, so requires and removes 10 KillCoins when bought
+        A worth of 10 Coins, so requires and removes 10 Coins when bought
         An expiration time of 300 seconds (5 minutes)
         Requires permission "paintball.item.forward"
         Sets the amount to 1
         And is shown in the inventory, true
 
-        You can set KillCoins, expiration time, or money to 0 to remove requiring it
+        You can set Coins, expiration time, or money to 0 to remove requiring it
         You can also set permission, or description safely to null in order to remove a description or required permission
          */
-        new KillCoinItem(Material.DIAMOND_AXE, "Jumper", "Gives you the ability to jump\n5 blocks up!", 0, 10, 300, "paintball.item.sneaker", 1, true) {
+        new CoinItem(Material.DIAMOND_AXE, "Jumper", "Gives you the ability to jump\n5 blocks up!", 0, 10, 300, "paintball.item.sneaker", 1, true) {
             /*
             Whenever this item is right clicked, the player is teleported up 5 blocks by adding 5 to the Y
              */
@@ -128,10 +128,10 @@ Kill-Coin-Shop:
     amount: 1
     expiration-time: -1
     money: 120
-    killcoins: 2
+    coins: 2
     shown: true
 ```
-You can add new items to the shop by making a new section. For example, if you wanted to add a new KillCoin item with the same values of the double-snow-ball-shooter, you can copy and paste it and change the values. For exmaple:
+You can add new items to the shop by making a new section. For example, if you wanted to add a new Coin item with the same values of the double-snow-ball-shooter, you can copy and paste it and change the values. For exmaple:
 ```yaml
 Kill-Coin-Shop:
   double-snow-ball-shooter:
@@ -142,7 +142,7 @@ Kill-Coin-Shop:
     amount: 1
     expiration-time: -1
     money: 120
-    killcoins: 2
+    coins: 2
     shown: true
   double-shooter:
     name: "&6Double Paintball Shooter"
@@ -152,7 +152,7 @@ Kill-Coin-Shop:
     amount: 64
     expiration-time: -1
     money: 5000
-    killcoins: 0
+    coins: 0
     shown: true
 ```
 There are a few downsides to this way:

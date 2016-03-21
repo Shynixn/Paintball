@@ -18,12 +18,11 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import static me.synapz.paintball.storage.Settings.THEME;
-import static me.synapz.paintball.storage.Settings.WEBSITE;
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.GREEN;
 
 public class JoinSigns implements Listener {
 
-    // TODO: MAJOR, add permissions for adding signs
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSignCreate(SignChangeEvent e) {
         // paintball.sign.use
@@ -31,7 +30,7 @@ public class JoinSigns implements Listener {
             return;
 
         if (!e.getLine(1).equalsIgnoreCase("autojoin") && !e.getLine(1).equalsIgnoreCase("join")) {
-            Messenger.error(e.getPlayer(), "Wrong syntax for creating Paintball sign.", "For more information: " + WEBSITE);
+            Messenger.error(e.getPlayer(), "Wrong syntax for creating Paintball sign.");
             e.getBlock().breakNaturally();
             return;
         }
@@ -39,6 +38,8 @@ public class JoinSigns implements Listener {
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
         // For Auto joining
         if (e.getLine(1).equalsIgnoreCase("autojoin")) {
+            if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.autojoin.create"))
+                return;
             Messenger.success(e.getPlayer(), "Auto Join sign successfully created!");
             e.setLine(0, prefix);
             e.setLine(1, GREEN + "Auto Join");
@@ -50,6 +51,9 @@ public class JoinSigns implements Listener {
 
         // For joining a specific Arena
         if (e.getLine(1).equalsIgnoreCase("join")) {
+            if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.join.create"))
+                return;
+
             Arena a = ArenaManager.getArenaManager().getArena(e.getLine(2));
             if (Utils.nullCheck(e.getLine(2), a, e.getPlayer())) {
                 e.setLine(0, prefix);
@@ -79,7 +83,9 @@ public class JoinSigns implements Listener {
             return;
         }
         if (sign.getLine(1).equals(GREEN + "Auto Join")) {
-            // TODO: check if this works
+            if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.autojoin.use"))
+                return;
+
             Arena arenaToJoin = ArenaManager.getArenaManager().getBestArena();
             if (arenaToJoin == null) {
                 Messenger.error(player, "No arenas are currently opened.");
@@ -88,6 +94,9 @@ public class JoinSigns implements Listener {
             arenaToJoin.joinLobby(player, null);
             return;
         }
+
+        if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.join.use"))
+            return;
 
         if (ArenaManager.getArenaManager().getArena(sign.getLine(1)) == null) {
             Messenger.error(player, "No arena named " + sign.getLine(1) + " found.");
@@ -112,25 +121,25 @@ public class JoinSigns implements Listener {
             return;
         }
 
-        if (!e.getPlayer().hasPermission("paintball.sign.destroy"))
-            Messenger.error(e.getPlayer(), "You do not have permission to destroy Paintball signs!");
-
-
         Sign sign = (Sign) e.getBlock().getState();
         SignLocation autoJoinOrLbsign = Settings.ARENA.getSigns().get(sign.getLocation());
 
         if (autoJoinOrLbsign != null) {
             if (autoJoinOrLbsign.getType() == SignLocation.SignLocations.LEADERBOARD) {
-                Messenger.success(e.getPlayer(), "Leaderboard sign has been successfully removed!");
+                if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.leaderboard.remove"))
+                    Messenger.success(e.getPlayer(), "Leaderboard sign has been successfully removed!");
             } else {
-                Messenger.success(e.getPlayer(), "Autojoin sign has been successfully removed!");
+                if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.autojoin.remove"))
+                    Messenger.success(e.getPlayer(), "Autojoin sign has been successfully removed!");
             }
             autoJoinOrLbsign.removeSign();
         } else {
             Arena a = ArenaManager.getArenaManager().getArena(sign.getLine(1));
             if (a != null) {
-                a.getSignLocations().get(sign.getLocation()).removeSign();
-                Messenger.success(e.getPlayer(), a + "'s join sign has been successfully removed!");
+                if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.join.remove")) {
+                    a.getSignLocations().get(sign.getLocation()).removeSign();
+                    Messenger.success(e.getPlayer(), a + "'s join sign has been successfully removed!");
+                }
             }
         }
     }

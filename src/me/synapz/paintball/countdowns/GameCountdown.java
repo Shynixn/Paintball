@@ -4,7 +4,8 @@ import me.synapz.paintball.Arena;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.players.ArenaPlayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameCountdown extends PaintballCountdown {
 

@@ -22,8 +22,7 @@ public class SetMin extends ArenaCommand {
         }
 
         if (arena.getMax() == 0 || min < arena.getMax()) {
-            // TODO: make back to 1
-            if (min <= 0) {
+            if (min <= 1) {
                 Messenger.error(player, "Min must be greater than 1!");
                 return;
             }

@@ -11,20 +11,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.sql.*;
 import java.util.*;
 
-import static me.synapz.paintball.storage.Settings.*;
+import static me.synapz.paintball.storage.Settings.SECONDARY;
+import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.RESET;
 import static org.bukkit.ChatColor.STRIKETHROUGH;
 
@@ -47,42 +44,13 @@ public final class PlayerData extends PaintballFile {
 
     @Override
     public FileConfiguration getFileConfig() {
-        if (SQL) {
-            return this.addStats(fileConfig);
-        }
         return this.fileConfig;
     }
 
     @Override
     public void saveFile() {
-        if (SQL) {
-            try {
-                this.removeStats(fileConfig).save(this);
-            }catch (Exception exc) {
-                Messenger.error(Bukkit.getConsoleSender(), "Error saving SQL. Check config.yml's SQL settings. Falling back to playerdata.yml's stats.");
-                exc.printStackTrace();
-            }
-        } else {
-            super.saveFile();
-        }
+        super.saveFile();
     }
-
-    public FileConfiguration removeStats(FileConfiguration yaml) {
-        Set<String> keys = yaml.getConfigurationSection("Player-Data").getKeys(false);
-        YamlConfiguration statsYaml = new YamlConfiguration();
-        for (String key : keys) {
-            ConfigurationSection stats = yaml.getConfigurationSection(key + ".Stats");
-            String path = stats.getCurrentPath();
-            statsYaml.set(path, stats);
-            yaml.set(path, null);
-        }
-        byte[] byteArray = statsYaml.saveToString().getBytes();
-        String encoded = Base64.getEncoder().encode(byteArray).toString();
-        yaml.set("Stats", encoded);
-        Utils.executeQuery("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
-        return yaml;
-    }
-
 
     // Adds one to a player's stat
     // ex: if a player gets 1 kill, add one the stat in config
@@ -120,7 +88,7 @@ public final class PlayerData extends PaintballFile {
         }};
 
         Map<String, String> uuidList = new HashMap<String, String>();
-        // TODO check if null!
+
         for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
             uuidList.put(uuid, getPlayerStats(UUID.fromString(uuid)).get(type));
         }
@@ -172,7 +140,6 @@ public final class PlayerData extends PaintballFile {
 
     // Method for /pb leaderboard <stat> <page>
     // Organizes players from best to worse based on the stat selected
-    // TODO: does not look nice, and doesn't have enough players to test fully
     public void paginate(CommandSender sender, StatType type, int page, int pageLength) {
         SortedMap<String, String> allPlayers = new TreeMap<String, String>(Collections.<String>reverseOrder());
         for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
@@ -200,12 +167,10 @@ public final class PlayerData extends PaintballFile {
     }
 
     // Gets the page of a player's stats, useful for /pb stat and /pb leaderboard <page>
-    // TODO: not working at all
     public void getPage(Player player, StatType type, int page) {
         // int totalPages = getFileConfig().getConfigurationSection("Player-Data").getKeys(false).size() % 8;
         int current = Integer.parseInt(page + "" + page);
         int end = current + 8;
-        // TODO: 11/20/15  add prefix
         for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
             Messenger.info(player, "#" + current + " - " + Bukkit.getPlayer(UUID.fromString(uuid)) == null ? Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() : Bukkit.getPlayer(UUID.fromString(uuid)).getName() + " Many: " + getPlayerStats(UUID.fromString(uuid)).get(type));
         }
@@ -225,48 +190,15 @@ public final class PlayerData extends PaintballFile {
         return String.format("%d%s", (int) Math.round(Utils.divide(hits, shots)*100), "%");
     }
 
-    private FileConfiguration addStats(FileConfiguration yaml) {
-        YamlConfiguration statsYaml = new YamlConfiguration();
-        try {
-            Connection conn;
-            conn = DriverManager.getConnection(HOST, USERNAME, PASSWORD);
-            PreparedStatement sql = conn.prepareStatement("SELECT statsFROM `Paintball_Stats` WHERE id = '1';");
-            ResultSet result = sql.executeQuery();
-            result.next();
-            String base64Stats = result.getString("stats");
-            String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
-            statsYaml.loadFromString(yamlString);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Bukkit.getLogger().info("SQL connection failed! Using offline backup until we can connect again");
-            if (yaml.contains("Stats")) {
-                String base64Stats = yaml.getString("Stats");
-                String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
-                try {
-                    statsYaml.loadFromString(yamlString);
-                } catch (InvalidConfigurationException e1) {
-                    e1.printStackTrace();
-                    Bukkit.getLogger().severe("Failed to load offline config! Please check SQL connection and playerdata file!");
-                }
-            } else {
-                Bukkit.getLogger().severe("Statistics Down!! We have no SQL connection and don't have a backup of stats!");
-            }
-        }
-        Set<String> keys = statsYaml.getConfigurationSection("Player-Data").getKeys(false);
-        for (String key : keys) {
-            ConfigurationSection stats = statsYaml.getConfigurationSection(key + ".Stats");
-            String path = stats.getCurrentPath();
-            yaml.set(path, stats);
-        }
-        return yaml;
-    }
-
     // Saves player information to PlayerData file
     // Called when the player enters an arena
-    // TODO: add exp and other missing values
     public void savePlayerInformation(Player player) {
         ExperienceManager exp = new ExperienceManager(player);
         String id = player.getName();
+
+        if (locations.containsKey(id))
+            return;
+
         locations.put(id, player.getLocation());
         gamemodes.put(id, player.getGameMode());
         foodLevels.put(id, player.getFoodLevel());
@@ -280,7 +212,6 @@ public final class PlayerData extends PaintballFile {
 
         addStatsIfNotYetAdded(player.getUniqueId());
         Utils.stripValues(player);
-        saveFile();
     }
 
     public void getStats(Player sender, String targetName) {
@@ -323,6 +254,7 @@ public final class PlayerData extends PaintballFile {
         expLevels.remove(id);
         scoreboards.remove(id);
         flying.remove(id);
+        player.updateInventory();
     }
 
     // Checks to make sure there is a configuration section, if it isn't it is created for that player
@@ -346,7 +278,6 @@ public final class PlayerData extends PaintballFile {
 
     // Increments the set path by one
     private void addOneToPath(String path) {
-        // TODO: file saves but only updates Stat values on reload :(
         getFileConfig().set(path, getFileConfig().getInt(path) + 1);
     }
 }

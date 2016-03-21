@@ -3,7 +3,7 @@ package me.synapz.paintball.countdowns;
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Utils;
-import me.synapz.paintball.killcoin.KillCoinItem;
+import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,17 +15,17 @@ import java.util.Map;
 public class ExpirationCountdown extends PaintballCountdown {
 
     /*
-    This Countdown class is responsible for KillCoinItems which have an ExpirationTime
+    This Countdown class is responsible for CoinItems which have an ExpirationTime
      */
 
     private static Map<String, ExpirationCountdown> times = new HashMap<>();
 
     private final ArenaPlayer arenaPlayer;
     private final Player player;
-    private final KillCoinItem item;
+    private final CoinItem item;
     private final PlayerInventory inv;
 
-    public ExpirationCountdown(KillCoinItem item, ArenaPlayer arenaPlayer, double counter) {
+    public ExpirationCountdown(CoinItem item, ArenaPlayer arenaPlayer, double counter) {
         super(counter+1);
         this.counter = counter;
         this.arenaPlayer = arenaPlayer;
@@ -48,7 +48,6 @@ public class ExpirationCountdown extends PaintballCountdown {
         if (ProtectionCountdown.godPlayers.keySet().contains(player.getName()))
             return; // Dont want it to double when it players
         if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && item.equals(itemInHand) && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
-            // TODO: if actionbar is installed and true in config
             if (times.get(inv.getItemInHand().getItemMeta().getDisplayName()).getCounter() == counter) {
                 BountifulAPI.sendActionBar(player, Messenger.EXPIRATION_TIME.replace("%time%", String.valueOf((int)(counter-1))));
             }
@@ -72,17 +71,7 @@ public class ExpirationCountdown extends PaintballCountdown {
     // Overrides cancel so that it cancels the task AND removes the item from inventory (if it is in the inventory)
     @Override
     public void cancel() {
-        if (player != null && player.getInventory().contains(item)) {
-            for (ItemStack itemStack : player.getPlayer().getInventory().getContents()) {
-                if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().equals(item.getItemName(true))) {
-                    player.getPlayer().getInventory().remove(itemStack);
-                    break;
-                }
-            }
-            String endMessage = Messenger.EXPIRATION_END.replace("%item%", item.getItemName(false));
-            BountifulAPI.sendActionBar(player, endMessage, 240);
-            Messenger.msg(player.getPlayer(), endMessage);
-        }
+        item.remove(arenaPlayer);
         times.remove(item.getItemName(true), this);
         Utils.removeActionBar(player);
         super.cancel();

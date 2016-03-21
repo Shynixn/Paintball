@@ -3,16 +3,18 @@ package me.synapz.paintball.players;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
+import me.synapz.paintball.coin.CoinItem;
+import me.synapz.paintball.coin.CoinItemHandler;
+import me.synapz.paintball.coin.CoinItems;
 import me.synapz.paintball.countdowns.ExpirationCountdown;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.killcoin.KillCoinItem;
-import me.synapz.paintball.killcoin.KillCoinItemHandler;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -24,13 +26,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.synapz.paintball.storage.Settings.SECONDARY;
-import static me.synapz.paintball.storage.Settings.THEME;
-import static me.synapz.paintball.storage.Settings.VAULT;
+import static me.synapz.paintball.storage.Settings.*;
 
 public class ArenaPlayer extends PaintballPlayer {
 
-    private Map<String, KillCoinItem> coinItems = new HashMap<>();
+    private Map<String, CoinItem> coinItems = new HashMap<>();
 
     private int killStreak;
     private int coins;
@@ -39,6 +39,8 @@ public class ArenaPlayer extends PaintballPlayer {
     private double money;
     private int health;
     private int lives;
+
+    private Location lastLocation;
 
     private boolean isWinner;
 
@@ -58,7 +60,8 @@ public class ArenaPlayer extends PaintballPlayer {
      */
     @Override
     protected void initPlayer() {
-        // TODO: Don't make random but instead have a counter
+        player.getInventory().clear();
+        player.updateInventory();
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
         giveWoolHelmet();
         giveItems = false;
@@ -83,7 +86,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 .addLine(ScoreboardLine.LINE)
                 .addLine(ScoreboardLine.MONEY, arena.CURRENCY + Settings.ECONOMY.getBalance(player), Settings.VAULT)
                 .addLine(ScoreboardLine.KD, "0.00")
-                .addLine(ScoreboardLine.KILL_COIN, 0, arena.KILL_COIN_SHOP)
+                .addLine(ScoreboardLine.COIN, 0, arena.COIN_SHOP)
                 .addLine(ScoreboardLine.KILL_STREAK, 0)
                 .addLine(ScoreboardLine.KILLS, 0)
                 .addLine(ScoreboardLine.LINE)
@@ -104,7 +107,7 @@ public class ArenaPlayer extends PaintballPlayer {
         pbSb.reloadTeams(true)
                 .reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + Settings.ECONOMY.getBalance(player), size+2)
                 .reloadLine(ScoreboardLine.KD, getKd(), size+3)
-                .reloadLine(ScoreboardLine.KILL_COIN, String.valueOf(getCoins()), size+4)
+                .reloadLine(ScoreboardLine.COIN, String.valueOf(getCoins()), size+4)
                 .reloadLine(ScoreboardLine.KILL_STREAK, String.valueOf(getKillStreak()), size+5)
                 .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6)
                 .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8)
@@ -142,9 +145,9 @@ public class ArenaPlayer extends PaintballPlayer {
         PlayerInventory inv = player.getInventory();
 
         inv.setArmorContents(colorLeatherItems(new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_HELMET)));
-        inv.setItem(0, Utils.makeItem(Material.SNOW_BALL, THEME + "Paintball", 64));
+        CoinItems.getCoinItems().getMainItem().giveItemToPlayer(this);
 
-        if (arena.KILL_COIN_SHOP)
+        if (arena.COIN_SHOP)
             inv.setItem(8, Utils.makeItem(Material.DOUBLE_PLANT, ChatColor.GOLD + "Coin Shop", 1));
         player.updateInventory();
     }
@@ -179,9 +182,9 @@ public class ArenaPlayer extends PaintballPlayer {
         killStreak++;
 
         arenaPlayer.withdraw(arena.MONEY_PER_DEATH);
-        arenaPlayer.withdrawCoin(arena.KILLCOIN_PER_DEATH);
+        arenaPlayer.withdrawCoin(arena.COIN_PER_DEATH);
         deposit(arena.MONEY_PER_KILL);
-        depositCoin(arena.KILLCOIN_PER_KILL);
+        depositCoin(arena.COIN_PER_KILL);
 
         arena.incrementTeamScore(team);
         Settings.PLAYERDATA.incrementStat(StatType.KILLS, this);
@@ -202,7 +205,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * Adds a CoinItem to a player's inventory
      * @param item CoinItem to be added to the inventory
      */
-    public void addItem(KillCoinItem item) {
+    public void addItem(CoinItem item) {
         this.getPlayer().getInventory().addItem(item.getItemStack(this, false));
         if (item.hasExpirationTime()) {
             new ExpirationCountdown(item, this, item.getExpirationTime());
@@ -213,8 +216,8 @@ public class ArenaPlayer extends PaintballPlayer {
             Settings.ECONOMY.withdrawPlayer(player, item.getMoney());
         }
 
-        if (item.requiresKillCoins()) {
-            withdrawCoin(item.getKillCoins());
+        if (item.requiresCoins()) {
+            withdrawCoin(item.getCoins());
         }
         coinItems.put(item.getItemName(true), item);
     }
@@ -225,6 +228,7 @@ public class ArenaPlayer extends PaintballPlayer {
      */
     public void setHealth(int newHealth) {
         health = newHealth;
+        lastLocation = player.getLocation();
 
         // This will set the hearts to what they should be above their name
         arena.updateAllScoreboard();
@@ -266,7 +270,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * Gives a player a Coin Shop
      */
     public void giveShop() {
-        KillCoinItemHandler.getHandler().showInventory(this);
+        CoinItemHandler.getHandler().showInventory(this);
     }
 
     /**
@@ -282,7 +286,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * @param displayName Name of the CoinItem
      * @return CoinItem which was found
      */
-    public KillCoinItem getItemWithName(String displayName) {
+    public CoinItem getItemWithName(String displayName) {
         return coinItems.get(displayName);
     }
 
@@ -314,14 +318,14 @@ public class ArenaPlayer extends PaintballPlayer {
     }
 
     public void depositCoin(double amount){
-        if (!arena.KILL_COIN_SHOP)
+        if (!arena.COIN_SHOP)
             return;
 
         coins += amount;
     }
 
     public void withdrawCoin(double amount) {
-        if (!arena.KILL_COIN_SHOP)
+        if (!arena.COIN_SHOP)
             return;
 
         coins -= amount;
@@ -360,6 +364,10 @@ public class ArenaPlayer extends PaintballPlayer {
 
     public boolean isWinner() {
         return isWinner;
+    }
+
+    public Location getLastLocation() {
+        return lastLocation;
     }
 
     /**

@@ -1,11 +1,11 @@
 package me.synapz.paintball.commands.player;
 
 
-import me.synapz.paintball.*;
+import me.synapz.paintball.Arena;
+import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.Messenger;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
-
-import static org.bukkit.ChatColor.RED;
 
 public class Join extends TeamCommand {
 

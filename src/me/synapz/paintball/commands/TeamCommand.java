@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands;
 
-import me.synapz.paintball.*;
+import me.synapz.paintball.Messenger;
+import me.synapz.paintball.Team;
 import me.synapz.paintball.commands.arena.DelLocation;
 import me.synapz.paintball.commands.arena.SetLocation;
 import me.synapz.paintball.enums.CommandType;

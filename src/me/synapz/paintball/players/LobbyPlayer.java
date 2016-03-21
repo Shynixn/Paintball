@@ -9,6 +9,7 @@ import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -113,7 +114,6 @@ public class LobbyPlayer extends PaintballPlayer {
         // For if the amount of teams are larger than 9 slots (how would they click the 10th or 11th? The -1 is because the player is on 1 team, we don't show that team
         if (arena.getArenaTeamList().size()-1 > 9) {
             // Just creates a wool item, which when you click will open a change menu
-            // TODO: make inventory click events for this
             player.getInventory().setItem(0, Utils.makeWool(THEME + "Click to change team", team.getDyeColor()));
             return;
         }
@@ -148,9 +148,12 @@ public class LobbyPlayer extends PaintballPlayer {
         team.playerLeaveTeam();
         team = newTeam;
         team.playerJoinTeam();
-        // TODO: replace with the const and chat message
         Messenger.titleMsg(player, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
-        player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
+
+        if (arena.TELEPORT_TEAM_SWITCH)
+            player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
+
+        pbSb.updateNametags();
         giveItems();
         giveWoolHelmet();
         new ChangeTeamCountdown(arena.TEAM_SWITCH_COOLDOWN, player);

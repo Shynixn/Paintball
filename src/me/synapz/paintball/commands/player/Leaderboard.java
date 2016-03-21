@@ -6,7 +6,6 @@ import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -14,6 +13,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class Leaderboard extends PaintballCommand {
+
+    // TODO: Re-Implement to work.
 
     public void onCommand(Player player, String[] args) {
         StatType statType = null;

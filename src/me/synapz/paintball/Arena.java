@@ -11,11 +11,7 @@ import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
-
-import static me.synapz.paintball.locations.TeamLocation.*;
-import static me.synapz.paintball.storage.Settings.*;
-import static org.bukkit.ChatColor.*;
-
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -23,6 +19,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+
+import static me.synapz.paintball.locations.TeamLocation.TeamLocations;
+import static me.synapz.paintball.storage.Settings.*;
+import static org.bukkit.ChatColor.*;
 
 public class Arena {
 
@@ -35,8 +35,8 @@ public class Arena {
     public int LOBBY_COUNTDOWN;
     public int LOBBY_INTERVAL;
     public int LOBBY_NO_INTERVAL;
-    public int KILLCOIN_PER_KILL;
-    public int KILLCOIN_PER_DEATH;
+    public int COIN_PER_KILL;
+    public int COIN_PER_DEATH;
     public int MONEY_PER_KILL;
     public int MONEY_PER_DEATH;
     public int MONEY_PER_WIN;
@@ -45,6 +45,7 @@ public class Arena {
     public int HITS_TO_KILL;
     public int LIVES;
     public int TEAM_SWITCH_COOLDOWN;
+    public int SPEED;
 
     public String ARENA_CHAT;
     public String SPEC_CHAT;
@@ -53,15 +54,12 @@ public class Arena {
     public boolean BROADCAST_WINNER;
     public boolean PER_TEAM_CHAT_LOBBY;
     public boolean PER_TEAM_CHAT_ARENA;
-    public boolean KILL_COIN_SHOP;
-    public boolean GIVE_WOOL_HELMET_ARENA;
-    public boolean GIVE_WOOL_HELMET_LOBBY;
-    public boolean COLOR_PLAYER_TITLE_LOBBY;
-    public boolean COLOR_PLAYER_TITLE_ARENA;
+    public boolean COIN_SHOP;
     public boolean GIVE_TEAM_SWITCHER;
     public boolean USE_ARENA_CHAT;
     public boolean DISABLE_ALL_COMMANDS;
     public boolean ALL_PAINTBALL_COMMANDS;
+    public boolean TELEPORT_TEAM_SWITCH;
 
     public List<String> BLOCKED_COMMANDS;
     public List<String> ALLOWED_COMMANDS;
@@ -81,6 +79,7 @@ public class Arena {
     private Map<Location, SignLocation> signLocations = new HashMap<>();
 
     private ArenaState state;
+    private boolean toReload;
 
     public enum ArenaState {
         NOT_SETUP,
@@ -227,7 +226,6 @@ public class Arena {
     }
 
     // Gets the steps for the arena
-    // TODO: this is a giant block of code, see if there is any better ways of doing this
     public String getSteps() {
         ArrayList<String> steps = new ArrayList<String>();
         String finalString;
@@ -253,8 +251,9 @@ public class Arena {
         if (setEnabled) {
             setState(ArenaState.WAITING);
         } else {
+            List<PaintballPlayer> copyFile = new ArrayList<>(getAllPlayers().values());
             broadcastMessage(toString() + RED + " has been disabled.");
-            for (PaintballPlayer player : getAllPlayers().values())
+            for (PaintballPlayer player : copyFile)
                 player.leave();
             setState(ArenaState.DISABLED);
         }
@@ -303,7 +302,6 @@ public class Arena {
         }
 
         setArenaTeamList(ARENA.getTeamsList(this));
-        // TODO: add things from config.yml like time etc if they aren't defaulted
         if (isSetup() && isEnabled()) {
             setState(ArenaState.WAITING);
         } else {
@@ -325,7 +323,7 @@ public class Arena {
             int counter = Utils.getCurrentCounter(this);
             sign.setLine(0, prefix); // in case the prefix changes
             sign.setLine(1, getName()); // in case they rename it
-            sign.setLine(2, getStateAsString() + " " + (counter == -1 ? "" : counter + "s")); // TODO: put times here ;)
+            sign.setLine(2, getStateAsString() + " " + (counter == -1 ? "" : counter + "s"));
             sign.setLine(3, getMax() <= 0 ? "0/0" : getLobbyPlayers().size() == getMax() || getAllArenaPlayers().size() == getMax() ? RED + "Full" : (state == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "" : state == ArenaState.IN_PROGRESS || state == ArenaState.STARTING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
             sign.update();
         }
@@ -360,7 +358,6 @@ public class Arena {
     }
 
     // Put the arena to string ex: Arena Syn, where Syn is the arena name. At the end it is green so if you don't want it to be green change it after
-    // TODO: chat color support
     public String toString() {
         return "Arena " + GRAY + this.getName() + GREEN;
     }
@@ -404,14 +401,19 @@ public class Arena {
         inGame = new ArrayList<>();
         setState(ArenaState.WAITING);
         this.resetTeamScores();
+
+        if (toReload) {
+            this.toReload = false;
+            this.loadConfigValues();
+        }
+    }
+
+    public void setReload(){
+        this.toReload = true;
     }
 
     // Called when a team wins
     public void win(List<Team> teams) {
-        if (BROADCAST_WINNER) {
-            // TODO: broadcast to server / network (except for those in game, they get a different message)
-        }
-
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
             Player player = arenaPlayer.getPlayer();
             if (teams.contains(arenaPlayer.getTeam()))
@@ -419,11 +421,11 @@ public class Arena {
             String spaces = Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(20);
             String title = THEME + " Games Stats ";
             Messenger.msg(player, spaces + title + spaces,
-                    (arenaPlayer.getMoney() < 0 ? "-" : "+") + "$" + Math.abs(arenaPlayer.getMoney()),
-                    "Kills: " + arenaPlayer.getKills(),
-                    "Deaths: " + arenaPlayer.getDeaths(),
-                    "Killstreak: " + arenaPlayer.getKillStreak(),
-                    "KD: " + arenaPlayer.getKd(),
+                    Settings.THEME + "Money: " + Settings.SECONDARY + (arenaPlayer.getMoney() < 0 ? "-" : "+") + "$" + Math.abs(arenaPlayer.getMoney()),
+                    Settings.THEME + "Kills: " + Settings.SECONDARY + arenaPlayer.getKills(),
+                    Settings.THEME + "Deaths: " + Settings.SECONDARY + arenaPlayer.getDeaths(),
+                    Settings.THEME + "Killstreak: " + Settings.SECONDARY + arenaPlayer.getKillStreak(),
+                    Settings.THEME + "KD: " + Settings.SECONDARY + arenaPlayer.getKd(),
                     "Your team " + (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost"),
                     spaces + Utils.makeSpaces(title +  "123") + spaces);
         }
@@ -433,7 +435,11 @@ public class Arena {
             formattedWinnerList.append(winningTeam.getChatColor()).append(winningTeam.getTitleName()).append(Settings.THEME).append(", ");
         }
         String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", "));
-        broadcastMessage((teams.size() == 1 ? "The " + list + " team won!": "There was a tie between " + formattedWinnerList.toString()));
+        if (BROADCAST_WINNER) {
+            Bukkit.broadcastMessage((teams.size() == 1 ? "The " + list + " team won!": "There was a tie between " + formattedWinnerList.toString()));
+        } else {
+            broadcastMessage((teams.size() == 1 ? "The " + list + " team won!": "There was a tie between " + formattedWinnerList.toString()));
+        }
         for (PaintballPlayer player : getAllPlayers().values())
             BountifulAPI.sendTitle(player.getPlayer(), 20, 40, 20, THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost"): formattedWinnerList.toString()));
         new GameFinishCountdown(WIN_WAIT_TIME, this);
@@ -608,8 +614,8 @@ public class Arena {
         LOBBY_COUNTDOWN             = ARENA.loadInt("Countdown.lobby.countdown", this);
         LOBBY_INTERVAL              = ARENA.loadInt("Countdown.lobby.interval", this);
         LOBBY_NO_INTERVAL           = ARENA.loadInt("Countdown.lobby.no-interval", this);
-        KILLCOIN_PER_KILL           = ARENA.loadInt("Rewards.Kill-Coins.per-kill", this);
-        KILLCOIN_PER_DEATH          = ARENA.loadInt("Rewards.Kill-Coins.per-death", this);
+        COIN_PER_KILL               = ARENA.loadInt("Rewards.Coins.per-kill", this);
+        COIN_PER_DEATH              = ARENA.loadInt("Rewards.Coins.per-death", this);
         MONEY_PER_KILL              = ARENA.loadInt("Rewards.Money.per-kill", this);
         MONEY_PER_DEATH             = ARENA.loadInt("Rewards.Money.per-death", this);
         MONEY_PER_WIN               = ARENA.loadInt("Rewards.Money.per-win", this);
@@ -618,17 +624,15 @@ public class Arena {
         HITS_TO_KILL                = ARENA.loadInt("hits-to-kill", this);
         LIVES                       = ARENA.loadInt("lives", this);
         TEAM_SWITCH_COOLDOWN        = ARENA.loadInt("team-switch-cooldown", this);
+        SPEED                       = ARENA.loadInt("speed", this);
 
         PER_TEAM_CHAT_LOBBY        = ARENA.loadBoolean("Join-Lobby.per-team-chat", this);
         PER_TEAM_CHAT_ARENA        = ARENA.loadBoolean("Join-Arena.per-team-chat", this);
-        KILL_COIN_SHOP             = ARENA.loadBoolean("kill-coin-shop", this);
-        GIVE_WOOL_HELMET_ARENA     = ARENA.loadBoolean("Join-Arena.give-wool-helmet", this);
-        GIVE_WOOL_HELMET_LOBBY     = ARENA.loadBoolean("Join-Lobby.give-wool-helmet", this);
-        COLOR_PLAYER_TITLE_LOBBY   = ARENA.loadBoolean("Join-Lobby.color-player-title", this);
-        COLOR_PLAYER_TITLE_ARENA   = ARENA.loadBoolean("Join-Arena.color-player-title", this);
+        COIN_SHOP                  = ARENA.loadBoolean("coin-shop", this);
         GIVE_TEAM_SWITCHER         = ARENA.loadBoolean("Join-Lobby.give-team-switcher", this);
         USE_ARENA_CHAT             = ARENA.loadBoolean("Chat.use-arena-chat", this);
         BROADCAST_WINNER           = ARENA.loadBoolean("Chat.broadcast-winner", this);
+        TELEPORT_TEAM_SWITCH       = ARENA.loadBoolean("teleport-on-team-switch", this);
 
         DISABLE_ALL_COMMANDS       = config.getBoolean("Commands.disable-all-commands");
         ALL_PAINTBALL_COMMANDS     = config.getBoolean("Commands.all-paintball-commands");

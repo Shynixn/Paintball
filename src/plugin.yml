@@ -1,10 +1,9 @@
 name: Paintball
-version: 1.0
+version: BETA_1.0
 description: Paintball Minigame
-authors: [Synapz_, dart2112]
+authors: [Synapz_]
 main: me.synapz.paintball.Paintball
-website: NotAdded2Spigot.yet/sorry
-softdepend: [TitleAPI, Vault, ActionBarAPI]
+depend: [BountifulAPI, Vault]
 
 commands:
    paintball:
@@ -29,6 +28,13 @@ permissions:
        paintball.admin.enable: true
        paintball.admin.disable: true
        paintball.admin.help: true
+       paintball.admin.remove: true
+       paintball.leaderboard.create: true
+       paintball.join.create: true
+       paintball.autojoin.create: true
+       paintball.join.remove: true
+       paintball.autojoin.remove: true
+       paintball.leaderboard.remove: true
    paintball.arena:
      description: Gives access to arena setup command subsection
      default: op
@@ -40,7 +46,6 @@ permissions:
        paintball.arena.max: true
        paintball.arena.setlocation: true
        paintball.arena.rename: true
-       paintball.arena.remove: true
        paintball.arena.delspec: true
        paintball.arena.dellocation: true
        paintball.arena.create: true
@@ -55,3 +60,6 @@ permissions:
        paintball.join: true
        paintball.list: true
        paintball.stats: true
+       paintball.leaderboard.use: true
+       paintball.join.use: true
+       paintball.autojoin.use: true

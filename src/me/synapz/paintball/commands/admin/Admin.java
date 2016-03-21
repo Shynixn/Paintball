@@ -1,8 +1,8 @@
 package me.synapz.paintball.commands.admin;
 
 
-import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.commands.CommandManager;
+import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.entity.Player;
 

@@ -1,19 +1,24 @@
 package me.synapz.paintball;
 
-import com.connorlinfoot.actionbarapi.ActionBarAPI;
-import me.synapz.paintball.countdowns.*;
-import me.synapz.paintball.storage.Settings;
-import org.bukkit.*;
+import com.connorlinfoot.bountifulapi.BountifulAPI;
+import me.synapz.paintball.countdowns.PaintballCountdown;
+import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Snowball;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.util.Vector;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import static org.bukkit.ChatColor.RED;
 
@@ -84,46 +89,21 @@ public class Utils {
     }
 
     // Gets the team with the least amount of players
-    public static Team max(Arena a , HashMap<Team, Integer> size) {
-        // Get all the sizes of each Team and assign it to numbers array
-        // in case there aren't any players in the arena
-        if (size.keySet().size() == 0){
-            for (Team t : a.getArenaTeamList()) {
-                return t;
-            }
-        }
-        for (Team t : size.keySet()) {
-            if (size.get(t) == 0) {
-                return t;
-            }
+    public static Team max(Arena a) {
+        List<Integer> intList = new ArrayList<Integer>() {{
+            for (Team team : a.getArenaTeamList())
+                add(team.getSize());
+        }};
+
+        Collections.sort(intList);
+
+        int maxSize = intList.get(0);
+
+        for (Team team : a.getArenaTeamList()) {
+            if (team.getSize() == maxSize)
+                return team;
         }
 
-        int[] numbers = new int[size.keySet().size()];
-        int count = 0;
-        for (Team t : size.keySet()) {
-            numbers[count] = size.get(t);
-            count++;
-        }
-
-        // calculate the largest number and assign it to largetst
-        int smallest = numbers[0];
-        int largetst = numbers[0];
-
-        for(int i=1; i< numbers.length; i++)
-        {
-            if(numbers[i] > largetst)
-                largetst = numbers[i];
-            else if (numbers[i] < smallest)
-                smallest = numbers[i];
-        }
-        // check each team in the keySet until you find the one that matches the largest, then return it as it is the greatest.
-        for (Team t : size.keySet()) {
-            for (Integer teamSize : size.values()) {
-                if (size.get(t) == teamSize) {
-                    return t;
-                }
-            }
-        }
         return null;
     }
 
@@ -144,19 +124,6 @@ public class Utils {
         return 1+generator.nextInt(to);
     }
 
-    // TODO: for some reason this spams console like 6 times when it fails
-    public static void executeQuery(String query) {
-        Connection conn;
-        try {
-            conn = DriverManager.getConnection(Settings.HOST, Settings.USERNAME, Settings.PASSWORD);
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.executeQuery();
-        } catch (Exception e) {
-            Settings.SQL = false;
-            Messenger.error(Bukkit.getConsoleSender(), "Error starting SQL. Falling back to storing values in playerdata.yml. Check config.yml's SQL settings.");
-            e.printStackTrace();
-        }
-    }
 
     /*
     Creates a specific amount of spaces based on set amount of spaces
@@ -180,7 +147,7 @@ public class Utils {
     Removes an action bar if it is in a player
      */
     public static void removeActionBar(Player player) {
-        ActionBarAPI.sendActionBar(player, "");
+        BountifulAPI.sendActionBar(player, "");
     }
 
     /*
@@ -243,7 +210,20 @@ public class Utils {
         player.setHealth(player.getMaxHealth());
         player.setFireTicks(0);
         exp.setExp(0);
+        player.updateInventory();
         for (PotionEffect effect : player.getActivePotionEffects())
             player.removePotionEffect(effect.getType());
+    }
+
+    // Shoots a Snowball with the correct speed
+    public static void shootSnowball(Player player, Arena arena, double accuracy) {
+        accuracy = 0.2F;
+        Projectile pr = player.launchProjectile(Snowball.class);
+
+        Vector v = player.getLocation().getDirection();
+        v.add(new Vector(Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy));
+        v.subtract(new Vector(Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy));
+        v.multiply(arena.SPEED);
+        pr.setVelocity(v);
     }
 }

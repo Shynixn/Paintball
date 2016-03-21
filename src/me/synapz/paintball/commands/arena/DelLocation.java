@@ -6,7 +6,6 @@ import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.ChatColor;
 
 public class DelLocation extends TeamCommand {
 

@@ -2,14 +2,10 @@ package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Paintball;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class PaintballCountdown extends BukkitRunnable {
@@ -41,7 +37,7 @@ public abstract class PaintballCountdown extends BukkitRunnable {
             return;
         }
 
-        if ((int) counter <= end) {
+        if (counter <= end) {
             onFinish();
             cancel();
         } else {
@@ -66,6 +62,8 @@ public abstract class PaintballCountdown extends BukkitRunnable {
     public void cancel() {
         super.cancel();
         counter = -1D;
+        tasks.remove(arena, this);
+
         if (arena != null)
             arena.updateSigns();
     }

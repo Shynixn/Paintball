@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands.arena;
 
-import me.synapz.paintball.*;
+import me.synapz.paintball.Messenger;
+import me.synapz.paintball.Team;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
 

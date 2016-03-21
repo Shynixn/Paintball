@@ -2,8 +2,6 @@ package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.players.PaintballPlayer;
-import me.synapz.paintball.players.ScoreboardPlayer;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

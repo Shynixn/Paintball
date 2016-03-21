@@ -2,25 +2,22 @@ package me.synapz.paintball.commands;
 
 
 import me.synapz.paintball.Messenger;
+import me.synapz.paintball.commands.admin.*;
 import me.synapz.paintball.commands.arena.*;
 import me.synapz.paintball.commands.player.*;
-import me.synapz.paintball.commands.admin.*;
-import me.synapz.paintball.commands.player.List;
 import me.synapz.paintball.enums.CommandType;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static org.bukkit.ChatColor.*;
-import static me.synapz.paintball.storage.Settings.*;
-
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class CommandManager implements CommandExecutor{
+import static me.synapz.paintball.storage.Settings.SECONDARY;
+import static me.synapz.paintball.storage.Settings.THEME;
+import static org.bukkit.ChatColor.WHITE;
 
+public class CommandManager implements CommandExecutor{
 
     private static Map<String, PaintballCommand> COMMANDS = new HashMap<String, PaintballCommand>();
 
@@ -29,7 +26,7 @@ public class CommandManager implements CommandExecutor{
 
 
     public void init() {
-    	addCommands(new Join(), new Leave(), new Spectate(), new Stats(), new Leaderboard(), new List(), new Admin(CommandType.PLAYER),
+    	addCommands(new Join(), new Leave(), new Spectate(), new Stats() /*new Leaderboard()*/, new List(), new Admin(CommandType.PLAYER),
     			new Create(), new Remove(), new SetLocation(), new DelLocation(), new SetSpectate(), new DelSpectate(), new SetMin(),
     			new SetMax(), new SetTeams(), new Start(), new Stop(), new Rename(), new Enable(), new Disable(),
     			new Steps(), new Reload(), new Admin(CommandType.ADMIN), new Arena(CommandType.ARENA));
@@ -89,8 +86,6 @@ public class CommandManager implements CommandExecutor{
         }
     }
 
-
-    // TODO: add command ARENA help
     public static void displayHelp(Player player, CommandType type) {
         boolean isPlayerType = type == CommandType.PLAYER;
         boolean isArenatype = type == CommandType.ARENA;

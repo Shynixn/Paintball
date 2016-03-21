@@ -9,7 +9,7 @@ import static me.synapz.paintball.storage.Settings.THEME;
 
 public enum ScoreboardLine {
 
-    KILL_COIN("KillCoins" + Messenger.SUFFIX),
+    COIN("Coins" + Messenger.SUFFIX),
     KILL_STREAK("Kill Streak" + Messenger.SUFFIX),
     KILLS("Kills" + Messenger.SUFFIX),
     KD("K/D" + Messenger.SUFFIX),
