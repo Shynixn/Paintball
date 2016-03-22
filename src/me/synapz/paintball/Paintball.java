@@ -28,9 +28,6 @@ public class Paintball extends JavaPlugin implements Listener {
         commandManager.init();
 
         /*
-        Important Things
-        - More Coin
-
         Non-Important Things
         - Better ActionBar (It flickers and don't work sometimes)
         - Make it so if the config values are not found it sets it in. - (Still does not work for things not in default
@@ -39,7 +36,6 @@ public class Paintball extends JavaPlugin implements Listener {
         - Better stat sign layout
         - Fix leaderboard command
         - Global ranks in /pb stats also
-        - Sometimes stats don't get set back on /reload
         - Team Pick bug where teams might not be an even number
         - Leave signs
         - Spectator join signs

@@ -71,9 +71,14 @@ public class ExpirationCountdown extends PaintballCountdown {
     // Overrides cancel so that it cancels the task AND removes the item from inventory (if it is in the inventory)
     @Override
     public void cancel() {
+        if (inventoryContainsItem()) {
+            BountifulAPI.sendActionBar(player, Messenger.EXPIRATION_END.replace("%item%", item.getItemName(false)), 240);
+        } else {
+            Utils.removeActionBar(player);
+        }
+
         item.remove(arenaPlayer);
         times.remove(item.getItemName(true), this);
-        Utils.removeActionBar(player);
         super.cancel();
     }
 

@@ -188,7 +188,12 @@ public class CoinItem extends ItemStack {
     public void remove(ArenaPlayer arenaPlayer) {
         Player player = arenaPlayer.getPlayer();
         if (player != null && player.getInventory().contains(this)) {
-            this.remove(arenaPlayer);
+            for (ItemStack itemStack : player.getPlayer().getInventory().getContents()) {
+                if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().equals(this.getItemName(true))) {
+                    player.getPlayer().getInventory().remove(itemStack);
+                    break;
+                }
+            }
         }
     }
 
