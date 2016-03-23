@@ -133,7 +133,7 @@ public class ArenaManager {
                 case LEADERBOARD:
                     StatType type = null;
                     for (StatType t : StatType.values()) {
-                        if (t.getSignName().equalsIgnoreCase(sign.getLine(2).replace(" ", ""))) {
+                        if (t.getSignName().equalsIgnoreCase(sign.getLine(2).replace(" ", "").replace("/", ""))) {
                             type = t;
                         }
                     }

@@ -5,6 +5,7 @@ import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -74,15 +75,43 @@ public class LeaderboardSigns implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeaderboardSignclick(PlayerInteractEvent e) {
-        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN) return;
-        if (!(e.getClickedBlock().getState() instanceof Sign)) return;
+        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN)
+            return;
+
+        if (!(e.getClickedBlock().getState() instanceof Sign))
+            return;
+
         Sign sign = (Sign) e.getClickedBlock().getState();
+
+        if (sign.getLines().length < 4)
+            return;
+
         Player player = e.getPlayer();
 
-        if (Settings.ARENA.getSigns().get(sign.getLocation()) == null)
+        if (!isLeaderboardSign(sign))
             return;
 
         if (Messenger.signPermissionValidator(player, "paintball.leaderboard.use"))
             Settings.PLAYERDATA.getStats(player, sign.getLine(1));
+    }
+
+    private boolean isLeaderboardSign(Sign sign) {
+        boolean hasStatType = false;
+        boolean isInFile = Settings.ARENA.getSigns().get(sign.getLocation()) != null;
+
+        for (StatType type : StatType.values()) {
+            if (sign.getLine(2).replace("/", "").replace(" ", "").equalsIgnoreCase(type.getSignName())) {
+                hasStatType = true;
+                break;
+            }
+        }
+
+        // In case the location was not found and it is a leaderboard sign, re-add it.
+        if (!isInFile && sign.getLine(0).contains("#") && hasStatType) {
+            new SignLocation(sign.getLocation(), SignLocation.SignLocations.LEADERBOARD);
+            isInFile = true;
+        }
+
+        return isInFile;
     }
 }

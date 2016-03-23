@@ -54,4 +54,5 @@ public enum StatType {
     public boolean isCalculated() {
         return path.equals("none");
     }
+
 }

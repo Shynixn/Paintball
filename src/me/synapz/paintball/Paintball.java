@@ -33,7 +33,6 @@ public class Paintball extends JavaPlugin implements Listener {
         - Make it so if the config values are not found it sets it in. - (Still does not work for things not in default
         - Remove join signs on arena remove
         - Fix command order
-        - Better stat sign layout
         - Fix leaderboard command
         - Global ranks in /pb stats also
         - Team Pick bug where teams might not be an even number
@@ -46,10 +45,10 @@ public class Paintball extends JavaPlugin implements Listener {
         - Vault, Title, and ActionBar remove in config
         - Tie support
         - Reset stats command
-        - Stop players from moving armour..
         - Their nametag is not updating...
         - Sometimes hearts do not show
         - Particles on kill
+        - Leaderboard sign for times played, counted from when a player leaves how much time the arena has been at
 
         Future Features
         - Ranks

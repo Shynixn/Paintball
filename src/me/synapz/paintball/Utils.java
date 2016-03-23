@@ -124,6 +124,19 @@ public class Utils {
         return 1+generator.nextInt(to);
     }
 
+    /*
+    Easily sees if an item is equal to the given string
+     */
+    public static boolean equals(ItemStack item, String name) {
+        return item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equals(name);
+    }
+
+    /*
+    Easily sees if an item name contains the given string
+     */
+    public static boolean contains(ItemStack item, String name) {
+        return item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().contains(name);
+    }
 
     /*
     Creates a specific amount of spaces based on set amount of spaces

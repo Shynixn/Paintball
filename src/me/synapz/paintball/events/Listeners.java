@@ -185,8 +185,12 @@ public class Listeners implements Listener {
                         }
                     }
                     player.closeInventory();
+                } else {
                     e.setCancelled(true);
+                    Messenger.error(player, "You are not allowed to move items in your inventory!");
+                    player.closeInventory();
                 }
+                e.setCancelled(true);
             } else if (gamePlayer instanceof SpectatorPlayer) {
                 if (clickedItem.getType() == Material.SKULL_ITEM) {
                     String targetName = ChatColor.stripColor(name.split(" ")[4]);
@@ -195,13 +199,15 @@ public class Listeners implements Listener {
                     ((SpectatorPlayer) gamePlayer).spectate(target);
                 } else {
                     Messenger.error(player, "You are not allowed to move items in your inventory!");
+                    e.setCancelled(true);
                     player.closeInventory();
                 }
                 e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
-                if (clickedItem != null && clickedItem.hasItemMeta() && clickedItem.getItemMeta().getDisplayName().contains("Coin Shop")) {
-                    player.getInventory().addItem(clickedItem);
+                if (Utils.contains(clickedItem, "Team") || Utils.equals(clickedItem, ChatColor.GOLD + "Coin Shop")) {
                     e.setCancelled(true);
+                    Messenger.error(player, "You are not allowed to move items in your inventory!");
+                    player.closeInventory();
                 }
             }
         }
