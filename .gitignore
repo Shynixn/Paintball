@@ -1,6 +1,7 @@
 # IntelliJ IDEA Stuff
 /.idea
 *.iml
+*.eml
 
 # Maven Stuff
 /target
