@@ -1,5 +1,6 @@
 package me.synapz.paintball.coin;
 
+import me.synapz.paintball.Utils;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
@@ -189,7 +190,7 @@ public class CoinItem extends ItemStack {
         Player player = arenaPlayer.getPlayer();
         if (player != null && player.getInventory().contains(this)) {
             for (ItemStack itemStack : player.getPlayer().getInventory().getContents()) {
-                if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().equals(this.getItemName(true))) {
+                if (Utils.equals(itemStack, this.getItemName(true))) {
                     player.getPlayer().getInventory().remove(itemStack);
                     break;
                 }
