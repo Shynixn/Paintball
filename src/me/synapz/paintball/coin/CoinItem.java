@@ -71,7 +71,7 @@ public class CoinItem extends ItemStack {
         CoinItemHandler.getHandler().addItem(this);
     }
 
-    private CoinItem(CoinItem item) {
+    public CoinItem(CoinItem item) {
         super(item);
         this.name = item.getItemName(false);
         this.nameWithSpaces = name;
@@ -84,8 +84,6 @@ public class CoinItem extends ItemStack {
         this.configItem = item.hasType();
         this.type = item.getItemType();
         this.sound = item.getSound();
-
-        CoinItemHandler.getHandler().addItem(this);
     }
 
     // Gets the item name
@@ -142,9 +140,8 @@ public class CoinItem extends ItemStack {
         }
 
         if (requiresMoney())
-            newLore.add(Settings.THEME + "Cost: " + Settings.SECONDARY + arenaPlayer.getArena().CURRENCY + getMoney()); // todo: implement currency so $amount
+            newLore.add(Settings.THEME + "Cost: " + Settings.SECONDARY + arenaPlayer.getArena().CURRENCY + getMoney());
 
-        // TODO: if 2+ people in arena and one buys an item without coins, the other players has it lock up and they cant buy the item even if it dont require coins
         if (requiresCoins())
             newLore.add(Settings.THEME + "Coins: " + Settings.SECONDARY + getCoins());
 
@@ -182,7 +179,7 @@ public class CoinItem extends ItemStack {
 
     // Adds a copy of the CoinItem to the player's inventory
     public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
-        playerToGetItem.addItem(this);
+        playerToGetItem.addItem(new CoinItem(this));
     }
 
     // Removes the item from the inventory
@@ -269,7 +266,7 @@ public class CoinItem extends ItemStack {
             // while the item has the same name, add a space
             while (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equals(this.getItemName(true))) {
                 StringBuilder builder = new StringBuilder(getItemName(true));
-                builder.append(" ");
+                builder.append(ChatColor.RESET);
                 this.nameWithSpaces = builder.toString();
             }
         }

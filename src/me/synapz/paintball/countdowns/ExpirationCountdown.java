@@ -34,7 +34,7 @@ public class ExpirationCountdown extends PaintballCountdown {
         this.item = item;
         this.end = 1;
 
-        times.put(item.getItemMeta().getDisplayName(), this);
+        times.put(item.getItemName(true), this);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ExpirationCountdown extends PaintballCountdown {
 
     private boolean inventoryContainsItem() {
         for (ItemStack itemStack : player.getInventory()) {
-            if (item.equals(itemStack))
+            if (Utils.equals(itemStack, item.getItemName(true)))
                 return true;
         }
         return false;
