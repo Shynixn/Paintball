@@ -20,7 +20,7 @@ public class CoinItem extends ItemStack {
     // Display name
     // Description
     // Cost
-    // coins
+    // Coins
     // Expiration Time
     // Permission
 

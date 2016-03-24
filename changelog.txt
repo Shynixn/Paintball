@@ -8,6 +8,7 @@ BETA-1.1
 - Fixed K/D Leaderboard signs not updating
 - On arena remove, join signs now update to "Removed"
 - Added win helix
+- Fixed expiration items not being removed and loosing their countdowns
 
 BETA-1.0
 - Initial Release
