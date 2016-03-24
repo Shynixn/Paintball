@@ -31,7 +31,6 @@ public class Paintball extends JavaPlugin implements Listener {
         Non-Important Things
         - Better ActionBar (It flickers and don't work sometimes)
         - Make it so if the config values are not found it sets it in. - (Still does not work for things not in default
-        - Remove join signs on arena remove
         - Fix command order
         - Fix leaderboard command
         - Global ranks in /pb stats also
@@ -59,10 +58,8 @@ public class Paintball extends JavaPlugin implements Listener {
         - Holographic displays that pop out, like +1$ and +1 score etc.
         - When a player dies tp them to the ground like they are dying
         - Autocorrect function
-        - winners get helix over head
+        - Winners get helix over head--
         */
-
-        // can move items in inventory in game
 
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);

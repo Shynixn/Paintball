@@ -91,6 +91,11 @@ public class JoinSigns implements Listener {
                 Messenger.error(player, "No arenas are currently opened.");
                 return;
             }
+
+            // In case for some reason the sign is not in the sign locations (WorldEdited?) it adds it in
+            if (Settings.ARENA.getSigns().get(sign.getLocation()) == null)
+                new SignLocation(sign.getLocation(), SignLocation.SignLocations.AUTOJOIN);
+
             arenaToJoin.joinLobby(player, null);
             return;
         }
@@ -103,6 +108,12 @@ public class JoinSigns implements Listener {
             return;
         }
         Arena arenaToJoin = ArenaManager.getArenaManager().getArenas().get(sign.getLine(1));
+
+        // In case the sign is not found in config, add it so it can auto-update
+        if (!arenaToJoin.getSignLocations().containsKey(sign.getLocation())) {
+            new SignLocation(arenaToJoin, sign.getLocation(), SignLocation.SignLocations.JOIN);
+            arenaToJoin.updateSigns();
+        }
 
         if (arenaToJoin != null) {
             arenaToJoin.joinLobby(player, null);

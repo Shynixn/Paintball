@@ -1,13 +1,20 @@
 package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.Arena;
+import me.synapz.paintball.Utils;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.players.PaintballPlayer;
 import org.bukkit.Bukkit;
 
 public class GameFinishCountdown extends PaintballCountdown {
 
     public GameFinishCountdown(int counter, Arena arena) {
         super(arena, counter);
+
+        for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
+            if (arenaPlayer.isWinner())
+                Utils.createHelix(arenaPlayer.getPlayer());
+        }
 
         arena.setState(Arena.ArenaState.STOPPING);
         tasks.put(arena, this);

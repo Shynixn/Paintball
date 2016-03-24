@@ -4,8 +4,10 @@ BETA-1.1
 - Fixed lobby sometimes not starting
 - Added Expiration Countdown finish message
 - Stopped ability to move armor and lobby items
-- Support WorldEdited Leaderboard signs to be added to location list so it will be auto-updated.
+- Support WorldEdited Leaderboard, Join and Auto Join signs, so they will be added to auto-update on click.
 - Fixed K/D Leaderboard signs not updating
+- On arena remove, join signs now update to "Removed"
+- Added win helix
 
 BETA-1.0
 - Initial Release

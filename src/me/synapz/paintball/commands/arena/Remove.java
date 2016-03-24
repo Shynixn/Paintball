@@ -8,8 +8,12 @@ import me.synapz.paintball.enums.CommandType;
 public class Remove extends ArenaCommand {
 
     public void onCommand() {
+        boolean sendMessage = !arena.getAllPlayers().containsKey(player);
+
         arena.removeArena();
-        Messenger.success(player, arena.toString() + " successfully removed!");
+
+        if (sendMessage)
+            Messenger.success(player, arena.toString() + " successfully removed!");
     }
 
     public String getName() {

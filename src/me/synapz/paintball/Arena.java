@@ -87,7 +87,8 @@ public class Arena {
         DISABLED,
         STARTING,
         STOPPING,
-        IN_PROGRESS;
+        IN_PROGRESS,
+        REMOVED;
 
         @Override
         public String toString() {
@@ -131,6 +132,12 @@ public class Arena {
 
     // Removes arena from list and from arenas.yml
     public void removeArena() {
+        for (PaintballPlayer player : getAllPlayers().values()) {
+            player.leave();
+            Messenger.error(player.getPlayer(), "Arena has been removed.");
+        }
+
+        setState(ArenaState.REMOVED);
         ARENA_FILE.set("Arenas." + this.getDefaultName(), null);
         ArenaManager.getArenaManager().getArenas().remove(this.getDefaultName(), this);
         advSave();
@@ -319,7 +326,9 @@ public class Arena {
                 signLoc.removeSign();
                 return;
             }
+
             Sign sign = (Sign) loc.getBlock().getState();
+
             int counter = Utils.getCurrentCounter(this);
             sign.setLine(0, prefix); // in case the prefix changes
             sign.setLine(1, getName()); // in case they rename it
@@ -523,6 +532,9 @@ public class Arena {
             case NOT_SETUP:
                 color = GRAY;
                 break;
+            case REMOVED:
+                color = DARK_RED;
+                break;
         }
         return color + state.toString();
     }
@@ -569,7 +581,7 @@ public class Arena {
 
     // get the list of all players
     public Map<Player, PaintballPlayer> getAllPlayers() {
-        return allPlayers;
+        return new HashMap<>(allPlayers);
     }
 
     public void updateAllScoreboard() {
@@ -593,7 +605,10 @@ public class Arena {
          * we also want to see if the arena is setup because if it is, Arena.NOT_SETUP should
          * be replaced with ArenaState.WAITING (or ArenaState.DISABLED) because the setup is complete.
          */
-        if (isSetup() && isEnabled()) {
+
+        if (state == ArenaState.REMOVED) {
+            return;
+        } else if (isSetup() && isEnabled()) {
             setState(ArenaState.WAITING);
         } else if (isSetup() && !isEnabled()) {
             setState(ArenaState.DISABLED);

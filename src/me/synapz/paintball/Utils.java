@@ -2,10 +2,7 @@ package me.synapz.paintball;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.countdowns.PaintballCountdown;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
@@ -15,10 +12,7 @@ import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.bukkit.ChatColor.RED;
 
@@ -147,6 +141,20 @@ public class Utils {
             builder.append(" ");
         }
         return builder.toString();
+    }
+
+    /*
+    Creates a helix out of particales, yay
+     */
+    public static void createHelix(Player player) {
+        Location loc = player.getLocation();
+        int radius = 1;
+        for(double y = 0; y <= 3; y+=0.01) {
+            double x = radius * Math.cos(y*10);
+            double z = radius * Math.sin(y*10);
+
+            loc.getWorld().playEffect(new Location(loc.getWorld(), loc.getX() + x, loc.getY() + y, loc.getZ() + z), Effect.HAPPY_VILLAGER, 1);
+        }
     }
 
     /*
