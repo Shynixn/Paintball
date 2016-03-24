@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CoinItemHandler {
+
     private static Map<String, CoinItem> items = new HashMap<>();
     private static CoinItemHandler handler = new CoinItemHandler();
 
@@ -21,7 +22,7 @@ public class CoinItemHandler {
     }
 
     public void addItem(CoinItem item) {
-        items.put(ChatColor.translateAlternateColorCodes('&', item.getItemName(true)), item);
+        items.put(ChatColor.translateAlternateColorCodes('&', item.getItemName(false)), item);
     }
 
     public void showInventory(ArenaPlayer arenaPlayer) {

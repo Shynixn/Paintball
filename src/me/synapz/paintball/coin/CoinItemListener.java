@@ -5,6 +5,7 @@ import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Messenger;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,7 +35,7 @@ public class CoinItemListener implements Listener {
         if (arenaPlayer == null) {
             return;
         }
-        CoinItem coinItem = (CoinItem) CoinItemHandler.getHandler().getAllItems().get(item.getItemMeta().getDisplayName());
+        CoinItem coinItem = CoinItemHandler.getHandler().getAllItems().get(item.getItemMeta().getDisplayName());
         if (coinItem == null) {
             return;
         }
@@ -71,19 +72,20 @@ public class CoinItemListener implements Listener {
         if (arenaPlayer == null) {
             return;
         }
-        CoinItem coinItem = arenaPlayer.getItemWithName(item.getItemMeta().getDisplayName());
-        if (coinItem == null) {
+        CoinItem clickedItem = arenaPlayer.getItemWithName(item.getItemMeta().getDisplayName());
+
+        if (clickedItem == null) {
             return;
         }
-        if (coinItem.hasType()) {
+        if (clickedItem.hasType()) {
 
         } else {
-            if (coinItem.hasSound()) {
-                player.playSound(player.getLocation(), coinItem.getSound(), 1.0F, 1.0F);
+            if (clickedItem.hasSound()) {
+                player.playSound(player.getLocation(), clickedItem.getSound(), 1.0F, 1.0F);
             }
-            ArenaClickItemEvent event = new ArenaClickItemEvent(arenaPlayer, coinItem);
+            ArenaClickItemEvent event = new ArenaClickItemEvent(arenaPlayer, clickedItem);
             Bukkit.getServer().getPluginManager().callEvent(event);
-            coinItem.onClickItem(event);
+            CoinItemHandler.getHandler().getAllItems().get(ChatColor.RESET + clickedItem.getItemName(false).replace(ChatColor.RESET + "", "")).onClickItem(event);
             e.setCancelled(true);
         }
     }
