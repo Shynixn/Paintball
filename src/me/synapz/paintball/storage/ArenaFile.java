@@ -12,6 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.*;
 
+import static me.synapz.paintball.storage.Settings.ARENA;
+
 public class ArenaFile extends PaintballFile {
 
     private Map<Location, SignLocation> leaderboardAndJoinSigns = new HashMap<>();
@@ -61,49 +63,7 @@ public class ArenaFile extends PaintballFile {
 
     // Adds a new arena to arena.yml with values default
     public void addNewConfigSection(Arena a) {
-        List<String> valuesToSet = new ArrayList<String>() {{
-            this.add("max-score");
-            this.add("time");
-            this.add("lives");
-            this.add("win-waiting-time");
-            this.add("kill-coin-shop");
-            this.add("kill-coin-shop");
-            this.add("safe-time");
-            this.add("hits-to-kill");
-
-            this.add("Join-Arena.give-wool-helmet");
-            this.add("Join-Arena.color-player-title");
-            this.add("Join-Arena.per-team-chat");
-
-            this.add("Join-Lobby.give-wool-helmet");
-            this.add("Join-Lobby.color-player-title");
-            this.add("Join-Lobby.give-team-switcher");
-            this.add("Join-Lobby.per-team-chat");
-
-            this.add("Rewards.Kill-Coins.per-kill");
-            this.add("Rewards.Kill-Coins.per-death");
-            this.add("Rewards.Money.per-kill");
-            this.add("Rewards.Money.per-death");
-            this.add("Rewards.Money.per-win");
-            this.add("Rewards.Money.per-defeat");
-
-            this.add("Chat.use-arena-chat");
-            this.add("Chat.broadcast-winner");
-            this.add("Chat.spectator-chat");
-            this.add("Chat.arena-chat");
-
-            this.add("Countdown.lobby.countdown");
-            this.add("Countdown.lobby.interval");
-            this.add("Countdown.lobby.no-interval");
-
-            this.add("Countdown.arena.countdown");
-            this.add("Countdown.arena.interval");
-            this.add("Countdown.arena.no-interval");
-        }};
-
-        for (String value : valuesToSet) {
-            fileConfig.set(getConfigPath(value, a), "default");
-        }
+        a.loadConfigValues();
     }
 
     // Load all arenas from arenas.yml

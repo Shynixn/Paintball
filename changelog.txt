@@ -1,3 +1,8 @@
+BETA-1.2
+- Fixed arenas.yml storing old values
+
+- Finish /pb arena info <arena>
+
 BETA-1.1
 - Added Spray n' Pray
 - Added Mini-gun

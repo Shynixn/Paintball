@@ -623,23 +623,26 @@ public class Arena {
         MAX_SCORE                   = ARENA.loadInt("max-score", this);
         TIME                        = ARENA.loadInt("time", this);
         WIN_WAIT_TIME               = ARENA.loadInt("win-waiting-time", this);
+        SAFE_TIME                   = ARENA.loadInt("safe-time", this);
+        HITS_TO_KILL                = ARENA.loadInt("hits-to-kill", this);
+        LIVES                       = ARENA.loadInt("lives", this);
+        TEAM_SWITCH_COOLDOWN        = ARENA.loadInt("team-switch-cooldown", this);
+        SPEED                       = ARENA.loadInt("speed", this);
+        CURRENCY                   = ARENA.loadString("currency", this);
+
         ARENA_COUNTDOWN             = ARENA.loadInt("Countdown.arena.countdown", this);
         ARENA_INTERVAL              = ARENA.loadInt("Countdown.arena.interval", this);
         ARENA_NO_INTERVAL           = ARENA.loadInt("Countdown.arena.no-interval", this);
         LOBBY_COUNTDOWN             = ARENA.loadInt("Countdown.lobby.countdown", this);
         LOBBY_INTERVAL              = ARENA.loadInt("Countdown.lobby.interval", this);
         LOBBY_NO_INTERVAL           = ARENA.loadInt("Countdown.lobby.no-interval", this);
+
         COIN_PER_KILL               = ARENA.loadInt("Rewards.Coins.per-kill", this);
         COIN_PER_DEATH              = ARENA.loadInt("Rewards.Coins.per-death", this);
         MONEY_PER_KILL              = ARENA.loadInt("Rewards.Money.per-kill", this);
         MONEY_PER_DEATH             = ARENA.loadInt("Rewards.Money.per-death", this);
         MONEY_PER_WIN               = ARENA.loadInt("Rewards.Money.per-win", this);
         MONEY_PER_DEFEAT            = ARENA.loadInt("Rewards.Money.per-defeat", this);
-        SAFE_TIME                   = ARENA.loadInt("safe-time", this);
-        HITS_TO_KILL                = ARENA.loadInt("hits-to-kill", this);
-        LIVES                       = ARENA.loadInt("lives", this);
-        TEAM_SWITCH_COOLDOWN        = ARENA.loadInt("team-switch-cooldown", this);
-        SPEED                       = ARENA.loadInt("speed", this);
 
         PER_TEAM_CHAT_LOBBY        = ARENA.loadBoolean("Join-Lobby.per-team-chat", this);
         PER_TEAM_CHAT_ARENA        = ARENA.loadBoolean("Join-Arena.per-team-chat", this);
@@ -654,7 +657,6 @@ public class Arena {
 
         ARENA_CHAT                 = ARENA.loadString("Chat.arena-chat", this);
         SPEC_CHAT                  = ARENA.loadString("Chat.spectator-chat", this);
-        CURRENCY                   = ARENA.loadString("currency", this);
 
         BLOCKED_COMMANDS           = config.getStringList("Commands.Blocked");
         ALLOWED_COMMANDS           = config.getStringList("Commands.Allowed");

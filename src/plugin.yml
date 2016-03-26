@@ -29,6 +29,7 @@ permissions:
        paintball.admin.disable: true
        paintball.admin.help: true
        paintball.admin.remove: true
+       paintball.admin.info: true
        paintball.leaderboard.create: true
        paintball.join.create: true
        paintball.autojoin.create: true

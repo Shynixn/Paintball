@@ -29,7 +29,6 @@ public class Paintball extends JavaPlugin implements Listener {
 
         /*
         Non-Important Things
-        - Better ActionBar (It flickers and don't work sometimes)
         - Make it so if the config values are not found it sets it in. - (Still does not work for things not in default
         - Fix command order
         - Fix leaderboard command
@@ -47,7 +46,6 @@ public class Paintball extends JavaPlugin implements Listener {
         - Particles on kill
         - Leaderboard sign for times played, counted from when a player leaves how much time the arena has been at
         - Grayish messages on prefix
-        - No fly after leaving arena when starting with fly
 
         Future Features
         - Ranks
