@@ -67,7 +67,6 @@ public abstract class TeamCommand extends ArenaCommand {
     protected abstract int getTeamArg();
 
     // Checks to see if a team is invalid, if it is it sends the player the list of valid teams
-    // TODO: error here
     private boolean teamCheck() {
         String teamString = args[getTeamArg()];
         StringBuilder validTeams = new StringBuilder(" ");

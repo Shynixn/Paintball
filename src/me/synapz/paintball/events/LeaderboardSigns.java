@@ -106,6 +106,9 @@ public class LeaderboardSigns implements Listener {
             }
         }
 
+        if (!sign.getLine(0).startsWith("#"))
+            return false;
+
         // In case the location was not found and it is a leaderboard sign, re-add it.
         if (!isInFile && sign.getLine(0).contains("#") && hasStatType) {
             new SignLocation(sign.getLocation(), SignLocation.SignLocations.LEADERBOARD);

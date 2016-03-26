@@ -279,7 +279,7 @@ public class Arena {
             if (ARENA_FILE.getString(t.getPath(TeamLocations.SPAWN, 1)) == null) {
                 spawnsSet = false;
             }
-            // TODO make t.getPath(type) instead of boolean
+
             if (ARENA_FILE.getString(t.getPath(TeamLocations.LOBBY, 1))== null) {
                 spawnsSet = false;
             }

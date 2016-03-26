@@ -6,9 +6,11 @@ BETA-1.1
 - Stopped ability to move armor and lobby items
 - Support WorldEdited Leaderboard, Join and Auto Join signs, so they will be added to auto-update on click.
 - Fixed K/D Leaderboard signs not updating
-- On arena remove, join signs now update to "Removed"
-- Added win helix
+- On arena remove, join signs now updated to "Removed"
+- Added win helix, which creates a particle helix on winners
 - Fixed expiration items not being removed and loosing their countdowns
+- Fixed Auto-Join sign being seen as a Leaderboard sign on click
+- Fixed fly not working sometimes on leave
 
 BETA-1.0
 - Initial Release

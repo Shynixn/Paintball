@@ -32,8 +32,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class Listeners implements Listener {
 
-    // TODO: move armour, and other items
-
     // When ever a player leaves the game, make them leave the arena so they get their stuff
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onArenaQuit(PlayerQuitEvent e) {

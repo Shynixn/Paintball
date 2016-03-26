@@ -27,34 +27,6 @@ Commands:
   - /time
 
 ###############################
-#        KillCoin Shop        #
-###############################
-# You can make more KillCoinItems through the small API, with directions on plugin page #TODO plugin page here
-Kill-Coin-Shop:
-  double-snow-ball-shooter:
-    # The type of the KillCoin item, avaiable types: double_shooter, TODO: more types
-    # You are only limited to the default types unless you make more KillCoin items through the API
-    type: double_shooter
-    # The display name of the item (Supports chat colors &1,&2 etc)
-    name: "&6Double Paintball Shooter"
-    # The material the item. Must be in caps. For a list of materials look at: TOOD: list of materials here
-    material: "SNOW_BALL"
-    # The description (item lore) of what the item does (Supports chat colors and "\n"--which will add a new line to the description)
-    description: "&dGives you an extra speed Paintball launcher\n&dthat can shoot two paintballs at a time!"
-    # Permission required to buy item, set to "none" for no requiring no permission
-    permission-required: "paintball.shop.doubleshooter"
-    # Amount given of this item. Do not put greater than 64 # TODO: allow greater than 64
-    amount: 1
-    # Time, in seconds, until item expires, 0 for no expiration. Uses ActionBarAPI plugin to show expiration time to player
-    expiration-time: 0
-    # Money that will be spent for the item, requires Vault
-    money: 20
-    # KillCoins that will be spent for the item
-    killcoins: 2
-    # Weather or not the item will be shown in the KillCoin Shop
-    shown: true
-
-###############################
 #      Per-Arena Settings     #
 ###############################
 Per-Arena-Settings:

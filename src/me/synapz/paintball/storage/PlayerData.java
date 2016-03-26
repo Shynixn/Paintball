@@ -36,6 +36,7 @@ public final class PlayerData extends PaintballFile {
     private Map<String, Integer> expLevels = new HashMap<>();
     private Map<String, Scoreboard> scoreboards = new HashMap<>();
     private Map<String, Boolean> flying = new HashMap<>();
+    private Map<String, Boolean> allowFly = new HashMap<>();
     private Map<String, Collection<PotionEffect>> potions = new HashMap<>();
 
     public PlayerData(Plugin pb) {
@@ -207,7 +208,8 @@ public final class PlayerData extends PaintballFile {
         armour.put(id, player.getInventory().getArmorContents());
         expLevels.put(id, exp.getCurrentExp());
         scoreboards.put(id, player.getScoreboard() == null ? Bukkit.getScoreboardManager().getNewScoreboard() : player.getScoreboard());
-        flying.put(id, player.isFlying() && player.getAllowFlight());
+        allowFly.put(id,  player.getAllowFlight());
+        flying.put(id, player.isFlying());
         potions.put(id, player.getActivePotionEffects());
 
         addStatsIfNotYetAdded(player.getUniqueId());
@@ -241,7 +243,7 @@ public final class PlayerData extends PaintballFile {
         player.setHealth(health.get(id));
         player.setGameMode(gamemodes.get(id));
         player.setScoreboard(scoreboards.get(id));
-        player.setAllowFlight(flying.get(id));
+        player.setAllowFlight(allowFly.get(id));
         player.setFlying(flying.get(id));
         exp.setExp(expLevels.get(id));
         player.addPotionEffects(potions.get(id));

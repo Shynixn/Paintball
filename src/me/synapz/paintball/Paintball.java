@@ -37,10 +37,8 @@ public class Paintball extends JavaPlugin implements Listener {
         - Team Pick bug where teams might not be an even number
         - Leave signs
         - Spectator join signs
-        - they can buy items by just clicking on them... make sure the item isnt in their inventory...
         - Better kill messages
         - Switch team wool numbers is wrong
-        - Bug where a player can click an item in their inventory and it will buy it.
         - Vault, Title, and ActionBar remove in config
         - Tie support
         - Reset stats command
@@ -48,6 +46,8 @@ public class Paintball extends JavaPlugin implements Listener {
         - Sometimes hearts do not show
         - Particles on kill
         - Leaderboard sign for times played, counted from when a player leaves how much time the arena has been at
+        - Grayish messages on prefix
+        - No fly after leaving arena when starting with fly
 
         Future Features
         - Ranks
@@ -58,7 +58,6 @@ public class Paintball extends JavaPlugin implements Listener {
         - Holographic displays that pop out, like +1$ and +1 score etc.
         - When a player dies tp them to the ground like they are dying
         - Autocorrect function
-        - Winners get helix over head--
         */
 
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
