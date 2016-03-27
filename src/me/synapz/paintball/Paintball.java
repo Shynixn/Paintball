@@ -11,6 +11,7 @@ import me.synapz.paintball.metrics.Metrics;
 import me.synapz.paintball.storage.Settings;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,7 +46,6 @@ public class Paintball extends JavaPlugin implements Listener {
         - Sometimes hearts do not show
         - Particles on kill
         - Leaderboard sign for times played, counted from when a player leaves how much time the arena has been at
-        - Grayish messages on prefix
 
         Future Features
         - Ranks
@@ -56,6 +56,7 @@ public class Paintball extends JavaPlugin implements Listener {
         - Holographic displays that pop out, like +1$ and +1 score etc.
         - When a player dies tp them to the ground like they are dying
         - Autocorrect function
+        - Leaderboard heads
         */
 
         Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
@@ -72,7 +73,6 @@ public class Paintball extends JavaPlugin implements Listener {
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             ArenaManager.getArenaManager().updateAllSignsOnServer();
         }, 0L, (long) Settings.SIGN_UPDATE_TIME);
-
 
         try {
             Metrics metrics = new Metrics(this);

@@ -15,7 +15,7 @@ public class DelSpectate extends ArenaCommand {
         }
 
         arena.removeSpectatorLocation();
-        Messenger.success(player, arena.toString() + ChatColor.GREEN + " spectate location deleted: " + Settings.SECONDARY + (Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator") == null ? 1 : Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator").getValues(false).size()), arena.getSteps());
+        Messenger.success(player, arena.toString(ChatColor.GREEN) + " spectate location deleted: " + Settings.SECONDARY + (Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator") == null ? 1 : Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator").getValues(false).size()), arena.getSteps());
     }
 
     public String getArgs() {

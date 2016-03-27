@@ -10,13 +10,13 @@ public class Spectate extends ArenaCommand {
     public void onCommand() {
         switch (arena.getState()) {
             case NOT_SETUP:
-                Messenger.error(player, arena.toString() + ChatColor.RED + " has not been fully setup.");
+                Messenger.error(player, arena.toString(ChatColor.RED) + " has not been fully setup.");
                 return;
             case DISABLED:
-                Messenger.error(player, arena.toString() + ChatColor.RED + " is disabled.");
+                Messenger.error(player, arena.toString(ChatColor.RED) + " is disabled.");
                 return;
             case WAITING:
-                Messenger.error(player, arena.toString() + ChatColor.RED + " is currently not in progress, nothing to spectate.");
+                Messenger.error(player, arena.toString(ChatColor.RED) + " is currently not in progress, nothing to spectate.");
                 return;
             default:
                 break;

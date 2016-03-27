@@ -5,6 +5,7 @@ import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
 
 import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
 public class SetMax extends ArenaCommand {
@@ -35,7 +36,7 @@ public class SetMax extends ArenaCommand {
             Messenger.error(player, "Max (" + GRAY + max + RED + ") must be greater than the number of teams (" + GRAY + arena.getArenaTeamList().size() + RED + ")!");
             return;
         }
-        Messenger.success(player, "Max players for " + arena.toString() + " set to " + GRAY + max, arena.getSteps());
+        Messenger.success(player, "Max players for " + arena.toString(GREEN) + " set to " + GRAY + max, arena.getSteps());
     }
 
     public String getName() {

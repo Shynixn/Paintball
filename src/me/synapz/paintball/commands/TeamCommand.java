@@ -28,7 +28,7 @@ public abstract class TeamCommand extends ArenaCommand {
         }
 
         if (arena.getArenaTeamList().isEmpty()) {
-            Messenger.error(player, arena.toString() + ChatColor.RED + " does not have any teams set!");
+            Messenger.error(player, arena.toString(ChatColor.RED) + " does not have any teams set!");
             return;
         }
 

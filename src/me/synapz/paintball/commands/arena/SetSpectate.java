@@ -11,7 +11,7 @@ public class SetSpectate extends ArenaCommand {
 
     public void onCommand() {
         arena.setSpectatorLocation(player.getLocation());
-        Messenger.success(player, arena.toString() + ChatColor.GREEN + " spectate location set: " + Settings.SECONDARY + (Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator") == null ? 1 : Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator").getValues(false).size()), arena.getSteps());
+        Messenger.success(player, arena.toString(ChatColor.GREEN) + " spectate location set: " + Settings.SECONDARY + (Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator") == null ? 1 : Settings.ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator").getValues(false).size()), arena.getSteps());
     }
 
     public String getArgs() {

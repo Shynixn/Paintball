@@ -4,6 +4,7 @@ import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
+import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +26,7 @@ public class SetTeams extends ArenaCommand {
             return;
         }
         if (colors.size() == 1) {
-            Messenger.error(player, arena.toString() + RED + " cannot have only one team!");
+            Messenger.error(player, arena.toString(RED) + " cannot have only one team!");
             return;
         }
         for (String color : colors) {
@@ -54,7 +55,7 @@ public class SetTeams extends ArenaCommand {
             out += t.getTitleName() + ", ";
         }
         out = out.substring(0, out.lastIndexOf(","));
-        Messenger.success(player, arena.toString() + "'s teams has been set to " + out + "!", arena.getSteps());
+        Messenger.success(player, arena.toString(ChatColor.GREEN) + "'s teams has been set to " + out + "!", arena.getSteps());
     }
 
     public String getArgs() {

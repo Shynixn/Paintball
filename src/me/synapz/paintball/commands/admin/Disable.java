@@ -17,15 +17,15 @@ public class Disable extends ArenaCommand {
 
         if (Utils.nullCheck(args[2], arena, player)) {
             if (!arena.isSetup()) {
-                Messenger.error(player, arena.toString() + ChatColor.RED + " has not been setup.");
+                Messenger.error(player, arena.toString(ChatColor.RED) + " has not been setup.");
                 return;
             }
             if (!arena.isEnabled()) {
-                Messenger.error(player, arena.toString() + ChatColor.RED + " is already disable.");
+                Messenger.error(player, arena.toString(ChatColor.RED) + " is already disabled.");
                 return;
             }
             if (!arena.getAllPlayers().containsKey(player))
-                Messenger.success(player, arena.toString() + " has been disabled!");
+                Messenger.success(player, arena.toString(ChatColor.GREEN) + " has been disabled!");
             arena.setEnabled(false);
         }
     }

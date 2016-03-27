@@ -2,8 +2,12 @@ package me.synapz.paintball.commands.admin;
 
 import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Team;
+import me.synapz.paintball.Utils;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.locations.TeamLocation;
+
+import static org.bukkit.ChatColor.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +17,24 @@ import static me.synapz.paintball.storage.Settings.*;
 
 public class Info extends ArenaCommand {
 
+
     public void onCommand() {
+        final String LINE = SECONDARY + STRIKETHROUGH + Utils.makeSpaces(20) + RESET + " " + THEME + arena.getName() + " " + SECONDARY + STRIKETHROUGH + Utils.makeSpaces(20);
+        final int specSize = ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator") != null ? ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator").getValues(false).size() : 0;
+        final List<String> teams = readableList(arena.getArenaTeamList());
+
         Messenger.msg(player,
+                LINE,
                 THEME + "State: " + SECONDARY + arena.getState(),
                 THEME + "Min: " + SECONDARY + arena.getMin(),
                 THEME + "Max: " + SECONDARY + arena.getMax(),
-                THEME + "Teams: ");
-        for (String item : readableList(arena.getArenaTeamList()))
-            Messenger.msg(player, SECONDARY + item);
+                THEME + "Enabled: " + SECONDARY + arena.isEnabled(),
+                THEME + "Join Signs: " + SECONDARY + arena.getSignLocations().keySet().size(),
+                THEME + "Spectator Locations: " + SECONDARY + specSize,
+                THEME + "Teams: " + SECONDARY + (teams.isEmpty() ? "Empty" : ""));
+        for (String item : teams)
+            Messenger.msg(player, SECONDARY + item + "");
+
     }
 
     public String getArgs() {
@@ -58,8 +72,12 @@ public class Info extends ArenaCommand {
 
     private List<String> readableList(Set<Team> teams) {
         return new ArrayList<String>(){{
-            for (Team team : teams)
+            for (Team team : teams) {
                 add("  - " + team.getTitleName());
+                add("      " + THEME + "Color: " + team.getChatColor() + "█");
+                add("      " + THEME + "Lobby locations: " + SECONDARY + team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY));
+                add("      " + THEME + "Spawn locations: " + SECONDARY + team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN));
+            }
         }};
     }
 }

@@ -259,7 +259,7 @@ public class Arena {
             setState(ArenaState.WAITING);
         } else {
             List<PaintballPlayer> copyFile = new ArrayList<>(getAllPlayers().values());
-            broadcastMessage(toString() + RED + " has been disabled.");
+            broadcastMessage(this.toString(RED) + " has been disabled.");
             for (PaintballPlayer player : copyFile)
                 player.leave();
             setState(ArenaState.DISABLED);
@@ -361,16 +361,16 @@ public class Arena {
             startGame();
         } else {
             setState(ArenaState.WAITING);
-            this.broadcastMessage(this.toString() + RED + " has been force stopped.");
+            this.broadcastMessage(this.toString(RED) + " has been force stopped.");
             this.forceLeaveArena();
         }
     }
 
     // Put the arena to string ex: Arena Syn, where Syn is the arena name. At the end it is green so if you don't want it to be green change it after
-    public String toString() {
-        return "Arena " + GRAY + this.getName() + GREEN;
+    public String toString(ChatColor color) {
+        return color + "Arena " + GRAY + this.getName() + color;
     }
-    
+
     // Return the path the Arena is at with a . at the end (This is where defaultName comes in handy)
     public String getPath() {
         return "Arenas." + defaultName + ".";
@@ -455,11 +455,9 @@ public class Arena {
     }
 
     // Broadcasts a message to the whole arena
-    public void broadcastMessage(String... chatMessage) {
-        for (Player player : allPlayers.keySet()) {
-            for (String msg : chatMessage)
-                player.sendMessage(PREFIX + msg);
-        }
+    public void broadcastMessage(String chatMessage) {
+        for (Player player : allPlayers.keySet())
+                Messenger.info(player, chatMessage);
     }
 
     public void broadcastTitle(String header, String footer, int fadeIn, int stay, int fadeOut) {

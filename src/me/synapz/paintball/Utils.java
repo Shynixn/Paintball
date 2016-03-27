@@ -182,21 +182,21 @@ public class Utils {
 
         for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
             if (a.containsPlayer(player)) {
-                Messenger.error(player, "You are already in " + a.toString() + ChatColor.RED + ".");
+                Messenger.error(player, "You are already in " + a.toString(RED) + ".");
                 return false;
             }
         }
 
         // Checks to see if the arena is full
         if (arena.getLobbyPlayers().size() == arena.getMax() && arena.getMax() > 0) {
-            Messenger.error(player, arena.toString() + RED + " is full!");
+            Messenger.error(player, arena.toString(RED) + " is full!");
             return false;
         }
 
         if (state == Arena.ArenaState.WAITING) {
             return true;
         } else {
-            Messenger.error(player, arena.toString() + ChatColor.RED + " is " + state.toString().toLowerCase() + ".");
+            Messenger.error(player, arena.toString(RED) + " is " + state.toString().toLowerCase() + ".");
             return false;
         }
     }

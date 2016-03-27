@@ -15,14 +15,14 @@ public class Enable extends ArenaCommand {
         }
 
         if (!arena.isSetup()) {
-            Messenger.error(player, arena.toString() + ChatColor.RED + " has not been setup.");
+            Messenger.error(player, arena.toString(ChatColor.RED) + " has not been setup.");
             return;
         }
         if (arena.isEnabled()) {
-            Messenger.error(player, arena.toString() + ChatColor.RED + " is already enabled.");
+            Messenger.error(player, arena.toString(ChatColor.RED) + " is already enabled.");
             return;
         }
-        Messenger.success(player, arena.toString() + " has been enabled!");
+        Messenger.success(player, arena.toString(ChatColor.GREEN) + " has been enabled!");
         arena.setEnabled(true);
     }
 

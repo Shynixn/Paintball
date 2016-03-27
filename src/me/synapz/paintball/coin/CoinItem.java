@@ -219,6 +219,15 @@ public class CoinItem extends ItemStack {
     }
 
     public Sound getSound() {
+        try {
+            sound.toString();
+        } catch (NullPointerException exc) {
+            // Sound is null
+            return null;
+        } catch (NoSuchFieldError exc) {
+            // Sound is not found because of a version change
+            return null;
+        }
         return sound;
     }
 
@@ -253,7 +262,7 @@ public class CoinItem extends ItemStack {
     }
 
     public boolean hasSound() {
-        return sound != null;
+        return getSound() != null;
     }
     // Checks to see if the player requires any permissions
     public boolean hasPermission() {

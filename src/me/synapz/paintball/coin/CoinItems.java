@@ -17,9 +17,25 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class CoinItems implements Listener {
 
     private static CoinItems instance = null;
+
+    private static Sound CLICK_SOUND;
+
+    static {
+        try {
+            CLICK_SOUND = Sound.BLOCK_LEVER_CLICK;
+        } catch (NoSuchFieldError exc) {
+            // Sound did not load... try to load the 1.8 and lower sound
+            CLICK_SOUND = Sound.valueOf("CLICK");
+        }
+    }
 
     public static CoinItems getCoinItems() {
         if (instance == null) {
@@ -31,7 +47,7 @@ public class CoinItems implements Listener {
     public void loadItems() {
         instance = new CoinItems();
 
-        new CoinItem(Material.GOLD_BARDING, "AK-47", 1, true, "Shoot from an AK-47", 0.0D, 5, 120, "", Sound.CLICK) {
+        new CoinItem(Material.GOLD_BARDING, "AK-47", 1, true, "Shoot from an AK-47", 0.0D, 0, 120, "", CLICK_SOUND) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
@@ -40,7 +56,7 @@ public class CoinItems implements Listener {
             }
         };
 
-        new CoinItem(Material.IRON_BARDING, "Spray n' Pray", 1, true, "Spray tons of Paintballs\nand hit your enemy!", 0.0D, 15, 10, "", Sound.CLICK) {
+        new CoinItem(Material.IRON_BARDING, "Spray n' Pray", 1, true, "Spray tons of Paintballs\nand hit your enemy!", 0.0D, 0, 10, "", CLICK_SOUND) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
@@ -49,7 +65,7 @@ public class CoinItems implements Listener {
             }
         };
 
-        new CoinItem(Material.GOLD_BARDING, "Mini-Gun", 1, true, "High Precision fast shooting gun", 0.0D, 11, 10, "", Sound.CLICK) {
+        new CoinItem(Material.GOLD_BARDING, "Mini-Gun", 1, true, "High Precision fast shooting gun", 0.0D, 0, 10, "", CLICK_SOUND) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
@@ -60,7 +76,7 @@ public class CoinItems implements Listener {
             }
         };
 
-        new CoinItem(Material.SUGAR, "Sugar Overdose", 1, true, "Speeds up your movement by 2x", 0.0D, 3, 0, "", Sound.CLICK) {
+        new CoinItem(Material.SUGAR, "Sugar Overdose", 1, true, "Speeds up your movement by 2x", 0.0D, 0, 0, "", CLICK_SOUND) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
                 ItemStack itemInHand = player.getItemInHand();
@@ -69,7 +85,7 @@ public class CoinItems implements Listener {
                 player.getInventory().remove(itemInHand);
             }
         };
-        new CoinItem(Material.DIAMOND_BARDING, "Rocket Launcher", 1, true, "Shoot a giant wave of Paintballs", 0.0D, 7, 0, "", Sound.ENDERDRAGON_DEATH) {
+        new CoinItem(Material.DIAMOND_BARDING, "Rocket Launcher", 1, true, "Shoot a giant wave of Paintballs", 0.0D, 0, 0, "", CLICK_SOUND) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
                 for (int i = 0; i < 50; i++) {
@@ -78,7 +94,7 @@ public class CoinItems implements Listener {
                 player.getInventory().remove(player.getItemInHand());
             }
         };
-        new CoinItem(Material.TNT, "Nuke", 1, true, "Click to kill everyone\n on the other team!", 0.0D, 24, 0, "", Sound.AMBIENCE_RAIN) {
+        new CoinItem(Material.TNT, "Nuke", 1, true, "Click to kill everyone\n on the other team!", 0.0D, 0, 0, "", CLICK_SOUND) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Team safeTeam = event.getArenaPlayer().getTeam();
                 Arena arena = event.getArena();
@@ -94,7 +110,7 @@ public class CoinItems implements Listener {
                 arenaPlayer.getPlayer().getInventory().remove(arenaPlayer.getPlayer().getItemInHand());
             }
         };
-        new CoinItem(Material.GHAST_TEAR, "Time Warp", 1, true, "Teleports you to your\nlast death location", 0.0D, 5, 0, "", Sound.CLICK) {
+        new CoinItem(Material.GHAST_TEAR, "Time Warp", 1, true, "Teleports you to your\nlast death location", 0.0D, 0, 0, "", CLICK_SOUND) {
             public void onClickItem(ArenaClickItemEvent event) {
                 ArenaPlayer player = event.getArenaPlayer();
                 if (player.getLastLocation() == null) {
@@ -110,7 +126,7 @@ public class CoinItems implements Listener {
     }
 
     public CoinItem getMainItem() {
-        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", Sound.CLICK) {
+        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", CLICK_SOUND) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 

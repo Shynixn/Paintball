@@ -6,6 +6,7 @@ import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Create extends PaintballCommand {
@@ -19,7 +20,7 @@ public class Create extends PaintballCommand {
             return;
         } else {
             Arena a = new Arena(arenaName, arenaName, true);
-            Messenger.success(player, a.toString() + " successfully created!", a.getSteps());
+            Messenger.success(player, a.toString(ChatColor.GREEN) + " successfully created!", a.getSteps());
         }
     }
 

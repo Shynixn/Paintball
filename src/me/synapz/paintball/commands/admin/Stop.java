@@ -15,11 +15,11 @@ public class Stop extends ArenaCommand {
         if (arena.getState() == Arena.ArenaState.IN_PROGRESS || arena.getState() == Arena.ArenaState.STARTING || arena.getState() == Arena.ArenaState.STOPPING) {
             // if the player isn't in the arena send them a message, otherwise the forceStart method will send the message to everyone
             if (!arena.getAllPlayers().keySet().contains(player))
-                Messenger.success(player, arena.toString() + GREEN + " has been force stopped!");
+                Messenger.success(player, arena.toString(GREEN) + " has been force stopped!");
             arena.forceStart(false);
             return;
         }
-        Messenger.error(player, arena.toString() + RED + " is not in progress.");
+        Messenger.error(player, arena.toString(RED) + " is not in progress.");
     }
 
     public String getArgs() {

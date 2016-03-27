@@ -41,7 +41,7 @@ public class Start extends ArenaCommand {
                 msg = "has encountered an unexpected error.";
                 break;
             }
-        Messenger.info(player, color + arena.toString() + color + " " + msg);
+        Messenger.info(player, arena.toString(color) + " " + msg);
     }
 
     public String getArgs() {

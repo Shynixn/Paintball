@@ -31,7 +31,7 @@ public class SetMin extends ArenaCommand {
             Messenger.error(player, "Your min (" + GRAY + min + RED + ") must be less than than your max (" + GRAY + arena.getMax() + RED + ") !");
             return;
         }
-        Messenger.success(player, "Min players for " + arena.toString() + " set to " + ChatColor.GRAY + min, arena.getSteps());
+        Messenger.success(player, "Min players for " + arena.toString(ChatColor.GREEN) + " set to " + ChatColor.GRAY + min, arena.getSteps());
     }
 
     public String getName() {

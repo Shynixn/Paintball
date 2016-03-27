@@ -1,6 +1,9 @@
+BETA-1.3
+- Full 1.9 Support
+- Now 1.8 and 1.9 versions can be backwards compatible, and Sounds will not break
+
 BETA-1.2
 - Fixed arenas.yml storing old values
-
 - Finish /pb arena info <arena>
 
 BETA-1.1
