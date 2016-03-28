@@ -8,6 +8,8 @@ import me.synapz.paintball.coin.CoinItemHandler;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,6 +38,7 @@ public class Settings {
     public static ArenaFile ARENA;
     public static PlayerData PLAYERDATA;
     public static FileConfiguration ARENA_FILE;
+    public static ItemsFile ITEMS;
 
     // Variables
     private static Settings instance;
@@ -76,7 +79,9 @@ public class Settings {
 
         // TODO: always says error on reload/start
         pb.saveResource("config.yml", false);
+        pb.saveResource("items.yml", false);
 
+        ITEMS = new ItemsFile(pb);
         ARENA = new ArenaFile(pb);
         PLAYERDATA = new PlayerData(pb);
         ARENA_FILE = ARENA.getFileConfig();

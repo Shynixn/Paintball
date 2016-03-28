@@ -1,0 +1,77 @@
+sugar-overdose:
+  name: "Sugar Overdose"
+  material: SUGAR
+  amount: 1
+  shown: true
+  description: "Speeds up movement by 2x"
+  money: 0
+  coins: 3
+  time: 0
+  permission: ""
+  sound: "ENTITY_PLAYER_BURP"
+ak-47:
+  name: "AK-47"
+  material: GOLD_BARDING
+  amount: 1
+  shown: true
+  description: "Shoot with 100% accuracy\nout of an AK-47"
+  money: 0
+  coins: 5
+  time: 120
+  permission: ""
+  sound: "UI_BUTTON_CLICK"
+spray-n-pray:
+  name: "Spray n' Pray"
+  material: IRON_BARDING
+  amount: 1
+  shown: true
+  description: "Spray tons of Paintballs\ntowards your enemies!"
+  money: 0
+  coins: 7
+  time: 10
+  permission: ""
+  sound: "UI_BUTTON_CLICK"
+mini-gun:
+  name: "Mini-Gun"
+  material: GOLD_BARDING
+  amount: 1
+  shown: true
+  description: "High Precision fast shooting gun"
+  money: 0
+  coins: 10
+  time: 10
+  permission: ""
+  sound: "UI_BUTTON_CLICK"
+rocket-launcher:
+  name: "Rocket Launcher"
+  material: DIAMOND_BARDING
+  amount: 1
+  shown: true
+  description: "Shoot a giant wave of Paintballs"
+  money: 0
+  coins: 12
+  time: 0
+  permission: ""
+  sound: "UI_BUTTON_CLICK"
+nuke:
+  name: "Nuke"
+  material: TNT
+  amount: 1
+  shown: true
+  description: "Click to kill everyone\non the other team"
+  money: 0
+  coins: 24
+  time: 0
+  permission: ""
+  sound: "UI_BUTTON_CLICK"
+time-warp:
+  name: "Time Wrap"
+  material: GHAST_TEAR
+  amount: 1
+  shown: true
+  description: "Teleports you to your\nlast death location"
+  money: 0
+  coins: 2
+  time: 0
+  permission: ""
+  sound: "UI_BUTTON_CLICK"

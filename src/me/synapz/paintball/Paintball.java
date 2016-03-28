@@ -46,6 +46,7 @@ public class Paintball extends JavaPlugin implements Listener {
         - Sometimes hearts do not show
         - Particles on kill
         - Leaderboard sign for times played, counted from when a player leaves how much time the arena has been at
+        - Reload ItemFile on /pb admin reload also
 
         Future Features
         - Ranks

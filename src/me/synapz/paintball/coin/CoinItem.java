@@ -4,6 +4,7 @@ import me.synapz.paintball.Utils;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -33,7 +34,6 @@ public class CoinItem extends ItemStack {
     private final String permission;
     private final boolean showItem;
     private final boolean configItem;
-    private final String type;
     private final Sound sound;
 
     public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, Sound sound) {
@@ -47,28 +47,28 @@ public class CoinItem extends ItemStack {
         this.permission = permission;
         this.showItem = showItem;
         this.configItem = false;
-        this.type = "";
         this.sound = sound;
 
         CoinItemHandler.getHandler().addItem(this);
     }
 
     // Creates a CoinItem from config.yml based on a rawItem
-    public CoinItem(String path, FileConfiguration file) {
-        super(Material.valueOf(file.getString(path + ".material")), file.getInt(path + ".amount"));
-        this.name = file.getString(path + ".name");
-        this.nameWithSpaces = name;
-        this.description = file.getString(path + ".description");
-        this.money = file.getDouble(path + ".money");
-        this.coins = file.getInt(path + ".coins");
-        this.expirationTime = file.getInt(path + ".expiration-time");
-        this.permission = file.getString(path + ".permission-required");
-        this.showItem = file.getBoolean(path + ".shown");
-        this.configItem = true;
-        this.type = file.getString(path + ".type");
-        this.sound = Sound.valueOf(file.getString(path + "sound"));
+    public CoinItem(String path) {
+        this(Material.valueOf(Settings.ITEMS.getFileConfig().getString(path + ".material")),
+                Settings.ITEMS.getFileConfig().getString(path + ".name"),
+                Settings.ITEMS.getFileConfig().getInt(path + ".amount"),
+                Settings.ITEMS.getFileConfig().getBoolean(path + ".shown"),
+                Settings.ITEMS.getFileConfig().getString(path + ".description"),
+                Settings.ITEMS.getFileConfig().getDouble(path + ".money"),
+                Settings.ITEMS.getFileConfig().getInt(path + ".coins"),
+                Settings.ITEMS.getFileConfig().getInt(path + ".time"),
+                Settings.ITEMS.getFileConfig().getString(path + ".permission"),
+                Sound.valueOf(Settings.ITEMS.getFileConfig().getString(path + ".sound")));
+    }
 
-        CoinItemHandler.getHandler().addItem(this);
+    // Creates a CoinItem from config.yml based on a rawItem
+    public CoinItem(CoinItems.Items item) {
+        this(item.toString());
     }
 
     public CoinItem(CoinItem item) {
@@ -82,7 +82,6 @@ public class CoinItem extends ItemStack {
         this.permission = item.getPermission();
         this.showItem = item.showItem();
         this.configItem = item.hasType();
-        this.type = item.getItemType();
         this.sound = item.getSound();
     }
 
@@ -203,11 +202,6 @@ public class CoinItem extends ItemStack {
             return itemMeta.hasDisplayName() && itemMeta.hasDisplayName() && itemMeta.getDisplayName().equals(itemStackMeta.getDisplayName()) && itemMeta.getLore().equals(itemStackMeta.getLore());
         }
         return false;
-    }
-
-    // Gets the type of item TODO: Replace with return of enum
-    public String getItemType() {
-        return type;
     }
 
     // The method that gets fired whenever a player clicks on the item
