@@ -1,3 +1,10 @@
+BETA-1.5
+- Advanced items.yml saving so you will always have an up-to-date version of new items in items.yml always
+- Fixed spelling mistakes
+- Added arenas.yml, and items.yml to /pb admin reload
+
+- Added Paintball Shower into Coin Shop
+
 BETA-1.4
 - Large addition: Added items.yml so you can customize all items values
 - Fixed un-true shop values

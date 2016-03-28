@@ -1,6 +1,7 @@
 package me.synapz.paintball.coin;
 
 import me.synapz.paintball.Utils;
+import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
@@ -53,22 +54,17 @@ public class CoinItem extends ItemStack {
     }
 
     // Creates a CoinItem from config.yml based on a rawItem
-    public CoinItem(String path) {
-        this(Material.valueOf(Settings.ITEMS.getFileConfig().getString(path + ".material")),
-                Settings.ITEMS.getFileConfig().getString(path + ".name"),
-                Settings.ITEMS.getFileConfig().getInt(path + ".amount"),
-                Settings.ITEMS.getFileConfig().getBoolean(path + ".shown"),
-                Settings.ITEMS.getFileConfig().getString(path + ".description"),
-                Settings.ITEMS.getFileConfig().getDouble(path + ".money"),
-                Settings.ITEMS.getFileConfig().getInt(path + ".coins"),
-                Settings.ITEMS.getFileConfig().getInt(path + ".time"),
-                Settings.ITEMS.getFileConfig().getString(path + ".permission"),
-                Sound.valueOf(Settings.ITEMS.getFileConfig().getString(path + ".sound")));
-    }
-
-    // Creates a CoinItem from config.yml based on a rawItem
-    public CoinItem(CoinItems.Items item) {
-        this(item.toString());
+    public CoinItem(Items item) {
+        this(item.getMaterial(),
+                item.getName(),
+                item.getAmount(),
+                item.isShown(),
+                item.getDescription(),
+                item.getMoney(),
+                item.getCoins(),
+                item.getTime(),
+                item.getPermission(),
+                item.getSound());
     }
 
     public CoinItem(CoinItem item) {

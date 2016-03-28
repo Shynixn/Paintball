@@ -5,6 +5,7 @@ import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.coin.CoinItemHandler;
+import me.synapz.paintball.coin.CoinItems;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -38,7 +39,7 @@ public class Settings {
     public static ArenaFile ARENA;
     public static PlayerData PLAYERDATA;
     public static FileConfiguration ARENA_FILE;
-    public static ItemsFile ITEMS;
+    public static ItemFile ITEMS;
 
     // Variables
     private static Settings instance;
@@ -79,19 +80,19 @@ public class Settings {
 
         // TODO: always says error on reload/start
         pb.saveResource("config.yml", false);
-        pb.saveResource("items.yml", false);
 
-        ITEMS = new ItemsFile(pb);
-        ARENA = new ArenaFile(pb);
         PLAYERDATA = new PlayerData(pb);
-        ARENA_FILE = ARENA.getFileConfig();
 
         loadEverything();
     }
 
     private void loadEverything() {
+        ITEMS = new ItemFile(pb);
+        ARENA = new ArenaFile(pb);
+        ARENA_FILE = ARENA.getFileConfig();
         loadSettings(); // loads everything in config.yml into constants
-        CoinItemHandler.getHandler().loadItemsFromConfig(pb.getConfig()); // loads all coin items
+
+        CoinItems.getCoinItems().loadItems();
     }
 
     // Called on server start, reload, and pb admin reload

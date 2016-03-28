@@ -4,6 +4,7 @@ import me.synapz.paintball.Arena;
 import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Team;
 import me.synapz.paintball.Utils;
+import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -29,21 +30,6 @@ public class CoinItems implements Listener {
     private static CoinItems instance = null;
 
     private static Sound CLICK_SOUND;
-
-    public enum Items {
-        SUGAR_OVERDOSE,
-        AK_47,
-        MINI_GUN,
-        SPRAY_N_PRAY,
-        ROCKET_LAUNCHER,
-        NUKE,
-        TIME_WARP;
-
-        @Override
-        public String toString() {
-            return super.toString().replace("_", "-").toLowerCase();
-        }
-    }
 
     static {
         try {
@@ -138,6 +124,16 @@ public class CoinItems implements Listener {
                     event.getCoinItem().remove(player);
 
                     player.getPlayer().teleport(player.getLastLocation());
+                }
+            }
+        };
+
+        new CoinItem(Items.PAINTBALL_SHOWER) {
+            public void onClickItem(ArenaClickItemEvent event) {
+                Player player = event.getArenaPlayer().getPlayer();
+
+                for (int i = 0; i < 200; i++) {
+                    Utils.shootUpSnowball(player);
                 }
             }
         };

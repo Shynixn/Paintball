@@ -39,17 +39,4 @@ public class CoinItemHandler {
     public Map<String, CoinItem> getAllItems() {
         return items;
     }
-
-    public void loadItemsFromConfig(FileConfiguration file) {
-        // TODO: Re-enable this.
-        /*
-        if (!file.isConfigurationSection("Kill-Coin-Shop"))
-            return;
-        Set<String> rawItems = file.getConfigurationSection("Kill-Coin-Shop").getKeys(false);
-        for (String rawItem : rawItems) {
-            new CoinItem
-           ("Kill-Coin-Shop." + rawItem, file);
-        }
-        */
-    }
 }

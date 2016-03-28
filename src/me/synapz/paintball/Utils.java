@@ -247,4 +247,20 @@ public class Utils {
         v.multiply(arena.SPEED);
         pr.setVelocity(v);
     }
+
+    // Shoots a Snowball with the correct speed
+    public static void shootUpSnowball(Player player) {
+        double accuracy = 0.2F;
+
+        Vector v = player.getLocation().getDirection();
+        v.multiply(1/1000);
+        v.setY(1);
+        v.multiply(2);
+        v.add(new Vector(Math.random() * accuracy - accuracy, Math.random() * accuracy - accuracy, Math.random() * accuracy - accuracy));
+        v.subtract(new Vector(Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy));
+
+        Projectile pr = player.launchProjectile(Snowball.class);
+
+        pr.setVelocity(v);
+    }
 }
