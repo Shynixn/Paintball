@@ -1,5 +1,8 @@
 package me.synapz.paintball.enums;
 
+import me.synapz.paintball.Messenger;
+import org.bukkit.entity.Player;
+
 import java.util.UUID;
 
 public enum StatType {
@@ -55,4 +58,20 @@ public enum StatType {
         return path.equals("none");
     }
 
+    public static StatType getStatType(Player player, String statString) {
+        StatType type = null;
+        for (StatType t : StatType.values()) {
+            if (t.getSignName().equalsIgnoreCase(statString)) {
+                type = t;
+            }
+        }
+
+        if (type == null) {
+            String error = statString + " is an invalid statistic type.";
+
+            if (player != null)
+                Messenger.error(player, error, "Choose either " + StatType.getReadableList());
+        }
+        return type;
+    }
 }

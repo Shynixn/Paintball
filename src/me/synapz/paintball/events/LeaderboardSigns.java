@@ -30,24 +30,10 @@ public class LeaderboardSigns implements Listener {
             return;
         }
 
-        StatType type = null;
-        for (StatType t : StatType.values()) {
-            if (t.getSignName().equalsIgnoreCase(e.getLine(2))) {
-                type = t;
-            }
-        }
+        StatType type = StatType.getStatType(e.getPlayer(), e.getLine(3));
 
-        if (type == null) {
-            String error = e.getLine(2) + " is an invalid statistic type.";
-            if (e.getLine(2).isEmpty()) {
-                error = "Choose a statistic type on line 3.";
-            }
-
-
-            Messenger.error(e.getPlayer(), error, "Choose either " + StatType.getReadableList());
-            e.getBlock().breakNaturally();
+        if (type == null)
             return;
-        }
 
         if (e.getLine(3).isEmpty()) {
             Messenger.error(e.getPlayer(), "Line 4 cannot be blank.", "Choose a rank number, for example: 3");

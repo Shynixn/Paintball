@@ -8,6 +8,7 @@ import me.synapz.paintball.events.JoinSigns;
 import me.synapz.paintball.events.LeaderboardSigns;
 import me.synapz.paintball.events.Listeners;
 import me.synapz.paintball.metrics.Metrics;
+import me.synapz.paintball.storage.ArenaFile;
 import me.synapz.paintball.storage.Settings;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -46,7 +47,6 @@ public class Paintball extends JavaPlugin implements Listener {
         - Sometimes hearts do not show
         - Particles on kill
         - Leaderboard sign for times played, counted from when a player leaves how much time the arena has been at
-        - Reload ItemFile on /pb admin reload also
 
         Future Features
         - Ranks
@@ -95,6 +95,7 @@ public class Paintball extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         ArenaManager.getArenaManager().stopArenas();
+        Settings.ARENA.deleteLeaderboards();
     }
 
     private void setupEconomy() {

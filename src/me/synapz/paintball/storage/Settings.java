@@ -7,6 +7,7 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.coin.CoinItemHandler;
 import me.synapz.paintball.coin.CoinItems;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Item;
@@ -33,6 +34,7 @@ public class Settings {
 
     public static boolean VAULT;
     public static boolean TITLE;
+    public static boolean HOLOGRAPHIC_DISPLAYS;
 
     public static Economy ECONOMY = null;
 
@@ -84,6 +86,7 @@ public class Settings {
         PLAYERDATA = new PlayerData(pb);
 
         loadEverything();
+        ARENA.loadLeaderboards();
     }
 
     private void loadEverything() {
@@ -109,6 +112,7 @@ public class Settings {
         SIGN_UPDATE_TIME            = config.getInt("sign-update-time");
         VAULT                       = config.getBoolean("vault");
         TITLE                       = config.getBoolean("title");
+        HOLOGRAPHIC_DISPLAYS        = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
     }
 
     public void reloadConfig() {

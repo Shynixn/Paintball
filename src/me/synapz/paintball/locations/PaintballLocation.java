@@ -9,7 +9,7 @@ public abstract class PaintballLocation {
     // Important class to shorten files by shorting
     // Turns Locations into: world,x,y,z,yaw,pitch
 
-    protected final Arena arena;
+    protected Arena arena;
     protected final Location loc;
 
     // Just creates a PaintballLocation
@@ -25,7 +25,6 @@ public abstract class PaintballLocation {
         this.arena = a;
         this.loc = location;
     }
-
 
     public Location getLocation() {
         return loc;

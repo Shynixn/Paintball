@@ -1,16 +1,19 @@
 package me.synapz.paintball;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
 import com.google.common.base.Joiner;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static me.synapz.paintball.storage.Settings.PLAYERDATA;
 import static me.synapz.paintball.storage.Settings.THEME;
@@ -148,6 +151,24 @@ public class ArenaManager {
                     break;
                 default:
                     break; // should never happen
+            }
+        }
+
+        if (Settings.HOLOGRAPHIC_DISPLAYS) {
+            Collection<Hologram> holograms = HologramsAPI.getHolograms(JavaPlugin.getProvidingPlugin(Paintball.class));
+
+            for (Hologram holo : holograms) {
+                if (holo.getLine(0).toString().contains("Top")) {
+                    holo.clearLines();
+
+                    holo.appendTextLine(Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10) + ChatColor.RESET + Settings.THEME + " Paintball Top Leaderboard " + Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10));
+
+                    for (StatType type : StatType.values()) {
+                        int rank = 1;
+                        Map<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(rank, type);
+                        holo.appendTextLine(Settings.THEME + "#" + rank + " " + type.getName() + " " + Settings.SECONDARY + " - " + Settings.THEME + playerAndStat.keySet().toArray()[0] + Settings.SECONDARY + "  - " + Settings.THEME + playerAndStat.values().toArray()[0]);
+                    }
+                }
             }
         }
     }

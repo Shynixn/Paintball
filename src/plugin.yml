@@ -1,9 +1,10 @@
 name: Paintball
-version: BETA_1.5
+version: BETA_1.6
 description: Paintball Minigame
 authors: [Synapz_]
 main: me.synapz.paintball.Paintball
 depend: [BountifulAPI, Vault]
+softdepend: [HolographicDisplays]
 
 commands:
    paintball:
@@ -30,6 +31,7 @@ permissions:
        paintball.admin.help: true
        paintball.admin.remove: true
        paintball.admin.info: true
+       paintball.admin.setholo: true
        paintball.leaderboard.create: true
        paintball.join.create: true
        paintball.autojoin.create: true
