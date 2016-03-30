@@ -5,20 +5,18 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import me.synapz.paintball.*;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.HologramLocation;
-import me.synapz.paintball.locations.PaintballLocation;
 import me.synapz.paintball.locations.SignLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.*;
 
-import static me.synapz.paintball.storage.Settings.ARENA;
+import static me.synapz.paintball.storage.Settings.PLAYERDATA;
 
 public class ArenaFile extends PaintballFile {
 
@@ -70,31 +68,18 @@ public class ArenaFile extends PaintballFile {
     public void loadLeaderboards() {
         for (String loc : getHologramList()) {
             HologramLocation hologramLocation = new HologramLocation(loc);
-            addLeaderboard(hologramLocation.getLocation(), hologramLocation.getType(), false);
+            addLeaderboard(hologramLocation.getLocation(), hologramLocation.getType(), hologramLocation.getPage(), false);
         }
     }
 
-    public void addLeaderboard(Location loc, StatType statType, boolean addToFile) {
+    public void addLeaderboard(Location loc, StatType statType, int page, boolean addToFile) {
         Hologram hologram = HologramsAPI.createHologram(JavaPlugin.getProvidingPlugin(Paintball.class), loc);
 
-        if (statType == null) {
-            hologram.appendTextLine(Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10) + ChatColor.RESET + Settings.THEME + " Paintball Top Leaderboard " + Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10));
-
-            for (StatType type : StatType.values()) {
-                int rank = 1;
-                Map<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(rank, type);
-                hologram.appendTextLine(Settings.THEME + "#" + rank + " " + type.getName() + " " + Settings.SECONDARY + " - " + Settings.THEME + playerAndStat.keySet().toArray()[0] + Settings.SECONDARY + "  - " + Settings.THEME + playerAndStat.values().toArray()[0]);
-            }
-        } else {
-            hologram.appendTextLine(Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10) + ChatColor.RESET + Settings.THEME + " Paintball " + statType.getSignName() + " Leaderboard " + Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10));
-
-            for (int i = 1; i <= 10; i++) {
-                Map<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(i, statType);
-                hologram.appendTextLine(Settings.THEME + "#" + i + Settings.SECONDARY + " - " + Settings.THEME + playerAndStat.keySet().toArray()[0] + Settings.SECONDARY + "  - " + Settings.THEME + playerAndStat.values().toArray()[0]);
-            }
+        for (String statLine : PLAYERDATA.getPage(statType, page)) {
+            hologram.appendTextLine(statLine);
         }
 
-        new HologramLocation(loc, statType, addToFile);
+        new HologramLocation(loc, statType, page, addToFile);
     }
 
     public void deleteLeaderboards() {

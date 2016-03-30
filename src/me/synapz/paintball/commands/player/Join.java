@@ -20,7 +20,7 @@ public class Join extends TeamCommand {
             arena.joinLobby(player, null);
             return;
         }
-        //Joins the arena
+        //  Joins the arena
         arena.joinLobby(player, team);
     }
 

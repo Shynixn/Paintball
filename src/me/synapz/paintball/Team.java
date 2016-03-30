@@ -1,7 +1,6 @@
 package me.synapz.paintball;
 
 import me.synapz.paintball.locations.TeamLocation;
-import me.synapz.paintball.players.LobbyPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;

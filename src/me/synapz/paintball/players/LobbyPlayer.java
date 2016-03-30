@@ -9,7 +9,6 @@ import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -46,12 +45,12 @@ public class LobbyPlayer extends PaintballPlayer {
 
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
         team.playerJoinTeam();
-        giveWoolHelmet();
 
         // If the arena can start (enough players) AND the lobby does not already have one started
         if (arena.canStartTimer() && LobbyCountdown.tasks.get(arena) == null) {
             new LobbyCountdown(arena.LOBBY_COUNTDOWN, arena);
         }
+        giveWoolHelmet();
     }
 
     /**

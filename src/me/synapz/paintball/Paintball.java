@@ -1,18 +1,15 @@
 package me.synapz.paintball;
 
 import me.synapz.paintball.coin.CoinItemListener;
-import me.synapz.paintball.coin.CoinItems;
 import me.synapz.paintball.commands.CommandManager;
 import me.synapz.paintball.events.ChatSystem;
 import me.synapz.paintball.events.JoinSigns;
 import me.synapz.paintball.events.LeaderboardSigns;
 import me.synapz.paintball.events.Listeners;
 import me.synapz.paintball.metrics.Metrics;
-import me.synapz.paintball.storage.ArenaFile;
 import me.synapz.paintball.storage.Settings;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,7 +30,6 @@ public class Paintball extends JavaPlugin implements Listener {
         Non-Important Things
         - Make it so if the config values are not found it sets it in. - (Still does not work for things not in default
         - Fix command order
-        - Fix leaderboard command
         - Global ranks in /pb stats also
         - Team Pick bug where teams might not be an even number
         - Leave signs
@@ -42,7 +38,6 @@ public class Paintball extends JavaPlugin implements Listener {
         - Switch team wool numbers is wrong
         - Vault, Title, and ActionBar remove in config
         - Tie support
-        - Reset stats command
         - Their nametag is not updating...
         - Sometimes hearts do not show
         - Particles on kill
@@ -76,17 +71,6 @@ public class Paintball extends JavaPlugin implements Listener {
         try {
             Metrics metrics = new Metrics(this);
             metrics.start();
-
-            /*
-            Metrics.Graph playersInArenaGraph = metrics.createGraph("Players In Arena");
-
-            playersInArenaGraph.addPlotter(new Metrics.Plotter() {
-                @Override
-                public int getValue() {
-                    return 22;
-                }
-            });
-            */
         } catch (IOException exc) {
 
         }

@@ -1,3 +1,15 @@
+BETA-1.8
+- Fixed Paintball Shower item not being removed
+- Added SetHolo checks that were missing (greater than 0, smaller than max page)
+- Added /pb admin reset <player> [stat] - Resets a player's stats, or all their stats
+
+BETA-1.7
+- Added /pb top <stat/all> [page] - Which displays the leaderboard of a stat, or all stats
+- Added /pb admin delholo [radius] - Which removes holograms of a set radius (default is 5)
+- Refined how leaderboards look
+- Added way better Hologram Leaderboard setting which accepts pages
+    - /pb admin setholo <stat/all> [page]
+
 BETA-1.6
 - Added Hologram leaderboards! Use /pb admin setholo [stat], leave stat blank for 1-10 list on all
 - Holograms auto-update efficiently

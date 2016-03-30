@@ -6,11 +6,7 @@ import me.synapz.paintball.Messenger;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -56,7 +52,7 @@ public final class PlayerData extends PaintballFile {
     // Adds one to a player's stat
     // ex: if a player gets 1 kill, add one the stat in config
     public void incrementStat(StatType type, ArenaPlayer player) {
-        UUID id = player.getPlayer().getUniqueId();
+        UUID id = ((OfflinePlayer) player.getPlayer()).getUniqueId();
 
         switch (type) {
             // KD and ACCURACY are automatically determined by dividing
@@ -79,6 +75,15 @@ public final class PlayerData extends PaintballFile {
         }
 
         addOneToPath(type.getPath(id));
+        saveFile();
+    }
+
+    // Resets a specific stat
+    public void resetStats(StatType type, OfflinePlayer player) {
+        UUID id = player.getUniqueId();
+
+        if (!type.isCalculated())
+            getFileConfig().set(type.getPath(id), 0);
         saveFile();
     }
 
@@ -139,42 +144,42 @@ public final class PlayerData extends PaintballFile {
         return stats;
     }
 
-    // Method for /pb leaderboard <stat> <page>
-    // Organizes players from best to worse based on the stat selected
-    public void paginate(CommandSender sender, StatType type, int page, int pageLength) {
-        SortedMap<String, String> allPlayers = new TreeMap<String, String>(Collections.<String>reverseOrder());
-        for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
-            String name;
-            String score;
-            if (Bukkit.getServer().getPlayer(UUID.fromString(uuid)) == null) {
-                name = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
-                score = getPlayerStats(UUID.fromString(uuid)).get(type);
-            } else {
-                name = Bukkit.getPlayer(UUID.fromString(uuid)).getName();
-                score = getPlayerStats(UUID.fromString(uuid)).get(type);
-            }
-            allPlayers.put(name, score);
-        }
-        sender.sendMessage(ChatColor.YELLOW + "List: Page (" + String.valueOf(page) + " of " + (((allPlayers.size() % pageLength) == 0) ? allPlayers.size() / pageLength : (allPlayers.size() / pageLength) + 1));
-        int i = 0, k = 0;
-        page--;
-        for (final Map.Entry<String, String> e : allPlayers.entrySet()) {
-            k++;
-            if ((((page * pageLength) + i + 1) == k) && (k != ((page * pageLength) + pageLength + 1))) {
-                i++;
-                sender.sendMessage(ChatColor.YELLOW + e.getKey() + " - " + e.getValue());
-            }
-        }
+    public int getMaxPage() {
+        int listSize = getFileConfig().getConfigurationSection("Player-Data").getKeys(false).size();
+        return (listSize/10)%10 == 0 ? listSize/10 : (listSize/10)+1;
     }
 
-    // Gets the page of a player's stats, useful for /pb stat and /pb leaderboard <page>
-    public void getPage(Player player, StatType type, int page) {
-        // int totalPages = getFileConfig().getConfigurationSection("Player-Data").getKeys(false).size() % 8;
-        int current = Integer.parseInt(page + "" + page);
-        int end = current + 8;
-        for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
-            Messenger.info(player, "#" + current + " - " + Bukkit.getPlayer(UUID.fromString(uuid)) == null ? Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName() : Bukkit.getPlayer(UUID.fromString(uuid)).getName() + " Many: " + getPlayerStats(UUID.fromString(uuid)).get(type));
+    // Gets a page of stats returned by a list of strings
+    public List<String> getPage(StatType statType, int page) {
+        List<String> stats = new ArrayList<>();
+
+        int end = page*10;
+        int start = end-10;
+
+        // Adds the title
+        String title = statType == null ? Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10) + ChatColor.RESET + Settings.THEME + " Paintball Top " + Settings.SECONDARY + page + Settings.THEME + " Leaderboard " + Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10) : Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10) + ChatColor.RESET + Settings.THEME + " Paintball " + statType.getName() + " Leaderboard " + ChatColor.GRAY + page + Settings.THEME + "/" + ChatColor.GRAY + getMaxPage() + " " + Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10);
+        stats.add(title);
+
+        // Starts adding the values to the stats list
+        if (statType == null) {
+            // Go through each value and find the rank of it and add it to the list
+            for (StatType type : StatType.values()) {
+                Map<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(page, type);
+                stats.add(Settings.THEME + "#" + page + Settings.SECONDARY + " " + type.getName() + Messenger.SUFFIX + Settings.THEME + playerAndStat.keySet().toArray()[0] + Settings.SECONDARY + "  - " + playerAndStat.values().toArray()[0]);
+            }
+        } else {
+            for (int i = start; i <= end; i++) {
+                if (i > 0) {
+                    Map<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(i, statType);
+                    String playerName = (String) playerAndStat.keySet().toArray()[0];
+
+                    if (!playerName.equals("Unknown"))
+                        stats.add(Settings.THEME + "#" + i + Messenger.SUFFIX + Settings.THEME + playerName + Settings.SECONDARY + "  - " + playerAndStat.values().toArray()[0]);
+                }
+            }
         }
+
+        return stats;
     }
 
     // Returns a player's KD by dividing kills and deaths

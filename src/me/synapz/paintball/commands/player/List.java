@@ -4,7 +4,6 @@ package me.synapz.paintball.commands.player;
 import me.synapz.paintball.ArenaManager;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.entity.Player;
 
 public class List extends PaintballCommand {

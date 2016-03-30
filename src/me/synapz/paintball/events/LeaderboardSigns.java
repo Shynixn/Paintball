@@ -3,9 +3,7 @@ package me.synapz.paintball.events;
 import me.synapz.paintball.Messenger;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
-import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -17,8 +15,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 public class LeaderboardSigns implements Listener {
 

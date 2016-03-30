@@ -3,7 +3,6 @@ package me.synapz.paintball.countdowns;
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.Utils;
 import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.players.PaintballPlayer;
 import org.bukkit.Bukkit;
 
 public class GameFinishCountdown extends PaintballCountdown {

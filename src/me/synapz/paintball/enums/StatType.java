@@ -61,7 +61,7 @@ public enum StatType {
     public static StatType getStatType(Player player, String statString) {
         StatType type = null;
         for (StatType t : StatType.values()) {
-            if (t.getSignName().equalsIgnoreCase(statString)) {
+            if (t.getSignName().equalsIgnoreCase(statString) || t.getName().equals(statString)) {
                 type = t;
             }
         }

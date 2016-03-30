@@ -3,7 +3,6 @@ package me.synapz.paintball.coin;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 

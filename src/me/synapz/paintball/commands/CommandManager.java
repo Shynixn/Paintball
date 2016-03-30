@@ -26,10 +26,10 @@ public class CommandManager implements CommandExecutor{
 
 
     public void init() {
-    	addCommands(new Join(), new Leave(), new Spectate(), new Stats() /*new Leaderboard()*/, new List(), new Admin(CommandType.PLAYER),
+    	addCommands(new Join(), new Leave(), new Spectate(), new Stats(), new List(), new Admin(CommandType.PLAYER),
     			new Create(), new Remove(), new SetLocation(), new DelLocation(), new SetSpectate(), new DelSpectate(), new SetMin(),
-    			new SetMax(), new SetTeams(), new Start(), new Stop(), new Rename(), new Enable(), new Disable(), new SetHolo(),
-    			new Steps(), new Info(), new Reload(), new Admin(CommandType.ADMIN), new Arena(CommandType.ARENA));
+    			new SetMax(), new SetTeams(), new Start(), new Stop(), new Rename(), new Enable(), new Disable(), new SetHolo(), new DelHolo(),
+    			new Steps(), new Info(), new Reload(), new Reset(), new Top(), new Admin(CommandType.ADMIN), new Arena(CommandType.ARENA));
     }
 
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String commandLabel, String[] args) {

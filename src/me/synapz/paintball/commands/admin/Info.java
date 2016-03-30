@@ -7,16 +7,15 @@ import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.locations.TeamLocation;
 
-import static org.bukkit.ChatColor.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import static me.synapz.paintball.storage.Settings.*;
+import static org.bukkit.ChatColor.RESET;
+import static org.bukkit.ChatColor.STRIKETHROUGH;
 
 public class Info extends ArenaCommand {
-
 
     public void onCommand() {
         final String LINE = SECONDARY + STRIKETHROUGH + Utils.makeSpaces(20) + RESET + " " + THEME + arena.getName() + " " + SECONDARY + STRIKETHROUGH + Utils.makeSpaces(20);

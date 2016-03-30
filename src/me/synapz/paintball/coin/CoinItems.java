@@ -8,8 +8,6 @@ import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.storage.Settings;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -19,11 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class CoinItems implements Listener {
 
@@ -135,6 +128,7 @@ public class CoinItems implements Listener {
                 for (int i = 0; i < 200; i++) {
                     Utils.shootUpSnowball(player);
                 }
+                player.getInventory().remove(player.getItemInHand());
             }
         };
     }

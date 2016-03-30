@@ -1,6 +1,6 @@
 name: Paintball
-version: BETA_1.6
-description: Paintball Minigame
+version: BETA_1.8
+description: Paintball, featuring up to 16 teams.
 authors: [Synapz_]
 main: me.synapz.paintball.Paintball
 depend: [BountifulAPI, Vault]
@@ -32,6 +32,8 @@ permissions:
        paintball.admin.remove: true
        paintball.admin.info: true
        paintball.admin.setholo: true
+       paintball.admin.delholo: true
+       paintball.admin.reset: true
        paintball.leaderboard.create: true
        paintball.join.create: true
        paintball.autojoin.create: true
@@ -57,7 +59,7 @@ permissions:
      description: Gives access to player subcommand menu
      default: not op
      children:
-       paintball.leaderboard: true
+       paintball.top: true
        paintball.spectate: true
        paintball.leave: true
        paintball.join: true
