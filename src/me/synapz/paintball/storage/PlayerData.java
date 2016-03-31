@@ -7,6 +7,7 @@ import me.synapz.paintball.Utils;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -95,7 +96,7 @@ public final class PlayerData extends PaintballFile {
 
         Map<String, String> uuidList = new HashMap<String, String>();
 
-        for (String uuid : getFileConfig().getConfigurationSection("Player-Data").getKeys(false)) {
+        for (String uuid : getSection("Player-Data").getKeys(false)) {
             uuidList.put(uuid, getPlayerStats(UUID.fromString(uuid)).get(type));
         }
 
@@ -145,7 +146,10 @@ public final class PlayerData extends PaintballFile {
     }
 
     public int getMaxPage() {
-        int listSize = getFileConfig().getConfigurationSection("Player-Data").getKeys(false).size();
+        int listSize = getSection("Player-Data").getKeys(false).size();
+
+        if (listSize > 0 && listSize <= 10)
+            return 1;
         return (listSize/10)%10 == 0 ? listSize/10 : (listSize/10)+1;
     }
 
@@ -281,6 +285,14 @@ public final class PlayerData extends PaintballFile {
                 getFileConfig().set(type.getPath(id), 0);
         }
         saveFile();
+    }
+
+    private ConfigurationSection getSection(String path) {
+        if (getFileConfig().getConfigurationSection(path) == null) {
+            return getFileConfig().createSection(path);
+        } else {
+            return getFileConfig().getConfigurationSection(path);
+        }
     }
 
     // Increments the set path by one

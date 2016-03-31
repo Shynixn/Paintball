@@ -110,6 +110,11 @@ public class Team {
         return  "Arenas." + arena.getDefaultName() + "." + type.toString() + "." + this.getConfigName() + "." + spawnNumber;
     }
 
+    // Return the team's specific path in config.
+    public String getPath() {
+        return  "Arenas." + arena.getDefaultName() + "." + this.getConfigName() + "." + "Flag";
+    }
+
     public int getSpawnPointsSize(TeamLocation.TeamLocations type) {
         String path = "Arenas." + arena.getDefaultName() + "." + type.toString() + "." + this.getConfigName();
         ConfigurationSection section = ARENA_FILE.getConfigurationSection(path);
@@ -152,7 +157,26 @@ public class Team {
     }
 
     public int getMax() {
-        return Math.round(arena.getMax()/arena.getArenaTeamList().size());
+        int maxPer = (int) Math.round((double) arena.getMax()/arena.getArenaTeamList().size());
+        int total = maxPer*arena.getArenaTeamList().size();
+
+        Map<Team, Integer> perMax = new HashMap<Team, Integer>() {{
+            for (Team t : arena.getArenaTeamList()) {
+                put(t, maxPer);
+            }
+        }};
+
+        while (total > arena.getMax()) {
+            total = 0;
+
+            for (Team team : arena.getArenaTeamList()) {
+                int oldMax = perMax.get(team);
+                perMax.replace(team, oldMax, oldMax--);
+                total += oldMax;
+            }
+        }
+
+        return perMax.get(this);
     }
 
     public int getSize() {

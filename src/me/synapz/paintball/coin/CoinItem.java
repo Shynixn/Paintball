@@ -31,11 +31,11 @@ public class CoinItem extends ItemStack {
     private final int coins;
     private final int expirationTime;
     private final String permission;
+    private final String action;
     private final boolean showItem;
-    private final boolean configItem;
     private final Sound sound;
 
-    public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, Sound sound) {
+    public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, String action, Sound sound) {
         super(material, amount);
         this.name = name;
         this.nameWithSpaces = name;
@@ -45,8 +45,8 @@ public class CoinItem extends ItemStack {
         this.expirationTime = expirationTime;
         this.permission = permission;
         this.showItem = showItem;
-        this.configItem = false;
         this.sound = sound;
+        this.action = action;
 
         CoinItemHandler.getHandler().addItem(this);
     }
@@ -62,6 +62,7 @@ public class CoinItem extends ItemStack {
                 item.getCoins(),
                 item.getTime(),
                 item.getPermission(),
+                item.getAction(),
                 item.getSound());
     }
 
@@ -75,8 +76,8 @@ public class CoinItem extends ItemStack {
         this.expirationTime = item.getExpirationTime();
         this.permission = item.getPermission();
         this.showItem = item.showItem();
-        this.configItem = item.hasType();
         this.sound = item.getSound();
+        this.action = item.getAction();
     }
 
     // Gets the item name
@@ -107,6 +108,11 @@ public class CoinItem extends ItemStack {
     // Gets the items permission
     public String getPermission() {
         return permission;
+    }
+
+    // Gets the item's kill action
+    public String getAction() {
+        return action;
     }
 
     // Sets the values specific to the arena player, then returns the item to be placed in coinshop
@@ -159,7 +165,7 @@ public class CoinItem extends ItemStack {
             if (this.requiresCoins() && player.getCoins() < this.getCoins())
                 builder.add("You don't have enough coins ");
 
-            if (this.requiresMoney() && Settings.ECONOMY.getBalance(player.getPlayer()) < getMoney())
+            if (this.requiresMoney() && Settings.VAULT && Settings.ECONOMY.getBalance(player.getPlayer()) < getMoney())
                 builder.add("You don't have enough money");
         }
 
@@ -217,11 +223,6 @@ public class CoinItem extends ItemStack {
             return null;
         }
         return sound;
-    }
-
-    // Checks to see if this CoinItem is a configItem
-    public boolean hasType() {
-        return configItem;
     }
 
     // Weather or not to show the item in the inventory

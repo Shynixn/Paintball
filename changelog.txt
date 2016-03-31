@@ -1,3 +1,20 @@
+BETA-2.1
+- MAJOR: Added CTF mode! So there are two modes: Team Deathmatch and Capture the Flag.
+
+BETA-2.0
+- Fixed /paintball being blocked in arena
+- Fixed Gun accuracy to be more accurate (it was too hard to shoot)
+- Fixed plugin not loading without a plugin making a Vault account (like Essentials)
+- Fixed IndexOutOfBoundsException on /pb admin reset Name
+- Fixed a wrong number on max page algorithm
+
+BETA-1.9
+- Removed double messages on /pb join
+- Fixed LobbyPlayer & ArenaPlayer wool helmet not showing up
+- Fixed join team items so now it updates the teams when a player switches team
+- Removed coinItem.getType()
+- Added dynamic messages you can set in items.yml under actions
+
 BETA-1.8
 - Fixed Paintball Shower item not being removed
 - Added SetHolo checks that were missing (greater than 0, smaller than max page)

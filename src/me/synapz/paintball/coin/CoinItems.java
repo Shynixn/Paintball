@@ -100,7 +100,7 @@ public class CoinItems implements Listener {
                     Team team = gamePlayer.getTeam();
                     if (team != safeTeam) {
                         gamePlayer.setHealth(1);
-                        arenaPlayer.kill(gamePlayer);
+                        arenaPlayer.kill(gamePlayer, this.getAction());
                         gamePlayer.getPlayer().teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
                     }
                 }
@@ -134,7 +134,7 @@ public class CoinItems implements Listener {
     }
 
     public CoinItem getMainItem() {
-        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", CLICK_SOUND) {
+        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", "shot", CLICK_SOUND) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 

@@ -81,10 +81,12 @@ public class ArenaPlayer extends PaintballPlayer {
 
     @Override
     public PaintballScoreboard createScoreboard() {
+        double bal = Settings.VAULT ? Settings.ECONOMY.getBalance(player) : 0;
+
         PaintballScoreboard sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
                 .addTeams(true)
                 .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.MONEY, arena.CURRENCY + Settings.ECONOMY.getBalance(player), Settings.VAULT)
+                .addLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, Settings.VAULT)
                 .addLine(ScoreboardLine.KD, "0.00")
                 .addLine(ScoreboardLine.COIN, 0, arena.COIN_SHOP)
                 .addLine(ScoreboardLine.KILL_STREAK, 0)
@@ -103,9 +105,11 @@ public class ArenaPlayer extends PaintballPlayer {
         if (pbSb == null)
             return;
 
+        double bal = Settings.VAULT ? Settings.ECONOMY.getBalance(player) : 0;
+
         int size = arena.getArenaTeamList().size()-1;
         pbSb.reloadTeams(true)
-                .reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + Settings.ECONOMY.getBalance(player), size+2)
+                .reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, size+2)
                 .reloadLine(ScoreboardLine.KD, getKd(), size+3)
                 .reloadLine(ScoreboardLine.COIN, String.valueOf(getCoins()), size+4)
                 .reloadLine(ScoreboardLine.KILL_STREAK, String.valueOf(getKillStreak()), size+5)
@@ -149,6 +153,9 @@ public class ArenaPlayer extends PaintballPlayer {
 
         if (arena.COIN_SHOP)
             inv.setItem(8, Utils.makeItem(Material.DOUBLE_PLANT, ChatColor.GOLD + "Coin Shop", 1));
+
+        giveWoolHelmet();
+
         player.updateInventory();
     }
 
@@ -174,7 +181,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * When this ArenaPlayer kills another ArenaPlayer.
      * @param arenaPlayer ArenaPlayer who was killed
      */
-    public void kill(ArenaPlayer arenaPlayer) {
+    public void kill(ArenaPlayer arenaPlayer, String action) {
         // The game is already over and they won so just do not do anything
         if (arena.getTeamScore(team) == arena.MAX_SCORE)
             return;
@@ -189,7 +196,7 @@ public class ArenaPlayer extends PaintballPlayer {
         arena.incrementTeamScore(team);
         Settings.PLAYERDATA.incrementStat(StatType.KILLS, this);
         Settings.PLAYERDATA.incrementStat(StatType.HIGEST_KILL_STREAK, this);
-        arena.broadcastMessage(THEME + player.getName() + SECONDARY + " shot " + THEME + arenaPlayer.getPlayer().getName());
+        arena.broadcastMessage(THEME + player.getName() + SECONDARY + " " + action + " " + THEME + arenaPlayer.getPlayer().getName());
 
         // Updates all player's scoreboards
         for (ArenaPlayer player : arena.getAllArenaPlayers()) {

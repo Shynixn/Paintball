@@ -11,17 +11,21 @@ public class Join extends TeamCommand {
 
     public void onCommand() {
         // If the player types in /pb join
-        if (arena == null) {
+        if (args.length == 1) {
             Arena arena = ArenaManager.getArenaManager().getBestArena();
             if (arena == null) {
                 Messenger.error(player, "No arenas are currently opened.");
                 return;
+            } else {
+                arena.joinLobby(player, null);
             }
+        } else if (args.length == 2) {
+            // If the player types in /pb join Arena
             arena.joinLobby(player, null);
-            return;
+        } else if (args.length == 3) {
+            // If the player types in /pb join Arena Team
+            arena.joinLobby(player, team);
         }
-        //  Joins the arena
-        arena.joinLobby(player, team);
     }
 
     public String getArgs() {

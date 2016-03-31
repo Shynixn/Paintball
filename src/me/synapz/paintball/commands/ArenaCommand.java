@@ -32,7 +32,7 @@ public abstract class ArenaCommand extends PaintballCommand {
             return;
         }
 
-        if (!(this instanceof TeamCommand)) {// make sure this doesn't call onCommand if it is a team command, because it still has to check for team
+        if (!(this instanceof TeamCommand)) { // make sure this doesn't call onCommand if it is a team command, because it still has to check for team
             onCommand();
         } else {
             return;

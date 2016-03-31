@@ -241,7 +241,7 @@ public class Utils {
 
     // Shoots a Snowball with the correct speed
     public static void shootSnowball(Player player, Arena arena, double accuracy) {
-        accuracy = 0.2F;
+        accuracy = 0.1F;
         Projectile pr = player.launchProjectile(Snowball.class);
 
         Vector v = player.getLocation().getDirection();

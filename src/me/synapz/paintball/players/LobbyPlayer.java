@@ -50,7 +50,6 @@ public class LobbyPlayer extends PaintballPlayer {
         if (arena.canStartTimer() && LobbyCountdown.tasks.get(arena) == null) {
             new LobbyCountdown(arena.LOBBY_COUNTDOWN, arena);
         }
-        giveWoolHelmet();
     }
 
     /**
@@ -78,6 +77,9 @@ public class LobbyPlayer extends PaintballPlayer {
         int size = arena.getArenaTeamList().size()-1;
         pbSb.reloadTeams(false)
                 .reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+2);
+
+        if (arena.GIVE_TEAM_SWITCHER)
+            giveItems();
     }
 
     /**
@@ -131,6 +133,7 @@ public class LobbyPlayer extends PaintballPlayer {
             int spot = items.indexOf(item);
             player.getInventory().setItem(spot, items.get(spot));
         }
+        giveWoolHelmet();
         player.updateInventory();
     }
 

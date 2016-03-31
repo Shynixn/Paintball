@@ -23,7 +23,8 @@ public abstract class TeamCommand extends ArenaCommand {
         try {
             this.rawTeamName = args[getTeamArg()];
         } catch (ArrayIndexOutOfBoundsException exc) {
-            onCommand();
+            if (arena != null)
+                onCommand();
             return;
         }
 

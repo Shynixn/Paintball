@@ -47,6 +47,10 @@ public class ItemFile extends PaintballFile {
         return loadString(item, "permission", item.getDefaultPermission());
     }
 
+    public String getAction(Items item) {
+        return loadString(item, "action", item.getDefaultAction());
+    }
+
     public Sound getSound(Items item) {
         return Sound.valueOf(loadString(item, "sound", item.getDefaultSound().toString()));
     }

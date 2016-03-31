@@ -6,14 +6,14 @@ import org.bukkit.Sound;
 
 public enum Items {
 
-    TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", Sound.UI_BUTTON_CLICK),
-    SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", Sound.ENTITY_PLAYER_BURP),
-    AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", Sound.UI_BUTTON_CLICK),
-    ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", Sound.UI_BUTTON_CLICK),
-    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", Sound.UI_BUTTON_CLICK),
-    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", Sound.UI_BUTTON_CLICK),
-    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 200 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", Sound.UI_BUTTON_CLICK),
-    NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", Sound.UI_BUTTON_CLICK);
+    TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Sound.UI_BUTTON_CLICK),
+    SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Sound.ENTITY_PLAYER_BURP),
+    AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", "plowed", Sound.UI_BUTTON_CLICK),
+    ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted", Sound.UI_BUTTON_CLICK),
+    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down", Sound.UI_BUTTON_CLICK),
+    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed", Sound.UI_BUTTON_CLICK),
+    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 200 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended", Sound.UI_BUTTON_CLICK),
+    NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Sound.UI_BUTTON_CLICK);
 
     @Override
     public String toString() {
@@ -29,9 +29,10 @@ public enum Items {
     private final int coins;
     private final int time;
     private final String permission;
+    private final String action;
     private final Sound sound;
 
-    Items(String n, Material mat, boolean s, int a, String desc, double m, int c, int t, String p, Sound sound) {
+    Items(String n, Material mat, boolean s, int a, String desc, double m, int c, int t, String p, String ac, Sound sound) {
         this.name = n;
         this.material = mat;
         this.amount = a;
@@ -41,6 +42,7 @@ public enum Items {
         this.coins = c;
         this.time = t;
         this.permission = p;
+        this.action = ac;
         this.sound = sound;
     }
 
@@ -78,6 +80,10 @@ public enum Items {
 
     public String getPermission() {
         return Settings.ITEMS.getPermission(this);
+    }
+
+    public String getAction() {
+        return Settings.ITEMS.getAction(this);
     }
 
     public Sound getSound() {
@@ -118,6 +124,10 @@ public enum Items {
 
     public String getDefaultPermission() {
         return permission;
+    }
+
+    public String getDefaultAction() {
+        return action;
     }
 
     public Sound getDefaultSound() {

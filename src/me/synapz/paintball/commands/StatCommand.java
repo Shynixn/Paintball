@@ -16,7 +16,11 @@ public abstract class StatCommand extends PaintballCommand {
         this.player = player;
         this.args = args;
 
-        this.rawStatType = args[getStatArg()];
+        try {
+            this.rawStatType = args[getStatArg()];
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            this.rawStatType = "all";
+        }
 
         if (!rawStatType.equalsIgnoreCase("all")) {
             type = StatType.getStatType(player, rawStatType);

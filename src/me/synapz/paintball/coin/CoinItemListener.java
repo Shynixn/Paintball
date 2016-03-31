@@ -77,16 +77,12 @@ public class CoinItemListener implements Listener {
         if (clickedItem == null) {
             return;
         }
-        if (clickedItem.hasType()) {
-
-        } else {
-            if (clickedItem.hasSound()) {
-                player.playSound(player.getLocation(), clickedItem.getSound(), 1.0F, 1.0F);
-            }
-            ArenaClickItemEvent event = new ArenaClickItemEvent(arenaPlayer, clickedItem);
-            Bukkit.getServer().getPluginManager().callEvent(event);
-            CoinItemHandler.getHandler().getAllItems().get(ChatColor.RESET + clickedItem.getItemName(false).replace(ChatColor.RESET + "", "")).onClickItem(event);
-            e.setCancelled(true);
+        if (clickedItem.hasSound()) {
+            player.playSound(player.getLocation(), clickedItem.getSound(), 1.0F, 1.0F);
         }
+        ArenaClickItemEvent event = new ArenaClickItemEvent(arenaPlayer, clickedItem);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        CoinItemHandler.getHandler().getAllItems().get(ChatColor.RESET + clickedItem.getItemName(false).replace(ChatColor.RESET + "", "")).onClickItem(event);
+        e.setCancelled(true);
     }
 }

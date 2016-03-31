@@ -29,19 +29,14 @@ public class Paintball extends JavaPlugin implements Listener {
         /*
         Non-Important Things
         - Make it so if the config values are not found it sets it in. - (Still does not work for things not in default
-        - Fix command order
         - Global ranks in /pb stats also
         - Team Pick bug where teams might not be an even number
         - Leave signs
         - Spectator join signs
-        - Better kill messages
-        - Switch team wool numbers is wrong
-        - Vault, Title, and ActionBar remove in config
         - Tie support
-        - Their nametag is not updating...
-        - Sometimes hearts do not show
-        - Particles on kill
         - Leaderboard sign for times played, counted from when a player leaves how much time the arena has been at
+
+        - Fix what happens when there is no balence
 
         Future Features
         - Ranks
@@ -88,6 +83,9 @@ public class Paintball extends JavaPlugin implements Listener {
             Settings.VAULT = false;
         } else {
             Settings.ECONOMY = rsp.getProvider();
+
+            if (Settings.ECONOMY == null)
+                Settings.VAULT = false;
         }
     }
 }

@@ -1,6 +1,7 @@
 package me.synapz.paintball.events;
 
 import me.synapz.paintball.*;
+import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.TeamLocation;
@@ -68,7 +69,7 @@ public class Listeners implements Listener {
                 return;
             } else if (arena.ALLOWED_COMMANDS.contains(baseCommand)){
                 return;
-            } else if (arena.ALL_PAINTBALL_COMMANDS && baseCommand.equals("/pb")){
+            } else if (arena.ALL_PAINTBALL_COMMANDS && baseCommand.equals("/pb") || baseCommand.equals("/paintball")){
                 return;
             } else if (arena.DISABLE_ALL_COMMANDS) {
                 e.setCancelled(true);
@@ -300,7 +301,12 @@ public class Listeners implements Listener {
             Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
 
             if (hitPlayer.hit()) {
-                arenaPlayer.kill(hitPlayer);
+                CoinItem clickedItem = arenaPlayer.getItemWithName(arenaPlayer.getPlayer().getItemInHand().getItemMeta().getDisplayName());
+                String action = "shot";
+
+                if (clickedItem != null)
+                    action = clickedItem.getAction();
+                arenaPlayer.kill(hitPlayer, action);
             } else {
                 Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
             }

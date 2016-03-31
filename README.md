@@ -46,34 +46,6 @@
 * McStats
 * Add hover information when someone hovers over command to show detailed description
 
-###Bugs
-Bugs
-- [ ] no commands in arena
-- [ ] no item drop
-- [ ] what if the spawn is in another world.... and the world isn't loaded
-- [ ] pb stat page
-- [ ] add config option to stop changing teams
-- [ ] Set multiple spawn points?? /pb arena setspawn red <number>
-- [ ] Leaderboard command /pb leaderboard <stat>
-- [ ] Maybe place rank in my stat
-- [ ] /stats values change on reloads
-- [ ] stat signs fix layout
-- [ ] commands out of order
-- [ ] Get all config values loaded into plugin with checks
-- [ ] show command info on hover
-- [ ] add start time to signs if arena is starting soon
-- [ ] replace sign with Full if full
-- [ ] should arena signs auto remove when arena is removed?
-- [ ] click on leaderboard sign, show all their stats
-- [ ] in game don’t let move things around
-- [ ] add join sign permissions to default
-- [ ] Add arena autojoin to join most ready arena
-- [ ] Make arenas.yml file smaller (1 line locations, 1 line values, etc)-- Longer .yml files may lag so this will help to read files faster
-- [ ] Big bug where if the team and max aren't multiples of each other, the teams won't be evenly distrobuted. Ex: If max is 16 and there are 12 teams, 16/12 = 0.75 which rounds to 1 per team, so the plugin is currently making it 1 per team
-- [ ] add config option to change the amount of hits for someone to die and add it under their nametag
-- [ ] fix nametag colors
-- [ ] per arena team names?
-
 ####Coin API
 Paintball has a powerful, built-in, object-oriented API for creating new Coins, giving you a higher ability to expand and customize your server.
 
