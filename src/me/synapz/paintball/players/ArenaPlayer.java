@@ -124,10 +124,12 @@ public class ArenaPlayer extends PaintballPlayer {
         team.playerLeaveTeam();
         Settings.PLAYERDATA.incrementStat(StatType.GAMES_PLAYED, this);
 
-        if (isWinner)
-            Settings.ECONOMY.depositPlayer(player, arena.MONEY_PER_WIN);
-        else
-            Settings.ECONOMY.withdrawPlayer(player, arena.MONEY_PER_DEFEAT);
+        if (Settings.VAULT) {
+            if (isWinner)
+                Settings.ECONOMY.depositPlayer(player, arena.MONEY_PER_WIN);
+            else
+                Settings.ECONOMY.withdrawPlayer(player, arena.MONEY_PER_DEFEAT);
+        }
 
         // TODO: What if there is 5 teams with 1 with 0 players... Make it so it
         // TODO: So it also checks for arenas with players or if 1 player in the arena

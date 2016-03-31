@@ -77,8 +77,15 @@ public class Settings {
 
         this.pb = pb;
 
-        // TODO: always says error on reload/start
-        pb.saveResource("config.yml", false);
+        boolean loadConfig = true;
+
+        for (File file : pb.getDataFolder().listFiles()) {
+            if (file.getName().equals("config.yml"))
+                loadConfig = false;
+        }
+
+        if (loadConfig)
+            pb.saveResource("config.yml", false);
 
         PLAYERDATA = new PlayerData(pb);
 

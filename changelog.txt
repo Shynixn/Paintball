@@ -1,5 +1,10 @@
+BETA-2.2
+- Made menus look nicer
+
 BETA-2.1
-- MAJOR: Added CTF mode! So there are two modes: Team Deathmatch and Capture the Flag.
+- Started to create CTFArena in the background
+- Fixed null being sent out when you leave if you do not have a Vault bank
+- Removed console always saying config.yml error even when there is no error
 
 BETA-2.0
 - Fixed /paintball being blocked in arena

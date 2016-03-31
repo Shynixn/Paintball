@@ -81,13 +81,13 @@ public class Messenger {
 
     // Get's the help associated with the command type
     public static String getHelpTitle(CommandType type) {
-        String title = "Paintball";
+        String title = BOLD + "Paintball";
         if (type == CommandType.ADMIN) {
             title += " Admin";
         } else if (type == CommandType.ARENA) {
             title += " Arena";
         }
-        return SECONDARY + STRIKETHROUGH + "                       " + RESET + THEME + " " + title + " " + SECONDARY + STRIKETHROUGH + "                       ";
+        return SECONDARY + STRIKETHROUGH + Utils.makeSpaces(25) + RESET + THEME + " " + title + " " + SECONDARY + STRIKETHROUGH + Utils.makeSpaces(25);
     }
 
     private static String createPrefix(String suffix){
