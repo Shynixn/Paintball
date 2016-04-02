@@ -1,7 +1,7 @@
 BETA-3.2
-
-- Fix score counter
-- Scored flags leaderboard and dropped?
+- Fix wrong flag scores
+- Added new Leaderboard types!
+    - Flags Captured & Flags Dropped
 
 BETA-3.1
 - Enhanced dropping and picking up flags

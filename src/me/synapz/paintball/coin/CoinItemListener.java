@@ -56,6 +56,7 @@ public class CoinItemListener implements Listener {
 
     @EventHandler
     public void onClickCoinItem(PlayerInteractEvent e) {
+
         Player player = e.getPlayer();
         ItemStack item = e.getItem();
         if (player == null) {

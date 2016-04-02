@@ -7,12 +7,14 @@ import me.synapz.paintball.events.JoinSigns;
 import me.synapz.paintball.events.LeaderboardSigns;
 import me.synapz.paintball.events.Listeners;
 import me.synapz.paintball.metrics.Metrics;
+import me.synapz.paintball.players.CTFArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,17 +29,18 @@ public class Paintball extends JavaPlugin implements Listener {
 
         CommandManager commandManager = new CommandManager();
         commandManager.init();
+
         /*
         Non-Important Things
         - Make it so if the config values are not found it sets it in. - (Still does not work for things not in default
-        - Global ranks in /pb stats also
         - Team Pick bug where teams might not be an even number
         - Leave signs
         - Spectator join signs
         - Tie support
         - Leaderboard sign for times played, counted from when a player leaves how much time the arena has been at
-
-        - Fix what happens when there is no balence
+        - Spectator thing add next page
+        - Way better ActionBar
+        - Fix double messages
 
         Future Features
         - Ranks
@@ -46,16 +49,15 @@ public class Paintball extends JavaPlugin implements Listener {
             - Arena hovers, (who is in the arena, setup, etc)
         - Spectate Autojoin and signs
         - Holographic displays that pop out, like +1$ and +1 score etc.
-        - When a player dies tp them to the ground like they are dying
-        - Autocorrect function
-        - Leaderboard heads
         */
 
-        Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new JoinSigns(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ChatSystem(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new LeaderboardSigns(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new CoinItemListener(), this);
+        PluginManager pm = Bukkit.getServer().getPluginManager();
+
+        pm.registerEvents(new Listeners(), this);
+        pm.registerEvents(new JoinSigns(), this);
+        pm.registerEvents(new ChatSystem(), this);
+        pm.registerEvents(new LeaderboardSigns(), this);
+        pm.registerEvents(new CoinItemListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
 
         getCommand("paintball").setExecutor(commandManager);

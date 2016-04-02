@@ -97,6 +97,7 @@ public final class PlayerData extends PaintballFile {
         Map<String, String> uuidList = new HashMap<String, String>();
 
         for (String uuid : getSection("Player-Data").getKeys(false)) {
+            addStatsIfNotYetAdded(UUID.fromString(uuid));
             uuidList.put(uuid, getPlayerStats(UUID.fromString(uuid)).get(type));
         }
 

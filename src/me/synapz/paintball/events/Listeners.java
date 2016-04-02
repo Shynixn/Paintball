@@ -137,7 +137,7 @@ public class Listeners implements Listener {
                         e.setCancelled(true);
                         return;
                     }
-                    arenaPlayer.shoot(e); // paintball item
+                    arenaPlayer.shoot(e);
                     e.setCancelled(true);
                 }
             } else if (gamePlayer instanceof SpectatorPlayer) {
@@ -370,7 +370,7 @@ public class Listeners implements Listener {
 
                     arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + ctfPlayer.getPlayer().getName() + " has reset " + ctfPlayer.getTeam().getTitleName() + "'s flag!");
                 } else {
-                    Messenger.error(ctfPlayer.getPlayer(), "You cannot pickup your own team's flag!");
+                    Messenger.error(player, "You cannot pickup your own team's flag!");
                 }
                 return;
             } else {
@@ -380,8 +380,6 @@ public class Listeners implements Listener {
                 ctfPlayer.pickupFlag(clickedLoc, clickedFlag);
             }
             e.setCancelled(true);
-        } else {
-            return;
         }
     }
 
@@ -398,7 +396,7 @@ public class Listeners implements Listener {
 
             // If the player is a ArenaPlayer, and the damage was not from a snowball and the attacker is not a player, cancel.
             if (arena.getAllArenaPlayers().contains(pbPlayer) && e.getCause() != EntityDamageEvent.DamageCause.PROJECTILE)
-                    e.setCancelled(true);
+                e.setCancelled(true);
 
             // If the player is a LobbyPlayer or Spectator player, cancel all damage.
             if (arena.getLobbyPlayers().contains(pbPlayer) || arena.getSpectators().contains(pbPlayer))

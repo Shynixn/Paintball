@@ -1,9 +1,7 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.CTFArena;
-import me.synapz.paintball.Team;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.*;
+import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.storage.Settings;
 import net.md_5.bungee.api.ChatColor;
@@ -12,6 +10,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class CTFArenaPlayer extends ArenaPlayer {
 
@@ -54,17 +57,19 @@ public class CTFArenaPlayer extends ArenaPlayer {
     }
 
     public void dropFlag() {
+        Settings.PLAYERDATA.incrementStat(StatType.FLAGS_DROPPED, this);
 
         ctfArena.addFlagLocation(getLastLocation(), heldFlag);
         makeBanner(heldFlag, getLastLocation());
 
-        arena.incrementTeamScore(team);
         arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + player.getName() + " has dropped the flag!");
 
         removeFlag();
     }
 
     public void scoreFlag() {
+        Settings.PLAYERDATA.incrementStat(StatType.FLAGS_CAPTURED, this);
+
         arena.incrementTeamScore(team);
         arena.updateAllScoreboard();
 

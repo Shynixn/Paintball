@@ -490,8 +490,6 @@ public class Arena {
 
     public void resetTeamScores() {
         for (Team team : getArenaTeamList()) {
-            // teams.remove(team, teams.get(team));
-            // teams.put(team, 0);
             teams.replace(team, teams.get(team), 0);
         }
     }
