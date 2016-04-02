@@ -3,6 +3,7 @@ package me.synapz.paintball.storage;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import me.synapz.paintball.*;
+import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.HologramLocation;
 import me.synapz.paintball.locations.SignLocation;
@@ -59,6 +60,7 @@ public class ArenaFile extends PaintballFile {
     public void addNewArenaToFile(Arena arena) {
         fileConfig.set(arena.getPath() + "Name", arena.getName());
         fileConfig.set(arena.getPath() + "Enabled", false);
+        fileConfig.set(arena.getPath() + "Type", arena.getArenaType().getShortName());
 
         ArenaManager.getArenaManager().getArenas().put(arena.getName(), arena);
         addNewConfigSection(arena);
@@ -108,9 +110,21 @@ public class ArenaFile extends PaintballFile {
         for (String arenaName : rawArenas) {
             Arena a = null;
             String name = fileConfig.getString("Arenas." + arenaName + ".Name");
+            ArenaType type = ArenaType.getArenaType(null, fileConfig.getString("Arenas." + arenaName + ".Type"));
             try {
                 // add each arena to the server
-                a = new Arena(arenaName, name, false);
+
+                switch (type) {
+                    case CTF:
+                        a = new CTFArena(arenaName, name, false);
+                        break;
+                    case TDM:
+                        a = new Arena(arenaName, name, false);
+                        break;
+                    default:
+                        a = new Arena(arenaName, name, false);
+                }
+
                 // set the value of that arena
                 a.loadValues();
             }catch (Exception e) {

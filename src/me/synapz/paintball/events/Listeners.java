@@ -5,15 +5,14 @@ import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.TeamLocation;
-import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.players.LobbyPlayer;
-import me.synapz.paintball.players.PaintballPlayer;
-import me.synapz.paintball.players.SpectatorPlayer;
+import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Banner;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -310,6 +309,64 @@ public class Listeners implements Listener {
             } else {
                 Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onClickBannerInArena(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+
+        if (!isInArena(player))
+            return;
+
+        Arena arena = getArena(player);
+
+        if (arena == null)
+            return;
+
+        if (!(arena instanceof CTFArena))
+            return;
+
+        CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
+        Block clicked = e.getClickedBlock();
+
+        if (clicked == null)
+            return;
+
+        Location clickedLoc = clicked.getLocation();
+
+        boolean inFile = ((CTFArena) arena).getDropedFlagLocations().containsKey(clickedLoc);
+        Team clickedFlag = null;
+
+        // If it is inside the dropFlagLocation, just get it out
+        if (inFile) {
+            clickedFlag = ((CTFArena) arena).getDropedFlagLocations().get(clickedLoc);
+        } else {
+            // Otherwise check if the banner is in one of the set flag locations
+            for (Team team : arena.getArenaTeamList()){
+                Location flagLoc = ((CTFArena) arena).getFlagLocation(team);
+
+                if (flagLoc.getBlockX() == clickedLoc.getBlockX()
+                        && flagLoc.getBlockY() == clickedLoc.getBlockY()
+                        && flagLoc.getBlockZ() == clickedLoc.getBlockZ()) {
+                    inFile = true;
+                    clickedFlag = team;
+                }
+            }
+        }
+
+        if (inFile) {
+            if (clickedFlag == ctfPlayer.getTeam()) {
+                Messenger.error(ctfPlayer.getPlayer(), "You cannot pickup your own team's flag!");
+                return;
+            } else {
+                if (ctfPlayer.isFlagHolder())
+                    ctfPlayer.dropFlag();
+
+                ctfPlayer.pickupFlag(clickedFlag);
+            }
+        } else {
+            return;
         }
     }
 

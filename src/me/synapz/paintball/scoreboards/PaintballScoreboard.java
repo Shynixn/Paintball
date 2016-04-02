@@ -63,6 +63,12 @@ public class PaintballScoreboard {
         player.setScoreboard(sb);
     }
 
+    public void setDisplayNameCounter(String prefix, int time) {
+        String name = DISPLAY_NAME.replace("%time%", convertToNumberFormat(time));
+        objective.setDisplayName(prefix + name);
+        player.setScoreboard(sb);
+    }
+
     public PaintballScoreboard addLine(ScoreboardLine sbLine, String startValue, boolean toAdd) {
         if (toAdd)
             return addLine(sbLine, startValue);

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
@@ -49,8 +50,10 @@ public class Utils {
     public static ItemStack makeWool(String name, DyeColor color) {
         ItemStack wool = new Wool(color).toItemStack(1);
         ItemMeta woolMeta = wool.getItemMeta();
+
         woolMeta.setDisplayName(name);
         wool.setItemMeta(woolMeta);
+
         return wool;
     }
 
@@ -66,6 +69,17 @@ public class Utils {
         meta.setLore(newLore);
         wool.setItemMeta(meta);
         return wool;
+    }
+
+    public static ItemStack makeBanner(String name, DyeColor color) {
+        ItemStack banner = new ItemStack(Material.BANNER, 1);
+        BannerMeta meta = (BannerMeta) banner.getItemMeta();
+
+        meta.setDisplayName(name);
+        meta.setBaseColor(color);
+        banner.setItemMeta(meta);
+
+        return banner;
     }
 
     public static String makeHealth(int health) {
@@ -241,29 +255,12 @@ public class Utils {
 
     // Shoots a Snowball with the correct speed
     public static void shootSnowball(Player player, Arena arena, double accuracy) {
-        accuracy = 0.1F;
         Projectile pr = player.launchProjectile(Snowball.class);
 
         Vector v = player.getLocation().getDirection();
         v.add(new Vector(Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy));
         v.subtract(new Vector(Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy));
         v.multiply(arena.SPEED);
-        pr.setVelocity(v);
-    }
-
-    // Shoots a Snowball with the correct speed
-    public static void shootUpSnowball(Player player) {
-        double accuracy = 0.2F;
-
-        Vector v = player.getLocation().getDirection();
-        v.multiply(1/1000);
-        v.setY(1);
-        v.multiply(2);
-        v.add(new Vector(Math.random() * accuracy - accuracy, Math.random() * accuracy - accuracy, Math.random() * accuracy - accuracy));
-        v.subtract(new Vector(Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy,Math.random() * accuracy - accuracy));
-
-        Projectile pr = player.launchProjectile(Snowball.class);
-
         pr.setVelocity(v);
     }
 }

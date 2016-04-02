@@ -1,10 +1,20 @@
 package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.Arena;
+import me.synapz.paintball.CTFArena;
+import me.synapz.paintball.Team;
+import me.synapz.paintball.Utils;
+import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Banner;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +33,10 @@ public class ArenaStartCountdown extends PaintballCountdown {
     }
 
     public void onFinish() {
+
+        if (arena instanceof CTFArena)
+            createFlags();
+
         arena.broadcastMessage(GREEN + "Game started");
         arena.setState(Arena.ArenaState.IN_PROGRESS);
         arena.broadcastTitle(Settings.PREFIX, GREEN + "Game started", 0, 30, 20);
@@ -73,6 +87,17 @@ public class ArenaStartCountdown extends PaintballCountdown {
             if (playerX != spawnX || playerY != spawnY || playerZ != spawnZ) {
                 arenaPlayer.getPlayer().teleport(spawnLoc);
             }
+        }
+    }
+
+    private void createFlags() {
+        for (Team team : arena.getArenaTeamList()) {
+            Location loc = new FlagLocation((CTFArena) arena, team).getLocation();
+
+            loc.getBlock().setType(Material.STANDING_BANNER);
+            Banner banner = (Banner) loc.getBlock().getState();
+            banner.setBaseColor(team.getDyeColor());
+            banner.update();
         }
     }
 }

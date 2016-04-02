@@ -95,9 +95,14 @@ public class ArenaPlayer extends PaintballPlayer {
                 .addLine(ScoreboardLine.HEALTH, Utils.makeHealth(arena.HITS_TO_KILL));
         if (arena.LIVES > 0)
             sb.addLine(ScoreboardLine.LIVES, Utils.makeHealth(arena.LIVES));
-
-        sb.addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName());
         return sb.build();
+    }
+
+    @Override
+    public void updateDisplayName() {
+        if (pbSb != null) {
+            pbSb.setDisplayNameCounter(team.getChatColor() + "█ ", Utils.getCurrentCounter(arena));
+        }
     }
 
     @Override

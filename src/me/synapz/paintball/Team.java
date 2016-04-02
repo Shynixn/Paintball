@@ -112,7 +112,7 @@ public class Team {
 
     // Return the team's specific path in config.
     public String getPath() {
-        return  "Arenas." + arena.getDefaultName() + "." + this.getConfigName() + "." + "Flag";
+        return  "Arenas." + arena.getDefaultName() + "." + this.getConfigName() + ".Flag";
     }
 
     public int getSpawnPointsSize(TeamLocation.TeamLocations type) {

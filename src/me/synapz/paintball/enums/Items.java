@@ -12,7 +12,7 @@ public enum Items {
     ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted", Sound.UI_BUTTON_CLICK),
     MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down", Sound.UI_BUTTON_CLICK),
     SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed", Sound.UI_BUTTON_CLICK),
-    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 200 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended", Sound.UI_BUTTON_CLICK),
+    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended", Sound.UI_BUTTON_CLICK),
     NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Sound.UI_BUTTON_CLICK);
 
     @Override

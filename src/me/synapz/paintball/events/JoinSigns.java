@@ -149,7 +149,7 @@ public class JoinSigns implements Listener {
             if (a != null) {
                 if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.join.remove")) {
                     a.getSignLocations().get(sign.getLocation()).removeSign();
-                    Messenger.success(e.getPlayer(), a + "'s join sign has been successfully removed!");
+                    Messenger.success(e.getPlayer(), a.getName() + "'s join sign has been successfully removed!");
                 }
             }
         }

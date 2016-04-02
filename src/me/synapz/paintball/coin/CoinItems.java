@@ -8,6 +8,8 @@ import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -57,7 +59,7 @@ public class CoinItems implements Listener {
                 Player player = event.getArenaPlayer().getPlayer();
 
                 for (int i = 0; i < 20; i++)
-                    Utils.shootSnowball(player, event.getArena(), 1);
+                    Utils.shootSnowball(player, event.getArena(), 0.2);
             }
         };
 
@@ -86,7 +88,7 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
                 for (int i = 0; i < 50; i++) {
-                    Utils.shootSnowball(player, event.getArena(), 0);
+                    Utils.shootSnowball(player, event.getArena(), 0.3);
                 }
                 player.getInventory().remove(player.getItemInHand());
             }
@@ -125,8 +127,11 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
-                for (int i = 0; i < 200; i++) {
-                    Utils.shootUpSnowball(player);
+                for (int i = 0; i < 300; i++) {
+                    Location loc = player.getLocation();
+                    loc.setPitch(-90);
+                    player.teleport(loc);
+                    Utils.shootSnowball(player, event.getArena(), 0.2);
                 }
                 player.getInventory().remove(player.getItemInHand());
             }
@@ -138,7 +143,7 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
-                Utils.shootSnowball(player, event.getArena(), 0);
+                Utils.shootSnowball(player, event.getArena(), 0.1);
             }
         };
         return item;

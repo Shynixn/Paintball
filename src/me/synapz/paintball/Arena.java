@@ -6,6 +6,7 @@ import com.google.common.base.Joiner;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
+import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
@@ -112,6 +113,10 @@ public class Arena {
         }
 
         loadConfigValues();
+    }
+
+    public ArenaType getArenaType() {
+        return ArenaType.TDM;
     }
 
     // Returns the current name of the arena (Arenas.Syn.name)
@@ -387,7 +392,13 @@ public class Arena {
         setState(ArenaState.STARTING);
         for (LobbyPlayer p : lobby) {
             allPlayers.remove(p.getPlayer(), p);
-            ArenaPlayer player = new ArenaPlayer(this, p.getTeam(), p.getPlayer());
+            ArenaPlayer player;
+
+            if (this instanceof CTFArena)
+                player = new CTFArenaPlayer(this, p.getTeam(), p.getPlayer());
+            else
+                player = new ArenaPlayer(this, p.getTeam(), p.getPlayer());
+
             startLocs.put(player.getPlayer(), player.getPlayer().getLocation());
         }
         lobby.removeAll(lobby);

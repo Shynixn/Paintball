@@ -8,7 +8,6 @@ import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.locations.HologramLocation;
 import me.synapz.paintball.storage.Settings;
-import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

@@ -1,5 +1,37 @@
-BETA-2.2
-- Made menus look nicer
+BETA-3.1
+- Enhanced dropping and picking up flags
+
+- Connected implementations to listeners so game play works
+    - Drop flag now works
+    - Pickup flag now works when clicked
+
+
+BETA-3.0
+- Added /pb arena create <name> <ctf/tdm>
+- Added /pb arena setflag <arena> <team>
+- Added /pb arena delflag <arena> <team>
+- Flags spawn on arena start
+- Flags are removed on arena end
+- Updated /pb arena steps to add steps for flags if it is a CTFArena
+- Updates /pb admin info to show the arena type
+- CTF is not avaiable for setup, but not playable (although I have implemented most gameplay, just need to link it to events)
+
+BETA-2.1.3
+- Made Paintball Shower way better
+- Fixed Spray n' Pray accuracy
+- Fixed Rocket Launcher accuracy
+- Working on CTFArena in the background
+
+BETA-2.1.2
+- Organized imports
+- Minor bug fixes
+- Remove team in scoreboard and moved the team color to top left
+
+BETA-2.1.1
+- Made help menus look nicer
+- Fixed JoinSigns removal sending Arena object instead of name
+- Made default leaderboard and sign update time longer for less lag
+- Worked more on CTFArena
 
 BETA-2.1
 - Started to create CTFArena in the background

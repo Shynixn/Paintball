@@ -10,6 +10,8 @@ import me.synapz.paintball.metrics.Metrics;
 import me.synapz.paintball.storage.Settings;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,7 +27,6 @@ public class Paintball extends JavaPlugin implements Listener {
 
         CommandManager commandManager = new CommandManager();
         commandManager.init();
-
         /*
         Non-Important Things
         - Make it so if the config values are not found it sets it in. - (Still does not work for things not in default

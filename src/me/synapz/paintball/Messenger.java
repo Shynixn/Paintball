@@ -87,7 +87,7 @@ public class Messenger {
         } else if (type == CommandType.ARENA) {
             title += " Arena";
         }
-        return SECONDARY + STRIKETHROUGH + Utils.makeSpaces(25) + RESET + THEME + " " + title + " " + SECONDARY + STRIKETHROUGH + Utils.makeSpaces(25);
+        return SECONDARY + STRIKETHROUGH + Utils.makeSpaces(23) + RESET + DARK_GRAY + BOLD + STRIKETHROUGH + "[-" + RESET + THEME + " " + BOLD + title + " " + DARK_GRAY + BOLD + STRIKETHROUGH + "-]" + SECONDARY + STRIKETHROUGH + Utils.makeSpaces(23);
     }
 
     private static String createPrefix(String suffix){

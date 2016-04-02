@@ -3,8 +3,10 @@ package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.Arena;
 import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.CTFArena;
 import me.synapz.paintball.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
+import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -14,12 +16,29 @@ public class Create extends PaintballCommand {
     public void onCommand(Player player, String[] args) {
         String arenaName = args[2];
         Arena newArena = ArenaManager.getArenaManager().getArena(arenaName);
+        ArenaType type = ArenaType.getArenaType(player, args[3]);
+
+        if (type == null)
+            return;
 
         if (newArena != null) {
             Messenger.error(player, "An arena named " + arenaName + " already exists!");
             return;
         } else {
-            Arena a = new Arena(arenaName, arenaName, true);
+            Arena a;
+
+            switch (type) {
+                case CTF:
+                    a = new CTFArena(arenaName, arenaName, true);
+                    break;
+                case TDM:
+                    a = new Arena(arenaName, arenaName, true);
+                    break;
+                default:
+                    a = new Arena(arenaName, arenaName, true);
+                    break;
+            }
+
             Messenger.success(player, a.toString(ChatColor.GREEN) + " successfully created!", a.getSteps());
         }
     }
@@ -33,7 +52,7 @@ public class Create extends PaintballCommand {
     }
 
     public String getArgs() {
-        return "<arena>";
+        return "<arena> <" + ArenaType.getReadableList() + ">";
     }
 
     public String getPermission() {
@@ -45,11 +64,11 @@ public class Create extends PaintballCommand {
     }
 
     public int getMaxArgs() {
-        return 3;
+        return 4;
     }
 
     public int getMinArgs() {
-        return 3;
+        return 4;
     }
 
 }

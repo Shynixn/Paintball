@@ -1,5 +1,5 @@
 name: Paintball
-version: BETA_2.1
+version: BETA_3.1
 description: Paintball, featuring up to 16 teams.
 authors: [Synapz_]
 main: me.synapz.paintball.Paintball
@@ -53,6 +53,8 @@ permissions:
        paintball.arena.rename: true
        paintball.arena.delspec: true
        paintball.arena.dellocation: true
+       paintball.arena.setflag: true
+       paintball.arena.delflag: true
        paintball.arena.create: true
        paintball.arena.help: true
    paintball.default:
