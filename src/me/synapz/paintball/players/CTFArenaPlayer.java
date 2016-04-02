@@ -27,31 +27,30 @@ public class CTFArenaPlayer extends ArenaPlayer {
     public void kill(ArenaPlayer arenaPlayer, String action) {
         CTFArenaPlayer ctfArenaPlayer = (CTFArenaPlayer) arenaPlayer;
 
+        arena.decrementTeamScore(team);
         super.kill(ctfArenaPlayer, action);
 
         if (ctfArenaPlayer.isFlagHolder())
             ctfArenaPlayer.dropFlag();
     }
 
-    public void pickupFlag(Team pickedUp) {
+    public void pickupFlag(Location loc, Team pickedUp) {
 
         if (pickedUp != null && pickedUp == team)
             return;
 
-        Location flagLoc = new FlagLocation((CTFArena) arena, pickedUp).getLocation();
-
         isFlagHolder = true;
         heldFlag = pickedUp;
 
-        flagLoc.getBlock().setType(Material.AIR);
+        loc.getBlock().setType(Material.AIR);
 
         arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + player.getName() + " has stolen " + pickedUp.getTitleName() + "'s flag!");
 
         player.getInventory().setHelmet(Utils.makeBanner(team.getChatColor() + team.getTitleName() + " Flag", pickedUp.getDyeColor()));
         player.updateInventory();
 
-        if (ctfArena.getDropedFlagLocations().containsKey(flagLoc))
-            ctfArena.remFlagLocation(flagLoc);
+        if (ctfArena.getDropedFlagLocations().containsKey(loc))
+            ctfArena.remFlagLocation(loc);
     }
 
     public void dropFlag() {
@@ -59,14 +58,25 @@ public class CTFArenaPlayer extends ArenaPlayer {
         ctfArena.addFlagLocation(getLastLocation(), heldFlag);
         makeBanner(heldFlag, getLastLocation());
 
-        // Sends messages & removes the banner helmet
+        arena.incrementTeamScore(team);
         arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + player.getName() + " has dropped the flag!");
 
-        player.getInventory().setHelmet(Utils.makeWool(team.getChatColor() + team.getTitleName() + " Team", team.getDyeColor()));
-        player.updateInventory();
+        removeFlag();
+    }
 
-        isFlagHolder = false;
-        heldFlag = null;
+    public void scoreFlag() {
+        arena.incrementTeamScore(team);
+        arena.updateAllScoreboard();
+
+        arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + "The " + team.getTitleName() + " has scored a flag!");
+
+        Location toReset = ctfArena.getFlagLocation(heldFlag);
+        toReset.getBlock().setType(Material.STANDING_BANNER);
+        Banner banner = (Banner) toReset.getBlock().getState();
+        banner.setBaseColor(heldFlag.getDyeColor());
+        banner.update();
+
+        removeFlag();
     }
 
     public boolean isFlagHolder() {
@@ -82,5 +92,13 @@ public class CTFArenaPlayer extends ArenaPlayer {
 
         banner.setBaseColor(dropedTeam.getDyeColor());
         banner.update();
+    }
+
+    private void removeFlag() {
+        player.getInventory().setHelmet(Utils.makeWool(team.getChatColor() + team.getTitleName() + " Team", team.getDyeColor()));
+        player.updateInventory();
+
+        isFlagHolder = false;
+        heldFlag = null;
     }
 }

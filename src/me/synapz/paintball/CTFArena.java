@@ -80,10 +80,12 @@ public class CTFArena extends Arena {
     }
 
     public void addFlagLocation(Location loc, Team team) {
+        loc = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         dropedFlagLocations.put(loc, team);
     }
 
     public void remFlagLocation(Location loc) {
+        loc = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         dropedFlagLocations.remove(loc);
     }
 }

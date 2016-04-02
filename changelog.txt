@@ -1,10 +1,16 @@
+BETA-3.2
+
+- Fix score counter
+- Scored flags leaderboard and dropped?
+
 BETA-3.1
 - Enhanced dropping and picking up flags
-
 - Connected implementations to listeners so game play works
     - Drop flag now works
     - Pickup flag now works when clicked
-
+    - On death flag drops
+    - On click flag, it gets returned
+    - On walk over flag location with a flag you score
 
 BETA-3.0
 - Added /pb arena create <name> <ctf/tdm>

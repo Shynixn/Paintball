@@ -4,6 +4,7 @@ import me.synapz.paintball.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
@@ -333,7 +334,7 @@ public class Listeners implements Listener {
         if (clicked == null)
             return;
 
-        Location clickedLoc = clicked.getLocation();
+        Location clickedLoc = new Location(clicked.getWorld(), clicked.getX(), clicked.getY(), clicked.getZ());
 
         boolean inFile = ((CTFArena) arena).getDropedFlagLocations().containsKey(clickedLoc);
         Team clickedFlag = null;
@@ -357,14 +358,28 @@ public class Listeners implements Listener {
 
         if (inFile) {
             if (clickedFlag == ctfPlayer.getTeam()) {
-                Messenger.error(ctfPlayer.getPlayer(), "You cannot pickup your own team's flag!");
+                if (((CTFArena) arena).getDropedFlagLocations().containsKey(clickedLoc)) {
+                    clickedLoc.getBlock().setType(Material.AIR);
+
+                    Location resetLoc = new FlagLocation((CTFArena) ctfPlayer.getArena(), clickedFlag).getLocation();
+
+                    resetLoc.getBlock().setType(Material.STANDING_BANNER);
+                    Banner banner = (Banner) resetLoc.getBlock().getState();
+                    banner.setBaseColor(clickedFlag.getDyeColor());
+                    banner.update();
+
+                    arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + ctfPlayer.getPlayer().getName() + " has reset " + ctfPlayer.getTeam().getTitleName() + "'s flag!");
+                } else {
+                    Messenger.error(ctfPlayer.getPlayer(), "You cannot pickup your own team's flag!");
+                }
                 return;
             } else {
                 if (ctfPlayer.isFlagHolder())
                     ctfPlayer.dropFlag();
 
-                ctfPlayer.pickupFlag(clickedFlag);
+                ctfPlayer.pickupFlag(clickedLoc, clickedFlag);
             }
+            e.setCancelled(true);
         } else {
             return;
         }
@@ -406,6 +421,14 @@ public class Listeners implements Listener {
                 player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
             } else if (gamePlayer instanceof SpectatorPlayer) {
                 player.teleport(arena.getSpectatorLocation());
+            }
+        } else {
+            // Check to see if they went over their area to drop the flag
+            if (arena instanceof CTFArena) {
+                CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
+
+                if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getFlagLocation(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2)
+                    ctfPlayer.scoreFlag();
             }
         }
     }

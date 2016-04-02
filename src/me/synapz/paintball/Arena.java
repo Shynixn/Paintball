@@ -504,6 +504,10 @@ public class Arena {
         teams.replace(team, teams.get(team), teams.get(team)+1);
     }
 
+    public void decrementTeamScore(Team team) {
+        teams.replace(team, teams.get(team), teams.get(team)-1);
+    }
+
     // Gets the arenas current state
     public ArenaState getState() {
         if (!isSetup()) {
