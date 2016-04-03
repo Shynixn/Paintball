@@ -1,4 +1,14 @@
-<<<<<<< HEAD
+BETA-3.3.3
+- Fixed 9+ team switcher to look nicer
+- Fixed /pb admin convert permission
+- Code Cleanup
+- Fixed imports and organized
+
+BETA-3.3.2
+- Started SQL and Bungeecord support (database.yml is new, but missing values)
+- Fixed some startup errors when database.yml would not create backup
+- Updated config.yml to auto-update when new values are added
+
 BETA-3.3.1
 - Fixed hologram location
 - Fixed many event exceptions
@@ -10,12 +20,6 @@ BETA-3.3
 - Fixed steps bug for CTFArenas
 - Fixed shutdown error
 - Fixed casting exceptions
-=======
-BETA-3.3.2
-- Started SQL and Bungeecord support (database.yml is new, but missing values)
-- Fixed some startup errors when database.yml would not create backup
-- Updated config.yml to auto-update when new values are added
->>>>>>> ae2c7258c1d0fda1fa47e0dfef47aebcafb7161e
 
 BETA-3.2
 - Fix wrong flag scores
