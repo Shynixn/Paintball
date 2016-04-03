@@ -1,6 +1,7 @@
-BETA-3.2.1
-- Started SQL and Bungeecord support
+BETA-3.3.2
+- Started SQL and Bungeecord support (database.yml is new, but missing values)
 - Fixed some startup errors when database.yml would not create backup
+- Updated config.yml to auto-update when new values are added
 
 BETA-3.2
 - Fix wrong flag scores
