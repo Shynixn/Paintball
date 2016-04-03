@@ -27,11 +27,13 @@ public class PaintballFile extends File{
         }
 
         this.fileConfig = YamlConfiguration.loadConfiguration(this);
+        //TODO: Add SQL reinserting of data
         this.saveFile();
     }
 
     public void saveFile() {
         try {
+            //TODO: Take Data Out Before Saving and Send to SQL
             fileConfig.save(this);
         } catch (Exception e) {
             Messenger.error(Bukkit.getConsoleSender(), "Could not save " + getName() + ".", "", "Stack trace");

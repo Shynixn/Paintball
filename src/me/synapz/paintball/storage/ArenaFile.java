@@ -140,7 +140,6 @@ public class ArenaFile extends PaintballFile {
         }
     }
 
-    // TODO: put this stuff in the arenafile class
     public int loadInt(String item, Arena arena) {
         return (int) loadValue(item, arena);
     }
@@ -172,7 +171,7 @@ public class ArenaFile extends PaintballFile {
             rename the config file and make a new one
         */
         if (notFoundInConfig) {
-            Settings.getSettings().backupConfig();
+            Settings.getSettings().backupConfig("config");
         }
 
         if (fileConfig.getString(path).equalsIgnoreCase("default"))

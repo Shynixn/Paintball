@@ -39,6 +39,7 @@ public class Settings {
     public static PlayerData PLAYERDATA;
     public static FileConfiguration ARENA_FILE;
     public static ItemFile ITEMS;
+    public static Database DATABASE;
 
     // Variables
     private static Settings instance;
@@ -46,8 +47,8 @@ public class Settings {
 
     public Settings(Plugin plugin) {
         init(plugin); // init all config.yml stuff
-        instance = this; // inject the instance
-        this.pb = plugin; // set the plugin variable
+
+
         Settings.ARENA.setup(); // setup arena.yml
     }
 
@@ -55,37 +56,16 @@ public class Settings {
         return instance;
     }
 
-    public void backupConfig() {
-        Map<String, File> allFiles = new HashMap<String, File>(){{
-            for (File file : pb.getDataFolder().listFiles())
-                put(file.getName(), file);
-        }};
-        File oldConfig = allFiles.get("config.yml");
-        int suffix = 1;
-
-        while (allFiles.keySet().contains("config_backup" + suffix + ".yml"))
-            suffix++;
-
-        oldConfig.renameTo(new File(pb.getDataFolder(), "config_backup" + suffix + ".yml"));
-        init(JavaPlugin.getProvidingPlugin(Paintball.class));
-    }
-
     private void init(Plugin pb) {
+        instance = this; // inject the instance
         if (!pb.getDataFolder().exists()) {
             pb.getDataFolder().mkdir();
         }
 
         this.pb = pb;
 
-        boolean loadConfig = true;
-
-        for (File file : pb.getDataFolder().listFiles()) {
-            if (file.getName().equals("config.yml"))
-                loadConfig = false;
-        }
-
-        if (loadConfig)
-            pb.saveResource("config.yml", false);
+        loadFromJar("config.yml");
+        loadFromJar("database.yml");
 
         PLAYERDATA = new PlayerData(pb);
 
@@ -96,6 +76,7 @@ public class Settings {
     private void loadEverything() {
         ITEMS = new ItemFile(pb);
         ARENA = new ArenaFile(pb);
+        DATABASE = new Database(pb);
         ARENA_FILE = ARENA.getFileConfig();
         loadSettings(); // loads everything in config.yml into constants
 
@@ -104,18 +85,17 @@ public class Settings {
 
     // Called on server start, reload, and pb admin reload
     private void loadSettings() {
-        FileConfiguration config = pb.getConfig();
         PluginDescriptionFile pluginYML = pb.getDescription();
+        FileConfiguration config = pb.getConfig();
 
         VERSION                     = pluginYML.getVersion();
         AUTHOR                      = pluginYML.getAuthors().toString();
-        PREFIX                      = ChatColor.translateAlternateColorCodes('&', config.getString("prefix"));
-        THEME                       = ChatColor.translateAlternateColorCodes('&', config.getString("theme-color"));
-        SECONDARY                   = ChatColor.translateAlternateColorCodes('&', config.getString("secondary-color"));
-        CONFIG_VERSION              = config.getInt("version");
-        SIGN_UPDATE_TIME            = config.getInt("sign-update-time");
-        VAULT                       = config.getBoolean("vault");
-        TITLE                       = config.getBoolean("title");
+        PREFIX                      = ChatColor.translateAlternateColorCodes('&', loadString(config, "prefix"));
+        THEME                       = ChatColor.translateAlternateColorCodes('&', loadString(config, "theme-color"));
+        SECONDARY                   = ChatColor.translateAlternateColorCodes('&', loadString(config, "secondary-color"));
+        SIGN_UPDATE_TIME            = loadInt(config, "sign-update-time");
+        VAULT                       = loadBoolean(config, "vault");
+        TITLE                       = loadBoolean(config, "title");
         HOLOGRAPHIC_DISPLAYS        = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
     }
 
@@ -134,4 +114,55 @@ public class Settings {
         return pb.getConfig();
     }
 
+    private void loadFromJar(String name) {
+        boolean loadConfig = true;
+
+        for (File file : pb.getDataFolder().listFiles()) {
+            if (file.getName().equals(name))
+                loadConfig = false;
+        }
+
+        if (loadConfig)
+            pb.saveResource(name, false);
+    }
+
+    public void backupConfig(String name) {
+        Map<String, File> allFiles = new HashMap<String, File>(){{
+            for (File file : pb.getDataFolder().listFiles())
+                put(file.getName(), file);
+        }};
+        File oldConfig = allFiles.get(name + ".yml");
+        int suffix = 1;
+
+        while (allFiles.keySet().contains(name + "_backup" + suffix + ".yml"))
+            suffix++;
+
+        oldConfig.renameTo(new File(pb.getDataFolder(), name + "_backup" + suffix + ".yml"));
+        init(JavaPlugin.getProvidingPlugin(Paintball.class));
+    }
+
+    private int loadInt(FileConfiguration file, String path) {
+        return (int) loadValue(file, path);
+    }
+
+    private String loadString(FileConfiguration file, String path) {
+        return (String) loadValue(file, path);
+    }
+
+    private boolean loadBoolean(FileConfiguration file, String path) {
+        return (boolean) loadValue(file, path);
+    }
+
+    private Object loadValue(FileConfiguration file, String path) {
+        Object value = file.get(path);
+
+        // If this value is null, it was not found, so turn this file to config_backup.yml and load another updated one
+        if (value == null) {
+            Settings.getSettings().backupConfig("config");
+            return null;
+        }
+
+        // After backup and new one is done, get the value
+        return value;
+    }
 }
