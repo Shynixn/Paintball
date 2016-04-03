@@ -9,6 +9,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -86,16 +87,15 @@ public class Settings {
     // Called on server start, reload, and pb admin reload
     private void loadSettings() {
         PluginDescriptionFile pluginYML = pb.getDescription();
-        FileConfiguration config = pb.getConfig();
 
         VERSION                     = pluginYML.getVersion();
         AUTHOR                      = pluginYML.getAuthors().toString();
-        PREFIX                      = ChatColor.translateAlternateColorCodes('&', loadString(config, "prefix"));
-        THEME                       = ChatColor.translateAlternateColorCodes('&', loadString(config, "theme-color"));
-        SECONDARY                   = ChatColor.translateAlternateColorCodes('&', loadString(config, "secondary-color"));
-        SIGN_UPDATE_TIME            = loadInt(config, "sign-update-time");
-        VAULT                       = loadBoolean(config, "vault");
-        TITLE                       = loadBoolean(config, "title");
+        PREFIX                      = ChatColor.translateAlternateColorCodes('&', loadString("prefix"));
+        THEME                       = ChatColor.translateAlternateColorCodes('&', loadString("theme-color"));
+        SECONDARY                   = ChatColor.translateAlternateColorCodes('&', loadString("secondary-color"));
+        SIGN_UPDATE_TIME            = loadInt("sign-update-time");
+        VAULT                       = loadBoolean("vault");
+        TITLE                       = loadBoolean("title");
         HOLOGRAPHIC_DISPLAYS        = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
     }
 
@@ -141,26 +141,34 @@ public class Settings {
         init(JavaPlugin.getProvidingPlugin(Paintball.class));
     }
 
-    private int loadInt(FileConfiguration file, String path) {
-        return (int) loadValue(file, path);
+    private int loadInt(String path) {
+        return (int) loadValue("config.yml", path);
     }
 
-    private String loadString(FileConfiguration file, String path) {
-        return (String) loadValue(file, path);
+    private String loadString(String path) {
+        return (String) loadValue("config.yml", path);
     }
 
-    private boolean loadBoolean(FileConfiguration file, String path) {
-        return (boolean) loadValue(file, path);
+    private boolean loadBoolean(String path) {
+        return (boolean) loadValue("config.yml", path);
     }
 
-    private Object loadValue(FileConfiguration file, String path) {
-        Object value = file.get(path);
+    private Object loadValue(String name, String path) {
+
+        Map<String, File> allFiles = new HashMap<String, File>(){{
+            for (File file : JavaPlugin.getProvidingPlugin(Paintball.class).getDataFolder().listFiles())
+                put(file.getName(), file);
+        }};
+
+        boolean notFoundInConfig = YamlConfiguration.loadConfiguration(allFiles.get(name)).get(path) == null;
 
         // If this value is null, it was not found, so turn this file to config_backup.yml and load another updated one
-        if (value == null) {
+        if (notFoundInConfig) {
             Settings.getSettings().backupConfig("config");
             return null;
         }
+
+        Object value = YamlConfiguration.loadConfiguration(allFiles.get(name)).get(path);
 
         // After backup and new one is done, get the value
         return value;

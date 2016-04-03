@@ -26,7 +26,7 @@ public class LeaderboardSigns implements Listener {
             return;
         }
 
-        StatType type = StatType.getStatType(e.getPlayer(), e.getLine(3));
+        StatType type = StatType.getStatType(e.getPlayer(), e.getLine(2));
 
         if (type == null)
             return;

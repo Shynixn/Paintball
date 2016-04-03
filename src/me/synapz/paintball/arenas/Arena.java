@@ -617,6 +617,39 @@ public class Arena {
         }
     }
 
+    public int getTeamMax(Team team) {
+        // 8 % 3 = 3
+        int extra = (int) Math.round((double) this.getMax()%this.getArenaTeamList().size());
+        // 8 / 3 = 2
+        int maxPer = (int) Math.round((double) this.getMax()/this.getArenaTeamList().size());
+
+        if (getArenaTeamList().size() % 2 != 2 && extra != 0)
+            extra = (int) (double) this.getMax()%this.getArenaTeamList().size()-1;
+
+        // Put each one in
+        Map<Team, Integer> perMax = new HashMap<Team, Integer>() {{
+            for (Team t : getArenaTeamList()) {
+                put(t, maxPer);
+            }
+        }};
+
+        while (extra != 0) {
+            for (Team t : getArenaTeamList()) {
+                if (extra == 0) {
+                    break;
+                } else {
+                    int oldMax = perMax.get(t);
+                    int newMax = --oldMax;
+                    perMax.remove(t, oldMax);
+                    perMax.put(t, newMax);
+                    extra--;
+                }
+            }
+        }
+
+        return perMax.get(team);
+    }
+
     // Saves arena file along with other checks
     public void advSave() {
         ARENA.saveFile();
