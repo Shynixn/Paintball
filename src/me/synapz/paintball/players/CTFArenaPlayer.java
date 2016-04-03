@@ -1,20 +1,17 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.*;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.CTFArena;
 import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.locations.FlagLocation;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 public class CTFArenaPlayer extends ArenaPlayer {
 

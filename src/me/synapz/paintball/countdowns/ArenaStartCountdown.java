@@ -1,20 +1,15 @@
 package me.synapz.paintball.countdowns;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.CTFArena;
-import me.synapz.paintball.Team;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.CTFArena;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Banner;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BannerMeta;
 
 import java.util.HashMap;
 import java.util.Map;

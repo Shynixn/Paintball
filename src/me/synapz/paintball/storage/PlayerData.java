@@ -1,9 +1,9 @@
 package me.synapz.paintball.storage;
 
 
-import me.synapz.paintball.ExperienceManager;
-import me.synapz.paintball.Messenger;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.utils.ExperienceManager;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.*;
@@ -170,7 +170,9 @@ public final class PlayerData extends PaintballFile {
             // Go through each value and find the rank of it and add it to the list
             for (StatType type : StatType.values()) {
                 Map<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(page, type);
-                stats.add(Settings.THEME + "#" + page + Settings.SECONDARY + " " + type.getName() + Messenger.SUFFIX + Settings.THEME + playerAndStat.keySet().toArray()[0] + Settings.SECONDARY + "  - " + playerAndStat.values().toArray()[0]);
+                String value = playerAndStat.values().toArray()[0].toString();
+
+                stats.add(Settings.THEME + "#" + page + Settings.SECONDARY + " " + type.getName() + Messenger.SUFFIX + Settings.THEME + playerAndStat.keySet().toArray()[0] + Settings.SECONDARY + "  - " + value);
             }
         } else {
             for (int i = start; i <= end; i++) {
@@ -178,8 +180,11 @@ public final class PlayerData extends PaintballFile {
                     Map<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(i, statType);
                     String playerName = (String) playerAndStat.keySet().toArray()[0];
 
-                    if (!playerName.equals("Unknown"))
-                        stats.add(Settings.THEME + "#" + i + Messenger.SUFFIX + Settings.THEME + playerName + Settings.SECONDARY + "  - " + playerAndStat.values().toArray()[0]);
+                    if (!playerName.equals("Unknown")) {
+                        String value = playerAndStat.values().toArray()[0].toString();
+
+                        stats.add(Settings.THEME + "#" + i + Messenger.SUFFIX + Settings.THEME + playerName + Settings.SECONDARY + "  - " + value);
+                    }
                 }
             }
         }

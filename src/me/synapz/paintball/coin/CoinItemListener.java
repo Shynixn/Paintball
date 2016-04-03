@@ -1,8 +1,8 @@
 package me.synapz.paintball.coin;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;
 import net.md_5.bungee.api.ChatColor;

@@ -1,7 +1,7 @@
 package me.synapz.paintball.countdowns;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.Bukkit;
 

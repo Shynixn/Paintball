@@ -1,6 +1,6 @@
 package me.synapz.paintball.coin;
 
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;

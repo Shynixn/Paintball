@@ -1,6 +1,6 @@
 package me.synapz.paintball.events;
 
-import me.synapz.paintball.Arena;
+import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.event.Event;

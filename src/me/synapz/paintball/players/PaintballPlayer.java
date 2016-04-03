@@ -1,8 +1,8 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.Team;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

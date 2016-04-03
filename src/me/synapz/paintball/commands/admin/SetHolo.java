@@ -1,6 +1,6 @@
 package me.synapz.paintball.commands.admin;
 
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.StatCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.storage.Settings;
@@ -34,7 +34,7 @@ public class SetHolo extends StatCommand {
             return;
         }
 
-        Settings.ARENA.addLeaderboard(player.getLocation().add(0, 2, 0), type, page, true);
+        Settings.ARENA.addLeaderboard(player.getLocation(), type, page, true);
         Messenger.success(player, "Hologram leaderboard set to your location!");
     }
 

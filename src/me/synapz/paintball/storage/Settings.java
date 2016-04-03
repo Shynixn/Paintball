@@ -1,8 +1,8 @@
 package me.synapz.paintball.storage;
 
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.coin.CoinItems;
 import net.milkbowl.vault.economy.Economy;

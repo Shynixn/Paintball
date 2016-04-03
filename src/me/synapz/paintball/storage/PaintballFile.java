@@ -1,7 +1,7 @@
 package me.synapz.paintball.storage;
 
 
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

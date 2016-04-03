@@ -1,6 +1,6 @@
 package me.synapz.paintball.commands.admin;
 
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.StatCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.StatType;

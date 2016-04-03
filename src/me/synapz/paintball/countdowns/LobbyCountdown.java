@@ -1,6 +1,6 @@
 package me.synapz.paintball.countdowns;
 
-import me.synapz.paintball.Arena;
+import me.synapz.paintball.arenas.Arena;
 
 import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;

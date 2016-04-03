@@ -1,16 +1,14 @@
-package me.synapz.paintball;
+package me.synapz.paintball.arenas;
 
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.locations.FlagLocation;
-import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static me.synapz.paintball.storage.Settings.ARENA_FILE;
@@ -46,7 +44,7 @@ public class CTFArena extends Arena {
         StringBuilder steps = new StringBuilder(super.getSteps());
 
         // If the arena is already done, there is nothing to append
-        if (steps.toString().equals(Settings.PREFIX + GRAY + "Complete. Arena is open!"))
+        if (isSetup() && isEnabled())
             return steps.toString();
 
         for (Team t : getArenaTeamList()) {
@@ -60,14 +58,30 @@ public class CTFArena extends Arena {
     }
 
     @Override
+    public boolean isSetup() {
+        boolean flagsSet = true;
+
+        for (Team t : getArenaTeamList()) {
+            if (ARENA_FILE.getString(t.getPath()) == null)
+                flagsSet = false;
+        }
+
+        return super.isSetup() && flagsSet;
+    }
+
+    @Override
     public void forceLeaveArena() {
         super.forceLeaveArena();
 
         // Turns all start flag locations to air
         for (Team team : getArenaTeamList()) {
-            Location loc = new FlagLocation(this, team).getLocation();
+            Location loc;
 
-            loc.getBlock().setType(Material.AIR);
+            if (Settings.ARENA_FILE.getString(team.getPath()) != null) {
+                loc = new FlagLocation(this, team).getLocation();
+
+                loc.getBlock().setType(Material.AIR);
+            }
         }
 
         // Turns all pickedup flag locations to air

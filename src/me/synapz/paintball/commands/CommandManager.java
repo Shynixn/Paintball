@@ -1,7 +1,7 @@
 package me.synapz.paintball.commands;
 
 
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.admin.*;
 import me.synapz.paintball.commands.arena.*;
 import me.synapz.paintball.commands.player.*;
@@ -28,7 +28,7 @@ public class CommandManager implements CommandExecutor{
     public void init() {
     	addCommands(new Join(), new Leave(), new Spectate(), new Stats(), new List(), new Admin(CommandType.PLAYER),
     			new Create(), new Remove(), new SetLocation(), new DelLocation(), new SetSpectate(), new DelSpectate(), new SetFlag(), new DelFlag(), new SetMin(),
-    			new SetMax(), new SetTeams(), new Start(), new Stop(), new Rename(), new Enable(), new Disable(), new SetHolo(), new DelHolo(),
+    			new SetMax(), new SetTeams(), new Start(), new Stop(), new Rename(), new Convert(), new Enable(), new Disable(), new SetHolo(), new DelHolo(),
     			new Steps(), new Info(), new Reload(), new Reset(), new Top(), new Admin(CommandType.ADMIN), new Arena(CommandType.ARENA));
     }
 

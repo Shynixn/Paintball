@@ -1,3 +1,15 @@
+BETA-3.3.1
+- Fixed hologram location
+- Fixed many event exceptions
+
+BETA-3.3
+- Added a new Leaderboard type!
+    - Time played
+- Added /pb admin convert <arena> <type>
+- Fixed steps bug for CTFArenas
+- Fixed shutdown error
+- Fixed casting exceptions
+
 BETA-3.2
 - Fix wrong flag scores
 - Added new Leaderboard types!

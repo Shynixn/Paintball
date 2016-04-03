@@ -1,6 +1,6 @@
 package me.synapz.paintball.enums;
 
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -22,7 +22,9 @@ public enum StatType {
     DEFEATS("Defeats", ".Defeats", "defeats"),
 
     FLAGS_CAPTURED("Flags Captured", ".Flags-Captured", "flagscaptured"),
-    FLAGS_DROPPED("Flags Dropped", ".Flags-Dropped", "flagsdropped");
+    FLAGS_DROPPED("Flags Dropped", ".Flags-Dropped", "flagsdropped"),
+
+    TIME_PLAYED("Time Played", ".Time-Played", "timeplayed");
 
     private String name;
     private String path;

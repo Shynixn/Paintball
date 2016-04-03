@@ -1,9 +1,9 @@
 package me.synapz.paintball.countdowns;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

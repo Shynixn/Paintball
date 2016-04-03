@@ -1,8 +1,11 @@
-package me.synapz.paintball;
+package me.synapz.paintball.arenas;
 
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import com.google.common.base.Joiner;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
@@ -82,6 +85,7 @@ public class Arena {
     private ArenaState state;
     private boolean toReload;
 
+
     public enum ArenaState {
         NOT_SETUP,
         WAITING,
@@ -117,6 +121,11 @@ public class Arena {
 
     public ArenaType getArenaType() {
         return ArenaType.TDM;
+    }
+
+    public void setArenaType(ArenaType type) {
+        ARENA_FILE.set(getPath() + "Type", type.getShortName());
+        Settings.ARENA.loadArenasFromFile();
     }
 
     // Returns the current name of the arena (Arenas.Syn.name)

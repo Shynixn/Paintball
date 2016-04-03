@@ -1,6 +1,6 @@
 package me.synapz.paintball.events;
 
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;

@@ -1,4 +1,4 @@
-package me.synapz.paintball;
+package me.synapz.paintball.utils;
 
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;

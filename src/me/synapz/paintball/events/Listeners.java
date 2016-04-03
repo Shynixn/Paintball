@@ -1,13 +1,18 @@
 package me.synapz.paintball.events;
 
-import me.synapz.paintball.*;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.arenas.CTFArena;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -116,7 +121,7 @@ public class Listeners implements Listener {
                             }
                         }
                         player.closeInventory();
-                    } else if (name.contains("Click to change team")) {
+                    } else if (name.contains("Change Team")) {
                         Inventory inv = Bukkit.createInventory(null, 18, "Team Switcher");
                         for (Team t : a.getArenaTeamList()) {
                             // Make a new inventory and place all teams (except the one they are on) into it
@@ -328,11 +333,13 @@ public class Listeners implements Listener {
         if (!(arena instanceof CTFArena))
             return;
 
-        CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
+        PaintballPlayer gamePlayer = arena.getPaintballPlayer(player);
         Block clicked = e.getClickedBlock();
 
-        if (clicked == null)
+        if (clicked == null || !(gamePlayer instanceof CTFArenaPlayer))
             return;
+
+        CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
 
         Location clickedLoc = new Location(clicked.getWorld(), clicked.getX(), clicked.getY(), clicked.getZ());
 
@@ -409,6 +416,9 @@ public class Listeners implements Listener {
         Player player = e.getPlayer();
         Arena arena = getArena(player);
 
+        if (arena == null)
+            return;
+
         if (player.getLocation().getBlockY() <= -1 && isInArena(player)) {
             PaintballPlayer gamePlayer = arena.getPaintballPlayer(player);
             Team team = gamePlayer.getTeam();
@@ -421,12 +431,15 @@ public class Listeners implements Listener {
                 player.teleport(arena.getSpectatorLocation());
             }
         } else {
-            // Check to see if they went over their area to drop the flag
-            if (arena instanceof CTFArena) {
-                CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
+            if (isInArena(player)) {
+                PaintballPlayer gamePlayer = arena.getPaintballPlayer(player);
+                // Check to see if they went over their area to drop the flag
+                if (arena instanceof CTFArena && gamePlayer instanceof CTFArenaPlayer) {
+                    CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
 
-                if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getFlagLocation(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2)
-                    ctfPlayer.scoreFlag();
+                    if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getFlagLocation(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2)
+                        ctfPlayer.scoreFlag();
+                }
             }
         }
     }

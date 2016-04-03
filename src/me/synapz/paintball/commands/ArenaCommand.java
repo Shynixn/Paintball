@@ -1,8 +1,8 @@
 package me.synapz.paintball.commands;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.entity.Player;
 

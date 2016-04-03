@@ -3,10 +3,15 @@ package me.synapz.paintball.storage;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import me.synapz.paintball.*;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.arenas.CTFArena;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.HologramLocation;
 import me.synapz.paintball.locations.SignLocation;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -100,7 +105,7 @@ public class ArenaFile extends PaintballFile {
     }
 
     // Load all arenas from arenas.yml
-    private void loadArenasFromFile() {
+    public void loadArenasFromFile() {
         Set<String> rawArenas = fileConfig.getConfigurationSection("Arenas") == null ? null : fileConfig.getConfigurationSection("Arenas").getKeys(false);
 
         if (rawArenas == null) {

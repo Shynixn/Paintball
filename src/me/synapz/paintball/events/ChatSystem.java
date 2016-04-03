@@ -1,7 +1,7 @@
 package me.synapz.paintball.events;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.players.PaintballPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

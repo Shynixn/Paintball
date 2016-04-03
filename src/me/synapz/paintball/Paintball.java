@@ -1,5 +1,6 @@
 package me.synapz.paintball;
 
+import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.commands.CommandManager;
 import me.synapz.paintball.events.ChatSystem;
@@ -7,12 +8,9 @@ import me.synapz.paintball.events.JoinSigns;
 import me.synapz.paintball.events.LeaderboardSigns;
 import me.synapz.paintball.events.Listeners;
 import me.synapz.paintball.metrics.Metrics;
-import me.synapz.paintball.players.CTFArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;

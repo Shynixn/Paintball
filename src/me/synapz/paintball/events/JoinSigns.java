@@ -1,9 +1,9 @@
 package me.synapz.paintball.events;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.ArenaManager;
-import me.synapz.paintball.Messenger;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Material;

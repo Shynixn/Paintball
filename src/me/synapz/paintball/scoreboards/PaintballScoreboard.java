@@ -1,6 +1,6 @@
 package me.synapz.paintball.scoreboards;
 
-import me.synapz.paintball.Team;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;

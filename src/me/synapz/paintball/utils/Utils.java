@@ -1,6 +1,9 @@
-package me.synapz.paintball;
+package me.synapz.paintball.utils;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
+import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.countdowns.PaintballCountdown;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -80,6 +83,10 @@ public class Utils {
         banner.setItemMeta(meta);
 
         return banner;
+    }
+
+    public static double secondsToMin(int seconds) {
+        return seconds/60;
     }
 
     public static String makeHealth(int health) {

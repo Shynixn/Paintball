@@ -1,7 +1,7 @@
 package me.synapz.paintball.locations;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.Team;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Location;
 

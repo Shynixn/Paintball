@@ -1,7 +1,7 @@
 package me.synapz.paintball.commands.arena;
 
-import me.synapz.paintball.CTFArena;
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.arenas.CTFArena;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.Location;

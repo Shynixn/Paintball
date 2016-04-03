@@ -1,7 +1,6 @@
 package me.synapz.paintball.enums;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
 
 public enum ArenaType {

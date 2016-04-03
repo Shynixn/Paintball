@@ -1,8 +1,10 @@
-package me.synapz.paintball;
+package me.synapz.paintball.arenas;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.google.common.base.Joiner;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;

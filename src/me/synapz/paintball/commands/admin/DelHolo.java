@@ -2,7 +2,7 @@ package me.synapz.paintball.commands.admin;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import me.synapz.paintball.Messenger;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;

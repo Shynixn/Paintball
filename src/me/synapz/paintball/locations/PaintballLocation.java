@@ -1,6 +1,6 @@
 package me.synapz.paintball.locations;
 
-import me.synapz.paintball.Arena;
+import me.synapz.paintball.arenas.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 

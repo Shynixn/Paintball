@@ -1,12 +1,13 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.Team;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
 import me.synapz.paintball.coin.CoinItems;
 import me.synapz.paintball.countdowns.ExpirationCountdown;
+import me.synapz.paintball.countdowns.GameCountdown;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.StatType;
@@ -134,6 +135,17 @@ public class ArenaPlayer extends PaintballPlayer {
                 Settings.ECONOMY.depositPlayer(player, arena.MONEY_PER_WIN);
             else
                 Settings.ECONOMY.withdrawPlayer(player, arena.MONEY_PER_DEFEAT);
+        }
+
+        GameCountdown countdown = (GameCountdown) GameCountdown.tasks.get(arena);
+
+        if (countdown != null) {
+            int timePlayed = arena.TIME-(int)countdown.getCounter();
+
+            while (timePlayed > 0) {
+                Settings.PLAYERDATA.incrementStat(StatType.TIME_PLAYED, this);
+                timePlayed--;
+            }
         }
 
         // TODO: What if there is 5 teams with 1 with 0 players... Make it so it

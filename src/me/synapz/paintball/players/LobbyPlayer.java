@@ -1,9 +1,9 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.Arena;
-import me.synapz.paintball.Messenger;
-import me.synapz.paintball.Team;
-import me.synapz.paintball.Utils;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.countdowns.ChangeTeamCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
@@ -115,7 +115,7 @@ public class LobbyPlayer extends PaintballPlayer {
         // For if the amount of teams are larger than 9 slots (how would they click the 10th or 11th? The -1 is because the player is on 1 team, we don't show that team
         if (arena.getArenaTeamList().size()-1 > 9) {
             // Just creates a wool item, which when you click will open a change menu
-            player.getInventory().setItem(0, Utils.makeWool(THEME + "Click to change team", team.getDyeColor()));
+            player.getInventory().setItem(0, Utils.makeWool(team.getChatColor() + "" + ChatColor.BOLD + "Click" + Messenger.SUFFIX + ChatColor.RESET + team.getChatColor() + "Change Team", team.getDyeColor()));
             return;
         }
 
