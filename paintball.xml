@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="paintball" default="all">
+  
+  
+  <property file="paintball.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.ane"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.ear"/>
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/ext/access-bridge-64.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/jfxrt.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunmscapi.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jfxswt.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.bountifulapi-1.5.3.classpath">
+    <pathelement location="${basedir}/../../../Dropbox/Jars/BountifulAPI-1.5.3.jar"/>
+  </path>
+  
+  <path id="library.holographicdisplays.classpath">
+    <pathelement location="${basedir}/../../../Dropbox/Jars/HolographicDisplays.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.google.code.gson:gson:2.2.4.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.google.guava:guava:17.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/google/guava/guava/17.0/guava-17.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.googlecode.json-simple:json-simple:1.1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-lang:commons-lang:2.6.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-lang/commons-lang/2.6/commons-lang-2.6.jar"/>
+  </path>
+  
+  <path id="library.maven:_javax.persistence:persistence-api:1.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_junit:junit:4.10.classpath">
+    <pathelement location="${path.variable.maven_repository}/junit/junit/4.10/junit-4.10.jar"/>
+  </path>
+  
+  <path id="library.maven:_net.md-5:bungeecord-chat:1.9-snapshot.classpath">
+    <pathelement location="${path.variable.maven_repository}/net/md-5/bungeecord-chat/1.9-SNAPSHOT/bungeecord-chat-1.9-20160324.031633-17.jar"/>
+  </path>
+  
+  <path id="library.maven:_net.milkbowl.vault:vaultapi:1.5.classpath">
+    <pathelement location="${path.variable.maven_repository}/net/milkbowl/vault/VaultAPI/1.5/VaultAPI-1.5.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.avaje:ebean:2.8.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/avaje/ebean/2.8.1/ebean-2.8.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.bukkit:bukkit:1.8-r0.1-snapshot.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/bukkit/bukkit/1.8-R0.1-SNAPSHOT/bukkit-1.8-R0.1-20150227.224714-194.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.hamcrest:hamcrest-core:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.spigotmc:spigot-api:1.9-r0.1-snapshot.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/spigotmc/spigot-api/1.9-R0.1-SNAPSHOT/spigot-api-1.9-R0.1-20160327.100100-138.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.yaml:snakeyaml:1.15.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/yaml/snakeyaml/1.15/snakeyaml-1.15.jar"/>
+  </path>
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm-all.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  <import file="${basedir}/module_paintball.xml"/>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.paintball" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.paintball" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.paintball:jar" value="${basedir}/../../../Dropbox"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.Paintball.jar" value="${artifacts.temp.dir}/Paintball.jar"/>
+  </target>
+  
+  <target name="artifact.paintball:jar" depends="init.artifacts, compile.module.paintball" description="Build &#39;Paintball:jar&#39; artifact">
+    <property name="artifact.temp.output.paintball:jar" value="${artifacts.temp.dir}/Paintball_jar"/>
+    <mkdir dir="${artifact.temp.output.paintball:jar}"/>
+    <jar destfile="${temp.jar.path.Paintball.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${paintball.output.dir}"/>
+      <zipfileset file="${basedir}/src/config.yml"/>
+      <zipfileset file="${basedir}/src/plugin.yml"/>
+    </jar>
+    <copy file="${temp.jar.path.Paintball.jar}" tofile="${artifact.temp.output.paintball:jar}/Paintball.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.paintball:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.paintball:jar}"/>
+    <copy todir="${artifact.output.paintball:jar}">
+      <fileset dir="${artifact.temp.output.paintball:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>

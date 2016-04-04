@@ -306,8 +306,11 @@ public class Listeners implements Listener {
             Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
 
             if (hitPlayer.hit()) {
-                CoinItem clickedItem = arenaPlayer.getItemWithName(arenaPlayer.getPlayer().getItemInHand().getItemMeta().getDisplayName());
                 String action = "shot";
+                CoinItem clickedItem = null;
+
+                if (arenaPlayer.getPlayer().getItemInHand() != null && !arenaPlayer.getPlayer().getItemInHand().hasItemMeta() && !arenaPlayer.getPlayer().getItemInHand().getItemMeta().hasDisplayName())
+                    clickedItem = arenaPlayer.getItemWithName(arenaPlayer.getPlayer().getItemInHand().getItemMeta().getDisplayName());
 
                 if (clickedItem != null)
                     action = clickedItem.getAction();

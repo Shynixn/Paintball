@@ -158,26 +158,7 @@ public class Team {
     }
 
     public int getMax() {
-        int maxPer = (int) Math.round((double) arena.getMax()/arena.getArenaTeamList().size());
-        int total = maxPer*arena.getArenaTeamList().size();
-
-        Map<Team, Integer> perMax = new HashMap<Team, Integer>() {{
-            for (Team t : arena.getArenaTeamList()) {
-                put(t, maxPer);
-            }
-        }};
-
-        while (total > arena.getMax()) {
-            total = 0;
-
-            for (Team team : arena.getArenaTeamList()) {
-                int oldMax = perMax.get(team);
-                perMax.replace(team, oldMax, oldMax--);
-                total += oldMax;
-            }
-        }
-
-        return perMax.get(this);
+        return arena.getTeamMax(this);
     }
 
     public int getSize() {

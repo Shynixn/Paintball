@@ -1,3 +1,15 @@
+BETA-3.3.5
+- Fixed a error message string
+- Fixed loosing Gun when put inside a Coin Shop
+- Fixed Arena not stopping sometimes on ClassCastException
+- Fixed NullPointerException on arena end countdown when no item in hand
+
+BETA-3.3.4
+- Fixed Leaderboard Sign getting wrong line for the type
+- Made setting hologram locations easier
+- Major team pick bug fixed (After hours of math I fixed it)!
+- Fixed config.yml sometimes not auto-updating
+
 BETA-3.3.3
 - Fixed 9+ team switcher to look nicer
 - Fixed /pb admin convert permission
