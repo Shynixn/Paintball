@@ -1,2 +1,9 @@
 SQL:
+  enabled: false
+  host: localhost
+  port:
   password: password
+  database: Paintball
+Bungee:
+  enabled: false
+  serverid:
