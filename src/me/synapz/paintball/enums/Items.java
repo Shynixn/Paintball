@@ -1,19 +1,20 @@
 package me.synapz.paintball.enums;
 
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 
 public enum Items {
 
-    TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Sound.UI_BUTTON_CLICK),
-    SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Sound.ENTITY_PLAYER_BURP),
-    AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", "plowed", Sound.UI_BUTTON_CLICK),
-    ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted", Sound.UI_BUTTON_CLICK),
-    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down", Sound.UI_BUTTON_CLICK),
-    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed", Sound.UI_BUTTON_CLICK),
-    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended", Sound.UI_BUTTON_CLICK),
-    NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Sound.UI_BUTTON_CLICK);
+    TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Utils.DEFAULT_SOUND),
+    SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Utils.DEFAULT_SOUND),
+    AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", "plowed",  Utils.DEFAULT_SOUND),
+    ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted",  Utils.DEFAULT_SOUND),
+    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Utils.DEFAULT_SOUND),
+    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed",  Utils.DEFAULT_SOUND),
+    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended",  Utils.DEFAULT_SOUND),
+    NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Utils.DEFAULT_SOUND);
 
     @Override
     public String toString() {

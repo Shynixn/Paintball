@@ -1,6 +1,13 @@
+BETA-3.3.6
+- Fixed spelling mistake
+- Fixed loosing Gun when put inside a Coin Shop
+- Fixed 1.8 loading of Sound enums
+- Made sure 100% 1.9 and 1.8 backwards comparability
+    - Plugin auto-detects version and picks the correct Sound to load into items.yml
+    - Still make sure you have the correct Sound and Material values in items.yml (See FAQ)
+
 BETA-3.3.5
 - Fixed a error message string
-- Fixed loosing Gun when put inside a Coin Shop
 - Fixed Arena not stopping sometimes on ClassCastException
 - Fixed NullPointerException on arena end countdown when no item in hand
 

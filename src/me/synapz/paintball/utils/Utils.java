@@ -25,6 +25,17 @@ import static org.bukkit.ChatColor.RED;
 
 public class Utils {
 
+    public static Sound DEFAULT_SOUND;
+
+    static {
+        try {
+            DEFAULT_SOUND = Sound.BLOCK_LEVER_CLICK;
+        } catch (NoSuchFieldError exc) {
+            // Sound did not load... try to load the 1.8 and lower sound
+            DEFAULT_SOUND = Sound.valueOf("CLICK");
+        }
+    }
+
     // Checks to see if the arena is null
     public static boolean nullCheck(String arenaName, Arena arena, Player sender) {
         if (arena == null) {

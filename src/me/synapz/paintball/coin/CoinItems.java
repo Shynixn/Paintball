@@ -23,17 +23,6 @@ public class CoinItems implements Listener {
 
     private static CoinItems instance = null;
 
-    private static Sound CLICK_SOUND;
-
-    static {
-        try {
-            CLICK_SOUND = Sound.BLOCK_LEVER_CLICK;
-        } catch (NoSuchFieldError exc) {
-            // Sound did not load... try to load the 1.8 and lower sound
-            CLICK_SOUND = Sound.valueOf("CLICK");
-        }
-    }
-
     public static CoinItems getCoinItems() {
         if (instance == null) {
             new CoinItems().loadItems();
@@ -138,7 +127,7 @@ public class CoinItems implements Listener {
     }
 
     public CoinItem getMainItem() {
-        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", "shot", CLICK_SOUND) {
+        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Utils.DEFAULT_SOUND) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 

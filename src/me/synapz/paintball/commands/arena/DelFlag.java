@@ -37,7 +37,7 @@ public class DelFlag extends TeamCommand {
     }
 
     public String getInfo() {
-        return "Set a CTF Arena's flag";
+        return "Delete a CTF Arena's flag";
     }
 
     public CommandType getCommandType() {
