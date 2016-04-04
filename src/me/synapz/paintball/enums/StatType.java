@@ -72,23 +72,7 @@ public enum StatType {
         }
 
         if (type == null) {
-            String error = statString + " is a" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "" +
-                    "n invalid statistic type.";
+            String error = statString + " is an invalid statistic type.";
 
             if (player != null)
                 Messenger.error(player, error, "Choose either " + StatType.getReadableList());

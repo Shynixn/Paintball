@@ -1,14 +1,12 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.countdowns.*;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
 import me.synapz.paintball.coin.CoinItems;
-import me.synapz.paintball.countdowns.ExpirationCountdown;
-import me.synapz.paintball.countdowns.GameCountdown;
-import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.TeamLocation;
@@ -137,11 +135,20 @@ public class ArenaPlayer extends PaintballPlayer {
                 Settings.ECONOMY.withdrawPlayer(player, arena.MONEY_PER_DEFEAT);
         }
 
-        GameCountdown countdown = (GameCountdown) GameCountdown.tasks.get(arena);
+        PaintballCountdown countdown = GameCountdown.tasks.get(arena);
+        int timePlayed;
+
+        if (countdown instanceof GameFinishCountdown) {
+            timePlayed = arena.TIME;
+        } else if (countdown instanceof ArenaStartCountdown) {
+            timePlayed = 0;
+        } else if (countdown instanceof GameCountdown) {
+            timePlayed = arena.TIME-(int)countdown.getCounter();
+        } else {
+            timePlayed = 0;
+        }
 
         if (countdown != null) {
-            int timePlayed = arena.TIME-(int)countdown.getCounter();
-
             while (timePlayed > 0) {
                 Settings.PLAYERDATA.incrementStat(StatType.TIME_PLAYED, this);
                 timePlayed--;
