@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Base64;
+import java.util.Random;
 import java.util.Set;
 
 public class Database extends PaintballFile {
@@ -30,11 +31,32 @@ public class Database extends PaintballFile {
 
 
         // TODO: Load all values through loadString, loadInt, or loadBoolean, which checks to make sure the values are not null
-        password = loadString("SQL.password");
+        if (loadBoolean("SQL.enabled")) {
+            SQL = true;
+            host = loadString("SQL.host");
+            port = loadInt("SQL.port");
+            username = loadString("SQL.username");
+            password = loadString("SQL.password");
+            database = loadString("SQL.database");
+        }
+        if (loadBoolean("Bungee.enabled")) {
+            bungee = true;
+            if (loadString("Bungee.serverID").equalsIgnoreCase("Generate")) {
+                Random r = new Random(5);
+                String base10ServerID = r.doubles(1073741824).toString();
+                String serverID = Base64.getEncoder().encodeToString(base10ServerID.getBytes());
+                setValue("Bungee.serverID", serverID);
+                //run a method to start the listening for bungee commands
+            }
+        }
     }
 
-    public String getPassword() {
-        return password;
+    public Boolean isBungee() {
+        return bungee;
+    }
+
+    public Boolean isSQL() {
+        return SQL;
     }
 
     private int loadInt(String path) {
@@ -60,6 +82,10 @@ public class Database extends PaintballFile {
 
         // After backup and new one is done, get the value
         return value;
+    }
+
+    private void setValue(String path, Object object) {
+        fileConfig.set(path, object);
     }
 
     //TODO: Work on SQL stuff down here

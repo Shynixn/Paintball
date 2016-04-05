@@ -1,9 +1,10 @@
 SQL:
   enabled: false
   host: localhost
-  port:
+  port: 1433
+  username: admin
   password: password
   database: Paintball
 Bungee:
   enabled: false
-  serverid:
+  serverid: Generate
