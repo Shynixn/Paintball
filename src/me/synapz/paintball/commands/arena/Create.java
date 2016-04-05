@@ -4,6 +4,7 @@ package me.synapz.paintball.commands.arena;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.arenas.CTFArena;
+import me.synapz.paintball.arenas.ELMArena;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.ArenaType;
@@ -33,6 +34,9 @@ public class Create extends PaintballCommand {
                     break;
                 case TDM:
                     a = new Arena(arenaName, arenaName, true);
+                    break;
+                case ELM:
+                    a = new ELMArena(arenaName, arenaName, true);
                     break;
                 default:
                     a = new Arena(arenaName, arenaName, true);

@@ -37,11 +37,12 @@ public class ArenaPlayer extends PaintballPlayer {
     private int kills;
     private double money;
     private int health;
-    private int lives;
+    protected int lives;
 
     private Location lastLocation;
 
     private boolean isWinner;
+    private boolean isTie;
 
     /**
      * Creates a new ArenaPlayer
@@ -62,7 +63,9 @@ public class ArenaPlayer extends PaintballPlayer {
         player.getInventory().clear();
         player.updateInventory();
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
-        giveWoolHelmet();
+
+        if (arena.ARENA_WOOL_HELMET)
+            giveWoolHelmet();
         giveItems = false;
         health = arena.HITS_TO_KILL;
         lives = arena.LIVES;
@@ -71,11 +74,6 @@ public class ArenaPlayer extends PaintballPlayer {
     @Override
     protected void showMessages() {
 
-    }
-
-    @Override
-    protected void giveWoolHelmet() {
-        super.giveWoolHelmet();
     }
 
     @Override
@@ -180,7 +178,8 @@ public class ArenaPlayer extends PaintballPlayer {
         if (arena.COIN_SHOP)
             inv.setItem(8, Utils.makeItem(Material.DOUBLE_PLANT, ChatColor.GOLD + "Coin Shop", 1));
 
-        giveWoolHelmet();
+        if (arena.ARENA_WOOL_HELMET)
+            giveWoolHelmet();
 
         player.updateInventory();
     }
@@ -331,6 +330,10 @@ public class ArenaPlayer extends PaintballPlayer {
         isWinner = true;
     }
 
+    public void setTie() {
+        isTie = true;
+    }
+
     /**
      * Adds money to the player's balance and to their gained money
      * @param amount Amount to be added to player's balance
@@ -400,6 +403,10 @@ public class ArenaPlayer extends PaintballPlayer {
         return isWinner;
     }
 
+    public boolean isTie() {
+        return isTie;
+    }
+
     public Location getLastLocation() {
         return lastLocation;
     }
@@ -410,7 +417,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * @param items Items to be dyed
      * @return Edited items to be added
      */
-    private ItemStack[] colorLeatherItems(ItemStack... items) {
+    protected ItemStack[] colorLeatherItems(ItemStack... items) {
         int location = 0;
         ItemStack[] editedItems = new ItemStack[items.length];
         for (ItemStack item : items) {

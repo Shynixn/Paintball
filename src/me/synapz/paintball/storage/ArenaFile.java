@@ -6,6 +6,7 @@ import me.synapz.paintball.*;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.arenas.CTFArena;
+import me.synapz.paintball.arenas.ELMArena;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
@@ -126,8 +127,12 @@ public class ArenaFile extends PaintballFile {
                     case TDM:
                         a = new Arena(arenaName, name, false);
                         break;
+                    case ELM:
+                        a = new ELMArena(arenaName, name, false);
+                        break;
                     default:
                         a = new Arena(arenaName, name, false);
+                        break;
                 }
 
                 // set the value of that arena

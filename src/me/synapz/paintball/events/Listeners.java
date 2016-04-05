@@ -373,10 +373,7 @@ public class Listeners implements Listener {
 
                     Location resetLoc = new FlagLocation((CTFArena) ctfPlayer.getArena(), clickedFlag).getLocation();
 
-                    resetLoc.getBlock().setType(Material.STANDING_BANNER);
-                    Banner banner = (Banner) resetLoc.getBlock().getState();
-                    banner.setBaseColor(clickedFlag.getDyeColor());
-                    banner.update();
+                    Utils.createFlag(ctfPlayer.getTeam(), resetLoc);
 
                     arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + ctfPlayer.getPlayer().getName() + " has reset " + ctfPlayer.getTeam().getTitleName() + "'s flag!");
                 } else {

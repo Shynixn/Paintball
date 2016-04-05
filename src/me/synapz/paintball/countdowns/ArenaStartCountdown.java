@@ -6,9 +6,8 @@ import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Banner;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -88,11 +87,7 @@ public class ArenaStartCountdown extends PaintballCountdown {
     private void createFlags() {
         for (Team team : arena.getArenaTeamList()) {
             Location loc = new FlagLocation((CTFArena) arena, team).getLocation();
-
-            loc.getBlock().setType(Material.STANDING_BANNER);
-            Banner banner = (Banner) loc.getBlock().getState();
-            banner.setBaseColor(team.getDyeColor());
-            banner.update();
+            Utils.createFlag(team, loc);
         }
     }
 }

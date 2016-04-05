@@ -64,6 +64,8 @@ public class Arena {
     public boolean DISABLE_ALL_COMMANDS;
     public boolean ALL_PAINTBALL_COMMANDS;
     public boolean TELEPORT_TEAM_SWITCH;
+    public boolean ARENA_WOOL_HELMET;
+    public boolean LOBBY_WOOL_HELMET;
 
     public List<String> BLOCKED_COMMANDS;
     public List<String> ALLOWED_COMMANDS;
@@ -213,7 +215,7 @@ public class Arena {
         return getMin() != 0;
     }
 
-    private boolean isMaxSet() {
+    public boolean isMaxSet() {
         return getMax() != 0;
     }
 
@@ -405,6 +407,8 @@ public class Arena {
 
             if (this instanceof CTFArena)
                 player = new CTFArenaPlayer(this, p.getTeam(), p.getPlayer());
+            else if (this instanceof ELMArena)
+                player = new ELMArenaPlayer(this, p.getTeam(), p.getPlayer());
             else
                 player = new ArenaPlayer(this, p.getTeam(), p.getPlayer());
 
@@ -445,8 +449,12 @@ public class Arena {
     public void win(List<Team> teams) {
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
             Player player = arenaPlayer.getPlayer();
-            if (teams.contains(arenaPlayer.getTeam()))
-                arenaPlayer.setWon();
+            if (teams.contains(arenaPlayer.getTeam())) {
+                if (teams.size() != 1)
+                    arenaPlayer.setTie();
+                else
+                    arenaPlayer.setWon();
+            }
             String spaces = Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(20);
             String title = THEME + " Games Stats ";
             Messenger.msg(player, spaces + title + spaces,
@@ -704,6 +712,8 @@ public class Arena {
         USE_ARENA_CHAT             = ARENA.loadBoolean("Chat.use-arena-chat", this);
         BROADCAST_WINNER           = ARENA.loadBoolean("Chat.broadcast-winner", this);
         TELEPORT_TEAM_SWITCH       = ARENA.loadBoolean("teleport-on-team-switch", this);
+        ARENA_WOOL_HELMET          = ARENA.loadBoolean("Join-Arena.wool-helmet", this);
+        LOBBY_WOOL_HELMET          = ARENA.loadBoolean("Join-Lobby.wool-helmet", this);
 
         DISABLE_ALL_COMMANDS       = config.getBoolean("Commands.disable-all-commands");
         ALL_PAINTBALL_COMMANDS     = config.getBoolean("Commands.all-paintball-commands");
