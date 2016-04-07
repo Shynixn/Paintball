@@ -26,9 +26,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
     private static String host = null;
     private static String username = null;
     private static String password = null;
+    private static Plugin pb = null;
+    private static String SID = null;
     public Boolean bungee = false;
-    private Plugin pb = null;
-    private String SID = null;
     private String BID = null;
     private String database = null;
 
