@@ -1,10 +1,11 @@
 SQL:
   enabled: false
   host: localhost
-  port: 1433
   username: admin
   password: password
   database: Paintball
 Bungee:
   enabled: false
+  ##Found in bungee.yml on the bungee server, used to transfer players
+  bungeeID: null
   serverid: Generate
