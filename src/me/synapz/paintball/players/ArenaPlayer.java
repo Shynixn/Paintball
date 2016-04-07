@@ -1,6 +1,7 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.countdowns.*;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.utils.Utils;
@@ -31,12 +32,15 @@ public class ArenaPlayer extends PaintballPlayer {
 
     private Map<String, CoinItem> coinItems = new HashMap<>();
 
+    private int heightKillStreak;
     private int killStreak;
     private int coins;
     private int deaths;
     private int kills;
     private double money;
     private int health;
+    private int hits;
+    private int shots;
     protected int lives;
 
     private Location lastLocation;
@@ -95,12 +99,7 @@ public class ArenaPlayer extends PaintballPlayer {
         return sb.build();
     }
 
-    @Override
-    public void updateDisplayName() {
-        if (pbSb != null) {
-            pbSb.setDisplayNameCounter(team.getChatColor() + "█ ", Utils.getCurrentCounter(arena));
-        }
-    }
+
 
     @Override
     public void updateScoreboard() {
@@ -124,7 +123,6 @@ public class ArenaPlayer extends PaintballPlayer {
     public void leave() {
         super.leave();
         team.playerLeaveTeam();
-        Settings.PLAYERDATA.incrementStat(StatType.GAMES_PLAYED, this);
 
         if (Settings.VAULT) {
             if (isWinner)
@@ -146,12 +144,19 @@ public class ArenaPlayer extends PaintballPlayer {
             timePlayed = 0;
         }
 
-        if (countdown != null) {
-            while (timePlayed > 0) {
-                Settings.PLAYERDATA.incrementStat(StatType.TIME_PLAYED, this);
-                timePlayed--;
-            }
+        if (countdown != null && timePlayed != 0) {
+            Settings.PLAYERDATA.addToStat(StatType.TIME_PLAYED, this, timePlayed);
         }
+
+        Settings.PLAYERDATA.incrementStat(StatType.GAMES_PLAYED, this);
+        Settings.PLAYERDATA.addToStat(StatType.HITS, this, hits);
+        Settings.PLAYERDATA.addToStat(StatType.SHOTS, this, shots);
+        Settings.PLAYERDATA.addToStat(StatType.KILLS, this, kills);
+        Settings.PLAYERDATA.addToStat(StatType.DEATHS, this, deaths);
+
+        // killstreak is less than past killstreak, return
+        if (Settings.PLAYERDATA.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath(player.getUniqueId())) < heightKillStreak)
+            Settings.PLAYERDATA.setStat(StatType.HIGEST_KILL_STREAK, this, heightKillStreak);
 
         // TODO: What if there is 5 teams with 1 with 0 players... Make it so it
         // TODO: So it also checks for arenas with players or if 1 player in the arena
@@ -163,6 +168,14 @@ public class ArenaPlayer extends PaintballPlayer {
                 break;
             }
         }
+    }
+
+    public void incrementHits() {
+        hits++;
+    }
+
+    public void incrementShots() {
+        shots++;
     }
 
     /**
@@ -192,7 +205,6 @@ public class ArenaPlayer extends PaintballPlayer {
      */
     public boolean hit() {
         int newHealth = health--;
-        pbSb.updateNametags();
         if (newHealth != 1) {
             arena.updateAllScoreboard();
             return false;
@@ -213,14 +225,15 @@ public class ArenaPlayer extends PaintballPlayer {
         kills++;
         killStreak++;
 
+        if (killStreak > heightKillStreak)
+            heightKillStreak = killStreak;
+
         arenaPlayer.withdraw(arena.MONEY_PER_DEATH);
         arenaPlayer.withdrawCoin(arena.COIN_PER_DEATH);
         deposit(arena.MONEY_PER_KILL);
         depositCoin(arena.COIN_PER_KILL);
 
         arena.incrementTeamScore(team);
-        Settings.PLAYERDATA.incrementStat(StatType.KILLS, this);
-        Settings.PLAYERDATA.incrementStat(StatType.HIGEST_KILL_STREAK, this);
         arena.broadcastMessage(THEME + player.getName() + SECONDARY + " " + action + " " + THEME + arenaPlayer.getPlayer().getName());
 
         // Updates all player's scoreboards
@@ -271,8 +284,6 @@ public class ArenaPlayer extends PaintballPlayer {
             deaths++;
             lives--;
 
-            Settings.PLAYERDATA.incrementStat(StatType.DEATHS, this);
-
             // If they have no more lives turn them into a spectator player until the game ends
             if (arena.LIVES > 0 && lives == 0) {
                 arena.removePlayer(this, false);
@@ -311,7 +322,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * @param event The event when someone clicks an item
      */
     public void shoot(PlayerInteractEvent event) {
-        Settings.PLAYERDATA.incrementStat(StatType.SHOTS, this);
+        incrementShots();
     }
 
     /**

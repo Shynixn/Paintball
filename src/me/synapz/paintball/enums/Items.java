@@ -9,6 +9,7 @@ public enum Items {
 
     TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Utils.DEFAULT_SOUND),
     SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Utils.DEFAULT_SOUND),
+    RAPID_FIRE("Rapid Fire", Material.DIAMOND_HOE, true, 1, "Allows you to left or right click\nto shoot", 0, 4, 0, "", "", Utils.DEFAULT_SOUND),
     AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", "plowed",  Utils.DEFAULT_SOUND),
     ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted",  Utils.DEFAULT_SOUND),
     MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Utils.DEFAULT_SOUND),

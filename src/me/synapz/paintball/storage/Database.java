@@ -1,5 +1,6 @@
 package me.synapz.paintball.storage;
 
+import me.synapz.paintball.enums.Databases;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -18,36 +19,31 @@ public class Database extends PaintballFile {
 
     private Plugin pb = null;
     private Boolean bungee = false;
-    private Boolean SQL = false;
     private String host = null;
     private Integer port = null;
     private String username = null;
     private String password = null;
     private String database = null;
-    // TODO: Put other values
+    private boolean sql = false;
 
     public Database(Plugin pb) {
         super(pb, "database.yml");
 
+        sql = loadBoolean(Databases.SQL_ENABLED);
+        host = loadString(Databases.HOST);
+        port = loadInt(Databases.PORT);
+        username = loadString(Databases.USERNAME);
+        password = loadString(Databases.PASSWORD);
+        database = loadString(Databases.DATABASE);
 
-        // TODO: Load all values through loadString, loadInt, or loadBoolean, which checks to make sure the values are not null
-        if (loadBoolean("SQL.enabled")) {
-            SQL = true;
-            host = loadString("SQL.host");
-            port = loadInt("SQL.port");
-            username = loadString("SQL.username");
-            password = loadString("SQL.password");
-            database = loadString("SQL.database");
-        }
-        if (loadBoolean("Bungee.enabled")) {
-            bungee = true;
-            if (loadString("Bungee.serverID").equalsIgnoreCase("Generate")) {
-                Random r = new Random(5);
-                String base10ServerID = r.doubles(1073741824).toString();
-                String serverID = Base64.getEncoder().encodeToString(base10ServerID.getBytes());
-                setValue("Bungee.serverID", serverID);
-                //run a method to start the listening for bungee commands
-            }
+        bungee = loadBoolean(Databases.BUNGEE_ENABLED);
+
+        if (loadString(Databases.SERVER_ID).equalsIgnoreCase("Generate")) {
+            Random r = new Random(5);
+            String base10ServerID = r.doubles(1073741824).toString();
+            String serverID = Base64.getEncoder().encodeToString(base10ServerID.getBytes());
+            setValue("Bungee.serverID", serverID);
+            //run a method to start the listening for bungee commands
         }
     }
 
@@ -56,32 +52,54 @@ public class Database extends PaintballFile {
     }
 
     public Boolean isSQL() {
-        return SQL;
+        return sql;
     }
 
-    private int loadInt(String path) {
-        return (int) loadValue(path);
+    /*
+    If any of the following are null (not set) this will set the file with the default value
+    and return the default value.
+     */
+    private int loadInt(Databases type) {
+        if (isFoundInConfig(type))
+            return (int) loadValue(type);
+        else
+            fileConfig.set(type.getPath(), type.getDefaultInt());
+
+        saveFile();
+
+        return type.getDefaultInt();
     }
 
-    private String loadString(String path) {
-        return (String) loadValue(path);
+    private String loadString(Databases type) {
+        if (isFoundInConfig(type))
+            return (String) loadValue(type);
+        else
+            fileConfig.set(type.getPath(), type.getDefaultString());
+
+        saveFile();
+
+        return type.getDefaultString();
     }
 
-    private boolean loadBoolean(String path) {
-        return (boolean) loadValue(path);
+    private boolean loadBoolean(Databases type) {
+        if (isFoundInConfig(type))
+            return (boolean) loadValue(type);
+        else
+            fileConfig.set(type.getPath(), type.getDefaultBoolean());
+
+        saveFile();
+
+        return type.getDefaultBoolean();
     }
 
-    private Object loadValue(String path) {
-        Object value = fileConfig.get(path);
+    private Object loadValue(Databases type) {
+        return fileConfig.get(type.getPath());
+    }
 
-        // If this value is null, it was not found, so turn this file to database_backup.yml and load another updated one
-        if (value == null) {
-            Settings.getSettings().backupConfig("database");
-            return null;
-        }
+    private boolean isFoundInConfig(Databases type) {
+        Object value = fileConfig.get(type.getPath());
 
-        // After backup and new one is done, get the value
-        return value;
+        return value != null;
     }
 
     private void setValue(String path, Object object) {
@@ -90,7 +108,7 @@ public class Database extends PaintballFile {
 
     //TODO: Work on SQL stuff down here
     public void setupSQL(Plugin pb, String host, Integer port, String username, String password, String database) {
-        this.SQL = true;
+        this.sql = true;
         this.host = host;
         this.port = port;
         this.username = username;

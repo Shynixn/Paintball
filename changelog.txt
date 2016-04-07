@@ -1,8 +1,28 @@
-BETA-3.8.9
+BETA-3.4.3
+- Added item Rapid Fire which lets you left or right click
+- Removed auto sign updating. From now on it will only update when needed which is when a game is finished
+- Move efficiency updates
+
+BETA-3.4.2
+- Made all saving to playerdata.yml save at the end of the game which should lower lag a lot
+
+BETA-3.4.1
+- Reimplemented setting some Stat values to finally fix lag
+- Reimplemented nametags
+- Made saving at the end a big more efficient
+
+BETA-3.4.0
+- Added team square on Lobby Scoreboard
+- Attempted to fix lag again
+- Had to temp disable hits counter
+- Had to temp disable shots counter
+
+BETA-3.3.9
 - Fixed giving back wool helmet after flag drop if give-wool is false
 - Made banners face where they were set or dropped
 - Attempted to fix lag
 - Added more SQL stuff
+- Made loading much better
 
 BETA-3.3.8
 - Added new Leaderboard type!

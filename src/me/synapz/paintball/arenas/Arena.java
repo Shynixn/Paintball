@@ -428,6 +428,12 @@ public class Arena {
         List<PaintballPlayer> copiedList = new ArrayList<>(allPlayers.values());
         for (PaintballPlayer player : copiedList)
             player.leave();
+
+        // Save states
+        Settings.PLAYERDATA.saveFile();
+        // Update the save stats
+        ArenaManager.getArenaManager().updateAllSignsOnServer();
+
         allPlayers = new HashMap<>();
         lobby = new ArrayList<>();
         spectators = new ArrayList<>();

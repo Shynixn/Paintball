@@ -8,6 +8,7 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -137,17 +138,15 @@ public class ArenaManager {
                     sign.update();
                     break;
                 case LEADERBOARD:
-                    StatType type = null;
-                    for (StatType t : StatType.values()) {
-                        if (t.getSignName().equalsIgnoreCase(sign.getLine(2).replace(" ", "").replace("/", ""))) {
-                            type = t;
-                        }
-                    }
+                    StatType type = StatType.getStatType(null, sign.getLine(2));
+
                     if (type == null) {
                         signLoc.removeSign();
                         return;
                     }
+
                     HashMap<String, String> playerAndStat = PLAYERDATA.getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+
                     sign.setLine(1, playerAndStat.keySet().toArray()[0] + "");
                     sign.setLine(3, playerAndStat.values().toArray()[0] + "");
                     sign.update();

@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -124,14 +125,25 @@ public class CoinItems implements Listener {
                 player.getInventory().remove(player.getItemInHand());
             }
         };
-    }
 
-    public CoinItem getMainItem() {
-        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Utils.DEFAULT_SOUND) {
+        new CoinItem(Items.RAPID_FIRE) {
+            @Override
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
                 Utils.shootSnowball(player, event.getArena(), 0.1);
+            }
+        };
+    }
+
+    public CoinItem getMainItem() {
+        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Utils.DEFAULT_SOUND) {
+            @Override
+            public void onClickItem(ArenaClickItemEvent event) {
+                Player player = event.getArenaPlayer().getPlayer();
+
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                    Utils.shootSnowball(player, event.getArena(), 0.1);
             }
         };
         return item;

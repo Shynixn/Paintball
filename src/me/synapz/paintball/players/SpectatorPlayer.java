@@ -106,4 +106,11 @@ public class SpectatorPlayer extends PaintballPlayer {
         skull.setItemMeta(meta);
         return skull;
     }
+
+    @Override
+    public void updateDisplayName() {
+        if (pbSb != null) {
+            pbSb.setDisplayNameCounter("", Utils.getCurrentCounter(arena));
+        }
+    }
 }

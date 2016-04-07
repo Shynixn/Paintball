@@ -57,9 +57,7 @@ public class Paintball extends JavaPlugin implements Listener {
 
         getCommand("paintball").setExecutor(commandManager);
 
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            ArenaManager.getArenaManager().updateAllSignsOnServer();
-        }, 0L, (long) Settings.SIGN_UPDATE_TIME);
+        ArenaManager.getArenaManager().updateAllSignsOnServer();
 
         try {
             Metrics metrics = new Metrics(this);

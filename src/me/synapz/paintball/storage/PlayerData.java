@@ -62,9 +62,6 @@ public final class PlayerData extends PaintballFile {
             case ACCURACY:
                 return;
             case HIGEST_KILL_STREAK:
-                // killstreak is less than past killstreak, return
-                if (getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath(id)) >= player.getKillStreak())
-                    return;
                 getFileConfig().set(StatType.HIGEST_KILL_STREAK.getPath(id), player.getKillStreak());
                 return;
             case GAMES_PLAYED:
@@ -78,7 +75,18 @@ public final class PlayerData extends PaintballFile {
         }
 
         addOneToPath(type.getPath(id));
-        saveFile();
+    }
+
+    public void addToStat(StatType type, ArenaPlayer arenaPlayer, int toAdd) {
+        UUID id = ((OfflinePlayer) arenaPlayer.getPlayer()).getUniqueId();
+
+        getFileConfig().set(type.getPath(id), getFileConfig().getInt(type.getPath(id)) + toAdd);
+    }
+
+    public void setStat(StatType type, ArenaPlayer arenaPlayer, int toSet) {
+        UUID id = ((OfflinePlayer) arenaPlayer.getPlayer()).getUniqueId();
+
+        getFileConfig().set(type.getPath(id), toSet);
     }
 
     // Resets a specific stat

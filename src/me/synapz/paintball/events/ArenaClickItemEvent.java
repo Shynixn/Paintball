@@ -5,6 +5,7 @@ import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.block.Action;
 
 public class ArenaClickItemEvent extends Event {
 
@@ -12,11 +13,13 @@ public class ArenaClickItemEvent extends Event {
     private ArenaPlayer arenaPlayer;
     private Arena arena;
     private CoinItem coinItem;
+    private Action action;
 
-    public ArenaClickItemEvent(ArenaPlayer arenaPlayer, CoinItem coinItem) {
+    public ArenaClickItemEvent(ArenaPlayer arenaPlayer, CoinItem coinItem, Action action) {
         this.arenaPlayer = arenaPlayer;
         this.coinItem = coinItem;
         this.arena = arenaPlayer.getArena();
+        this.action = action;
     }
 
     public ArenaPlayer getArenaPlayer() {
@@ -29,6 +32,10 @@ public class ArenaClickItemEvent extends Event {
 
     public Arena getArena() {
         return this.arena;
+    }
+
+    public Action getAction() {
+        return action;
     }
 
     public HandlerList getHandlers() {

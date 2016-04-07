@@ -103,7 +103,6 @@ public class PaintballScoreboard {
             lines.put(index, name);
             index++;
         }
-        updateNametags();
         return this;
     }
 
@@ -124,30 +123,14 @@ public class PaintballScoreboard {
     }
 
     public PaintballScoreboard updateNametags() {
-        // TODO: Remove.
-        /*
-        for (ArenaPlayer arenaPlayer : pbPlayer.getArena().getAllArenaPlayers()) {
-            final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(arenaPlayer.getTeam().getTitleName());
+        for (PaintballPlayer pbPlayer : this.pbPlayer.getArena().getAllPlayers().values()) {
+            final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(pbPlayer.getTeam().getTitleName());
             playerTeam.setAllowFriendlyFire(false);
-            playerTeam.setPrefix(String.valueOf(arenaPlayer.getTeam().getChatColor()));
-            playerTeam.setSuffix(" " + Settings.THEME + (arenaPlayer.getHealth()) + ChatColor.RED + "❤");
-            playerTeam.addPlayer(arenaPlayer.getPlayer());
-        }
-        for (LobbyPlayer lobbyPlayer : pbPlayer.getArena().getLobbyPlayers()) {
-            final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(lobbyPlayer.getTeam().getTitleName());
-            playerTeam.setAllowFriendlyFire(false);
-            playerTeam.setPrefix(String.valueOf(lobbyPlayer.getTeam().getChatColor()));
-            playerTeam.addPlayer(lobbyPlayer.getPlayer());
-        }
-        for (SpectatorPlayer spectatorPlayer : pbPlayer.getArena().getSpectators()) {
-            final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(spectatorPlayer.getTeam().getTitleName());
-            playerTeam.setAllowFriendlyFire(false);
-            playerTeam.setPrefix(ChatColor.GRAY + String.valueOf(spectatorPlayer.getTeam().getChatColor()));
-            playerTeam.addPlayer(spectatorPlayer.getPlayer());
+            playerTeam.setPrefix(String.valueOf(pbPlayer.getTeam().getChatColor()));
+            playerTeam.addPlayer(pbPlayer.getPlayer());
         }
         player.setScoreboard(sb);
 
-        */
         return this;
     }
 

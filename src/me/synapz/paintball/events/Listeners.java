@@ -303,8 +303,6 @@ public class Listeners implements Listener {
             Messenger.error(arenaPlayer.getPlayer(), "You cannot hit players while you are protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(shooterPlayerName).getCounter() + " seconds");
             event.setCancelled(true);
         } else {
-            Settings.PLAYERDATA.incrementStat(StatType.HITS, arenaPlayer);
-
             if (hitPlayer.hit()) {
                 String action = "shot";
                 CoinItem clickedItem = null;
@@ -316,6 +314,7 @@ public class Listeners implements Listener {
                     action = clickedItem.getAction();
                 arenaPlayer.kill(hitPlayer, action);
             } else {
+                arenaPlayer.incrementHits();
                 Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
             }
         }

@@ -20,6 +20,9 @@ public class CTFArenaPlayer extends ArenaPlayer {
     private boolean isFlagHolder = false;
     private Team heldFlag;
 
+    private int captured;
+    private int dropped;
+
     public CTFArenaPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
     }
@@ -55,7 +58,7 @@ public class CTFArenaPlayer extends ArenaPlayer {
     }
 
     public void dropFlag() {
-        Settings.PLAYERDATA.incrementStat(StatType.FLAGS_DROPPED, this);
+        dropped++;
 
         ctfArena.addFlagLocation(getLastLocation(), heldFlag);
         Utils.createFlag(heldFlag, getLastLocation());
@@ -66,7 +69,7 @@ public class CTFArenaPlayer extends ArenaPlayer {
     }
 
     public void scoreFlag() {
-        Settings.PLAYERDATA.incrementStat(StatType.FLAGS_CAPTURED, this);
+        captured++;
 
         arena.incrementTeamScore(team);
         arena.updateAllScoreboard();
@@ -94,5 +97,14 @@ public class CTFArenaPlayer extends ArenaPlayer {
 
         isFlagHolder = false;
         heldFlag = null;
+    }
+
+    @Override
+    public void leave() {
+        super.leave();
+
+        Settings.PLAYERDATA.addToStat(StatType.FLAGS_CAPTURED, this, captured);
+        Settings.PLAYERDATA.addToStat(StatType.FLAGS_DROPPED, this, dropped);
+        Settings.PLAYERDATA.saveFile();
     }
 }

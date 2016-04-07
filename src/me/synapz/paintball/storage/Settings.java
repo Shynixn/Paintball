@@ -20,10 +20,6 @@ import java.util.Map;
 
 public class Settings {
 
-    // Constants
-    public static int SIGN_UPDATE_TIME;
-    public static int CONFIG_VERSION;
-
     public static String PREFIX;
     public static String VERSION;
     public static String THEME;
@@ -66,7 +62,6 @@ public class Settings {
         this.pb = pb;
 
         loadFromJar("config.yml");
-        loadFromJar("database.yml");
 
         PLAYERDATA = new PlayerData(pb);
 
@@ -93,7 +88,6 @@ public class Settings {
         PREFIX                      = ChatColor.translateAlternateColorCodes('&', loadString("prefix"));
         THEME                       = ChatColor.translateAlternateColorCodes('&', loadString("theme-color"));
         SECONDARY                   = ChatColor.translateAlternateColorCodes('&', loadString("secondary-color"));
-        SIGN_UPDATE_TIME            = loadInt("sign-update-time");
         VAULT                       = loadBoolean("vault");
         TITLE                       = loadBoolean("title");
         HOLOGRAPHIC_DISPLAYS        = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
