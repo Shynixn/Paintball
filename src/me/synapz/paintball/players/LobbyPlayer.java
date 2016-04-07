@@ -133,7 +133,9 @@ public class LobbyPlayer extends PaintballPlayer {
             int spot = items.indexOf(item);
             player.getInventory().setItem(spot, items.get(spot));
         }
-        giveWoolHelmet();
+
+        if (arena.LOBBY_WOOL_HELMET)
+            giveWoolHelmet();
         player.updateInventory();
     }
 
@@ -157,7 +159,9 @@ public class LobbyPlayer extends PaintballPlayer {
 
         pbSb.updateNametags();
         giveItems();
-        giveWoolHelmet();
+
+        if (arena.LOBBY_WOOL_HELMET)
+            giveWoolHelmet();
         new ChangeTeamCountdown(arena.TEAM_SWITCH_COOLDOWN, player);
     }
 }

@@ -124,6 +124,8 @@ public class PaintballScoreboard {
     }
 
     public PaintballScoreboard updateNametags() {
+        // TODO: Remove.
+        /*
         for (ArenaPlayer arenaPlayer : pbPlayer.getArena().getAllArenaPlayers()) {
             final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(arenaPlayer.getTeam().getTitleName());
             playerTeam.setAllowFriendlyFire(false);
@@ -144,6 +146,8 @@ public class PaintballScoreboard {
             playerTeam.addPlayer(spectatorPlayer.getPlayer());
         }
         player.setScoreboard(sb);
+
+        */
         return this;
     }
 

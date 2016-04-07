@@ -1,5 +1,7 @@
 package me.synapz.paintball.commands.arena;
 
+import me.synapz.paintball.arenas.ELMArena;
+import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -16,6 +18,11 @@ public class SetMax extends ArenaCommand {
             max = Integer.parseInt(maxString);
         } catch (NumberFormatException e) {
             Messenger.error(player, maxString + " is not a valid number!");
+            return;
+        }
+
+        if (arena instanceof ELMArena) {
+            Messenger.error(player, "The max for an " + ArenaType.ELM.getFullName() + " arena is already set to the amount of teams, so there is one person per team. Because of this, you do not need to set a max");
             return;
         }
 

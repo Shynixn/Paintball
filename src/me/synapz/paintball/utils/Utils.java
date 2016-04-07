@@ -6,12 +6,15 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.countdowns.PaintballCountdown;
 import org.bukkit.*;
+import org.bukkit.block.Banner;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
@@ -26,6 +29,7 @@ import static org.bukkit.ChatColor.RED;
 public class Utils {
 
     public static Sound DEFAULT_SOUND;
+    private static BlockFace[] radial = { BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST };
 
     static {
         try {
@@ -94,6 +98,26 @@ public class Utils {
         banner.setItemMeta(meta);
 
         return banner;
+    }
+
+    public static void createFlag(Team team, Location location) {
+        // Sets the location to a banner then updates the banner to the team color
+        location.getBlock().setType(Material.STANDING_BANNER);
+        Banner banner = (Banner) location.getBlock().getState();
+        banner.setBaseColor(team.getDyeColor());
+
+        // Turns the banner based on the yaw
+        org.bukkit.material.Banner bannerData = (org.bukkit.material.Banner) banner.getData();
+        bannerData.setFacingDirection(Utils.yawToFace(location.getYaw() + 180));
+        banner.setData(bannerData);
+
+        // Updates the banner
+        banner.update();
+
+    }
+
+    public static BlockFace yawToFace(float yaw) {
+        return radial[Math.round(yaw / 45f) & 0x7];
     }
 
     public static double secondsToMin(int seconds) {

@@ -70,6 +70,8 @@ public final class PlayerData extends PaintballFile {
             case GAMES_PLAYED:
                 if (player.isWinner())
                     addOneToPath(StatType.WINS.getPath(id));
+                else if (player.isTie())
+                    addOneToPath(StatType.TIES.getPath(id));
                 else
                     addOneToPath(StatType.DEFEATS.getPath(id));
                 break; // not return; because it still has to increment the games played

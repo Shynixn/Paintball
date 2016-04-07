@@ -20,6 +20,7 @@ public enum StatType {
     GAMES_PLAYED("Games Played", ".Games-Played", "gamesplayed"),
     WINS("Wins", ".Wins", "wins"),
     DEFEATS("Defeats", ".Defeats", "defeats"),
+    TIES("Ties", ".Ties", "ties"),
 
     FLAGS_CAPTURED("Flags Captured", ".Flags-Captured", "flagscaptured"),
     FLAGS_DROPPED("Flags Dropped", ".Flags-Dropped", "flagsdropped"),

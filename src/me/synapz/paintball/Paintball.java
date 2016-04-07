@@ -30,12 +30,9 @@ public class Paintball extends JavaPlugin implements Listener {
 
         /*
         Non-Important Things
-        - Make it so if the config values are not found it sets it in. - (Still does not work for things not in default
-        - Team Pick bug where teams might not be an even number
         - Leave signs
         - Spectator join signs
         - Tie support
-        - Leaderboard sign for times played, counted from when a player leaves how much time the arena has been at
         - Spectator thing add next page
         - Way better ActionBar
         - Fix double messages

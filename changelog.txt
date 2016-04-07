@@ -1,3 +1,18 @@
+BETA-3.8.9
+- Fixed giving back wool helmet after flag drop if give-wool is false
+- Made banners face where they were set or dropped
+- Attempted to fix lag
+- Added more SQL stuff
+
+BETA-3.3.8
+- Added new Leaderboard type!
+    - Ties
+- Made setholo work better for increased Leaderboard size
+- Added wool-helmet value for lobby and arena player
+
+BETA-3.3.7
+- Added Elimination game mode!
+
 BETA-3.3.6
 - Fixed spelling mistake
 - Fixed loosing Gun when put inside a Coin Shop

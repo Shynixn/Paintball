@@ -6,7 +6,8 @@ import org.bukkit.entity.Player;
 public enum ArenaType {
 
     CTF("Capture the Flag", "ctf"),
-    TDM("Team Deathmatch", "tdm");
+    TDM("Team Deathmatch", "tdm"),
+    ELM("Elimination", "elm");
 
     private String fullName;
     private String shortName;

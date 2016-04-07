@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class CTFArenaPlayer extends ArenaPlayer {
 
@@ -57,7 +58,7 @@ public class CTFArenaPlayer extends ArenaPlayer {
         Settings.PLAYERDATA.incrementStat(StatType.FLAGS_DROPPED, this);
 
         ctfArena.addFlagLocation(getLastLocation(), heldFlag);
-        makeBanner(heldFlag, getLastLocation());
+        Utils.createFlag(heldFlag, getLastLocation());
 
         arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + player.getName() + " has dropped the flag!");
 
@@ -73,10 +74,7 @@ public class CTFArenaPlayer extends ArenaPlayer {
         arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + "The " + team.getTitleName() + " has scored a flag!");
 
         Location toReset = ctfArena.getFlagLocation(heldFlag);
-        toReset.getBlock().setType(Material.STANDING_BANNER);
-        Banner banner = (Banner) toReset.getBlock().getState();
-        banner.setBaseColor(heldFlag.getDyeColor());
-        banner.update();
+        Utils.createFlag(heldFlag, toReset);
 
         removeFlag();
     }
@@ -85,19 +83,13 @@ public class CTFArenaPlayer extends ArenaPlayer {
         return isFlagHolder;
     }
 
-    private void makeBanner(Team dropedTeam, Location loc) {
-        Block block = loc.getBlock();
-
-        block.setType(Material.STANDING_BANNER);
-
-        Banner banner = (Banner) block.getState();
-
-        banner.setBaseColor(dropedTeam.getDyeColor());
-        banner.update();
-    }
-
     private void removeFlag() {
-        player.getInventory().setHelmet(Utils.makeWool(team.getChatColor() + team.getTitleName() + " Team", team.getDyeColor()));
+        if (arena.ARENA_WOOL_HELMET)
+            player.getInventory().setHelmet(Utils.makeWool(team.getChatColor() + team.getTitleName() + " Team", team.getDyeColor()));
+        else
+            player.getInventory().setArmorContents(colorLeatherItems(new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_HELMET)));
+
+
         player.updateInventory();
 
         isFlagHolder = false;

@@ -34,7 +34,7 @@ public class SetHolo extends StatCommand {
             return;
         }
 
-        Settings.ARENA.addLeaderboard(player.getLocation().add(0, 4, 0), type, page, true);
+        Settings.ARENA.addLeaderboard(player.getLocation().add(0, 4.5, 0), type, page, true);
         Messenger.success(player, "Hologram leaderboard set to your location!");
     }
 
