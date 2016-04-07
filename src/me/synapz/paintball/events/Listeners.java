@@ -10,6 +10,7 @@ import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
+import me.synapz.paintball.storage.Database;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
@@ -38,6 +39,17 @@ import org.bukkit.inventory.ItemStack;
 
 public class Listeners implements Listener {
 
+    //When a player joins, check if they are from a bungee server and send them to the arena if they are
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        Player player = e.getPlayer();
+        //detect if they have been called over by bungee
+        if (Database.bungeePlayers.containsKey(player.getUniqueId())) {
+            //if yes, send them to their arena
+            Database.bungeePlayers.get(player.getUniqueId()).joinLobby(player, null);
+        }
+    }
+
     // When ever a player leaves the game, make them leave the arena so they get their stuff
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onArenaQuit(PlayerQuitEvent e) {
@@ -64,17 +76,17 @@ public class Listeners implements Listener {
         if (!e.getMessage().contains("/") || baseCommand == null)
             return;
 
-        if (isInArena(player)){
+        if (isInArena(player)) {
             Arena arena = getArena(player);
 
             // If the command is in blocked commands, block it. If the command is in allowed commands, return.
-            if (arena.BLOCKED_COMMANDS.contains(baseCommand)){
+            if (arena.BLOCKED_COMMANDS.contains(baseCommand)) {
                 e.setCancelled(true);
                 Messenger.error(player, "That command is disabled while in the arena.");
                 return;
-            } else if (arena.ALLOWED_COMMANDS.contains(baseCommand)){
+            } else if (arena.ALLOWED_COMMANDS.contains(baseCommand)) {
                 return;
-            } else if (arena.ALL_PAINTBALL_COMMANDS && baseCommand.equals("/pb") || baseCommand.equals("/paintball")){
+            } else if (arena.ALL_PAINTBALL_COMMANDS && baseCommand.equals("/pb") || baseCommand.equals("/paintball")) {
                 return;
             } else if (arena.DISABLE_ALL_COMMANDS) {
                 e.setCancelled(true);
@@ -296,7 +308,7 @@ public class Listeners implements Listener {
             return;
         }
 
-        if(ProtectionCountdown.godPlayers.keySet().contains(hitPlayerName)) {
+        if (ProtectionCountdown.godPlayers.keySet().contains(hitPlayerName)) {
             Messenger.error(arenaPlayer.getPlayer(), "That player is currently safe from Paintballs. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
             event.setCancelled(true);
         } else if (ProtectionCountdown.godPlayers.keySet().contains(shooterPlayerName)) {
@@ -353,7 +365,7 @@ public class Listeners implements Listener {
             clickedFlag = ((CTFArena) arena).getDropedFlagLocations().get(clickedLoc);
         } else {
             // Otherwise check if the banner is in one of the set flag locations
-            for (Team team : arena.getArenaTeamList()){
+            for (Team team : arena.getArenaTeamList()) {
                 Location flagLoc = ((CTFArena) arena).getFlagLocation(team);
 
                 if (flagLoc.getBlockX() == clickedLoc.getBlockX()

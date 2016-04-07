@@ -3,12 +3,15 @@ package me.synapz.paintball.arenas;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.google.common.base.Joiner;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
+<<<<<<< HEAD
 import org.bukkit.Bukkit;
+=======
+import me.synapz.paintball.utils.Messenger;
+>>>>>>> f6365358a7e91a30cc5dddf472f353f6e4e81a1b
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -19,18 +22,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import static me.synapz.paintball.storage.Settings.PLAYERDATA;
-import static me.synapz.paintball.storage.Settings.THEME;
+import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.*;
 
 public class ArenaManager {
 
-    private ArenaManager() {}
-
     private static ArenaManager instance = new ArenaManager();
-
     // HashMap with arena's name to arena, makes it way more efficient to get an arena from a string
     private HashMap<String, Arena> arenas = new HashMap<>();
+
+    private ArenaManager() {
+    }
 
     public static ArenaManager getArenaManager() {
         return instance;
@@ -124,7 +126,7 @@ public class ArenaManager {
     // Updates every type of sign (Leaderboard, Join, Autojoin)
     public void updateAllSignsOnServer() {
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
-
+        DATABASE.updateBungeeSigns();
         for (SignLocation signLoc : Settings.ARENA.getSigns().values()) {
             if (!(signLoc.getLocation().getBlock().getState() instanceof Sign)) {
                 signLoc.removeSign();
