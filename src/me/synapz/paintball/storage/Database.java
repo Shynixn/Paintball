@@ -118,6 +118,29 @@ public class Database extends PaintballFile implements PluginMessageListener {
         return yaml;
     }
 
+    public static void updateBungeeSigns() {
+        int numb = 0;
+        String arenas = "";
+        String sign = "";
+        for (String an : ArenaManager.getArenaManager().getArenas().keySet()) {
+            Arena a = ArenaManager.getArenaManager().getArenas().get(an);
+            if (numb != 0) {
+                arenas = arenas + ":" + a.getName();
+                sign = sign + ":" + a.getStateAsString();
+            } else {
+                arenas = arenas + a.getName();
+                sign = sign + a.getStateAsString();
+            }
+        }
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Paintball");
+        out.writeUTF("Arenas");
+        out.writeUTF(SID);
+        out.writeUTF(arenas);
+        out.writeUTF(sign);
+        Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
+    }
+
     private Object loadValue(String path) {
         Object value = fileConfig.get(path);
 
@@ -143,11 +166,11 @@ public class Database extends PaintballFile implements PluginMessageListener {
         return SQL;
     }
 
+    //SQL
+
     private int loadInt(String path) {
         return (int) loadValue(path);
     }
-
-    //SQL
 
     private String loadString(String path) {
         return (String) loadValue(path);
@@ -156,6 +179,8 @@ public class Database extends PaintballFile implements PluginMessageListener {
     private boolean loadBoolean(String path) {
         return (boolean) loadValue(path);
     }
+
+    //Bungee
 
     public void setupSQL(Plugin pb, String host, String username, String password, String database) {
         SQL = true;
@@ -185,8 +210,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
             Bukkit.getLogger().info("Failed to download SQL backup!");
         }
     }
-
-    //Bungee
 
     public void onPluginMessageReceived(String channel, Player sender, byte[] message) {
         if (!channel.equals("BungeeCord")) {
@@ -223,34 +246,10 @@ public class Database extends PaintballFile implements PluginMessageListener {
                         out1.writeUTF("false");
                         Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
                     }
-
-                    //update signs
+                    updateBungeeSigns();
                 }
             }
         }
-    }
-
-    public void updateBungeeSigns() {
-        int numb = 0;
-        String arenas = "";
-        String sign = "";
-        for (String an : ArenaManager.getArenaManager().getArenas().keySet()) {
-            Arena a = ArenaManager.getArenaManager().getArenas().get(an);
-            if (numb != 0) {
-                arenas = arenas + ":" + a.getName();
-                sign = sign + ":" + a.getStateAsString();
-            } else {
-                arenas = arenas + a.getName();
-                sign = sign + a.getStateAsString();
-            }
-        }
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Paintball");
-        out.writeUTF("Arenas");
-        out.writeUTF(SID);
-        out.writeUTF(arenas);
-        out.writeUTF(sign);
-        Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
     }
 
 }
