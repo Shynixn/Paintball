@@ -118,28 +118,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
         return yaml;
     }
 
-    public Boolean isBungee() {
-        return bungee;
-    }
-
-    public Boolean isSQL() {
-        return SQL;
-    }
-
-    private int loadInt(String path) {
-        return (int) loadValue(path);
-    }
-
-    private String loadString(String path) {
-        return (String) loadValue(path);
-    }
-
-    private boolean loadBoolean(String path) {
-        return (boolean) loadValue(path);
-    }
-
-    //SQL
-
     private Object loadValue(String path) {
         Object value = fileConfig.get(path);
 
@@ -155,6 +133,28 @@ public class Database extends PaintballFile implements PluginMessageListener {
 
     private void setValue(String path, Object object) {
         fileConfig.set(path, object);
+    }
+
+    public Boolean isBungee() {
+        return bungee;
+    }
+
+    public Boolean isSQL() {
+        return SQL;
+    }
+
+    private int loadInt(String path) {
+        return (int) loadValue(path);
+    }
+
+    //SQL
+
+    private String loadString(String path) {
+        return (String) loadValue(path);
+    }
+
+    private boolean loadBoolean(String path) {
+        return (boolean) loadValue(path);
     }
 
     public void setupSQL(Plugin pb, String host, String username, String password, String database) {
