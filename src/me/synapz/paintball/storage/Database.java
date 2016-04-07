@@ -62,7 +62,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
     public static FileConfiguration addStats(FileConfiguration yaml) {
         YamlConfiguration statsYaml = new YamlConfiguration();
         try {
-            ResultSet result = executeQuery("SELECT statsFROM `Paintball_Stats` WHERE id = '1';");
+            ResultSet result = executeQuery("SELECT stats FROM `Paintball_Stats` WHERE id = '1';");
             result.next();
             String base64Stats = result.getString("stats");
             String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
@@ -172,7 +172,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
         try {
             Connection conn;
             conn = DriverManager.getConnection(host, username, password);
-            PreparedStatement sql = conn.prepareStatement("SELECT statsFROM `Paintball_Stats` WHERE id = '1';");
+            PreparedStatement sql = conn.prepareStatement("SELECT stats FROM `Paintball_Stats` WHERE id = '1';");
             ResultSet result = sql.executeQuery();
             result.next();
             String encoded = result.getString("stats");
