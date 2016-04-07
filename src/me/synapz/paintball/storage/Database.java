@@ -35,8 +35,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
     public Database(Plugin pb) {
         super(pb, "database.yml");
 
-
-        // TODO: Load all values through loadString, loadInt, or loadBoolean, which checks to make sure the values are not null
         if (loadBoolean("SQL.enabled")) {
             SQL = true;
             host = loadString("SQL.host");
@@ -62,7 +60,10 @@ public class Database extends PaintballFile implements PluginMessageListener {
     public static FileConfiguration addStats(FileConfiguration yaml) {
         YamlConfiguration statsYaml = new YamlConfiguration();
         try {
-            ResultSet result = executeQuery("SELECT stats FROM `Paintball_Stats` WHERE id = '1';");
+            Connection conn;
+            conn = DriverManager.getConnection(host, username, password);
+            PreparedStatement sql = conn.prepareStatement("SELECT stats FROM `Paintball_Stats` WHERE id = '1';");
+            ResultSet result = sql.executeQuery();
             result.next();
             String base64Stats = result.getString("stats");
             String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
@@ -105,21 +106,16 @@ public class Database extends PaintballFile implements PluginMessageListener {
         byte[] byteArray = statsYaml.saveToString().getBytes();
         String encoded = Base64.getEncoder().encode(byteArray).toString();
         yaml.set("Stats", encoded);
-        executeQuery("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
-        return yaml;
-    }
-
-    private static ResultSet executeQuery(String query) {
-        Connection conn;
         try {
+            Connection conn;
             conn = DriverManager.getConnection(host, username, password);
-            PreparedStatement sql = conn.prepareStatement(query);
-            ResultSet result = sql.executeQuery();
-            return result;
-        } catch (Exception e) {
+            PreparedStatement sql = conn.prepareStatement("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
+            sql.execute();
+        } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            Bukkit.getLogger().info("Failed to upload SQL!");
         }
+        return yaml;
     }
 
     public Boolean isBungee() {
@@ -142,6 +138,8 @@ public class Database extends PaintballFile implements PluginMessageListener {
         return (boolean) loadValue(path);
     }
 
+    //SQL
+
     private Object loadValue(String path) {
         Object value = fileConfig.get(path);
 
@@ -159,7 +157,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
         fileConfig.set(path, object);
     }
 
-    //TODO: Work on SQL stuff down here
     public void setupSQL(Plugin pb, String host, String username, String password, String database) {
         SQL = true;
         Database.host = host;
@@ -167,13 +164,16 @@ public class Database extends PaintballFile implements PluginMessageListener {
         Database.password = password;
         this.database = database;
         this.pb = pb;
-        executeQuery("CREATE DATABASE IF NOT EXISTS " + database);
-        executeQuery("CREATE TABLE IF NOT EXISTS Paintball_Stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
         try {
             Connection conn;
             conn = DriverManager.getConnection(host, username, password);
-            PreparedStatement sql = conn.prepareStatement("SELECT stats FROM `Paintball_Stats` WHERE id = '1';");
-            ResultSet result = sql.executeQuery();
+            PreparedStatement sql = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
+            sql.execute();
+            PreparedStatement sql0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS Paintball_Stats" +
+                    " (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
+            sql0.execute();
+            PreparedStatement sql1 = conn.prepareStatement("SELECT stats FROM `Paintball_Stats` WHERE id = '1';");
+            ResultSet result = sql1.executeQuery();
             result.next();
             String encoded = result.getString("stats");
             File file = new File(pb.getDataFolder(), "playerdata.yml");

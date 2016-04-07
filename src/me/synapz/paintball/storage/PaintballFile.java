@@ -25,7 +25,7 @@ public class PaintballFile extends File {
                 e.printStackTrace();
             }
         }
-        if (Database.SQL && this.getName().contains("PlayerData")) {
+        if (Database.SQL && this.getName().contains("playerdata")) {
             this.fileConfig = Database.addStats(YamlConfiguration.loadConfiguration(this));
         } else {
             this.fileConfig = YamlConfiguration.loadConfiguration(this);
@@ -35,7 +35,7 @@ public class PaintballFile extends File {
 
     public void saveFile() {
         try {
-            if (Database.SQL && this.getName().contains("PlayerData")) {
+            if (Database.SQL && this.getName().contains("playerdata")) {
                 Database.removeStats(fileConfig).save(this);
             } else {
                 fileConfig.save(this);
