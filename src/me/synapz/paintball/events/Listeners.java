@@ -267,7 +267,6 @@ public class Listeners implements Listener {
         }
     }
 
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Snowball snowball = event.getDamager() instanceof Snowball ? (Snowball) event.getDamager() : null;
@@ -324,6 +323,7 @@ public class Listeners implements Listener {
 
                 if (clickedItem != null)
                     action = clickedItem.getAction();
+
                 arenaPlayer.kill(hitPlayer, action);
             } else {
                 arenaPlayer.incrementHits();

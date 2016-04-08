@@ -40,10 +40,10 @@ public class ArenaStartCountdown extends PaintballCountdown {
 
     // Called every iteration of run()
     public void onIteration() {
-        String prefix = GREEN + "Starting ";
+        String prefix = GREEN + "Starting";
         String suffix = GRAY + "" + ((int) counter) + GREEN + " seconds!";
 
-        arena.broadcastMessage(prefix + suffix);
+        arena.broadcastMessage(prefix + " "+ suffix);
         arena.broadcastTitle(prefix, suffix, 0, 30, 20);
     }
 

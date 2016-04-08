@@ -1,3 +1,18 @@
+BETA-3.4.6
+- More lag fixes. Tested - Lag 100% removed
+
+BETA-3.4.5
+- Finally figured out reason for lag!
+- Other bug fixes
+
+BETA-3.4.4
+- Fixed double chat messages on arena chat
+- Fixed "Starting" title not being 100% center (OCD)
+- Fixed "Waiting" title not being 100% center (More OCD)
+- Fixed Lag? I debugged a lot and think the lag should be fixed!
+- Lots of new background SQL and Bungee stuff
+- Fixed some double messages when there is another chat plugin
+
 BETA-3.4.3
 - Added item Rapid Fire which lets you left or right click
 - Removed auto sign updating. From now on it will only update when needed which is when a game is finished

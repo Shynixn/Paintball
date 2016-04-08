@@ -112,7 +112,7 @@ public class PaintballScoreboard {
             String oldValue = lines.get(size);
             String newValue = team.getChatColor() + team.getTitleName() + ": " + SECONDARY + (asArenaPlayer ? (pbPlayer.getArena().MAX_SCORE - pbPlayer.getArena().getTeamScore(team)) : team.getSize());
 
-            sb.resetScores(Bukkit.getOfflinePlayer(oldValue));
+            sb.resetScores(oldValue);
             Score teamScore = objective.getScore(newValue);
             teamScore.setScore(size);
             lines.replace(size, oldValue, newValue);
@@ -138,7 +138,10 @@ public class PaintballScoreboard {
         String oldScore = lines.get(line);
         String newScore = sbLine.toString() + score;
 
-        sb.resetScores(Bukkit.getOfflinePlayer(oldScore));
+        if (oldScore == null)
+            return this;
+
+        sb.resetScores(oldScore);
         Score objScore = objective.getScore(newScore);
         objScore.setScore(line);
         lines.replace(line, lines.get(line), newScore);

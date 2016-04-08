@@ -11,15 +11,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class ChatSystem implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onChatInArena(AsyncPlayerChatEvent e) {
         Player player = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(player);
 
         if (a != null && a.containsPlayer(player)) {
             if (a.USE_ARENA_CHAT) {
-                PaintballPlayer pbPlayer = a.getPaintballPlayer(player);
-
                 a.getPaintballPlayer(player).chat(e.getMessage());
                 e.setCancelled(true);
             }

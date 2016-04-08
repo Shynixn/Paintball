@@ -206,7 +206,7 @@ public class ArenaPlayer extends PaintballPlayer {
     public boolean hit() {
         int newHealth = health--;
         if (newHealth != 1) {
-            arena.updateAllScoreboard();
+            updateScoreboard();
             return false;
         } else {
             setHealth(newHealth);
@@ -236,10 +236,8 @@ public class ArenaPlayer extends PaintballPlayer {
         arena.incrementTeamScore(team);
         arena.broadcastMessage(THEME + player.getName() + SECONDARY + " " + action + " " + THEME + arenaPlayer.getPlayer().getName());
 
-        // Updates all player's scoreboards
-        for (ArenaPlayer player : arena.getAllArenaPlayers()) {
-            player.updateScoreboard();
-        }
+        arena.updateAllScoreboard();
+
         // If the max score was reached set them to win
         if (reachedGoal()) {
             arena.win(Arrays.asList(team));
@@ -275,9 +273,6 @@ public class ArenaPlayer extends PaintballPlayer {
     public void setHealth(int newHealth) {
         health = newHealth;
         lastLocation = player.getLocation();
-
-        // This will set the hearts to what they should be above their name
-        arena.updateAllScoreboard();
 
         // This means they died, it just changes all the values
         if (health == 1) {

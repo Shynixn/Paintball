@@ -19,10 +19,10 @@ public class LobbyCountdown extends PaintballCountdown {
 
     // Called every iteration of run()
     public void onIteration() {
-        String prefix = GREEN + "Waiting ";
+        String prefix = GREEN + "Waiting";
         String suffix = GRAY + "" + ((int) counter) + GREEN + " seconds!";
 
-        arena.broadcastMessage(prefix + suffix);
+        arena.broadcastMessage(prefix + " " + suffix);
         arena.broadcastTitle(prefix, suffix, 20, 30, 20);
     }
 

@@ -7,11 +7,7 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
-<<<<<<< HEAD
-import org.bukkit.Bukkit;
-=======
 import me.synapz.paintball.utils.Messenger;
->>>>>>> f6365358a7e91a30cc5dddf472f353f6e4e81a1b
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -126,7 +122,9 @@ public class ArenaManager {
     // Updates every type of sign (Leaderboard, Join, Autojoin)
     public void updateAllSignsOnServer() {
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
+
         DATABASE.updateBungeeSigns();
+
         for (SignLocation signLoc : Settings.ARENA.getSigns().values()) {
             if (!(signLoc.getLocation().getBlock().getState() instanceof Sign)) {
                 signLoc.removeSign();

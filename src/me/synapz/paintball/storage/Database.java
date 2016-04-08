@@ -1,14 +1,10 @@
 package me.synapz.paintball.storage;
 
-<<<<<<< HEAD
-import me.synapz.paintball.enums.Databases;
-=======
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
->>>>>>> f6365358a7e91a30cc5dddf472f353f6e4e81a1b
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -21,22 +17,6 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-<<<<<<< HEAD
-import java.util.Base64;
-import java.util.Random;
-import java.util.Set;
-
-public class Database extends PaintballFile {
-
-    private Plugin pb = null;
-    private Boolean bungee = false;
-    private String host = null;
-    private Integer port = null;
-    private String username = null;
-    private String password = null;
-    private String database = null;
-    private boolean sql = false;
-=======
 import java.util.*;
 
 public class Database extends PaintballFile implements PluginMessageListener {
@@ -51,101 +31,10 @@ public class Database extends PaintballFile implements PluginMessageListener {
     public Boolean bungee = false;
     private String BID = null;
     private String database = null;
->>>>>>> f6365358a7e91a30cc5dddf472f353f6e4e81a1b
 
     public Database(Plugin pb) {
         super(pb, "database.yml");
 
-<<<<<<< HEAD
-        sql = loadBoolean(Databases.SQL_ENABLED);
-        host = loadString(Databases.HOST);
-        port = loadInt(Databases.PORT);
-        username = loadString(Databases.USERNAME);
-        password = loadString(Databases.PASSWORD);
-        database = loadString(Databases.DATABASE);
-
-        bungee = loadBoolean(Databases.BUNGEE_ENABLED);
-
-        if (loadString(Databases.SERVER_ID).equalsIgnoreCase("Generate")) {
-            Random r = new Random(5);
-            String base10ServerID = r.doubles(1073741824).toString();
-            String serverID = Base64.getEncoder().encodeToString(base10ServerID.getBytes());
-            setValue("Bungee.serverID", serverID);
-            //run a method to start the listening for bungee commands
-        }
-    }
-
-    public Boolean isBungee() {
-        return bungee;
-    }
-
-    public Boolean isSQL() {
-        return sql;
-    }
-
-    /*
-    If any of the following are null (not set) this will set the file with the default value
-    and return the default value.
-     */
-    private int loadInt(Databases type) {
-        if (isFoundInConfig(type))
-            return (int) loadValue(type);
-        else
-            fileConfig.set(type.getPath(), type.getDefaultInt());
-
-        saveFile();
-
-        return type.getDefaultInt();
-    }
-
-    private String loadString(Databases type) {
-        if (isFoundInConfig(type))
-            return (String) loadValue(type);
-        else
-            fileConfig.set(type.getPath(), type.getDefaultString());
-
-        saveFile();
-
-        return type.getDefaultString();
-    }
-
-    private boolean loadBoolean(Databases type) {
-        if (isFoundInConfig(type))
-            return (boolean) loadValue(type);
-        else
-            fileConfig.set(type.getPath(), type.getDefaultBoolean());
-
-        saveFile();
-
-        return type.getDefaultBoolean();
-    }
-
-    private Object loadValue(Databases type) {
-        return fileConfig.get(type.getPath());
-    }
-
-    private boolean isFoundInConfig(Databases type) {
-        Object value = fileConfig.get(type.getPath());
-
-        return value != null;
-    }
-
-    private void setValue(String path, Object object) {
-        fileConfig.set(path, object);
-    }
-
-    //TODO: Work on SQL stuff down here
-    public void setupSQL(Plugin pb, String host, Integer port, String username, String password, String database) {
-        this.sql = true;
-        this.host = host;
-        this.port = port;
-        this.username = username;
-        this.password = password;
-        this.database = database;
-        this.pb = pb;
-        executeQuery("CREATE DATABASE IF NOT EXISTS " + database);
-        executeQuery("CREATE TABLE IF NOT EXISTS Paintball_Stats (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
-=======
         if (loadBoolean("SQL.enabled")) {
             SQL = true;
             host = loadString("SQL.host");
@@ -170,7 +59,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
 
     public static FileConfiguration addStats(FileConfiguration yaml) {
         YamlConfiguration statsYaml = new YamlConfiguration();
->>>>>>> f6365358a7e91a30cc5dddf472f353f6e4e81a1b
         try {
             Connection conn;
             conn = DriverManager.getConnection(host, username, password);
@@ -230,7 +118,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
         return yaml;
     }
 
+    // TODO: This is returning null and breaks this whole thing onEnable and on leave
     public static void updateBungeeSigns() {
+        /*
         int numb = 0;
         String arenas = "";
         String sign = "";
@@ -251,6 +141,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
         out.writeUTF(arenas);
         out.writeUTF(sign);
         Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
+        */
     }
 
     private Object loadValue(String path) {
