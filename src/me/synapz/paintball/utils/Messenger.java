@@ -90,7 +90,7 @@ public class Messenger {
         return SECONDARY + STRIKETHROUGH + Utils.makeSpaces(23) + RESET + DARK_GRAY + BOLD + STRIKETHROUGH + "[-" + RESET + THEME + " " + BOLD + title + " " + DARK_GRAY + BOLD + STRIKETHROUGH + "-]" + SECONDARY + STRIKETHROUGH + Utils.makeSpaces(23);
     }
 
-    private static String createPrefix(String suffix){
+    public static String createPrefix(String suffix){
         return THEME + BOLD + suffix + SUFFIX;
     }
 

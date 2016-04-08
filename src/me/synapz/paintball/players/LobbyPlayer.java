@@ -153,6 +153,7 @@ public class LobbyPlayer extends PaintballPlayer {
         team = newTeam;
         team.playerJoinTeam();
         Messenger.titleMsg(player, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
+        updateDisplayName();
 
         if (arena.TELEPORT_TEAM_SWITCH)
             player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));

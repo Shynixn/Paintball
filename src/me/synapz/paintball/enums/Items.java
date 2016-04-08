@@ -7,15 +7,15 @@ import org.bukkit.Sound;
 
 public enum Items {
 
-    TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Utils.DEFAULT_SOUND),
-    SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Utils.DEFAULT_SOUND),
-    RAPID_FIRE("Rapid Fire", Material.DIAMOND_HOE, true, 1, "Allows you to left or right click\nto shoot", 0, 4, 0, "", "", Utils.DEFAULT_SOUND),
-    AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", "plowed",  Utils.DEFAULT_SOUND),
-    ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted",  Utils.DEFAULT_SOUND),
-    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Utils.DEFAULT_SOUND),
-    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed",  Utils.DEFAULT_SOUND),
-    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended",  Utils.DEFAULT_SOUND),
-    NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Utils.DEFAULT_SOUND);
+    TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Utils.DEFAULT_SOUND, 0),
+    SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Utils.DEFAULT_SOUND, 0),
+    RAPID_FIRE("Rapid Fire", Material.DIAMOND_HOE, true, 1, "Allows you to left or right click\nto shoot", 0, 4, 0, "", "", Utils.DEFAULT_SOUND, 1),
+    AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", "plowed",  Utils.DEFAULT_SOUND, 1),
+    ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted",  Utils.DEFAULT_SOUND, 3),
+    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Utils.DEFAULT_SOUND, 3),
+    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed",  Utils.DEFAULT_SOUND, 3),
+    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended",  Utils.DEFAULT_SOUND, 3),
+    NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Utils.DEFAULT_SOUND, 0);
 
     @Override
     public String toString() {
@@ -33,8 +33,9 @@ public enum Items {
     private final String permission;
     private final String action;
     private final Sound sound;
+    private final int damage;
 
-    Items(String n, Material mat, boolean s, int a, String desc, double m, int c, int t, String p, String ac, Sound sound) {
+    Items(String n, Material mat, boolean s, int a, String desc, double m, int c, int t, String p, String ac, Sound sound, int dmg) {
         this.name = n;
         this.material = mat;
         this.amount = a;
@@ -46,6 +47,7 @@ public enum Items {
         this.permission = p;
         this.action = ac;
         this.sound = sound;
+        this.damage = dmg;
     }
 
     public String getName() {
@@ -92,6 +94,10 @@ public enum Items {
         return Settings.ITEMS.getSound(this);
     }
 
+    public int getDamage() {
+        return Settings.ITEMS.getDamage(this);
+    }
+
     public String getDefaultName() {
         return name;
     }
@@ -134,5 +140,9 @@ public enum Items {
 
     public Sound getDefaultSound() {
         return sound;
+    }
+
+    public int getDefaultDamage() {
+        return damage;
     }
 }

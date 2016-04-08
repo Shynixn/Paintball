@@ -55,6 +55,9 @@ public class Arena {
     public String SPEC_CHAT;
     public String CURRENCY;
 
+    public boolean FIREWORK_ON_DEATH;
+    public boolean STOP_PROT_ON_HIT;
+    public boolean ACCURACY;
     public boolean BROADCAST_WINNER;
     public boolean PER_TEAM_CHAT_LOBBY;
     public boolean PER_TEAM_CHAT_ARENA;
@@ -711,6 +714,9 @@ public class Arena {
         MONEY_PER_WIN               = ARENA.loadInt("Rewards.Money.per-win", this);
         MONEY_PER_DEFEAT            = ARENA.loadInt("Rewards.Money.per-defeat", this);
 
+        FIREWORK_ON_DEATH          = ARENA.loadBoolean("firework-on-death", this);
+        STOP_PROT_ON_HIT           = ARENA.loadBoolean("cancel-prot-on-hit", this);
+        ACCURACY                   = ARENA.loadBoolean("accuracy", this);
         PER_TEAM_CHAT_LOBBY        = ARENA.loadBoolean("Join-Lobby.per-team-chat", this);
         PER_TEAM_CHAT_ARENA        = ARENA.loadBoolean("Join-Arena.per-team-chat", this);
         COIN_SHOP                  = ARENA.loadBoolean("coin-shop", this);

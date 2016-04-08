@@ -13,13 +13,13 @@ import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.Arrays;
@@ -203,13 +203,14 @@ public class ArenaPlayer extends PaintballPlayer {
      * Otherwise just call setHealth() to do other stuff
      * @return If they player should die (0 health) or just subtract their health
      */
-    public boolean hit() {
-        int newHealth = health--;
-        if (newHealth != 1) {
+    public boolean hit(Team fromTeam, int damage) {
+        int newHealth = health -= damage;
+
+        if (newHealth > 0) {
             updateScoreboard();
             return false;
         } else {
-            setHealth(newHealth);
+            setHealth(fromTeam, newHealth);
             return true;
         }
     }
@@ -270,14 +271,23 @@ public class ArenaPlayer extends PaintballPlayer {
      * When ever someone changes the player's health do all this stuff
      * @param newHealth Health to be set to
      */
-    public void setHealth(int newHealth) {
+    public void setHealth(Team fromTeam, int newHealth) {
         health = newHealth;
         lastLocation = player.getLocation();
 
         // This means they died, it just changes all the values
-        if (health == 1) {
+        if (health == 0) {
             deaths++;
             lives--;
+
+            if (arena.FIREWORK_ON_DEATH) {
+                // Shots a firework from the team who killed them
+                final Firework firework = player.getWorld().spawn(player.getLocation().add(0, 4, 0), Firework.class);
+                FireworkMeta meta = firework.getFireworkMeta();
+                meta.addEffects(FireworkEffect.builder().withColor(fromTeam.getColor(), team.getColor()).withTrail().build());
+                firework.setVelocity(firework.getVelocity().multiply(10));
+                firework.setFireworkMeta(meta);
+            }
 
             // If they have no more lives turn them into a spectator player until the game ends
             if (arena.LIVES > 0 && lives == 0) {

@@ -1,3 +1,17 @@
+BETA-3.4.8
+- Fixed Protection messages
+- Added new config.yml value "cancel-prot-on-hit" to enchance game play
+    - cancel-prot-on-hit is default true
+    - It cancels a player's protection if they attack someone. It still protected from attackers until timer ends
+- Added fireworks on kill
+- Added config.yml option "fireworks-on-kill" to enable or disable fireworks
+
+BETA-3.4.7
+- Added accuracy to config to allow you to turn on perfect aim
+    - Your arenas.yml will auto update and config.yml will auto backup and make a new one with this value
+- Fixed scoreboard color block to set faster when team is changed
+- Added damage value in items.yml so you can set how much damage an item has (like rocket launcher should be 3 damage so 1 hit kill)
+
 BETA-3.4.6
 - More lag fixes. Tested - Lag 100% removed
 

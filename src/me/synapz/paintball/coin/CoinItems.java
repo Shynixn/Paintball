@@ -90,7 +90,7 @@ public class CoinItems implements Listener {
                 for (ArenaPlayer gamePlayer : arena.getAllArenaPlayers()) {
                     Team team = gamePlayer.getTeam();
                     if (team != safeTeam) {
-                        gamePlayer.setHealth(1);
+                        gamePlayer.setHealth(safeTeam, 0);
                         arenaPlayer.kill(gamePlayer, this.getAction());
                         gamePlayer.getPlayer().teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
                     }
@@ -137,13 +137,14 @@ public class CoinItems implements Listener {
     }
 
     public CoinItem getMainItem() {
-        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Utils.DEFAULT_SOUND) {
+        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Utils.DEFAULT_SOUND, 1) {
             @Override
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
+                Arena arena = event.getArena();
 
                 if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-                    Utils.shootSnowball(player, event.getArena(), 0.1);
+                    Utils.shootSnowball(player, event.getArena(), arena.ACCURACY ? 0 : 0.1);
             }
         };
         return item;

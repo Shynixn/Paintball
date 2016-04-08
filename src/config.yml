@@ -30,6 +30,12 @@ Per-Arena-Settings:
   # The default settings for each arena. Set an arena setting to "default" in order to use this default value ex: kills-to-win: default
   # Arenas will auto-generate with values "default" whenever a new arena is created
   Defaults:
+    # True - Fireworks will launch when a player dies. False - No firework will launch
+    firework-on-death: true
+    # True - When a protected player attacks another player their protection cencels. False - Protection only ends after timer ends
+    cancel-prot-on-hit: true
+    # True - Paintballs will have 100% accuracy (If you make this true, make ak-47 shown false). False - Paintballs will not be accuracy
+    accuracy: false
     # How fast snowballs will shoot
     speed: 3
     # The currency for money

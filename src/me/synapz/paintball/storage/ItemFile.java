@@ -55,6 +55,10 @@ public class ItemFile extends PaintballFile {
         return Sound.valueOf(loadString(item, "sound", item.getDefaultSound().toString()));
     }
 
+    public int getDamage(Items item) {
+        return loadInt(item, "damage", item.getDefaultDamage());
+    }
+
     private String loadString(Items item, String section, String value) {
         if (fileConfig.get(item.toString()) == null || fileConfig.get(getPath(item, section)) == null) {
             fileConfig.set(item.toString() + "." + section, value);

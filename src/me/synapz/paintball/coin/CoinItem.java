@@ -34,8 +34,9 @@ public class CoinItem extends ItemStack {
     private final String action;
     private final boolean showItem;
     private final Sound sound;
+    private final int damage;
 
-    public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, String action, Sound sound) {
+    public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, String action, Sound sound, int damage) {
         super(material, amount);
         this.name = name;
         this.nameWithSpaces = name;
@@ -47,6 +48,7 @@ public class CoinItem extends ItemStack {
         this.showItem = showItem;
         this.sound = sound;
         this.action = action;
+        this.damage = damage;
 
         CoinItemHandler.getHandler().addItem(this);
     }
@@ -63,7 +65,8 @@ public class CoinItem extends ItemStack {
                 item.getTime(),
                 item.getPermission(),
                 item.getAction(),
-                item.getSound());
+                item.getSound(),
+                item.getDamage());
     }
 
     public CoinItem(CoinItem item) {
@@ -78,6 +81,7 @@ public class CoinItem extends ItemStack {
         this.showItem = item.showItem();
         this.sound = item.getSound();
         this.action = item.getAction();
+        this.damage = item.getDamage();
     }
 
     // Gets the item name
@@ -113,6 +117,10 @@ public class CoinItem extends ItemStack {
     // Gets the item's kill action
     public String getAction() {
         return action;
+    }
+
+    public int getDamage() {
+        return damage;
     }
 
     // Sets the values specific to the arena player, then returns the item to be placed in coinshop

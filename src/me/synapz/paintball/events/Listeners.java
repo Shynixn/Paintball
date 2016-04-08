@@ -1,5 +1,6 @@
 package me.synapz.paintball.events;
 
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.arenas.CTFArena;
@@ -308,27 +309,36 @@ public class Listeners implements Listener {
         }
 
         if (ProtectionCountdown.godPlayers.keySet().contains(hitPlayerName)) {
-            Messenger.error(arenaPlayer.getPlayer(), "That player is currently safe from Paintballs. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
+            Messenger.error(arenaPlayer.getPlayer(), "That player is protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
             event.setCancelled(true);
+            return;
         } else if (ProtectionCountdown.godPlayers.keySet().contains(shooterPlayerName)) {
-            Messenger.error(arenaPlayer.getPlayer(), "You cannot hit players while you are protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(shooterPlayerName).getCounter() + " seconds");
-            event.setCancelled(true);
-        } else {
-            if (hitPlayer.hit()) {
-                String action = "shot";
-                CoinItem clickedItem = null;
-
-                if (arenaPlayer.getPlayer().getItemInHand() != null && !arenaPlayer.getPlayer().getItemInHand().hasItemMeta() && !arenaPlayer.getPlayer().getItemInHand().getItemMeta().hasDisplayName())
-                    clickedItem = arenaPlayer.getItemWithName(arenaPlayer.getPlayer().getItemInHand().getItemMeta().getDisplayName());
-
-                if (clickedItem != null)
-                    action = clickedItem.getAction();
-
-                arenaPlayer.kill(hitPlayer, action);
+            // If they can stop on hit, stop the timer so they can hit
+            if (arenaPlayer.getArena().STOP_PROT_ON_HIT) {
+                BountifulAPI.sendActionBar(arenaPlayer.getPlayer(), Messenger.createPrefix("Protection") + "Cancelled", 240);
+                ProtectionCountdown.godPlayers.get(shooterPlayerName).cancel();
             } else {
-                arenaPlayer.incrementHits();
-                Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
+                Messenger.error(arenaPlayer.getPlayer(), "You are still protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
+                event.setCancelled(true);
+                return;
             }
+        }
+
+        CoinItem clickedItem = null;
+
+        if (arenaPlayer.getPlayer().getItemInHand() != null && !arenaPlayer.getPlayer().getItemInHand().hasItemMeta() && !arenaPlayer.getPlayer().getItemInHand().getItemMeta().hasDisplayName())
+            clickedItem = arenaPlayer.getItemWithName(arenaPlayer.getPlayer().getItemInHand().getItemMeta().getDisplayName());
+
+        if (hitPlayer.hit(arenaPlayer.getTeam(), clickedItem == null ? 1 : clickedItem.getDamage())) {
+            String action = "shot";
+
+            if (clickedItem != null)
+                action = clickedItem.getAction();
+
+            arenaPlayer.kill(hitPlayer, action);
+        } else {
+            arenaPlayer.incrementHits();
+            Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
         }
     }
 
