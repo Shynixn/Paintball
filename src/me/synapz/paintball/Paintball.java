@@ -53,7 +53,7 @@ public class Paintball extends JavaPlugin implements Listener {
         pm.registerEvents(new ChatSystem(), this);
         pm.registerEvents(new LeaderboardSigns(), this);
         pm.registerEvents(new CoinItemListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(this, this);
+        pm.registerEvents(this, this);
 
         getCommand("paintball").setExecutor(commandManager);
 
