@@ -74,6 +74,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
 
     private void setValue(String path, Object object) {
         fileConfig.set(path, object);
+        saveFile();
     }
 
     public Boolean isBungee() {
