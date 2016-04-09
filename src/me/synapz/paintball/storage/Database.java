@@ -35,6 +35,8 @@ public class Database extends PaintballFile implements PluginMessageListener {
     public Database(Plugin pb) {
         super(pb, "database.yml");
 
+        this.pb = pb;
+
         if (loadBoolean("SQL.enabled")) {
             SQL = true;
             host = loadString("SQL.host");
@@ -54,6 +56,74 @@ public class Database extends PaintballFile implements PluginMessageListener {
                 setValue("Bungee.serverID", serverID);
                 SID = serverID;
             }
+        }
+    }
+
+    private Object loadValue(String path) {
+        Object value = fileConfig.get(path);
+
+        // If this value is null, it was not found, so turn this file to database_backup.yml and load another updated one
+        if (value == null) {
+            Settings.getSettings().backupConfig("database");
+            return null;
+        }
+
+        // After backup and new one is done, get the value
+        return value;
+    }
+
+    private void setValue(String path, Object object) {
+        fileConfig.set(path, object);
+    }
+
+    public Boolean isBungee() {
+        return bungee;
+    }
+
+    public Boolean isSQL() {
+        return SQL;
+    }
+
+    private int loadInt(String path) {
+        return (int) loadValue(path);
+    }
+
+    private String loadString(String path) {
+        return (String) loadValue(path);
+    }
+
+    private boolean loadBoolean(String path) {
+        return (boolean) loadValue(path);
+    }
+
+    //SQL
+
+    public void setupSQL(Plugin pb, String host, String username, String password, String database) {
+        SQL = true;
+        Database.host = host;
+        Database.username = username;
+        Database.password = password;
+        this.database = database;
+        this.pb = pb;
+        try {
+            Connection conn;
+            conn = DriverManager.getConnection(host, username, password);
+            PreparedStatement sql = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
+            sql.execute();
+            PreparedStatement sql0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS Paintball_Stats" +
+                    " (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
+            sql0.execute();
+            PreparedStatement sql1 = conn.prepareStatement("SELECT stats FROM `Paintball_Stats` WHERE id = '1';");
+            ResultSet result = sql1.executeQuery();
+            result.next();
+            String encoded = result.getString("stats");
+            File file = new File(pb.getDataFolder(), "playerdata.yml");
+            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+            yaml.set("Stats", encoded);
+            yaml.save(file);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            Bukkit.getLogger().info("Failed to download SQL backup!");
         }
     }
 
@@ -118,101 +188,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
         return yaml;
     }
 
-    // TODO: This is returning null and breaks this whole thing onEnable and on leave
-    public static void updateBungeeSigns() {
-        /*
-        int numb = 0;
-        String arenas = "";
-        String sign = "";
-        for (String an : ArenaManager.getArenaManager().getArenas().keySet()) {
-            Arena a = ArenaManager.getArenaManager().getArenas().get(an);
-            if (numb != 0) {
-                arenas = arenas + ":" + a.getName();
-                sign = sign + ":" + a.getStateAsString();
-            } else {
-                arenas = arenas + a.getName();
-                sign = sign + a.getStateAsString();
-            }
-        }
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Paintball");
-        out.writeUTF("Arenas");
-        out.writeUTF(SID);
-        out.writeUTF(arenas);
-        out.writeUTF(sign);
-        Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
-        */
-    }
-
-    private Object loadValue(String path) {
-        Object value = fileConfig.get(path);
-
-        // If this value is null, it was not found, so turn this file to database_backup.yml and load another updated one
-        if (value == null) {
-            Settings.getSettings().backupConfig("database");
-            return null;
-        }
-
-        // After backup and new one is done, get the value
-        return value;
-    }
-
-    private void setValue(String path, Object object) {
-        fileConfig.set(path, object);
-    }
-
-    public Boolean isBungee() {
-        return bungee;
-    }
-
-    public Boolean isSQL() {
-        return SQL;
-    }
-
-    //SQL
-
-    private int loadInt(String path) {
-        return (int) loadValue(path);
-    }
-
-    private String loadString(String path) {
-        return (String) loadValue(path);
-    }
-
-    private boolean loadBoolean(String path) {
-        return (boolean) loadValue(path);
-    }
-
     //Bungee
-
-    public void setupSQL(Plugin pb, String host, String username, String password, String database) {
-        SQL = true;
-        Database.host = host;
-        Database.username = username;
-        Database.password = password;
-        this.database = database;
-        this.pb = pb;
-        try {
-            Connection conn;
-            conn = DriverManager.getConnection(host, username, password);
-            PreparedStatement sql = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
-            sql.execute();
-            PreparedStatement sql0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS Paintball_Stats" +
-                    " (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
-            sql0.execute();
-            PreparedStatement sql1 = conn.prepareStatement("SELECT stats FROM `Paintball_Stats` WHERE id = '1';");
-            ResultSet result = sql1.executeQuery();
-            result.next();
-            String encoded = result.getString("stats");
-            File file = new File(pb.getDataFolder(), "playerdata.yml");
-            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-            yaml.set("Stats", encoded);
-            yaml.save(file);
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-            Bukkit.getLogger().info("Failed to download SQL backup!");
-        }
-    }
 
     public void onPluginMessageReceived(String channel, Player sender, byte[] message) {
         if (!channel.equals("BungeeCord")) {
@@ -253,6 +229,30 @@ public class Database extends PaintballFile implements PluginMessageListener {
                 }
             }
         }
+    }
+
+    // TODO: This is returning null and breaks this whole thing onEnable and on leave *Fixed*
+    public static void updateBungeeSigns() {
+        int numb = 0;
+        String arenas = "";
+        String sign = "";
+        for (String an : ArenaManager.getArenaManager().getArenas().keySet()) {
+            Arena a = ArenaManager.getArenaManager().getArenas().get(an);
+            if (numb != 0) {
+                arenas = arenas + ":" + a.getName();
+                sign = sign + ":" + a.getStateAsString();
+            } else {
+                arenas = arenas + a.getName();
+                sign = sign + a.getStateAsString();
+            }
+        }
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Paintball");
+        out.writeUTF("Arenas");
+        out.writeUTF(SID);
+        out.writeUTF(arenas);
+        out.writeUTF(sign);
+        Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
     }
 
 }
