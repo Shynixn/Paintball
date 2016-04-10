@@ -2,6 +2,7 @@ package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.CTFArena;
+import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -28,8 +29,8 @@ public class ArenaStartCountdown extends PaintballCountdown {
 
     public void onFinish() {
 
-        if (arena instanceof CTFArena)
-            createFlags();
+        if (arena instanceof FlagArena)
+            ((FlagArena) arena).loadFlags();
 
         arena.broadcastMessage(GREEN + "Game started");
         arena.setState(Arena.ArenaState.IN_PROGRESS);
@@ -81,13 +82,6 @@ public class ArenaStartCountdown extends PaintballCountdown {
             if (playerX != spawnX || playerY != spawnY || playerZ != spawnZ) {
                 arenaPlayer.getPlayer().teleport(spawnLoc);
             }
-        }
-    }
-
-    private void createFlags() {
-        for (Team team : arena.getArenaTeamList()) {
-            Location loc = new FlagLocation((CTFArena) arena, team).getLocation();
-            Utils.createFlag(team, loc);
         }
     }
 }

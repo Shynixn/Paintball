@@ -1,6 +1,7 @@
 package me.synapz.paintball.locations;
 
 import me.synapz.paintball.arenas.CTFArena;
+import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Location;
@@ -10,7 +11,7 @@ public class FlagLocation extends PaintballLocation {
     private final Team team;
 
     // Creates a new TeamLocation AND sets the location in Arenas.yml
-    public FlagLocation(CTFArena arena, Team team, Location location) {
+    public FlagLocation(FlagArena arena, Team team, Location location) {
         super(arena, location);
         this.team = team;
 
@@ -18,7 +19,7 @@ public class FlagLocation extends PaintballLocation {
     }
 
     // Creates a new TeamLocation by looking inside of arenas.yml and grabbing it out
-    public FlagLocation(CTFArena arena, Team team) {
+    public FlagLocation(FlagArena arena, Team team) {
         super(arena, Settings.ARENA_FILE.getString(team.getPath()));
 
         this.team = team;

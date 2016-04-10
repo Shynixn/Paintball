@@ -326,7 +326,7 @@ public class Listeners implements Listener {
 
         CoinItem clickedItem = null;
 
-        if (arenaPlayer.getPlayer().getItemInHand() != null && !arenaPlayer.getPlayer().getItemInHand().hasItemMeta() && !arenaPlayer.getPlayer().getItemInHand().getItemMeta().hasDisplayName())
+        if (arenaPlayer.getPlayer().getItemInHand() != null && arenaPlayer.getPlayer().getItemInHand().hasItemMeta() && arenaPlayer.getPlayer().getItemInHand().getItemMeta().hasDisplayName())
             clickedItem = arenaPlayer.getItemWithName(arenaPlayer.getPlayer().getItemInHand().getItemMeta().getDisplayName());
 
         if (hitPlayer.hit(arenaPlayer.getTeam(), clickedItem == null ? 1 : clickedItem.getDamage())) {

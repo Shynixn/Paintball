@@ -126,6 +126,23 @@ public class CoinItems implements Listener {
             }
         };
 
+        new CoinItem(Items.FLY) {
+            @Override
+            public void onClickItem(ArenaClickItemEvent event) {
+                Player player = event.getArenaPlayer().getPlayer();
+
+                boolean toFly = !player.getAllowFlight();
+
+                if (toFly)
+                    Messenger.success(player, "Flying has been enabled");
+                else
+                    Messenger.success(player, "Flying has been disabled");
+
+                player.setAllowFlight(toFly);
+                player.setFlying(toFly);
+            }
+        };
+
         new CoinItem(Items.RAPID_FIRE) {
             @Override
             public void onClickItem(ArenaClickItemEvent event) {

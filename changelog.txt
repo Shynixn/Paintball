@@ -1,3 +1,15 @@
+BETA-3.5.1
+- Started Implementation of Domination (You can setup and flags load but not yet playable)
+- More abstraction behind the scenes :D
+
+BETA-3.5.0
+- More implementation of SQL and Bungee mode
+
+BETA-3.4.9
+- Fixed item damage not working
+- Fixed damage health not subtracting correctly
+- Added new item to enable or disable in game fly (By default this item is not shown)
+
 BETA-3.4.8
 - Fixed Protection messages
 - Added new config.yml value "cancel-prot-on-hit" to enchance game play

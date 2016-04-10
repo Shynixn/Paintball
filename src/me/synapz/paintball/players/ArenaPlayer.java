@@ -276,7 +276,7 @@ public class ArenaPlayer extends PaintballPlayer {
         lastLocation = player.getLocation();
 
         // This means they died, it just changes all the values
-        if (health == 0) {
+        if (health <= 0) {
             deaths++;
             lives--;
 

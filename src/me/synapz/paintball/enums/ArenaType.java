@@ -7,7 +7,8 @@ public enum ArenaType {
 
     CTF("Capture the Flag", "ctf"),
     TDM("Team Deathmatch", "tdm"),
-    ELM("Elimination", "elm");
+    ELM("Elimination", "elm"),
+    DOM("Domination", "dom");
 
     private String fullName;
     private String shortName;

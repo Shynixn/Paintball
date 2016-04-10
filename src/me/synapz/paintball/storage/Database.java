@@ -232,8 +232,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
         }
     }
 
-    // TODO: This is returning null and breaks this whole thing onEnable and on leave *Fixed*
     public static void updateBungeeSigns() {
+        // TODO: Still null
+        /*
         int numb = 0;
         String arenas = "";
         String sign = "";
@@ -250,10 +251,12 @@ public class Database extends PaintballFile implements PluginMessageListener {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Paintball");
         out.writeUTF("Arenas");
+        // TODO: This is null
         out.writeUTF(SID);
         out.writeUTF(arenas);
         out.writeUTF(sign);
         Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
+        */
     }
 
 }

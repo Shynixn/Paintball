@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.CTFArena;
+import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -14,8 +15,8 @@ public class DelFlag extends TeamCommand {
     public void onCommand() {
         Location flagLoc = player.getLocation();
 
-        if (arena instanceof CTFArena) {
-            new FlagLocation((CTFArena) arena, team, flagLoc).removeLocation();
+        if (arena instanceof FlagArena) {
+            new FlagLocation((FlagArena) arena, team, flagLoc).removeLocation();
             Messenger.success(player, "Deleted " + arena.getName() + "'s " + team.getTitleName() + " Team flag location!", arena.getSteps());
         } else {
             Messenger.error(player, "That arena is not a CTF Arena!");

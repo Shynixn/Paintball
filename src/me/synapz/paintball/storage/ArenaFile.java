@@ -2,11 +2,8 @@ package me.synapz.paintball.storage;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import me.synapz.paintball.*;
-import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.ArenaManager;
-import me.synapz.paintball.arenas.CTFArena;
-import me.synapz.paintball.arenas.ELMArena;
+import me.synapz.paintball.Paintball;
+import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
@@ -123,6 +120,9 @@ public class ArenaFile extends PaintballFile {
                 switch (type) {
                     case CTF:
                         a = new CTFArena(arenaName, name, false);
+                        break;
+                    case DOM:
+                        a = new DomArena(arenaName, name, false);
                         break;
                     case TDM:
                         a = new Arena(arenaName, name, false);

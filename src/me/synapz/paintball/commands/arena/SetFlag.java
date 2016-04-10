@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.CTFArena;
+import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -13,8 +14,8 @@ public class SetFlag extends TeamCommand {
     public void onCommand() {
         Location flagLoc = player.getLocation();
 
-        if (arena instanceof CTFArena) {
-            ((CTFArena) arena).setFlagLocation(team, flagLoc);
+        if (arena instanceof FlagArena) {
+            ((FlagArena) arena).setFlagLocation(team, flagLoc);
             Messenger.success(player, "Set " + arena.getName() + "'s " + team.getTitleName() + " Team flag to your location!", arena.getSteps());
         } else {
             Messenger.error(player, "That arena is not a CTF Arena!");

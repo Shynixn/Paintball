@@ -1,10 +1,8 @@
 package me.synapz.paintball.commands.arena;
 
 
+import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.ArenaManager;
-import me.synapz.paintball.arenas.CTFArena;
-import me.synapz.paintball.arenas.ELMArena;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.ArenaType;
@@ -31,6 +29,9 @@ public class Create extends PaintballCommand {
             switch (type) {
                 case CTF:
                     a = new CTFArena(arenaName, arenaName, true);
+                    break;
+                case DOM:
+                    a = new DomArena(arenaName, arenaName, true);
                     break;
                 case TDM:
                     a = new Arena(arenaName, arenaName, true);
