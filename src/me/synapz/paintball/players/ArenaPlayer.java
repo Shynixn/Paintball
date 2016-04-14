@@ -14,8 +14,10 @@ import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -85,7 +87,7 @@ public class ArenaPlayer extends PaintballPlayer {
         double bal = Settings.VAULT ? Settings.ECONOMY.getBalance(player) : 0;
 
         PaintballScoreboard sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
-                .addTeams(true)
+                .addTeams(false)
                 .addLine(ScoreboardLine.LINE)
                 .addLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, Settings.VAULT)
                 .addLine(ScoreboardLine.KD, "0.00")
@@ -109,7 +111,7 @@ public class ArenaPlayer extends PaintballPlayer {
         double bal = Settings.VAULT ? Settings.ECONOMY.getBalance(player) : 0;
 
         int size = arena.getArenaTeamList().size()-1;
-        pbSb.reloadTeams(true)
+        pbSb.reloadTeams(false)
                 .reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, size+2)
                 .reloadLine(ScoreboardLine.KD, getKd(), size+3)
                 .reloadLine(ScoreboardLine.COIN, String.valueOf(getCoins()), size+4)
@@ -236,6 +238,11 @@ public class ArenaPlayer extends PaintballPlayer {
 
         arena.incrementTeamScore(team);
         arena.broadcastMessage(THEME + player.getName() + SECONDARY + " " + action + " " + THEME + arenaPlayer.getPlayer().getName());
+
+        // Takes player off horse or whatever they are in
+        Entity vehicle = arenaPlayer.getPlayer().getVehicle();
+        vehicle.eject();
+        vehicle.setTicksLived(-1);
 
         arena.updateAllScoreboard();
 

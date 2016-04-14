@@ -1,3 +1,50 @@
+BETA-3.6.2
+- Added wool blocks to load on RTF bases
+- More fixes to RTF (You can set flags now)
+- Added Cowboy Coin Shop item!
+
+BETA-3.6.1
+- Started RTF arena!
+
+BETA-3.6.0
+- Fully added LTS mode
+- Added game mode type to lobby scoreboard
+- Fixed LobbyCountdown message flicker on 10-1
+
+BETA-3.5.9
+- More fixes to LTS game mode
+- Fixed tie messages to remove the bad formatting
+- Added "tied" to win message
+
+BETA-3.5.8
+- Started adding LTS (this one should be quick to add)
+- Made it so infinite time arenas no longer show time countdown
+
+BETA-3.5.7
+- Fixed "Position Secured" sometimes not being sent on Domination secure
+- Made score for Domination decrement every 10 seconds
+- Added ability to fully secure Domination flag (turns the area to captured color)
+
+BETA-3.5.6
+- Added new Coin Shop Item named Cyclone (When clicked turns you into circles shooting tons of Paintballs)
+- Added Domination flag clay border
+- Added "Position Secured" after securing a base in Domination
+
+BETA-3.5.5
+- Fix database error (again)
+
+BETA-3.5.4
+- A lot more additions to Domination
+- Made beacons turn on on start
+
+BETA-3.5.3
+- Added beacon under Domination Arena flag point
+- Added stained clay for under stained glass platform on Domination start
+- Renamed ELM to FFA (Free For All)
+
+BETA-3.5.2
+- Added domination flags made out of glass panes
+
 BETA-3.5.1
 - Started Implementation of Domination (You can setup and flags load but not yet playable)
 - More abstraction behind the scenes :D

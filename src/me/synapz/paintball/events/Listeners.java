@@ -4,7 +4,9 @@ import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.arenas.CTFArena;
+import me.synapz.paintball.arenas.DomArena;
 import me.synapz.paintball.coin.CoinItem;
+import me.synapz.paintball.countdowns.DomGameCountdown;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
@@ -436,30 +438,43 @@ public class Listeners implements Listener {
     public void onMoveInArena(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         Arena arena = getArena(player);
+        Location loc = player.getLocation();
 
         if (arena == null)
             return;
 
-        if (player.getLocation().getBlockY() <= -1 && isInArena(player)) {
-            PaintballPlayer gamePlayer = arena.getPaintballPlayer(player);
-            Team team = gamePlayer.getTeam();
+        PaintballPlayer gamePlayer = arena.getPaintballPlayer(player);
+        Team team = gamePlayer.getTeam();
 
+        if (loc.getBlockY() <= -1) {
             if (gamePlayer instanceof LobbyPlayer) {
                 player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
             } else if (gamePlayer instanceof ArenaPlayer) {
+
                 player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
             } else if (gamePlayer instanceof SpectatorPlayer) {
                 player.teleport(arena.getSpectatorLocation());
             }
         } else {
             if (isInArena(player)) {
-                PaintballPlayer gamePlayer = arena.getPaintballPlayer(player);
                 // Check to see if they went over their area to drop the flag
                 if (arena instanceof CTFArena && gamePlayer instanceof CTFArenaPlayer) {
                     CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
 
                     if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getFlagLocation(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2)
                         ctfPlayer.scoreFlag();
+                } else if (arena instanceof DomArena && gamePlayer instanceof DomArenaPlayer) {
+                    DomArenaPlayer domPlayer = (DomArenaPlayer) gamePlayer;
+                    DomArena domArena = (DomArena) arena;
+                    Location xloc = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+
+                    if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
+                        return;
+
+                    if (domArena.getSecureLocations().containsKey(xloc) && domArena.getSecureLocations().get(xloc) != domPlayer.getTeam())
+                        domPlayer.setSecuring(true);
+                    else
+                        domPlayer.setSecuring(false);
                 }
             }
         }

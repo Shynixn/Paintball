@@ -7,8 +7,10 @@ public enum ArenaType {
 
     CTF("Capture the Flag", "ctf"),
     TDM("Team Deathmatch", "tdm"),
-    ELM("Elimination", "elm"),
-    DOM("Domination", "dom");
+    FFA("Free For All", "ffa"),
+    DOM("Domination", "dom"),
+    LTS("Last Team Standing", "lts"),
+    RTF("Rush the Flag", "rtf");
 
     private String fullName;
     private String shortName;
@@ -28,6 +30,10 @@ public enum ArenaType {
 
     public static ArenaType getArenaType(Player sender, String strType) {
         ArenaType type = null;
+
+        // Had to convert ELM to FFA so this will turn the type to FFA if it loads as ELM
+        if (strType.equalsIgnoreCase("elm"))
+            return FFA;
 
         for (ArenaType t : ArenaType.values()) {
             if (t.getFullName().equalsIgnoreCase(strType) || t.getShortName().equalsIgnoreCase(strType))

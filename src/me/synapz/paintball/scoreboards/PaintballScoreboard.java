@@ -95,9 +95,9 @@ public class PaintballScoreboard {
         return this;
     }
 
-    public PaintballScoreboard addTeams(boolean asArenaPlayer) {
+    public PaintballScoreboard addTeams(boolean teamSize) {
         for (Team team : pbPlayer.getArena().getArenaTeamList()) {
-            String name = team.getChatColor() + team.getTitleName() + ": " + SECONDARY + (asArenaPlayer ? (pbPlayer.getArena().MAX_SCORE - pbPlayer.getArena().getTeamScore(team)) : team.getSize());
+            String name = team.getChatColor() + team.getTitleName() + ": " + SECONDARY + (!teamSize ? (pbPlayer.getArena().MAX_SCORE - pbPlayer.getArena().getTeamScore(team)) : team.getSize());
             Score score = objective.getScore(name);
             score.setScore(index);
             lines.put(index, name);
@@ -106,11 +106,11 @@ public class PaintballScoreboard {
         return this;
     }
 
-    public PaintballScoreboard reloadTeams(boolean asArenaPlayer) {
+    public PaintballScoreboard reloadTeams(boolean teamSize) {
         int size = 0;
         for (Team team : pbPlayer.getArena().getArenaTeamList()) {
             String oldValue = lines.get(size);
-            String newValue = team.getChatColor() + team.getTitleName() + ": " + SECONDARY + (asArenaPlayer ? (pbPlayer.getArena().MAX_SCORE - pbPlayer.getArena().getTeamScore(team)) : team.getSize());
+            String newValue = team.getChatColor() + team.getTitleName() + ": " + SECONDARY + (!teamSize ? (pbPlayer.getArena().MAX_SCORE - pbPlayer.getArena().getTeamScore(team)) : team.getSize());
 
             sb.resetScores(oldValue);
             Score teamScore = objective.getScore(newValue);

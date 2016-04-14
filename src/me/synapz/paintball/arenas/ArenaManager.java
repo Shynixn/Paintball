@@ -13,10 +13,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.*;
@@ -25,7 +22,7 @@ public class ArenaManager {
 
     private static ArenaManager instance = new ArenaManager();
     // HashMap with arena's name to arena, makes it way more efficient to get an arena from a string
-    private HashMap<String, Arena> arenas = new HashMap<>();
+    private Map<String, Arena> arenas = new HashMap<>();
 
     private ArenaManager() {
     }
@@ -49,7 +46,7 @@ public class ArenaManager {
     }
 
     // Gets a list of all arenas
-    public HashMap<String, Arena> getArenas() {
+    public Map<String, Arena> getArenas() {
         return arenas;
     }
 
@@ -123,7 +120,8 @@ public class ArenaManager {
     public void updateAllSignsOnServer() {
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
 
-        DATABASE.updateBungeeSigns();
+        // TODO: Throws null
+        // DATABASE.updateBungeeSigns();
 
         for (SignLocation signLoc : Settings.ARENA.getSigns().values()) {
             if (!(signLoc.getLocation().getBlock().getState() instanceof Sign)) {
@@ -145,7 +143,7 @@ public class ArenaManager {
                         return;
                     }
 
-                    HashMap<String, String> playerAndStat = PLAYERDATA.getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+                    Map<String, String> playerAndStat = PLAYERDATA.getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
 
                     sign.setLine(1, playerAndStat.keySet().toArray()[0] + "");
                     sign.setLine(3, playerAndStat.values().toArray()[0] + "");

@@ -124,11 +124,17 @@ public class ArenaFile extends PaintballFile {
                     case DOM:
                         a = new DomArena(arenaName, name, false);
                         break;
+                    case RTF:
+                        a = new RTFArena(arenaName, name, false);
+                        break;
                     case TDM:
                         a = new Arena(arenaName, name, false);
                         break;
-                    case ELM:
-                        a = new ELMArena(arenaName, name, false);
+                    case FFA:
+                        a = new FFAArena(arenaName, name, false);
+                        break;
+                    case LTS:
+                        a = new LTSArena(arenaName, name, false);
                         break;
                     default:
                         a = new Arena(arenaName, name, false);

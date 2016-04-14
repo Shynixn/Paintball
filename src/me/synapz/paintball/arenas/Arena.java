@@ -75,7 +75,7 @@ public class Arena {
 
     // All the players in the arena (Lobby, Spec, InGame) linked to the player which is linked to the PaintballPLayer
     private Map<Player, PaintballPlayer> allPlayers = new HashMap<Player, PaintballPlayer>();
-    private ArrayList<SpectatorPlayer> spectators = new ArrayList<SpectatorPlayer>();
+    private List<SpectatorPlayer> spectators = new ArrayList<SpectatorPlayer>();
     private List<LobbyPlayer> lobby = new ArrayList<LobbyPlayer>();
     private List<ArenaPlayer> inGame = new ArrayList<ArenaPlayer>();
 
@@ -253,7 +253,7 @@ public class Arena {
 
     // Gets the steps for the arena
     public String getSteps() {
-        ArrayList<String> steps = new ArrayList<String>();
+        List<String> steps = new ArrayList<String>();
         String finalString;
         ChatColor done = STRIKETHROUGH;
         String end = RESET + "" + GRAY;
@@ -410,8 +410,12 @@ public class Arena {
 
             if (this instanceof CTFArena)
                 player = new CTFArenaPlayer(this, p.getTeam(), p.getPlayer());
-            else if (this instanceof ELMArena)
-                player = new ELMArenaPlayer(this, p.getTeam(), p.getPlayer());
+            else if (this instanceof FFAArena)
+                player = new FFAArenaPlayer(this, p.getTeam(), p.getPlayer());
+            else if (this instanceof DomArena)
+                player = new DomArenaPlayer(this, p.getTeam(), p.getPlayer());
+            else if (this instanceof LTSArena)
+                player = new LTSArenaPlayer(this, p.getTeam(), p.getPlayer());
             else
                 player = new ArenaPlayer(this, p.getTeam(), p.getPlayer());
 
@@ -472,7 +476,7 @@ public class Arena {
                     Settings.THEME + "Deaths: " + Settings.SECONDARY + arenaPlayer.getDeaths(),
                     Settings.THEME + "Killstreak: " + Settings.SECONDARY + arenaPlayer.getKillStreak(),
                     Settings.THEME + "KD: " + Settings.SECONDARY + arenaPlayer.getKd(),
-                    "Your team " + (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost"),
+                    "Your team " + (teams.size() >= 2 ? "tied" : (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost")),
                     spaces + Utils.makeSpaces(title +  "123") + spaces);
         }
 
@@ -480,14 +484,17 @@ public class Arena {
         for (Team winningTeam : teams) {
             formattedWinnerList.append(winningTeam.getChatColor()).append(winningTeam.getTitleName()).append(Settings.THEME).append(", ");
         }
+
         String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", "));
+
         if (BROADCAST_WINNER) {
-            Bukkit.broadcastMessage((teams.size() == 1 ? "The " + list + " team won!": "There was a tie between " + formattedWinnerList.toString()));
+            Bukkit.broadcastMessage((teams.size() == 1 ? "The " + list + " team won!" : "There was a tie between " + list));
         } else {
-            broadcastMessage((teams.size() == 1 ? "The " + list + " team won!": "There was a tie between " + formattedWinnerList.toString()));
+            broadcastMessage((teams.size() == 1 ? "The " + list + " team won!" : "There was a tie between " + list));
         }
+
         for (PaintballPlayer player : getAllPlayers().values())
-            BountifulAPI.sendTitle(player.getPlayer(), 20, 40, 20, THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost"): formattedWinnerList.toString()));
+            BountifulAPI.sendTitle(player.getPlayer(), 20, 40, 20, THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list));
         new GameFinishCountdown(WIN_WAIT_TIME, this);
     }
 

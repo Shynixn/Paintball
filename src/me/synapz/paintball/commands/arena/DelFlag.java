@@ -19,7 +19,7 @@ public class DelFlag extends TeamCommand {
             new FlagLocation((FlagArena) arena, team, flagLoc).removeLocation();
             Messenger.success(player, "Deleted " + arena.getName() + "'s " + team.getTitleName() + " Team flag location!", arena.getSteps());
         } else {
-            Messenger.error(player, "That arena is not a CTF Arena!");
+            Messenger.error(player, "That arena does not need any flags!");
             return;
         }
     }
@@ -38,7 +38,7 @@ public class DelFlag extends TeamCommand {
     }
 
     public String getInfo() {
-        return "Delete a CTF Arena's flag";
+        return "Delete a Arena's flag point";
     }
 
     public CommandType getCommandType() {

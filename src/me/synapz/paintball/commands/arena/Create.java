@@ -33,11 +33,16 @@ public class Create extends PaintballCommand {
                 case DOM:
                     a = new DomArena(arenaName, arenaName, true);
                     break;
+                case RTF:
+                    a = new RTFArena(arenaName, arenaName, true);
                 case TDM:
                     a = new Arena(arenaName, arenaName, true);
                     break;
-                case ELM:
-                    a = new ELMArena(arenaName, arenaName, true);
+                case FFA:
+                    a = new FFAArena(arenaName, arenaName, true);
+                    break;
+                case LTS:
+                    a = new LTSArena(arenaName, arenaName, true);
                     break;
                 default:
                     a = new Arena(arenaName, arenaName, true);

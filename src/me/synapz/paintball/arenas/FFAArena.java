@@ -2,9 +2,9 @@ package me.synapz.paintball.arenas;
 
 import me.synapz.paintball.enums.ArenaType;
 
-public class ELMArena extends Arena {
+public class FFAArena extends Arena {
 
-    public ELMArena(String name, String currentName, boolean addToConfig) {
+    public FFAArena(String name, String currentName, boolean addToConfig) {
         super(name, currentName, addToConfig);
 
         // Elimination players should have only one life
@@ -21,7 +21,7 @@ public class ELMArena extends Arena {
 
     @Override
     public ArenaType getArenaType() {
-        return ArenaType.ELM;
+        return ArenaType.FFA;
     }
 
     /*

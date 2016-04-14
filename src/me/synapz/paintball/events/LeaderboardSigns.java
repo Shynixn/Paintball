@@ -15,6 +15,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class LeaderboardSigns implements Listener {
 
@@ -47,7 +48,7 @@ public class LeaderboardSigns implements Listener {
         }
 
         Messenger.success(e.getPlayer(), "Leaderboard sign successfully created!");
-        HashMap<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(i, type);
+        Map<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(i, type);
         e.setLine(0, "#" + i);
         e.setLine(1, playerAndStat.keySet().toArray()[0] + "");
         e.setLine(2, type.getName());

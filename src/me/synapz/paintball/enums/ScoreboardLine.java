@@ -18,7 +18,8 @@ public enum ScoreboardLine {
     TEAM("Team" + Messenger.SUFFIX),
     STATUS("Status" + Messenger.SUFFIX),
     HEALTH("Health" + Messenger.SUFFIX),
-    LIVES("Lives" + Messenger.SUFFIX);
+    LIVES("Lives" + Messenger.SUFFIX),
+    MODE("Mode" + Messenger.SUFFIX);
 
     private String name;
 

@@ -1,6 +1,8 @@
 package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.DomArena;
+import me.synapz.paintball.arenas.LTSArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.players.ArenaPlayer;
 
@@ -30,8 +32,6 @@ public class GameCountdown extends PaintballCountdown {
             if (score < arena.getTeamScore(t)) {
                 winningTeam = t;
                 score = arena.getTeamScore(winningTeam);
-            } else if (score == arena.getTeamScore(t) && t != winningTeam) {
-                // TODO: it is a tie
             }
         }
 

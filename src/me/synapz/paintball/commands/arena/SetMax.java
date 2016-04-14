@@ -1,6 +1,6 @@
 package me.synapz.paintball.commands.arena;
 
-import me.synapz.paintball.arenas.ELMArena;
+import me.synapz.paintball.arenas.FFAArena;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
@@ -21,8 +21,8 @@ public class SetMax extends ArenaCommand {
             return;
         }
 
-        if (arena instanceof ELMArena) {
-            Messenger.error(player, "The max for an " + ArenaType.ELM.getFullName() + " arena is already set to the amount of teams, so there is one person per team. Because of this, you do not need to set a max");
+        if (arena instanceof FFAArena) {
+            Messenger.error(player, "The max for an " + ArenaType.FFA.getFullName() + " arena is already set to the amount of teams, so there is one person per team. Because of this, you do not need to set a max");
             return;
         }
 

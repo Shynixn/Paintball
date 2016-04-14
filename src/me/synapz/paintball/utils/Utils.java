@@ -55,13 +55,18 @@ public class Utils {
     }
 
     // Returns an Array[] of items to an ArrayList
-    public static ArrayList<String> addItemsToArray(ArrayList<String> array, String... s) {
+    public static List<String> addItemsToArray(List<String> array, String... s) {
         for (String str : s) {
             if (str != "") {
                 array.add(str);
             }
         }
         return array;
+    }
+
+    // Turns a long decimal location to rounded numbers
+    public static Location simplifyLocation(Location loc) {
+        return new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
     // Makes wool from DyeColor and adds a name

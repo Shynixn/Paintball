@@ -1,8 +1,6 @@
 package me.synapz.paintball.countdowns;
 
-import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.CTFArena;
-import me.synapz.paintball.arenas.FlagArena;
+import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -36,6 +34,12 @@ public class ArenaStartCountdown extends PaintballCountdown {
         arena.setState(Arena.ArenaState.IN_PROGRESS);
         arena.broadcastTitle(Settings.PREFIX, GREEN + "Game started", 0, 30, 20);
         tpAllPlayersBack();
+
+        if (arena instanceof DomArena) {
+            new DomGameCountdown(arena);
+            return;
+        }
+
         new GameCountdown(arena);
     }
 

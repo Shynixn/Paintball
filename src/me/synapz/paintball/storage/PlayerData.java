@@ -99,7 +99,7 @@ public final class PlayerData extends PaintballFile {
     }
 
     // Gets a player at a rank, returns Unknown if no player can be found at rank
-    public HashMap<String, String> getPlayerAtRank(int rank, StatType type) {
+    public Map<String, String> getPlayerAtRank(int rank, StatType type) {
         HashMap<String, String> result = new HashMap<String, String>() {{
             put("Unknown", "");
         }};

@@ -11,9 +11,7 @@ import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
@@ -70,6 +68,39 @@ public class CoinItems implements Listener {
 
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1200, 2));
                 player.getInventory().remove(itemInHand);
+            }
+        };
+
+        new CoinItem(Items.COWBOY) {
+            @Override
+            public void onClickItem(ArenaClickItemEvent event) {
+                Player rider = event.getArenaPlayer().getPlayer();
+                Horse horse = (Horse) rider.getWorld().spawnEntity(rider.getLocation(), EntityType.HORSE);
+
+                horse.getInventory().setSaddle(new ItemStack(Material.SADDLE));
+                horse.setTamed(true);
+                horse.setAdult();
+                horse.setOwner(rider);
+                horse.setPassenger(rider);
+
+                rider.getInventory().remove(rider.getItemInHand());
+            }
+        };
+
+        new CoinItem(Items.CYCLONE) {
+            @Override
+            public void onClickItem(ArenaClickItemEvent event) {
+                Player player = event.getArenaPlayer().getPlayer();
+                Location start = player.getLocation();
+
+                for (int i = -180; i < 180; i++) {
+                    player.teleport(new Location(start.getWorld(), start.getX(), start.getY(), start.getZ(), i, start.getPitch()));
+
+                    Projectile snowball = player.launchProjectile(Snowball.class);
+                    snowball.setVelocity(snowball.getVelocity().multiply(event.getArena().SPEED));
+                }
+
+                player.getInventory().remove(player.getItemInHand());
             }
         };
 

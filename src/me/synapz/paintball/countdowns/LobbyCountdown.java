@@ -23,7 +23,7 @@ public class LobbyCountdown extends PaintballCountdown {
         String suffix = GRAY + "" + ((int) counter) + GREEN + " seconds!";
 
         arena.broadcastMessage(prefix + " " + suffix);
-        arena.broadcastTitle(prefix, suffix, 20, 30, 20);
+        arena.broadcastTitle(prefix, suffix, 0, 30, 20);
     }
 
     public boolean stop() {
