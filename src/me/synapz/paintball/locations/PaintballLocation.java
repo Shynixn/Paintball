@@ -20,10 +20,15 @@ public abstract class PaintballLocation {
 
     // Creates a PaintballLocation from a path (Does not set anything in arenas.yml, just gets it)
     public PaintballLocation(Arena a, String locationFromFile) {
-        String[] rawLocation = locationFromFile.split(",");
-        Location location = new Location(Bukkit.getWorld(rawLocation[0]), Double.parseDouble(rawLocation[1]), Double.parseDouble(rawLocation[2]), Double.parseDouble(rawLocation[3]), Float.parseFloat(rawLocation[4]), Float.parseFloat(rawLocation[5]));
+        if (locationFromFile != null) {
+            String[] rawLocation = locationFromFile.split(",");
+            Location location = new Location(Bukkit.getWorld(rawLocation[0]), Double.parseDouble(rawLocation[1]), Double.parseDouble(rawLocation[2]), Double.parseDouble(rawLocation[3]), Float.parseFloat(rawLocation[4]), Float.parseFloat(rawLocation[5]));
+            this.loc = location;
+        } else {
+            this.loc = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
+        }
+
         this.arena = a;
-        this.loc = location;
     }
 
     public Location getLocation() {

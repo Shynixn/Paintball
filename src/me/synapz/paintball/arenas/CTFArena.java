@@ -66,7 +66,9 @@ public class CTFArena extends FlagArena {
     }
 
     public void remFlagLocation(Location loc) {
+        Team team = dropedFlagLocations.get(loc);
+
         loc = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-        dropedFlagLocations.remove(loc);
+        dropedFlagLocations.remove(loc, team);
     }
 }

@@ -399,6 +399,8 @@ public class Listeners implements Listener {
                     Utils.createFlag(ctfPlayer.getTeam(), resetLoc);
 
                     arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + ctfPlayer.getPlayer().getName() + " has reset " + ctfPlayer.getTeam().getTitleName() + "'s flag!");
+
+                    ((CTFArena) arena).remFlagLocation(clickedLoc);
                 } else {
                     Messenger.error(player, "You cannot pickup your own team's flag!");
                 }
@@ -461,8 +463,26 @@ public class Listeners implements Listener {
                 if (arena instanceof CTFArena && gamePlayer instanceof CTFArenaPlayer) {
                     CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
 
-                    if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getFlagLocation(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2)
-                        ctfPlayer.scoreFlag();
+
+                    if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getFlagLocation(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2) {
+                        boolean flagIsHeld = false;
+                        boolean flagIsDropped = ((CTFArena) arena).getDropedFlagLocations().values().contains(ctfPlayer.getTeam());
+
+                        for (ArenaPlayer player1 : arena.getAllArenaPlayers()) {
+                            CTFArenaPlayer ctfArenaPlayer = (CTFArenaPlayer) player1;
+
+                            if (ctfArenaPlayer.isFlagHolder() && ctfArenaPlayer.getHeldFlag() != null && ctfArenaPlayer.getHeldFlag() == ctfPlayer.getTeam()) {
+                                flagIsHeld = true;
+                                break;
+                            }
+                        }
+
+                        // Checks to make sure the dropped flag location is contains the players team
+                        if (flagIsDropped || flagIsHeld)
+                            BountifulAPI.sendActionBar(ctfPlayer.getPlayer(), ChatColor.DARK_RED + "" + ChatColor.BOLD + "Error" + Messenger.SUFFIX + ChatColor.RED + "You are missing your team's flag!", 240);
+                        else
+                            ctfPlayer.scoreFlag();
+                    }
                 } else if (arena instanceof DomArena && gamePlayer instanceof DomArenaPlayer) {
                     DomArenaPlayer domPlayer = (DomArenaPlayer) gamePlayer;
                     DomArena domArena = (DomArena) arena;

@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.FlagArena;
+import me.synapz.paintball.arenas.RTFArena;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -14,8 +15,13 @@ public class SetFlag extends TeamCommand {
         Location flagLoc = player.getLocation();
 
         if (arena instanceof FlagArena) {
-            ((FlagArena) arena).setFlagLocation(team, flagLoc);
-            Messenger.success(player, "Set " + arena.getName() + "'s " + team.getTitleName() + " Team flag to your location!", arena.getSteps());
+            if (team == null && arena instanceof RTFArena) {
+                ((RTFArena) arena).setNuetralFlagLocation(flagLoc);
+                Messenger.success(player, "Set " + arena.getName() + "'s " + " neutral flag to your location!", arena.getSteps());
+            } else {
+                ((FlagArena) arena).setFlagLocation(team, flagLoc);
+                Messenger.success(player, "Set " + arena.getName() + "'s " + team.getTitleName() + " Team flag to your location!", arena.getSteps());
+            }
         } else {
             Messenger.error(player, "That arena does not need any flags set!");
             return;

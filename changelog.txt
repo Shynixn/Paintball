@@ -1,3 +1,17 @@
+BETA-3.6.4
+- Fixed FFA arena having some remains from ELM (1 life)
+- Fixed NullPointerException on stop if the neutral flag was never set
+- Fixed NullPointerException when a player died and was not on a horse
+- Fixed RTF flags not being set to air on arena finish
+
+- Fixed players from being able to score a flag when they did not have their flag at their base
+
+BETA-3.6.3
+- Fixed RTF being converted to TDM on create
+- Added ability to set neutral flag for RTF
+- Now able to fully setup RTF arena
+- Game play aspect almost finished
+
 BETA-3.6.2
 - Added wool blocks to load on RTF bases
 - More fixes to RTF (You can set flags now)

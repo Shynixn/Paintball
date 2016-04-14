@@ -35,6 +35,7 @@ public class Create extends PaintballCommand {
                     break;
                 case RTF:
                     a = new RTFArena(arenaName, arenaName, true);
+                    break;
                 case TDM:
                     a = new Arena(arenaName, arenaName, true);
                     break;

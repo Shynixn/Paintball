@@ -6,9 +6,6 @@ public class FFAArena extends Arena {
 
     public FFAArena(String name, String currentName, boolean addToConfig) {
         super(name, currentName, addToConfig);
-
-        // Elimination players should have only one life
-        LIVES = 1;
     }
 
     /*

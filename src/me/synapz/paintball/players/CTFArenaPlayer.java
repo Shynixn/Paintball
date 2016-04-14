@@ -86,6 +86,10 @@ public class CTFArenaPlayer extends ArenaPlayer {
         return isFlagHolder;
     }
 
+    public Team getHeldFlag() {
+        return heldFlag;
+    }
+
     private void removeFlag() {
         if (arena.ARENA_WOOL_HELMET)
             player.getInventory().setHelmet(Utils.makeWool(team.getChatColor() + team.getTitleName() + " Team", team.getDyeColor()));

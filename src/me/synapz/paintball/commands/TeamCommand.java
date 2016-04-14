@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands;
 
+import me.synapz.paintball.arenas.RTFArena;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.commands.arena.DelLocation;
@@ -33,7 +34,7 @@ public abstract class TeamCommand extends ArenaCommand {
             return;
         }
 
-        if ((this instanceof SetLocation || this instanceof DelLocation) && rawTeamName.equalsIgnoreCase("all")) {
+        if ((this instanceof SetLocation || this instanceof DelLocation) && rawTeamName.equalsIgnoreCase("all") || arena instanceof RTFArena && rawTeamName.equalsIgnoreCase("neutral")) {
             onCommand();
             return;
         }

@@ -241,8 +241,11 @@ public class ArenaPlayer extends PaintballPlayer {
 
         // Takes player off horse or whatever they are in
         Entity vehicle = arenaPlayer.getPlayer().getVehicle();
-        vehicle.eject();
-        vehicle.setTicksLived(-1);
+
+        if (vehicle != null) {
+            vehicle.eject();
+            vehicle.setTicksLived(-1);
+        }
 
         arena.updateAllScoreboard();
 

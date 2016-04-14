@@ -106,10 +106,12 @@ public class Utils {
     }
 
     public static void createFlag(Team team, Location location) {
+        DyeColor color = team == null ? DyeColor.WHITE : team.getDyeColor();
+
         // Sets the location to a banner then updates the banner to the team color
         location.getBlock().setType(Material.STANDING_BANNER);
         Banner banner = (Banner) location.getBlock().getState();
-        banner.setBaseColor(team.getDyeColor());
+        banner.setBaseColor(color);
 
         // Turns the banner based on the yaw
         org.bukkit.material.Banner bannerData = (org.bukkit.material.Banner) banner.getData();
