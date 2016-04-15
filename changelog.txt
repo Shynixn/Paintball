@@ -1,3 +1,6 @@
+BETA-3.6.5
+- Fixed annoying error where game would not end even if they killed everyone
+
 BETA-3.6.4
 - Fixed FFA arena having some remains from ELM (1 life)
 - Fixed NullPointerException on stop if the neutral flag was never set

@@ -160,16 +160,18 @@ public class ArenaPlayer extends PaintballPlayer {
         if (Settings.PLAYERDATA.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath(player.getUniqueId())) < heightKillStreak)
             Settings.PLAYERDATA.setStat(StatType.HIGEST_KILL_STREAK, this, heightKillStreak);
 
-        // TODO: What if there is 5 teams with 1 with 0 players... Make it so it
-        // TODO: So it also checks for arenas with players or if 1 player in the arena
-        // Looks in each team to see if there are 0 players in it...?
+
+        int left = 0;
+        // There must be at least one team
         for (Team team : arena.getArenaTeamList()) {
-            if (team.getSize() == 0) {
-                // TODO: get winner
-                // arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
-                break;
+            if (team.getSize() >= 1) {
+                left++;
             }
         }
+
+        // If there is less than one team with a player, end the game
+        if (left <= 1)
+            arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
     }
 
     public void incrementHits() {
