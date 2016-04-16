@@ -15,6 +15,7 @@ public enum Items {
     FLY("Fly", Material.FLINT, false, 1, "Activates fly on click", 0, 6, 0, "", "", Utils.DEFAULT_SOUND, 0),
     ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted",  Utils.DEFAULT_SOUND, 3),
     MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Utils.DEFAULT_SOUND, 3),
+    DOUBLE("2x Coins", Material.GOLD_INGOT, true, 1, "Earn 2x Coins for the rest of the game", 0, 9, 0, "", "", Utils.DEFAULT_SOUND, 0),
     SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed",  Utils.DEFAULT_SOUND, 3),
     CYCLONE("Cyclone", Material.HOPPER, true, 1, "Turns you into a Paintball shooting Cyclone", 0, 11, 0, "", "winded", Utils.DEFAULT_SOUND, 3),
     PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended",  Utils.DEFAULT_SOUND, 3),

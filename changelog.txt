@@ -1,3 +1,19 @@
+BETA-3.6.8
+- RTF Finished!
+- Fixed wrong kill names in CTFArena and RTFArena
+- Fixed leave ending game when one player leaves
+
+BETA-3.6.7
+- New Coin Item! "2x Coins"
+- Finished RTF Game mode!
+- Hooked RTF into Flag Captures and Flag Drops leaderboard
+- Fixed CTF and RTF arena not auto winning when reached 0
+- Fixed wrong team name on banner that was picked up on helmet
+
+BETA-3.6.6
+- Added config value "nametags" to toggle nametag visability
+- Fixed leave out of bounds when there was 0 players left
+
 BETA-3.6.5
 - Fixed annoying error where game would not end even if they killed everyone
 

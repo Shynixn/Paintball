@@ -14,6 +14,7 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
@@ -103,6 +104,25 @@ public class Utils {
         banner.setItemMeta(meta);
 
         return banner;
+    }
+
+    public static ItemStack[] colorLeatherItems(Team team, ItemStack... items) {
+        int location = 0;
+        ItemStack[] editedItems = new ItemStack[items.length];
+        for (ItemStack item : items) {
+            ItemStack armour = new ItemStack(item.getType(), 1);
+            LeatherArmorMeta lam = (LeatherArmorMeta) armour.getItemMeta();
+            lam.setColor(team.getColor());
+            lam.setDisplayName(team.getChatColor() + team.getTitleName() + " Team");
+            armour.setItemMeta(lam);
+            editedItems[location] = armour;
+            location++;
+        }
+        return editedItems;
+    }
+
+    public static boolean locEquals(Location loc, Location loc2) {
+        return loc.getBlockX() == loc2.getBlockX() && loc.getBlockY() == loc2.getBlockY() && loc.getBlockZ() == loc2.getBlockZ();
     }
 
     public static void createFlag(Team team, Location location) {

@@ -44,6 +44,7 @@ public class ArenaPlayer extends PaintballPlayer {
     private int hits;
     private int shots;
     protected int lives;
+    private int multiplier;
 
     private Location lastLocation;
 
@@ -170,7 +171,7 @@ public class ArenaPlayer extends PaintballPlayer {
         }
 
         // If there is less than one team with a player, end the game
-        if (left <= 1)
+        if (left <= 1 && arena.getAllPlayers().keySet().size() >= 1)
             arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
     }
 
@@ -189,7 +190,7 @@ public class ArenaPlayer extends PaintballPlayer {
     public void giveItems() {
         PlayerInventory inv = player.getInventory();
 
-        inv.setArmorContents(colorLeatherItems(new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_HELMET)));
+        inv.setArmorContents(Utils.colorLeatherItems(team, new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_HELMET)));
         CoinItems.getCoinItems().getMainItem().giveItemToPlayer(this);
 
         if (arena.COIN_SHOP)
@@ -386,6 +387,7 @@ public class ArenaPlayer extends PaintballPlayer {
         if (!arena.COIN_SHOP)
             return;
 
+        amount *= multiplier;
         coins += amount;
     }
 
@@ -394,6 +396,10 @@ public class ArenaPlayer extends PaintballPlayer {
             return;
 
         coins -= amount;
+    }
+
+    public void setMultiplier(int multiplier) {
+        this.multiplier = multiplier;
     }
 
     /*
@@ -436,28 +442,9 @@ public class ArenaPlayer extends PaintballPlayer {
     }
 
     public Location getLastLocation() {
+        if (lastLocation == null)
+            return player.getLocation();
         return lastLocation;
-    }
-
-    /**
-     * Colors a list of armour
-     *
-     * @param items Items to be dyed
-     * @return Edited items to be added
-     */
-    protected ItemStack[] colorLeatherItems(ItemStack... items) {
-        int location = 0;
-        ItemStack[] editedItems = new ItemStack[items.length];
-        for (ItemStack item : items) {
-            ItemStack armour = new ItemStack(item.getType(), 1);
-            LeatherArmorMeta lam = (LeatherArmorMeta) armour.getItemMeta();
-            lam.setColor(team.getColor());
-            lam.setDisplayName(team.getChatColor() + team.getTitleName() + " Team");
-            armour.setItemMeta(lam);
-            editedItems[location] = armour;
-            location++;
-        }
-        return editedItems;
     }
 
     private boolean reachedGoal() {

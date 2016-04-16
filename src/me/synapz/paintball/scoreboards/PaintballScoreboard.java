@@ -126,6 +126,9 @@ public class PaintballScoreboard {
         for (PaintballPlayer pbPlayer : this.pbPlayer.getArena().getAllPlayers().values()) {
             final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(pbPlayer.getTeam().getTitleName());
             playerTeam.setAllowFriendlyFire(false);
+
+            if (!pbPlayer.getArena().NAMETAGS)
+                playerTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
             playerTeam.setPrefix(String.valueOf(pbPlayer.getTeam().getChatColor()));
             playerTeam.addPlayer(pbPlayer.getPlayer());
         }

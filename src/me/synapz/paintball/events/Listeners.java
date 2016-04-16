@@ -1,13 +1,11 @@
 package me.synapz.paintball.events;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
-import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.ArenaManager;
-import me.synapz.paintball.arenas.CTFArena;
-import me.synapz.paintball.arenas.DomArena;
+import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.DomGameCountdown;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
+import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.FlagLocation;
@@ -356,63 +354,83 @@ public class Listeners implements Listener {
         if (arena == null)
             return;
 
-        if (!(arena instanceof CTFArena))
-            return;
-
         PaintballPlayer gamePlayer = arena.getPaintballPlayer(player);
         Block clicked = e.getClickedBlock();
 
-        if (clicked == null || !(gamePlayer instanceof CTFArenaPlayer))
+        if (clicked == null)
             return;
-
-        CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
 
         Location clickedLoc = new Location(clicked.getWorld(), clicked.getX(), clicked.getY(), clicked.getZ());
 
-        boolean inFile = ((CTFArena) arena).getDropedFlagLocations().containsKey(clickedLoc);
-        Team clickedFlag = null;
+        switch (arena.getArenaType()) {
+            case CTF:
+                if (gamePlayer instanceof CTFArenaPlayer) {
+                    CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) gamePlayer;
 
-        // If it is inside the dropFlagLocation, just get it out
-        if (inFile) {
-            clickedFlag = ((CTFArena) arena).getDropedFlagLocations().get(clickedLoc);
-        } else {
-            // Otherwise check if the banner is in one of the set flag locations
-            for (Team team : arena.getArenaTeamList()) {
-                Location flagLoc = ((CTFArena) arena).getFlagLocation(team);
+                    boolean inFile = ((CTFArena) arena).getDropedFlagLocations().containsKey(clickedLoc);
+                    Team clickedFlag = null;
 
-                if (flagLoc.getBlockX() == clickedLoc.getBlockX()
-                        && flagLoc.getBlockY() == clickedLoc.getBlockY()
-                        && flagLoc.getBlockZ() == clickedLoc.getBlockZ()) {
-                    inFile = true;
-                    clickedFlag = team;
+                    // If it is inside the dropFlagLocation, just get it out
+                    if (inFile) {
+                        clickedFlag = ((CTFArena) arena).getDropedFlagLocations().get(clickedLoc);
+                    } else {
+                        // Otherwise check if the banner is in one of the set flag locations
+                        for (Team team : arena.getArenaTeamList()) {
+                            Location flagLoc = ((CTFArena) arena).getFlagLocation(team);
+
+                            if (flagLoc.getBlockX() == clickedLoc.getBlockX()
+                                    && flagLoc.getBlockY() == clickedLoc.getBlockY()
+                                    && flagLoc.getBlockZ() == clickedLoc.getBlockZ()) {
+                                inFile = true;
+                                clickedFlag = team;
+                            }
+                        }
+                    }
+
+                    if (inFile) {
+                        if (clickedFlag == ctfPlayer.getTeam()) {
+                            if (((CTFArena) arena).getDropedFlagLocations().containsKey(clickedLoc)) {
+                                clickedLoc.getBlock().setType(Material.AIR);
+
+                                Location resetLoc = new FlagLocation((CTFArena) ctfPlayer.getArena(), clickedFlag).getLocation();
+
+                                Utils.createFlag(ctfPlayer.getTeam(), resetLoc);
+
+                                arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + ctfPlayer.getPlayer().getName() + " has reset " + ctfPlayer.getTeam().getTitleName() + "'s flag!");
+
+                                ((CTFArena) arena).remFlagLocation(clickedLoc);
+                            } else {
+                                Messenger.error(player, "You cannot pickup your own team's flag!");
+                            }
+                            return;
+                        } else {
+                            if (ctfPlayer.isFlagHolder())
+                                ctfPlayer.dropFlag();
+
+                            ctfPlayer.pickupFlag(clickedLoc, clickedFlag);
+                        }
+                    }
                 }
-            }
-        }
 
-        if (inFile) {
-            if (clickedFlag == ctfPlayer.getTeam()) {
-                if (((CTFArena) arena).getDropedFlagLocations().containsKey(clickedLoc)) {
-                    clickedLoc.getBlock().setType(Material.AIR);
+                break;
+            case RTF:
+                if (arena instanceof RTFArena && gamePlayer instanceof RTFArenaPlayer) {
+                    RTFArenaPlayer rtfPlayer = (RTFArenaPlayer) gamePlayer;
+                    RTFArena rtfArena = (RTFArena) arena;
+                    Location currentLocation = rtfArena.getCurrentFlagLocation();
 
-                    Location resetLoc = new FlagLocation((CTFArena) ctfPlayer.getArena(), clickedFlag).getLocation();
-
-                    Utils.createFlag(ctfPlayer.getTeam(), resetLoc);
-
-                    arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + ctfPlayer.getPlayer().getName() + " has reset " + ctfPlayer.getTeam().getTitleName() + "'s flag!");
-
-                    ((CTFArena) arena).remFlagLocation(clickedLoc);
-                } else {
-                    Messenger.error(player, "You cannot pickup your own team's flag!");
+                    // The location clicked was the neutral banner
+                    if (Utils.locEquals(Utils.simplifyLocation(currentLocation), (Utils.simplifyLocation(clickedLoc)))) {
+                        rtfPlayer.pickupFlag(Utils.simplifyLocation(clickedLoc), null);
+                    }
                 }
+
+                break;
+            default:
                 return;
-            } else {
-                if (ctfPlayer.isFlagHolder())
-                    ctfPlayer.dropFlag();
-
-                ctfPlayer.pickupFlag(clickedLoc, clickedFlag);
-            }
-            e.setCancelled(true);
         }
+
+        e.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -463,7 +481,6 @@ public class Listeners implements Listener {
                 if (arena instanceof CTFArena && gamePlayer instanceof CTFArenaPlayer) {
                     CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
 
-
                     if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getFlagLocation(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2) {
                         boolean flagIsHeld = false;
                         boolean flagIsDropped = ((CTFArena) arena).getDropedFlagLocations().values().contains(ctfPlayer.getTeam());
@@ -482,6 +499,12 @@ public class Listeners implements Listener {
                             BountifulAPI.sendActionBar(ctfPlayer.getPlayer(), ChatColor.DARK_RED + "" + ChatColor.BOLD + "Error" + Messenger.SUFFIX + ChatColor.RED + "You are missing your team's flag!", 240);
                         else
                             ctfPlayer.scoreFlag();
+                    }
+                } else if (arena instanceof RTFArena && gamePlayer instanceof RTFArenaPlayer) {
+                    RTFArenaPlayer rtfPlayer = (RTFArenaPlayer) arena.getPaintballPlayer(player);
+
+                    if (rtfPlayer.isFlagHolder() && rtfPlayer.getPlayer().getLocation().distance(((RTFArena) arena).getFlagLocation(team)) <= 2) {
+                        rtfPlayer.scoreFlag();
                     }
                 } else if (arena instanceof DomArena && gamePlayer instanceof DomArenaPlayer) {
                     DomArenaPlayer domPlayer = (DomArenaPlayer) gamePlayer;

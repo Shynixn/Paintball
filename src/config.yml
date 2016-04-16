@@ -58,6 +58,8 @@ Per-Arena-Settings:
     team-switch-cooldown: 3
     # When a player switches team should they teleport to the lobby location
     teleport-on-team-switch: true
+    # True - Players can see nametags. False - Nametags will not be shown
+    nametags: true
     # Settings for when a player joins an arena
     Join-Arena:
       # True - Chat will only send to players on the same team. False - Chat will send to whole arena (only for when in lobby)

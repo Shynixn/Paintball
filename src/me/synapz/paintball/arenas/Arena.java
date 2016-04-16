@@ -69,6 +69,7 @@ public class Arena {
     public boolean TELEPORT_TEAM_SWITCH;
     public boolean ARENA_WOOL_HELMET;
     public boolean LOBBY_WOOL_HELMET;
+    public boolean NAMETAGS;
 
     public List<String> BLOCKED_COMMANDS;
     public List<String> ALLOWED_COMMANDS;
@@ -410,6 +411,8 @@ public class Arena {
 
             if (this instanceof CTFArena)
                 player = new CTFArenaPlayer(this, p.getTeam(), p.getPlayer());
+            else if (this instanceof RTFArena)
+                player = new RTFArenaPlayer(this, p.getTeam(), p.getPlayer());
             else if (this instanceof FFAArena)
                 player = new FFAArenaPlayer(this, p.getTeam(), p.getPlayer());
             else if (this instanceof DomArena)
@@ -533,6 +536,9 @@ public class Arena {
 
     public void incrementTeamScore(Team team) {
         teams.replace(team, teams.get(team), teams.get(team)+1);
+
+        if (teams.get(team) == MAX_SCORE)
+            win(Arrays.asList(team));
     }
 
     public void decrementTeamScore(Team team) {
@@ -733,6 +739,7 @@ public class Arena {
         TELEPORT_TEAM_SWITCH       = ARENA.loadBoolean("teleport-on-team-switch", this);
         ARENA_WOOL_HELMET          = ARENA.loadBoolean("Join-Arena.wool-helmet", this);
         LOBBY_WOOL_HELMET          = ARENA.loadBoolean("Join-Lobby.wool-helmet", this);
+        NAMETAGS                   = ARENA.loadBoolean("nametags", this);
 
         DISABLE_ALL_COMMANDS       = config.getBoolean("Commands.disable-all-commands");
         ALL_PAINTBALL_COMMANDS     = config.getBoolean("Commands.all-paintball-commands");

@@ -104,6 +104,17 @@ public class CoinItems implements Listener {
             }
         };
 
+        new CoinItem(Items.DOUBLE) {
+            @Override
+            public void onClickItem(ArenaClickItemEvent event) {
+                ArenaPlayer arenaPlayer = event.getArenaPlayer();
+
+                arenaPlayer.setMultiplier(2);
+
+                arenaPlayer.getPlayer().getInventory().remove(arenaPlayer.getPlayer().getItemInHand());
+            }
+        };
+
         new CoinItem(Items.ROCKET_LAUNCHER) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
