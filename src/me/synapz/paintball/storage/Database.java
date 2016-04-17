@@ -28,20 +28,23 @@ public class Database extends PaintballFile implements PluginMessageListener {
     private static String username = null;
     private static String password = null;
     private static Plugin pb = null;
-    private static String SID = null;
+    private static String SID = "Generate";
     public Boolean bungee = false;
     private String BID = null;
     private String database = null;
 
     public Database(Plugin pb) {
         super(pb, "database.yml");
+        if (this.pb == null) {
+            setupDatabase();
+        }
+    }
 
+    public void setupDatabase() {
         this.pb = pb;
 
         SQL = loadBoolean(Databases.SQL_ENABLED);
         host = loadString(Databases.HOST);
-        // Port removed?
-        // port = loadInt(Databases.PORT);
         username = loadString(Databases.USERNAME);
         password = loadString(Databases.PASSWORD);
         database = loadString(Databases.DATABASE);
@@ -50,8 +53,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
 
         if (loadString(Databases.SERVER_ID).equalsIgnoreCase("Generate")) {
             Random r = new Random(5);
-            String base10ServerID = r.doubles(1073741824).toString();
-            String serverID = Base64.getEncoder().encodeToString(base10ServerID.getBytes());
+            Integer base10ServerID = r.nextInt(9999);
+            String serverIDString = Integer.toString(base10ServerID);
+            String serverID = Base64.getEncoder().encodeToString(serverIDString.getBytes());
             setValue("Bungee.serverID", serverID);
             //run a method to start the listening for bungee commands
         }
@@ -252,8 +256,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
     }
 
     public static void updateBungeeSigns() {
-        // TODO: Still null
-        /*
         int numb = 0;
         String arenas = "";
         String sign = "";
@@ -270,12 +272,10 @@ public class Database extends PaintballFile implements PluginMessageListener {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Paintball");
         out.writeUTF("Arenas");
-        // TODO: This is null
         out.writeUTF(SID);
         out.writeUTF(arenas);
         out.writeUTF(sign);
         Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
-        */
     }
 
 }
