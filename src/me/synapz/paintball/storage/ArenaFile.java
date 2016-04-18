@@ -124,6 +124,9 @@ public class ArenaFile extends PaintballFile {
                     case DOM:
                         a = new DomArena(arenaName, name, false);
                         break;
+                    case DTC:
+                        a = new DTCArena(arenaName, name, false);
+                        break;
                     case RTF:
                         a = new RTFArena(arenaName, name, false);
                         break;

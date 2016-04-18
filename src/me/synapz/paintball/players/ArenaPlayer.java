@@ -44,7 +44,7 @@ public class ArenaPlayer extends PaintballPlayer {
     private int hits;
     private int shots;
     protected int lives;
-    private int multiplier;
+    private int multiplier = 1;
 
     private Location lastLocation;
 
@@ -92,7 +92,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 .addLine(ScoreboardLine.LINE)
                 .addLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, Settings.VAULT)
                 .addLine(ScoreboardLine.KD, "0.00")
-                .addLine(ScoreboardLine.COIN, 0, arena.COIN_SHOP)
+                .addLine(ScoreboardLine.COIN, 0, arena.COINS)
                 .addLine(ScoreboardLine.KILL_STREAK, 0)
                 .addLine(ScoreboardLine.KILLS, 0)
                 .addLine(ScoreboardLine.LINE)
@@ -101,8 +101,6 @@ public class ArenaPlayer extends PaintballPlayer {
             sb.addLine(ScoreboardLine.LIVES, Utils.makeHealth(arena.LIVES));
         return sb.build();
     }
-
-
 
     @Override
     public void updateScoreboard() {
@@ -115,8 +113,12 @@ public class ArenaPlayer extends PaintballPlayer {
         pbSb.reloadTeams(false)
                 .reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, size+2)
                 .reloadLine(ScoreboardLine.KD, getKd(), size+3)
-                .reloadLine(ScoreboardLine.COIN, String.valueOf(getCoins()), size+4)
-                .reloadLine(ScoreboardLine.KILL_STREAK, String.valueOf(getKillStreak()), size+5)
+                .reloadLine(ScoreboardLine.COIN, String.valueOf(getCoins()), size+4, arena.COINS);
+
+        if (!arena.COINS)
+            size--;
+
+        pbSb.reloadLine(ScoreboardLine.KILL_STREAK, String.valueOf(getKillStreak()), size+5)
                 .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6)
                 .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8)
                 .reloadLine(ScoreboardLine.LIVES, Utils.makeHealth(lives), size+9, arena.LIVES > 0);
@@ -225,7 +227,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * @param arenaPlayer ArenaPlayer who was killed
      */
     public void kill(ArenaPlayer arenaPlayer, String action) {
-        // The game is already over and they won so just do not do anything
+        // The grame is already over and they won so just do not do anything
         if (arena.getTeamScore(team) == arena.MAX_SCORE)
             return;
         kills++;
@@ -384,17 +386,11 @@ public class ArenaPlayer extends PaintballPlayer {
     }
 
     public void depositCoin(double amount){
-        if (!arena.COIN_SHOP)
-            return;
-
         amount *= multiplier;
         coins += amount;
     }
 
     public void withdrawCoin(double amount) {
-        if (!arena.COIN_SHOP)
-            return;
-
         coins -= amount;
     }
 

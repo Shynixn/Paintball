@@ -60,6 +60,9 @@ Per-Arena-Settings:
     teleport-on-team-switch: true
     # True - Players can see nametags. False - Nametags will not be shown
     nametags: true
+    # True - Coins will be shown on the scoreboard and incremented. False - Coins will be disabled
+    coins: true
+
     # Settings for when a player joins an arena
     Join-Arena:
       # True - Chat will only send to players on the same team. False - Chat will send to whole arena (only for when in lobby)
@@ -75,6 +78,28 @@ Per-Arena-Settings:
       per-team-chat: true
       # True - Will give a colored wool helmet. False - Will give a colored armour helmet
       wool-helmet: true
+
+    # Specific extra settings for CTF arenas
+    CTF:
+      # Played sounds look at plugin page for the sound list specific to your version. By default there is no sound ("") because of different sound names for 1.8 and 1.9
+
+      # Sound played on a flag drop
+      Flag-Drop: ""
+      # Sound played on flag score
+      Flag-Score: ""
+      # Sound played on flag pickyup
+      Flag-Pickup: ""
+
+    # Specific extra settings for CTF arenas
+    RTF:
+      # Played sounds look at plugin page for the sound list specific to your version. By default there is no sound ("") because of different sound names for 1.8 and 1.9
+
+      # Sound played on a flag drop
+      Flag-Drop: ""
+      # Sound played on flag score
+      Flag-Score: ""
+      # Sound played on flag pickyup
+      Flag-Pickup: ""
 
     # Default rewards
     Rewards:

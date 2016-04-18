@@ -29,6 +29,8 @@ public class CTFArenaPlayer extends FlagArenaPlayer {
 
         heldFlag = pickedUp;
 
+        player.getWorld().playSound(player.getLocation(), ctfArena.FLAG_PICKUP, 5, 5);
+
         if (ctfArena.getDropedFlagLocations().containsKey(loc))
             ctfArena.remFlagLocation(loc);
     }
@@ -40,6 +42,8 @@ public class CTFArenaPlayer extends FlagArenaPlayer {
         Utils.createFlag(heldFlag, getLastLocation());
         ctfArena.addFlagLocation(getLastLocation(), heldFlag);
 
+        player.getWorld().playSound(player.getLocation(), ctfArena.FLAG_DROP, 5, 5);
+
         heldFlag = null;
     }
 
@@ -49,6 +53,8 @@ public class CTFArenaPlayer extends FlagArenaPlayer {
 
         Location toReset = ctfArena.getFlagLocation(heldFlag);
         Utils.createFlag(heldFlag, toReset);
+
+        player.getWorld().playSound(player.getLocation(), ctfArena.FLAG_SCORE, 5, 5);
 
         heldFlag = null;
     }

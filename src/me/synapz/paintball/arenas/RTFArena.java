@@ -6,20 +6,22 @@ import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import static me.synapz.paintball.storage.Settings.ARENA;
 import static me.synapz.paintball.storage.Settings.ARENA_FILE;
 import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.RESET;
 import static org.bukkit.ChatColor.STRIKETHROUGH;
 
 public class RTFArena extends FlagArena {
+
+    public Sound FLAG_PICKUP;
+    public Sound FLAG_DROP;
+    public Sound FLAG_SCORE;
 
     private Location neutralFlagLocation;
     private ArenaPlayer holder;
@@ -83,6 +85,15 @@ public class RTFArena extends FlagArena {
         }
 
         getNuetralFlagLocation().getBlock().setType(Material.AIR);
+    }
+
+    @Override
+    public void loadValues() {
+        super.loadValues();
+
+        FLAG_PICKUP             = (ARENA.loadString("RTF.Flag-Pickup", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("RTF.Flag-Pickup", this));
+        FLAG_DROP               = (ARENA.loadString("RTF.Flag-Drop", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("RTF.Flag-Pickup", this));
+        FLAG_SCORE              = (ARENA.loadString("RTF.Flag-Score", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("RTF.Flag-Pickup", this));
     }
 
     public Location getCurrentFlagLocation() {

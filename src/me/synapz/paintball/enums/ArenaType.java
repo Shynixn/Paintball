@@ -10,7 +10,8 @@ public enum ArenaType {
     FFA("Free For All", "ffa"),
     DOM("Domination", "dom"),
     LTS("Last Team Standing", "lts"),
-    RTF("Rush the Flag", "rtf");
+    RTF("Rush the Flag", "rtf"),
+    DTC("Destroy the Core", "dtc");
 
     private String fullName;
     private String shortName;

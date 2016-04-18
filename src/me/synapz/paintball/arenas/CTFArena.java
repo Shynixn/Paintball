@@ -8,16 +8,22 @@ import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static me.synapz.paintball.storage.Settings.ARENA;
 import static me.synapz.paintball.storage.Settings.ARENA_FILE;
 import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.RESET;
 import static org.bukkit.ChatColor.STRIKETHROUGH;
 
 public class CTFArena extends FlagArena {
+
+    public Sound FLAG_PICKUP;
+    public Sound FLAG_DROP;
+    public Sound FLAG_SCORE;
 
     private Map<Location, Team> dropedFlagLocations = new HashMap<Location, Team>();
 
@@ -54,6 +60,15 @@ public class CTFArena extends FlagArena {
         // Turns all pickedup flag locations to air
         for (Location loc : getDropedFlagLocations().keySet())
             loc.getBlock().setType(Material.AIR);
+    }
+
+    @Override
+    public void loadConfigValues() {
+        super.loadConfigValues();
+
+        FLAG_PICKUP             = (ARENA.loadString("CTF.Flag-Pickup", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("CTF.Flag-Pickup", this));
+        FLAG_DROP               = (ARENA.loadString("CTF.Flag-Drop", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("CTF.Flag-Pickup", this));
+        FLAG_SCORE              = (ARENA.loadString("CTF.Flag-Score", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("CTF.Flag-Pickup", this));
     }
 
     public Map<Location, Team> getDropedFlagLocations() {

@@ -45,10 +45,10 @@ public class CoinItemListener implements Listener {
         if (coinItem.hasError(arenaPlayer)) {
             Messenger.error(player, new String[]{(String) coinItem.getError(arenaPlayer).get(0)});
         } else {
+            coinItem.giveItemToPlayer(arenaPlayer);
             if ((coinItem.requiresMoney()) || (coinItem.requiresCoins())) {
                 arena.updateAllScoreboard();
             }
-            coinItem.giveItemToPlayer(arenaPlayer);
         }
         e.setCancelled(true);
         player.closeInventory();

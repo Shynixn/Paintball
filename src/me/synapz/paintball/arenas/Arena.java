@@ -55,6 +55,7 @@ public class Arena {
     public String SPEC_CHAT;
     public String CURRENCY;
 
+    public boolean COINS;
     public boolean FIREWORK_ON_DEATH;
     public boolean STOP_PROT_ON_HIT;
     public boolean ACCURACY;
@@ -711,7 +712,7 @@ public class Arena {
         LIVES                       = ARENA.loadInt("lives", this);
         TEAM_SWITCH_COOLDOWN        = ARENA.loadInt("team-switch-cooldown", this);
         SPEED                       = ARENA.loadInt("speed", this);
-        CURRENCY                   = ARENA.loadString("currency", this);
+        CURRENCY                    = ARENA.loadString("currency", this);
 
         ARENA_COUNTDOWN             = ARENA.loadInt("Countdown.arena.countdown", this);
         ARENA_INTERVAL              = ARENA.loadInt("Countdown.arena.interval", this);
@@ -727,6 +728,7 @@ public class Arena {
         MONEY_PER_WIN               = ARENA.loadInt("Rewards.Money.per-win", this);
         MONEY_PER_DEFEAT            = ARENA.loadInt("Rewards.Money.per-defeat", this);
 
+        COINS                      = ARENA.loadBoolean("coins", this);
         FIREWORK_ON_DEATH          = ARENA.loadBoolean("firework-on-death", this);
         STOP_PROT_ON_HIT           = ARENA.loadBoolean("cancel-prot-on-hit", this);
         ACCURACY                   = ARENA.loadBoolean("accuracy", this);

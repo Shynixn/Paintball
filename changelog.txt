@@ -1,3 +1,26 @@
+BETA-3.7.3
+- Added flag values for RTF arena
+    - RTF Flag-Pickup sound
+    - RTF Flag-Drop sound
+    - RTF Flag-Score sound
+
+BETA-3.7.2
+- Fixed coins from showing on scoreboard reload if coins is false in config
+- Fixed coins not updating when you buy something
+
+BETA-3.7.1
+- DTC (Destroy the Core) game mode started! (Ready for setup, game play not ready)
+
+BETA-3.7.0
+- Fixed coins not incrementing :(
+- Fixed Coin Shop config value from interfering with coin on scoreboard
+- Added config option "coins" to toggle the use of coins
+
+BETA-3.6.9
+- Added CTF arena Flag-Drop sound to config
+- Added CTF arena Flag-Pickup sound to config
+- Added CTF arena Flag-Score sound to config
+
 BETA-3.6.8
 - RTF Finished!
 - Fixed wrong kill names in CTFArena and RTFArena
@@ -276,7 +299,6 @@ BETA-1.5
 - Advanced items.yml saving so you will always have an up-to-date version of new items in items.yml always
 - Fixed spelling mistakes
 - Added arenas.yml, and items.yml to /pb admin reload
-
 - Added Paintball Shower into Coin Shop
 
 BETA-1.4
