@@ -35,12 +35,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
 
     public Database(Plugin pb) {
         super(pb, "database.yml");
-        if (this.pb == null) {
-            setupDatabase();
-        }
     }
 
-    public void setupDatabase() {
+    public void setupDatabase(Plugin pb) {
         this.pb = pb;
 
         SQL = loadBoolean(Databases.SQL_ENABLED);
@@ -263,11 +260,12 @@ public class Database extends PaintballFile implements PluginMessageListener {
             Arena a = ArenaManager.getArenaManager().getArenas().get(an);
             if (numb != 0) {
                 arenas = arenas + ":" + a.getName();
-                sign = sign + ":" + a.getStateAsString();
+                sign = sign + ":" + a.getSign();
             } else {
-                arenas = arenas + a.getName();
-                sign = sign + a.getStateAsString();
+                arenas = a.getName();
+                sign = a.getSign();
             }
+            numb++;
         }
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Paintball");

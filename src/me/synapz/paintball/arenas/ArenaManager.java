@@ -120,8 +120,8 @@ public class ArenaManager {
     public void updateAllSignsOnServer() {
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
 
-        // TODO: Throws null
-        // DATABASE.updateBungeeSigns();
+        // TODO: fixed
+        DATABASE.updateBungeeSigns();
 
         for (SignLocation signLoc : Settings.ARENA.getSigns().values()) {
             if (!(signLoc.getLocation().getBlock().getState() instanceof Sign)) {
