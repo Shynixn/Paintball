@@ -3,18 +3,18 @@ package me.synapz.paintball.arenas;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import com.google.common.base.Joiner;
-import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.enums.Team;
-import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.enums.ArenaType;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -357,6 +357,16 @@ public class Arena {
             sign.setLine(3, getMax() <= 0 ? "0/0" : getLobbyPlayers().size() == getMax() || getAllArenaPlayers().size() == getMax() ? RED + "Full" : (state == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "" : state == ArenaState.IN_PROGRESS || state == ArenaState.STARTING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
             sign.update();
         }
+    }
+
+    public String getSign() {
+        int counter = Utils.getCurrentCounter(this);
+        String sign = getName() + "," + getStateAsString() + " " + (counter == -1 ? "" : counter + "s") + "," +
+                (getMax() <= 0 ? "0/0" : getLobbyPlayers().size() == getMax() || getAllArenaPlayers().size() ==
+                        getMax() ? RED + "Full" : (state == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "" :
+                        state == ArenaState.IN_PROGRESS || state == ArenaState.STARTING ? getAllArenaPlayers().size() + ""
+                                : "0") + "/" + getMax());
+        return sign;
     }
 
     public Map<Location, SignLocation> getSignLocations() {

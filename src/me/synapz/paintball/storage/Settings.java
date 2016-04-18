@@ -1,9 +1,9 @@
 package me.synapz.paintball.storage;
 
 
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.coin.CoinItems;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -73,6 +73,7 @@ public class Settings {
         ITEMS = new ItemFile(pb);
         ARENA = new ArenaFile(pb);
         DATABASE = new Database(pb);
+        DATABASE.setupDatabase(pb);
         ARENA_FILE = ARENA.getFileConfig();
         loadSettings(); // loads everything in config.yml into constants
 
@@ -83,14 +84,14 @@ public class Settings {
     private void loadSettings() {
         PluginDescriptionFile pluginYML = pb.getDescription();
 
-        VERSION                     = pluginYML.getVersion();
-        AUTHOR                      = pluginYML.getAuthors().toString();
-        PREFIX                      = ChatColor.translateAlternateColorCodes('&', loadString("prefix"));
-        THEME                       = ChatColor.translateAlternateColorCodes('&', loadString("theme-color"));
-        SECONDARY                   = ChatColor.translateAlternateColorCodes('&', loadString("secondary-color"));
-        VAULT                       = loadBoolean("vault");
-        TITLE                       = loadBoolean("title");
-        HOLOGRAPHIC_DISPLAYS        = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
+        VERSION = pluginYML.getVersion();
+        AUTHOR = pluginYML.getAuthors().toString();
+        PREFIX = ChatColor.translateAlternateColorCodes('&', loadString("prefix"));
+        THEME = ChatColor.translateAlternateColorCodes('&', loadString("theme-color"));
+        SECONDARY = ChatColor.translateAlternateColorCodes('&', loadString("secondary-color"));
+        VAULT = loadBoolean("vault");
+        TITLE = loadBoolean("title");
+        HOLOGRAPHIC_DISPLAYS = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
     }
 
     public void reloadConfig() {
@@ -121,7 +122,7 @@ public class Settings {
     }
 
     public void backupConfig(String name) {
-        Map<String, File> allFiles = new HashMap<String, File>(){{
+        Map<String, File> allFiles = new HashMap<String, File>() {{
             for (File file : pb.getDataFolder().listFiles())
                 put(file.getName(), file);
         }};
@@ -149,7 +150,7 @@ public class Settings {
 
     private Object loadValue(String name, String path) {
 
-        Map<String, File> allFiles = new HashMap<String, File>(){{
+        Map<String, File> allFiles = new HashMap<String, File>() {{
             for (File file : JavaPlugin.getProvidingPlugin(Paintball.class).getDataFolder().listFiles())
                 put(file.getName(), file);
         }};
