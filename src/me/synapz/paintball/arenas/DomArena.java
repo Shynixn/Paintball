@@ -2,6 +2,7 @@ package me.synapz.paintball.arenas;
 
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 public class DomArena extends FlagArena {
+
+    public int SECURE_TIME;
 
     // A running list of all changed blocks
     private Map<Location, Material> oldBlocks = new HashMap<>();
@@ -59,6 +62,13 @@ public class DomArena extends FlagArena {
 
             runningScore.put(team, 1);
         }
+    }
+
+    @Override
+    public void loadConfigValues() {
+        super.loadConfigValues();
+
+        SECURE_TIME         = Settings.ARENA.loadInt("DOM.secure-time", this);
     }
 
     public void teamSecured(Location loc, Team team) {

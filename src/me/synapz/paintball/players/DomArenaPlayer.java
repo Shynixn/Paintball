@@ -39,7 +39,7 @@ public class DomArenaPlayer extends ArenaPlayer {
             BountifulAPI.sendTitle(player, 0, 21, 0, "", "");
             timeSecuring = 0;
         } else {
-            if (timeSecuring >= 11)
+            if (timeSecuring >= domArena.SECURE_TIME+1)
                 BountifulAPI.sendTitle(player, 0, 21, 0, "", Settings.THEME + ChatColor.BOLD + "Position Secured!");
             else
                 BountifulAPI.sendTitle(player, 0, 21, 0, "", makeBar());
@@ -57,8 +57,8 @@ public class DomArenaPlayer extends ArenaPlayer {
     }
 
     public void showTimeSecuring() {
-        if (timeSecuring >= 10) {
-            if (timeSecuring == 10) {
+        if (timeSecuring >= domArena.SECURE_TIME) {
+            if (timeSecuring == domArena.SECURE_TIME) {
                 domArena.teamSecured(Utils.simplifyLocation(player.getLocation()), team);
                 BountifulAPI.sendTitle(player, 0, 21, 0, "", Settings.THEME + ChatColor.BOLD + "Position Secured!");
             }
@@ -70,7 +70,7 @@ public class DomArenaPlayer extends ArenaPlayer {
     private String makeBar() {
         String bar = "";
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < domArena.SECURE_TIME; i++) {
             if (timeSecuring <= i)
                 bar += ChatColor.DARK_GRAY + "█";
             else

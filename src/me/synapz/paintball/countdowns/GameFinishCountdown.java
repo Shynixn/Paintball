@@ -10,11 +10,6 @@ public class GameFinishCountdown extends PaintballCountdown {
     public GameFinishCountdown(int counter, Arena arena) {
         super(arena, counter);
 
-        for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
-            if (arenaPlayer.isWinner())
-                Utils.createHelix(arenaPlayer.getPlayer());
-        }
-
         arena.setState(Arena.ArenaState.STOPPING);
         tasks.put(arena, this);
     }

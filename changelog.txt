@@ -1,3 +1,14 @@
+BETA-3.7.6
+
+- Fixed SQL Stuff
+
+BETA-3.7.5
+- Added domination secure time in config.yml
+- Removed win helix (to be replaced with fireworks)
+
+BETA-3.7.4
+- SQL should now work! Load your information into database.yml (make sure you backup playerdata in case)
+
 BETA-3.7.3
 - Added flag values for RTF arena
     - RTF Flag-Pickup sound

@@ -22,14 +22,14 @@ import java.util.*;
 
 public class Database extends PaintballFile implements PluginMessageListener {
 
-    public static Boolean SQL = false;
+    public static boolean SQL = false;
     public static HashMap<UUID, Arena> bungeePlayers = new HashMap<>();
     private static String host = null;
     private static String username = null;
     private static String password = null;
     private static Plugin pb = null;
     private static String SID = "Generate";
-    public Boolean bungee = false;
+    public boolean bungee = false;
     private String BID = null;
     private String database = null;
 
@@ -47,6 +47,10 @@ public class Database extends PaintballFile implements PluginMessageListener {
         database = loadString(Databases.DATABASE);
 
         bungee = loadBoolean(Databases.BUNGEE_ENABLED);
+
+        if (SQL) {
+            setupSQL(pb, host, username, password, database);
+        }
 
         if (loadString(Databases.SERVER_ID).equalsIgnoreCase("Generate")) {
             Random r = new Random(5);
@@ -178,8 +182,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
 
         Set<String> keys = statsYaml.getConfigurationSection("Player-Data").getKeys(false);
         for (String key : keys) {
-            ConfigurationSection stats = statsYaml.getConfigurationSection(key + ".Stats");
-            String path = stats.getCurrentPath();
+            String path = "Player-Data." + key + ".Stats";
+            ConfigurationSection stats = yaml.getConfigurationSection(path);
+
             yaml.set(path, stats);
         }
         return yaml;
@@ -189,8 +194,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
         Set<String> keys = yaml.getConfigurationSection("Player-Data").getKeys(false);
         YamlConfiguration statsYaml = new YamlConfiguration();
         for (String key : keys) {
-            ConfigurationSection stats = yaml.getConfigurationSection(key + ".Stats");
-            String path = stats.getCurrentPath();
+            String path = "Player-Data." + key + ".Stats";
+            ConfigurationSection stats = yaml.getConfigurationSection(path);
+
             statsYaml.set(path, stats);
             yaml.set(path, null);
         }
@@ -273,7 +279,12 @@ public class Database extends PaintballFile implements PluginMessageListener {
         out.writeUTF(SID);
         out.writeUTF(arenas);
         out.writeUTF(sign);
+
+        /*
+        TODO: This error
+        org.bukkit.plugin.messaging.ChannelNotRegisteredException: Attempted to send a plugin message through the unregistered channel `BungeeCord'.
         Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
+        */
     }
 
 }

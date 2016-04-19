@@ -230,20 +230,6 @@ public class Utils {
     }
 
     /*
-    Creates a helix out of particales, yay
-     */
-    public static void createHelix(Player player) {
-        Location loc = player.getLocation();
-        int radius = 1;
-        for(double y = 0; y <= 3; y+=0.01) {
-            double x = radius * Math.cos(y*10);
-            double z = radius * Math.sin(y*10);
-
-            loc.getWorld().playEffect(new Location(loc.getWorld(), loc.getX() + x, loc.getY() + y, loc.getZ() + z), Effect.HAPPY_VILLAGER, 1);
-        }
-    }
-
-    /*
     Creates a specific amount of spaces of the length of a word
      */
     public static String makeSpaces(String fromString) {
