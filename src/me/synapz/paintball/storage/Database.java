@@ -56,6 +56,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
             setValue("Bungee.serverID", serverID);
             //run a method to start the listening for bungee commands
         }
+        if (SQL) {
+            setupSQL(pb, host, username, password, database);
+        }
     }
 
     /*
@@ -120,15 +123,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
     //SQL
 
     public void setupSQL(Plugin pb, String host, String username, String password, String database) {
-        SQL = true;
-        Database.host = host;
-        Database.username = username;
-        Database.password = password;
-        this.database = database;
-        this.pb = pb;
         try {
             Connection conn;
-            conn = DriverManager.getConnection(host, username, password);
+            conn = DriverManager.getConnection(host + ":1433", username, password);
             PreparedStatement sql = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
             sql.execute();
             PreparedStatement sql0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS Paintball_Stats" +
@@ -138,10 +135,15 @@ public class Database extends PaintballFile implements PluginMessageListener {
             ResultSet result = sql1.executeQuery();
             result.next();
             String encoded = result.getString("stats");
+            if (encoded == null) {
+                Bukkit.getLogger().info("SQL ready!");
+                return;
+            }
             File file = new File(pb.getDataFolder(), "playerdata.yml");
             YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
             yaml.set("Stats", encoded);
             yaml.save(file);
+            Bukkit.getLogger().info("Downloaded stats from SQL!");
         } catch (SQLException | IOException e) {
             e.printStackTrace();
             Bukkit.getLogger().info("Failed to download SQL backup!");
