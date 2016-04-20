@@ -129,7 +129,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
     public void setupSQL(Plugin pb, String host, String username, String password, String database) {
         try {
             Connection conn;
-            conn = DriverManager.getConnection(host + ":1433", username, password);
+            conn = DriverManager.getConnection(host, username, password);
             PreparedStatement sql = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
             sql.execute();
             PreparedStatement sql0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS Paintball_Stats" +
