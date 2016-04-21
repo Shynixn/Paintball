@@ -6,6 +6,7 @@ import com.google.common.io.ByteStreams;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.enums.Databases;
+import me.synapz.paintball.storage.sql.mysql.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -23,15 +24,16 @@ import java.util.*;
 public class Database extends PaintballFile implements PluginMessageListener {
 
     public static boolean SQL = false;
+    public static boolean mySQL = true;
     public static HashMap<UUID, Arena> bungeePlayers = new HashMap<>();
     private static String host = null;
     private static String username = null;
     private static String password = null;
+    private static String database = null;
     private static Plugin pb = null;
     private static String SID = "Generate";
     public boolean bungee = false;
     private String BID = null;
-    private String database = null;
 
     public Database(Plugin pb) {
         super(pb, "database.yml");
@@ -41,12 +43,16 @@ public class Database extends PaintballFile implements PluginMessageListener {
         this.pb = pb;
 
         SQL = loadBoolean(Databases.SQL_ENABLED);
+        mySQL = loadBoolean(Databases.MY_SQL);
         host = loadString(Databases.HOST);
         username = loadString(Databases.USERNAME);
         password = loadString(Databases.PASSWORD);
         database = loadString(Databases.DATABASE);
 
         bungee = loadBoolean(Databases.BUNGEE_ENABLED);
+
+        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(pb, "BungeeCord", this);
+        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "BungeeCord");
 
         if (SQL) {
             setupSQL(pb, host, username, password, database);
@@ -58,7 +64,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
             String serverIDString = Integer.toString(base10ServerID);
             String serverID = Base64.getEncoder().encodeToString(serverIDString.getBytes());
             setValue("Bungee.serverID", serverID);
-            //run a method to start the listening for bungee commands
         }
         if (SQL) {
             setupSQL(pb, host, username, password, database);
@@ -126,10 +131,20 @@ public class Database extends PaintballFile implements PluginMessageListener {
 
     //SQL
 
+    public static Connection getConnection() throws SQLException, ClassNotFoundException {
+        if (mySQL) {
+            String port = host.substring(host.indexOf(":") + 1);
+            MySQL MySQL = new MySQL(host.replace(":" + port, ""), port, database, username, password);
+            return MySQL.openConnection();
+        } else {
+            return DriverManager.getConnection(host, username, password);
+        }
+    }
+
     public void setupSQL(Plugin pb, String host, String username, String password, String database) {
         try {
             Connection conn;
-            conn = DriverManager.getConnection(host + ":1433", username, password);
+            conn = getConnection();
             PreparedStatement sql = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
             sql.execute();
             PreparedStatement sql0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS Paintball_Stats" +
@@ -148,7 +163,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
             yaml.set("Stats", encoded);
             yaml.save(file);
             Bukkit.getLogger().info("Downloaded stats from SQL!");
-        } catch (SQLException | IOException e) {
+        } catch (SQLException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
             Bukkit.getLogger().info("Failed to download SQL backup!");
         }
@@ -158,14 +173,14 @@ public class Database extends PaintballFile implements PluginMessageListener {
         YamlConfiguration statsYaml = new YamlConfiguration();
         try {
             Connection conn;
-            conn = DriverManager.getConnection(host, username, password);
+            conn = getConnection();
             PreparedStatement sql = conn.prepareStatement("SELECT stats FROM `Paintball_Stats` WHERE id = '1';");
             ResultSet result = sql.executeQuery();
             result.next();
             String base64Stats = result.getString("stats");
             String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
             statsYaml.loadFromString(yamlString);
-        } catch (InvalidConfigurationException | SQLException e) {
+        } catch (InvalidConfigurationException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             Bukkit.getLogger().info("SQL connection failed! Using offline backup until we can connect again");
             if (yaml.contains("Stats")) {
@@ -207,10 +222,10 @@ public class Database extends PaintballFile implements PluginMessageListener {
         yaml.set("Stats", encoded);
         try {
             Connection conn;
-            conn = DriverManager.getConnection(host, username, password);
+            conn = getConnection();
             PreparedStatement sql = conn.prepareStatement("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
             sql.execute();
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             Bukkit.getLogger().info("Failed to upload SQL!");
         }
@@ -281,12 +296,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
         out.writeUTF(SID);
         out.writeUTF(arenas);
         out.writeUTF(sign);
-
-        /*
-        TODO: This error
-        org.bukkit.plugin.messaging.ChannelNotRegisteredException: Attempted to send a plugin message through the unregistered channel `BungeeCord'.
         Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
-        */
     }
 
 }
