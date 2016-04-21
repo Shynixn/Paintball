@@ -51,6 +51,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
 
         bungee = loadBoolean(Databases.BUNGEE_ENABLED);
 
+        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(pb, "BungeeCord", this);
+        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "BungeeCord");
+
         if (SQL) {
             setupSQL(pb, host, username, password, database);
         }
@@ -61,7 +64,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
             String serverIDString = Integer.toString(base10ServerID);
             String serverID = Base64.getEncoder().encodeToString(serverIDString.getBytes());
             setValue("Bungee.serverID", serverID);
-            //run a method to start the listening for bungee commands
         }
         if (SQL) {
             setupSQL(pb, host, username, password, database);
@@ -294,12 +296,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
         out.writeUTF(SID);
         out.writeUTF(arenas);
         out.writeUTF(sign);
-
-        /*
-        TODO: This error
-        org.bukkit.plugin.messaging.ChannelNotRegisteredException: Attempted to send a plugin message through the unregistered channel `BungeeCord'.
         Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
-        */
     }
 
 }
