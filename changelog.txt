@@ -1,5 +1,18 @@
-BETA-3.7.6
+BETA-3.7.9
+- Finally added Coin Item auto sorting so everything is smartly placed based on price!
+- Turned Coin Shop Item from Sunflower into Magma Cream so right click block works
 
+BETA-3.7.8
+- Many fixes to deathbox option (Still some errors)
+
+BETA-3.7.7
+- Added "deathbox-time" in config.yml
+- Started deathboxes (some bugs though), which is How long the player will wait before respawning, in this time they temp become a spectator then when the timer ends then teleport to the arena again (0 to remove this)
+- Fixed Domination Arena stop error
+- Fixed Domination blocks not being reset to their past block!
+- Fixed Domination reset blocks bug where changed blocks would be reset to what they were before the change
+
+BETA-3.7.6
 - Fixed SQL Stuff
 
 BETA-3.7.5

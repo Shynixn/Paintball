@@ -62,6 +62,8 @@ Per-Arena-Settings:
     nametags: true
     # True - Coins will be shown on the scoreboard and incremented. False - Coins will be disabled
     coins: true
+    # How long the player will wait before respawning, in this time they temp become a spectator then when the timer ends then teleport to the arena (0 to remove this)
+    deathbox-time: 0
 
     # Settings for when a player joins an arena
     Join-Arena:

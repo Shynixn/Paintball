@@ -50,6 +50,7 @@ public class Arena {
     public int LIVES;
     public int TEAM_SWITCH_COOLDOWN;
     public int SPEED;
+    public int DEATHBOX_TIME;
 
     public String ARENA_CHAT;
     public String SPEC_CHAT;
@@ -723,6 +724,7 @@ public class Arena {
         TEAM_SWITCH_COOLDOWN        = ARENA.loadInt("team-switch-cooldown", this);
         SPEED                       = ARENA.loadInt("speed", this);
         CURRENCY                    = ARENA.loadString("currency", this);
+        DEATHBOX_TIME               = ARENA.loadInt("deathbox-time", this);
 
         ARENA_COUNTDOWN             = ARENA.loadInt("Countdown.arena.countdown", this);
         ARENA_INTERVAL              = ARENA.loadInt("Countdown.arena.interval", this);

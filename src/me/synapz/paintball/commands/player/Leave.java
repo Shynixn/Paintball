@@ -6,12 +6,14 @@ import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Leave extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         Arena a;
+
         try {
             a = ArenaManager.getArenaManager().getArena(player);
             a.getName(); // used to see if it returns null

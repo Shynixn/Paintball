@@ -36,8 +36,12 @@ public class DomArena extends FlagArena {
 
     @Override
     public void resetFlags() {
-        for (Location loc : oldBlocks.keySet())
-            loc.getBlock().setType(oldBlocks.get(loc));
+        for (Location loc : oldBlocks.keySet()) {
+            if (oldBlocks.get(loc) != null && loc.getBlock() != null)
+                loc.getBlock().setType(oldBlocks.get(loc));
+        }
+
+        oldBlocks = new HashMap<>();
     }
 
     @Override
@@ -111,6 +115,8 @@ public class DomArena extends FlagArena {
 
 
     private void setBlock(Location loc, Material material, byte data) {
+        loc = Utils.simplifyLocation(loc);
+
         if (!oldBlocks.containsKey(loc))
             oldBlocks.put(loc, loc.getBlock().getType());
 

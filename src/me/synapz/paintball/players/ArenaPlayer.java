@@ -73,7 +73,9 @@ public class ArenaPlayer extends PaintballPlayer {
 
         if (arena.ARENA_WOOL_HELMET)
             giveWoolHelmet();
-        giveItems = false;
+
+        // If it is in progress, it is a spectator player from a death event so give their items, otherwise dont give there items
+        giveItems = arena.getState() == Arena.ArenaState.IN_PROGRESS ? true : false;
         health = arena.HITS_TO_KILL;
         lives = arena.LIVES;
     }
@@ -196,7 +198,7 @@ public class ArenaPlayer extends PaintballPlayer {
         CoinItems.getCoinItems().getMainItem().giveItemToPlayer(this);
 
         if (arena.COIN_SHOP)
-            inv.setItem(8, Utils.makeItem(Material.DOUBLE_PLANT, ChatColor.GOLD + "Coin Shop", 1));
+            inv.setItem(8, Utils.makeItem(Material.MAGMA_CREAM, ChatColor.GOLD + "Coin Shop", 1));
 
         if (arena.ARENA_WOOL_HELMET)
             giveWoolHelmet();
@@ -315,9 +317,12 @@ public class ArenaPlayer extends PaintballPlayer {
                 // Reloads their settings for them to go back... Sets their health, kill streak, location, protection and updates their scoreboard
                 health = arena.HITS_TO_KILL;
                 killStreak = 0;
-                player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
-                new ProtectionCountdown(arena.SAFE_TIME, this);
                 updateScoreboard();
+
+                if (!(arena.DEATHBOX_TIME > 0))
+                    player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
+
+                new ProtectionCountdown(arena.DEATHBOX_TIME > 0 ? arena.DEATHBOX_TIME : arena.SAFE_TIME, this, arena.DEATHBOX_TIME > 0);
             }
         }
     }
