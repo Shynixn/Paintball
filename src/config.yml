@@ -8,6 +8,8 @@ secondary-color: '&7'
 vault: true
 # Allows hooking into BountifulAPI to send title messages that display in the middle of the screen
 title: true
+# Allows the plugin to check for update and notify OP's and players with paintball.notify if there is an update on join
+update-check: true
 
 Commands:
   # If true, disables all commands in arena except for: Allowed commands and (if all-paintball-commands is true) Paintball commands.

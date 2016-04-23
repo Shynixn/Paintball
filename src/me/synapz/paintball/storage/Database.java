@@ -296,7 +296,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
         out.writeUTF(SID);
         out.writeUTF(arenas);
         out.writeUTF(sign);
-        Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
+        // TODO: java.lang.IllegalArgumentException: Plugin must be enabled to send messages
+        // Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
     }
-
 }

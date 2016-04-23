@@ -9,6 +9,7 @@ import me.synapz.paintball.events.LeaderboardSigns;
 import me.synapz.paintball.events.Listeners;
 import me.synapz.paintball.metrics.Metrics;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Update;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +24,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 
 public class Paintball extends JavaPlugin implements Listener {
+
+    private Update updater;
 
     @Override
     public void onEnable() {
@@ -69,6 +72,8 @@ public class Paintball extends JavaPlugin implements Listener {
         } catch (IOException exc) {
 
         }
+
+        new Update(this);
     }
 
     @Override

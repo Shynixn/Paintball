@@ -20,12 +20,15 @@ import java.util.Map;
 
 public class Settings {
 
+
+    public static String WEBSITE;
     public static String PREFIX;
     public static String VERSION;
     public static String THEME;
     public static String AUTHOR;
     public static String SECONDARY;
 
+    public static boolean UPDATE_CHECK;
     public static boolean VAULT;
     public static boolean TITLE;
     public static boolean HOLOGRAPHIC_DISPLAYS;
@@ -84,6 +87,7 @@ public class Settings {
     private void loadSettings() {
         PluginDescriptionFile pluginYML = pb.getDescription();
 
+        WEBSITE = pluginYML.getWebsite();
         VERSION = pluginYML.getVersion();
         AUTHOR = pluginYML.getAuthors().toString();
         PREFIX = ChatColor.translateAlternateColorCodes('&', loadString("prefix"));
@@ -91,6 +95,7 @@ public class Settings {
         SECONDARY = ChatColor.translateAlternateColorCodes('&', loadString("secondary-color"));
         VAULT = loadBoolean("vault");
         TITLE = loadBoolean("title");
+        UPDATE_CHECK = loadBoolean("update-check");
         HOLOGRAPHIC_DISPLAYS = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
     }
 

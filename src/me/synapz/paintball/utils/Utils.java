@@ -128,6 +128,9 @@ public class Utils {
     public static void createFlag(Team team, Location location) {
         DyeColor color = team == null ? DyeColor.WHITE : team.getDyeColor();
 
+        while (location.clone().subtract(0, 1, 0).getBlock().getType() == Material.AIR && location.getBlockY() > 0)
+            location.subtract(0, 1, 0);
+
         // Sets the location to a banner then updates the banner to the team color
         location.getBlock().setType(Material.STANDING_BANNER);
         Banner banner = (Banner) location.getBlock().getState();

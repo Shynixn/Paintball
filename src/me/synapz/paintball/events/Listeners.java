@@ -1,6 +1,7 @@
 package me.synapz.paintball.events;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
+import com.connorlinfoot.bountifulapi.CLUpdate;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.DomGameCountdown;
@@ -8,12 +9,14 @@ import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.enums.UpdateResult;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Database;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Update;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -41,14 +44,23 @@ import org.bukkit.inventory.ItemStack;
 public class Listeners implements Listener {
 
     //When a player joins, check if they are from a bungee server and send them to the arena if they are
-    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
+
         //detect if they have been called over by bungee
         if (Database.bungeePlayers.containsKey(player.getUniqueId())) {
             //if yes, send them to their arena
             Database.bungeePlayers.get(player.getUniqueId()).joinLobby(player, null);
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoinCheck(PlayerJoinEvent e) {
+        Player player = e.getPlayer();
+        UpdateResult result = Update.getUpdater().getResult();
+
+        if (player.hasPermission("paintball.update") && result != UpdateResult.DISABLED && !result.getMessage().isEmpty())
+            Messenger.success(player, result.getMessage().replace("%new%", Update.getUpdater().getNewVersion()));
     }
 
     // When ever a player leaves the game, make them leave the arena so they get their stuff

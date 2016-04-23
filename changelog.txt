@@ -1,3 +1,19 @@
+BETA-3.8.3
+- Added "update-check" to config.yml to toggle update check
+- Added update checker to inform all players with new permission (paintball.update) and OP there is an update available
+- Temp fix Bungee error
+
+BETA-3.8.2
+- Fixed banners disappearing when a player is killed in air
+- Updated description
+
+BETA-3.8.1
+- Small behind the scene bug fixes
+- Started adding DTC Core generation
+
+BETA-3.8.0
+- Added support for MySQL and (many) support for SQLite <3
+
 BETA-3.7.9
 - Finally added Coin Item auto sorting so everything is smartly placed based on price!
 - Turned Coin Shop Item from Sunflower into Magma Cream so right click block works

@@ -1,8 +1,9 @@
 name: Paintball
-version: BETA_3.7.9
-description: Paintball, featuring up to 16 teams.
+version: BETA-3.8.3
+description: Paintball 16 teams, 7 Game modes, SQL, Stats, Coin Shop, Unlimited arenas, Simultaneous games, Scoreboards
 authors: [Synapz_]
 main: me.synapz.paintball.Paintball
+website: http://bit.ly/23QqV4S
 depend: [BountifulAPI, Vault]
 softdepend: [HolographicDisplays]
 
@@ -41,6 +42,7 @@ permissions:
        paintball.join.remove: true
        paintball.autojoin.remove: true
        paintball.leaderboard.remove: true
+       paintball.update: true
    paintball.arena:
      description: Gives access to arena setup command subsection
      default: op
