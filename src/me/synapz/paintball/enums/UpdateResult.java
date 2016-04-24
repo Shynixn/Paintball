@@ -8,7 +8,7 @@ public enum UpdateResult {
     UPDATE("Version " + ChatColor.GRAY + "%new%" + ChatColor.GREEN + " is out! " + Settings.SECONDARY + ChatColor.ITALIC + ChatColor.UNDERLINE + Settings.WEBSITE),
     ERROR(ChatColor.RED + "There was an error checking for an update."),
     DISABLED(""),
-    NO_UPDATE("You are have the latest version of the plugin.");
+    NO_UPDATE("You have the latest version of the plugin.");
 
     private String message;
 

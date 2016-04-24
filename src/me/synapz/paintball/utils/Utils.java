@@ -29,17 +29,8 @@ import static org.bukkit.ChatColor.RED;
 
 public class Utils {
 
-    public static Sound DEFAULT_SOUND;
+    public static Sound DEFAULT_SOUND = Sounds.WOOD_CLICK.bukkitSound();
     private static BlockFace[] radial = { BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST };
-
-    static {
-        try {
-            DEFAULT_SOUND = Sound.BLOCK_LEVER_CLICK;
-        } catch (NoSuchFieldError exc) {
-            // Sound did not load... try to load the 1.8 and lower sound
-            DEFAULT_SOUND = Sound.valueOf("CLICK");
-        }
-    }
 
     // Checks to see if the arena is null
     public static boolean nullCheck(String arenaName, Arena arena, Player sender) {
@@ -123,6 +114,34 @@ public class Utils {
 
     public static boolean locEquals(Location loc, Location loc2) {
         return loc.getBlockX() == loc2.getBlockX() && loc.getBlockY() == loc2.getBlockY() && loc.getBlockZ() == loc2.getBlockZ();
+    }
+
+    public static Sound strToSound(String strSound) {
+        try {
+            Sound sound = Sound.valueOf(strSound);
+            sound.toString();
+            return sound;
+        } catch (IllegalArgumentException exc) {
+            try {
+                Sounds sound = Sounds.valueOf(strSound);
+                sound.toString();
+                return sound.bukkitSound();
+            } catch (IllegalArgumentException exc1) {
+                return null;
+            } catch (NullPointerException exc1) {
+                return null;
+            }
+        } catch (NullPointerException exc) {
+            try {
+                Sounds sound = Sounds.valueOf(strSound);
+                sound.toString();
+                return sound.bukkitSound();
+            } catch (IllegalArgumentException exc1) {
+                return null;
+            } catch (NullPointerException exc1) {
+                return null;
+            }
+        }
     }
 
     public static void createFlag(Team team, Location location) {

@@ -66,9 +66,9 @@ public class CTFArena extends FlagArena {
     public void loadConfigValues() {
         super.loadConfigValues();
 
-        FLAG_PICKUP             = (ARENA.loadString("CTF.Flag-Pickup", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("CTF.Flag-Pickup", this));
-        FLAG_DROP               = (ARENA.loadString("CTF.Flag-Drop", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("CTF.Flag-Pickup", this));
-        FLAG_SCORE              = (ARENA.loadString("CTF.Flag-Score", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("CTF.Flag-Pickup", this));
+        FLAG_PICKUP             = (ARENA.loadString("CTF.Flag-Pickup", this).equals("")) ? null : Utils.strToSound(ARENA.loadString("CTF.Flag-Pickup", this));
+        FLAG_DROP               = (ARENA.loadString("CTF.Flag-Drop", this).equals("")) ? null : Utils.strToSound(ARENA.loadString("CTF.Flag-Pickup", this));
+        FLAG_SCORE              = (ARENA.loadString("CTF.Flag-Score", this).equals("")) ? null : Utils.strToSound(ARENA.loadString("CTF.Flag-Pickup", this));
     }
 
     public Map<Location, Team> getDropedFlagLocations() {

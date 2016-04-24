@@ -3,6 +3,7 @@ package me.synapz.paintball.coin;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.utils.Sounds;
 import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.events.ArenaClickItemEvent;
@@ -196,7 +197,7 @@ public class CoinItems implements Listener {
     }
 
     public CoinItem getMainItem() {
-        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Utils.DEFAULT_SOUND, 1) {
+        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Sounds.WOOD_CLICK.bukkitSound(), 1) {
             @Override
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();

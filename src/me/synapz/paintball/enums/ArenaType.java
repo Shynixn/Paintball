@@ -5,20 +5,22 @@ import org.bukkit.entity.Player;
 
 public enum ArenaType {
 
-    CTF("Capture the Flag", "ctf"),
-    TDM("Team Deathmatch", "tdm"),
-    FFA("Free For All", "ffa"),
-    DOM("Domination", "dom"),
-    LTS("Last Team Standing", "lts"),
-    RTF("Rush the Flag", "rtf"),
-    DTC("Destroy the Core", "dtc");
+    CTF("Capture the Flag", "ctf", "Capture other team's flags and bring them to your base"),
+    TDM("Team Deathmatch", "tdm", "Kill players on the other team"),
+    FFA("Free For All", "ffa", "Everyone is on their own team"),
+    DOM("Domination", "dom", "Secure other team's beacon points"),
+    LTS("Last Team Standing", "lts", "Limited lives, last team standing wins"),
+    RTF("Rush the Flag", "rtf", "Capture the neutral flag and bring it to your base"),
+    DTC("Destroy the Core", "dtc", "Get to the other team's Core and shoot it to destroy it");
 
     private String fullName;
     private String shortName;
+    private String gameInfo;
 
-    private ArenaType(String fullName, String shortName) {
+    private ArenaType(String fullName, String shortName, String gameInfo) {
         this.fullName = fullName;
         this.shortName = shortName;
+        this.gameInfo = gameInfo;
     }
 
     public String getFullName() {
@@ -27,6 +29,10 @@ public enum ArenaType {
 
     public String getShortName() {
         return shortName;
+    }
+
+    public String getGameInfo() {
+        return gameInfo;
     }
 
     public static ArenaType getArenaType(Player sender, String strType) {

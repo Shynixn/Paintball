@@ -1,3 +1,18 @@
+BETA-3.8.4
+- Added how-to-play action bar to show while arena is starting. For Ex: CTF would say "Capture other team's flags and bring them to your base"
+- Added "generate-size" to Domination config to easily edit how large a secure point will generate
+- Added "secure" to Domination config to edit the sound played when a team secures a point
+- Added "start-secure" to Domination config to edit the sound played when a team starts to secure a point
+- Added "update-interval" to Domination config to edit the interval of scores being deducted
+- Added way better sound loading for 1.8 sounds to actually turn into 1.9 sounds
+- Added default sounds to items and config.yml because the new sound loading system converts all 1.8 sounds to 1.9 sounds for backwards compatibility
+- Updated join and leaderboard sign listeners to prevent being cancelled by other plugins
+- Updated Gun sound to a better and less obnoxious sound
+- Fixed spelling errors
+- Fixed previous Vault and Coin issue that was not being applied to LTS arenas
+- Fixed Domination from not resetting blocks to their old data and instead to just their type
+- Fixed arena convert error
+
 BETA-3.8.3
 - Added "update-check" to config.yml to toggle update check
 - Added update checker to inform all players with new permission (paintball.update) and OP there is an update available
@@ -12,7 +27,7 @@ BETA-3.8.1
 - Started adding DTC Core generation
 
 BETA-3.8.0
-- Added support for MySQL and (many) support for SQLite <3
+- Added support for MySQL and (maybe) support for SQLite <3
 
 BETA-3.7.9
 - Finally added Coin Item auto sorting so everything is smartly placed based on price!

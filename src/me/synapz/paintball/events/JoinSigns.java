@@ -23,7 +23,7 @@ import static org.bukkit.ChatColor.GREEN;
 
 public class JoinSigns implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onSignCreate(SignChangeEvent e) {
         // paintball.sign.use
         if (e.getLines().length == 0 || !e.getLine(0).equalsIgnoreCase("pb") || e.getLine(1).equalsIgnoreCase("lb"))
@@ -69,7 +69,7 @@ public class JoinSigns implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onArenaTryToJoinOnClick(PlayerInteractEvent e) {
         if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN)
             return;
@@ -122,7 +122,7 @@ public class JoinSigns implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onSignBreak(BlockBreakEvent e) {
         // Check to make sure it is a sign
         try {

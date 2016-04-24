@@ -51,8 +51,10 @@ public class Database extends PaintballFile implements PluginMessageListener {
 
         bungee = loadBoolean(Databases.BUNGEE_ENABLED);
 
-        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(pb, "BungeeCord", this);
-        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "BungeeCord");
+        if (!Bukkit.getServer().getMessenger().getIncomingChannels().contains("BungeeCord")) {
+            Bukkit.getServer().getMessenger().registerIncomingPluginChannel(pb, "BungeeCord", this);
+            Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "BungeeCord");
+        }
 
         if (SQL) {
             setupSQL(pb, host, username, password, database);

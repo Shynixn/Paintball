@@ -43,7 +43,7 @@ public class LTSArenaPlayer extends ArenaPlayer {
         double bal = Settings.VAULT ? Settings.ECONOMY.getBalance(player) : 0;
 
         int size = arena.getArenaTeamList().size()-1;
-        pbSb.reloadTeams(true)
+        pbSb.reloadTeams(false)
                 .reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, size+2)
                 .reloadLine(ScoreboardLine.KD, getKd(), size+3)
                 .reloadLine(ScoreboardLine.COIN, String.valueOf(getCoins()), size+4)

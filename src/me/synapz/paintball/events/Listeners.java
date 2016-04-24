@@ -64,7 +64,7 @@ public class Listeners implements Listener {
     }
 
     // When ever a player leaves the game, make them leave the arena so they get their stuff
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onArenaQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(player);
@@ -74,7 +74,7 @@ public class Listeners implements Listener {
     }
 
     // Don't let players break blocks in arena
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockBreakInArena(BlockBreakEvent e) {
         if (stopAction(e.getPlayer(), "You are not allowed to break blocks while in the arena!"))
             e.setCancelled(true);
@@ -242,12 +242,12 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void lossFoodInArena(FoodLevelChangeEvent e) {
         e.setCancelled(e.getEntity() instanceof Player && isInArena((Player) e.getEntity()));
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onShootItemFromInventoryInArena(PlayerDropItemEvent e) {
         Player player = e.getPlayer();
 
@@ -256,7 +256,7 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDeathInArena(PlayerDeathEvent e) {
         Player target = e.getEntity();
         if (isInArena(target)) {
@@ -265,7 +265,7 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onRespawnInArena(PlayerRespawnEvent e) {
         Player target = e.getPlayer();
 
@@ -280,7 +280,7 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         Snowball snowball = event.getDamager() instanceof Snowball ? (Snowball) event.getDamager() : null;
 

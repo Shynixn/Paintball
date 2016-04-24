@@ -93,7 +93,6 @@ public class Arena {
     private ArenaState state;
     private boolean toReload;
 
-
     public enum ArenaState {
         NOT_SETUP,
         WAITING,

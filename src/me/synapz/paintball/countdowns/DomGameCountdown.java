@@ -26,7 +26,7 @@ public class DomGameCountdown extends GameCountdown {
             }
         }
 
-        if (counter % 10 == 0) {
+        if (counter % ((DomArena) arena).UPDATE_INTERVAL == 0) {
             for (Team team : arena.getArenaTeamList()) {
 
                 if (arena instanceof DomArena) {

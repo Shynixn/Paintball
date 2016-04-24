@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class LeaderboardSigns implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onSignCreate(SignChangeEvent e) {
         if (e.getLines().length <= 3 || !e.getLine(0).equalsIgnoreCase("pb") || !e.getLine(1).equalsIgnoreCase("lb")) return;
 
@@ -56,7 +56,7 @@ public class LeaderboardSigns implements Listener {
         new SignLocation(e.getBlock().getLocation(), SignLocation.SignLocations.LEADERBOARD);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onLeaderboardSignclick(PlayerInteractEvent e) {
         if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN)
             return;

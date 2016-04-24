@@ -1,6 +1,8 @@
 package me.synapz.paintball.storage;
 
 import me.synapz.paintball.enums.Items;
+import me.synapz.paintball.utils.Sounds;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.plugin.Plugin;
@@ -52,7 +54,7 @@ public class ItemFile extends PaintballFile {
     }
 
     public Sound getSound(Items item) {
-        return Sound.valueOf(loadString(item, "sound", item.getDefaultSound().toString()));
+        return Utils.strToSound(loadString(item, "sound", item.getDefaultSound().toString()));
     }
 
     public int getDamage(Items item) {

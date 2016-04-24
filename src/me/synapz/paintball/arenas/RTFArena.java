@@ -91,9 +91,9 @@ public class RTFArena extends FlagArena {
     public void loadValues() {
         super.loadValues();
 
-        FLAG_PICKUP             = (ARENA.loadString("RTF.Flag-Pickup", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("RTF.Flag-Pickup", this));
-        FLAG_DROP               = (ARENA.loadString("RTF.Flag-Drop", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("RTF.Flag-Pickup", this));
-        FLAG_SCORE              = (ARENA.loadString("RTF.Flag-Score", this).equals("")) ? null : Sound.valueOf(ARENA.loadString("RTF.Flag-Pickup", this));
+        FLAG_PICKUP             = (ARENA.loadString("RTF.Flag-Pickup", this).equals("")) ? null : Utils.strToSound(ARENA.loadString("RTF.Flag-Pickup", this));
+        FLAG_DROP               = (ARENA.loadString("RTF.Flag-Drop", this).equals("")) ? null : Utils.strToSound(ARENA.loadString("RTF.Flag-Pickup", this));
+        FLAG_SCORE              = (ARENA.loadString("RTF.Flag-Score", this).equals("")) ? null : Utils.strToSound(ARENA.loadString("RTF.Flag-Pickup", this));
     }
 
     public Location getCurrentFlagLocation() {

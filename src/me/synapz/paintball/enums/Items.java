@@ -1,25 +1,26 @@
 package me.synapz.paintball.enums;
 
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Sounds;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 
 public enum Items {
 
-    TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Utils.DEFAULT_SOUND, 0),
-    SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Utils.DEFAULT_SOUND, 0),
-    COWBOY("Cowboy", Material.LEASH, true, 1, "Puts you onto a horse to ride", 0, 3, 0, "", "", Utils.DEFAULT_SOUND, 0),
-    RAPID_FIRE("Rapid Fire", Material.DIAMOND_HOE, true, 1, "Allows you to left or right click\nto shoot", 0, 4, 0, "", "", Utils.DEFAULT_SOUND, 1),
+    TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Sounds.WOOD_CLICK.bukkitSound(), 0),
+    SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Sounds.BURP.bukkitSound(), 0),
+    COWBOY("Cowboy", Material.LEASH, true, 1, "Puts you onto a horse to ride", 0, 3, 0, "", "", Sounds.FALL_BIG.bukkitSound(), 0),
+    RAPID_FIRE("Rapid Fire", Material.DIAMOND_HOE, true, 1, "Allows you to left or right click\nto shoot", 0, 4, 0, "", "", Sounds.ARROW_HIT.bukkitSound(), 1),
     AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", "plowed",  Utils.DEFAULT_SOUND, 1),
-    FLY("Fly", Material.FLINT, false, 1, "Activates fly on click", 0, 6, 0, "", "", Utils.DEFAULT_SOUND, 0),
-    ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted",  Utils.DEFAULT_SOUND, 3),
-    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Utils.DEFAULT_SOUND, 3),
-    DOUBLE("2x Coins", Material.GOLD_INGOT, true, 1, "Earn 2x Coins for the rest of the game", 0, 9, 0, "", "", Utils.DEFAULT_SOUND, 0),
-    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed",  Utils.DEFAULT_SOUND, 3),
-    CYCLONE("Cyclone", Material.HOPPER, true, 1, "Turns you into a Paintball shooting Cyclone", 0, 11, 0, "", "winded", Utils.DEFAULT_SOUND, 3),
-    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended",  Utils.DEFAULT_SOUND, 3),
-    NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Utils.DEFAULT_SOUND, 0);
+    FLY("Fly", Material.FLINT, false, 1, "Activates fly on click", 0, 6, 0, "", "", Sounds.ZOMBIE_PIG_HURT.bukkitSound(), 0),
+    ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted",  Sounds.BLAZE_HIT.bukkitSound(), 3),
+    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Sounds.WOOD_CLICK.bukkitSound(), 3),
+    DOUBLE("2x Coins", Material.GOLD_INGOT, true, 1, "Earn 2x Coins for the rest of the game", 0, 9, 0, "", "", Sounds.BURP.bukkitSound(), 0),
+    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed",  Sounds.CHICKEN_EGG_POP.bukkitSound(), 3),
+    CYCLONE("Cyclone", Material.HOPPER, true, 1, "Turns you into a Paintball shooting Cyclone", 0, 11, 0, "", "winded", Sounds.ANVIL_LAND.bukkitSound(), 3),
+    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended",  Sounds.BAT_TAKEOFF.bukkitSound(), 3),
+    NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Sounds.ENDERDRAGON_GROWL.bukkitSound(), 0);
 
     @Override
     public String toString() {

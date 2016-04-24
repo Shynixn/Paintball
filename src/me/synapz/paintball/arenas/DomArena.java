@@ -8,6 +8,7 @@ import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
@@ -15,12 +16,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static me.synapz.paintball.storage.Settings.ARENA;
+
 public class DomArena extends FlagArena {
 
     public int SECURE_TIME;
+    public int GENERATE_SIZE;
+    public int UPDATE_INTERVAL;
+
+    public Sound SECURE;
+    public Sound START_SECURE;
 
     // A running list of all changed blocks
     private Map<Location, Material> oldBlocks = new HashMap<>();
+    private Map<Location, Byte> oldData = new HashMap<>();
     private Map<Location, Team> secureLocations = new HashMap<>();
     private Map<Location, Location> centerLoc = new HashMap<>();
     private Map<Team, Integer> runningScore = new HashMap<>();
@@ -41,7 +50,13 @@ public class DomArena extends FlagArena {
                 loc.getBlock().setType(oldBlocks.get(loc));
         }
 
+        for (Location loc : oldData.keySet()) {
+            if (oldData.get(loc) != null && loc.getBlock() != null)
+                loc.getBlock().setData(oldData.get(loc));
+        }
+
         oldBlocks = new HashMap<>();
+        oldData = new HashMap<>();
     }
 
     @Override
@@ -73,6 +88,11 @@ public class DomArena extends FlagArena {
         super.loadConfigValues();
 
         SECURE_TIME         = Settings.ARENA.loadInt("DOM.secure-time", this);
+        GENERATE_SIZE       = Settings.ARENA.loadInt("DOM.generate-size", this);
+        UPDATE_INTERVAL     = Settings.ARENA.loadInt("DOM.update-interval", this);
+
+        SECURE              = (ARENA.loadString("DOM.secure", this).equals("")) ? null : Utils.strToSound(ARENA.loadString("DOM.secure", this));
+        START_SECURE        = (ARENA.loadString("DOM.start-secure", this).equals("")) ? null : Utils.strToSound(ARENA.loadString("DOM.start-secure", this));
     }
 
     public void teamSecured(Location loc, Team team) {
@@ -119,6 +139,9 @@ public class DomArena extends FlagArena {
 
         if (!oldBlocks.containsKey(loc))
             oldBlocks.put(loc, loc.getBlock().getType());
+
+        if (oldData.containsKey(loc))
+            oldData.put(loc, loc.getBlock().getData());
 
         loc.getBlock().setType(material);
 

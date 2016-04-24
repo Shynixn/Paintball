@@ -1,11 +1,14 @@
 package me.synapz.paintball.countdowns;
 
+import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -23,6 +26,8 @@ public class ArenaStartCountdown extends PaintballCountdown {
         super(a, counter); // adds 1 so to human eyes it goes from 5 to 1 instead of 4 to 0
 
         this.startLocations = startLocations;
+
+        sendGameInfo();
     }
 
     public void onFinish() {
@@ -58,7 +63,7 @@ public class ArenaStartCountdown extends PaintballCountdown {
 
     public boolean intervalCheck() {
         arena.updateAllScoreboardTimes();
-
+        sendGameInfo();
         arena.updateSigns();
         tpAllPlayersBack();
         return counter <= arena.ARENA_NO_INTERVAL || counter % arena.ARENA_INTERVAL == 0;
@@ -86,6 +91,12 @@ public class ArenaStartCountdown extends PaintballCountdown {
             if (playerX != spawnX || playerY != spawnY || playerZ != spawnZ) {
                 arenaPlayer.getPlayer().teleport(spawnLoc);
             }
+        }
+    }
+
+    private void sendGameInfo() {
+        for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
+            BountifulAPI.sendActionBar(arenaPlayer.getPlayer(), Settings.THEME + ChatColor.BOLD + arena.getArenaType().getShortName().toUpperCase() + Messenger.SUFFIX + arena.getArenaType().getGameInfo());
         }
     }
 }

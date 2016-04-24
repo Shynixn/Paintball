@@ -88,25 +88,34 @@ Per-Arena-Settings:
       # Played sounds look at plugin page for the sound list specific to your version. By default there is no sound ("") because of different sound names for 1.8 and 1.9
 
       # Sound played on a flag drop
-      Flag-Drop: ""
+      Flag-Drop: "PIG_DEATH"
       # Sound played on flag score
-      Flag-Score: ""
+      Flag-Score: "VILLAGER_YES"
       # Sound played on flag pickyup
-      Flag-Pickup: ""
+      Flag-Pickup: "DIG_WOOL"
 
     # Specific extra settings for CTF arenas
     RTF:
       # Played sounds look at plugin page for the sound list specific to your version. By default there is no sound ("") because of different sound names for 1.8 and 1.9
 
       # Sound played on a flag drop
-      Flag-Drop: ""
+      Flag-Drop: "PIG_DEATH"
       # Sound played on flag score
-      Flag-Score: ""
+      Flag-Score: "VILLAGER_YES"
       # Sound played on flag pickyup
-      Flag-Pickup: ""
+      Flag-Pickup: "DIG_WOOL"
 
     DOM:
+      # How long it takes for someone to secure a base
       secure-time: 10
+      # The interval of when to deduct the points. Every x seconds it will subtract the amount of claimed secured points they have
+      update-interval: 10
+      # How large a secure point will be generated
+      generate-size: 2
+      # Sound played when a player starts to secure a base
+      start-secure: "ITEM_PICKUP"
+      # Sound played when a player secures a base
+      secure: "VILLAGER_YES"
 
     # Default rewards
     Rewards:
