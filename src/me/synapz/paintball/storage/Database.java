@@ -278,27 +278,28 @@ public class Database extends PaintballFile implements PluginMessageListener {
     }
 
     public static void updateBungeeSigns() {
-        int numb = 0;
-        String arenas = "";
-        String sign = "";
-        for (String an : ArenaManager.getArenaManager().getArenas().keySet()) {
-            Arena a = ArenaManager.getArenaManager().getArenas().get(an);
-            if (numb != 0) {
-                arenas = arenas + ":" + a.getName();
-                sign = sign + ":" + a.getSign();
-            } else {
-                arenas = a.getName();
-                sign = a.getSign();
+        if (pb.isEnabled()) {
+            int numb = 0;
+            String arenas = "";
+            String sign = "";
+            for (String an : ArenaManager.getArenaManager().getArenas().keySet()) {
+                Arena a = ArenaManager.getArenaManager().getArenas().get(an);
+                if (numb != 0) {
+                    arenas = arenas + ":" + a.getName();
+                    sign = sign + ":" + a.getSign();
+                } else {
+                    arenas = a.getName();
+                    sign = a.getSign();
+                }
+                numb++;
             }
-            numb++;
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("Paintball");
+            out.writeUTF("Arenas");
+            out.writeUTF(SID);
+            out.writeUTF(arenas);
+            out.writeUTF(sign);
+            Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
         }
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Paintball");
-        out.writeUTF("Arenas");
-        out.writeUTF(SID);
-        out.writeUTF(arenas);
-        out.writeUTF(sign);
-        // TODO: java.lang.IllegalArgumentException: Plugin must be enabled to send messages
-        // Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
     }
 }
