@@ -42,7 +42,6 @@ public class Paintball extends JavaPlugin implements Listener {
         - Tie support
         - Spectator thing add next page
         - Way better ActionBar
-        - Fix double messages
 
         Future Features
         - Ranks

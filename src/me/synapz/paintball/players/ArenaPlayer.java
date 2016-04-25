@@ -1,7 +1,6 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.countdowns.*;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.utils.Utils;
@@ -14,15 +13,11 @@ import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,6 +29,7 @@ public class ArenaPlayer extends PaintballPlayer {
 
     private Map<String, CoinItem> coinItems = new HashMap<>();
 
+    private Horse horse;
     private int heightKillStreak;
     private int killStreak;
     private int coins;
@@ -59,6 +55,10 @@ public class ArenaPlayer extends PaintballPlayer {
      */
     public ArenaPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
+    }
+
+    public ArenaPlayer(SpectatorPlayer sp, Team team) {
+        super(sp.getArena(), team, sp.getPlayer(), true);
     }
 
     /**
@@ -131,6 +131,9 @@ public class ArenaPlayer extends PaintballPlayer {
         super.leave();
         team.playerLeaveTeam();
 
+        if (horse != null)
+            horse.setHealth(0);
+
         if (Settings.VAULT) {
             if (isWinner)
                 Settings.ECONOMY.depositPlayer(player, arena.MONEY_PER_WIN);
@@ -185,6 +188,24 @@ public class ArenaPlayer extends PaintballPlayer {
 
     public void incrementShots() {
         shots++;
+    }
+
+    public void setHorse(Horse horse) {
+        this.horse = horse;
+    }
+
+    public Horse getHorse() {
+        return horse;
+    }
+
+    public void teleportHorse() {
+        if (horse != null) {
+            horse.teleport(player.getLocation());
+            horse.setTamed(true);
+            horse.setAdult();
+            horse.setOwner(player);
+            horse.setPassenger(player);
+        }
     }
 
     /**
@@ -245,14 +266,6 @@ public class ArenaPlayer extends PaintballPlayer {
 
         arena.incrementTeamScore(team);
         arena.broadcastMessage(THEME + player.getName() + SECONDARY + " " + action + " " + THEME + arenaPlayer.getPlayer().getName());
-
-        // Takes player off horse or whatever they are in
-        Entity vehicle = arenaPlayer.getPlayer().getVehicle();
-
-        if (vehicle != null) {
-            vehicle.eject();
-            vehicle.setTicksLived(-1);
-        }
 
         arena.updateAllScoreboard();
 
@@ -319,10 +332,12 @@ public class ArenaPlayer extends PaintballPlayer {
                 killStreak = 0;
                 updateScoreboard();
 
-                if (!(arena.DEATHBOX_TIME > 0))
+                if (!(arena.RESPAWN_TIME > 0)) {
                     player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
+                    teleportHorse();
+                }
 
-                new ProtectionCountdown(arena.DEATHBOX_TIME > 0 ? arena.DEATHBOX_TIME : arena.SAFE_TIME, this, arena.DEATHBOX_TIME > 0);
+                new ProtectionCountdown(arena.RESPAWN_TIME > 0 ? arena.RESPAWN_TIME : arena.SAFE_TIME, this, arena.RESPAWN_TIME > 0);
             }
         }
     }

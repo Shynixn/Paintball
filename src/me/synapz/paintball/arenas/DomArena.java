@@ -46,8 +46,9 @@ public class DomArena extends FlagArena {
     @Override
     public void resetFlags() {
         for (Location loc : oldBlocks.keySet()) {
-            if (oldBlocks.get(loc) != null && loc.getBlock() != null)
+            if (oldBlocks.get(loc) != null && loc.getBlock() != null) {
                 loc.getBlock().setType(oldBlocks.get(loc));
+            }
         }
 
         for (Location loc : oldData.keySet()) {
@@ -131,16 +132,13 @@ public class DomArena extends FlagArena {
         return runningScore;
     }
 
-
-
-
     private void setBlock(Location loc, Material material, byte data) {
         loc = Utils.simplifyLocation(loc);
 
         if (!oldBlocks.containsKey(loc))
             oldBlocks.put(loc, loc.getBlock().getType());
 
-        if (oldData.containsKey(loc))
+        if (!oldData.containsKey(loc))
             oldData.put(loc, loc.getBlock().getData());
 
         loc.getBlock().setType(material);

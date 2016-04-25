@@ -1,3 +1,18 @@
+BETA-3.8.6
+- Renamed "deathbox-time" to "respawn-time"
+
+- Fixed players not being teleported back to their horse on death
+- Edited some respawning messages
+- Fully implemented respawn so it works flawlessly
+
+BETA-3.8.5
+- Fixed blocks not restoring their data in Domination arena
+- Fixes to bungee
+- Stopped players from being able to move items in a horse inventory
+- Stopped players from being able to shoot while riding a horse
+- Added horses to teleport to them after a player dies
+- Added horses to die when a player leaves and arena end
+
 BETA-3.8.4
 - Added how-to-play action bar to show while arena is starting. For Ex: CTF would say "Capture other team's flags and bring them to your base"
 - Added "generate-size" to Domination config to easily edit how large a secure point will generate

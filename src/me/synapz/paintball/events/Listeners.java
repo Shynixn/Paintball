@@ -37,7 +37,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -233,7 +235,7 @@ public class Listeners implements Listener {
                 }
                 e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
-                if (Utils.contains(clickedItem, "Team") || Utils.equals(clickedItem, ChatColor.GOLD + "Coin Shop") || player.getOpenInventory().getTitle().contains("Coin Shop")) {
+                if (player.getOpenInventory().getTitle().contains("Horse") || Utils.contains(clickedItem, "Team") || Utils.equals(clickedItem, ChatColor.GOLD + "Coin Shop") || player.getOpenInventory().getTitle().contains("Coin Shop")) {
                     e.setCancelled(true);
                     Messenger.error(player, "You are not allowed to move items in your inventory!");
                     player.closeInventory();

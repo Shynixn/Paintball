@@ -45,6 +45,22 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         loadScoreboard();
     }
 
+    public PaintballPlayer(Arena a, Team t, Player p, boolean giveItems) {
+        this.arena = a;
+        this.team = t;
+        this.player = p;
+
+        if (arena == null || team == null || player == null)
+            return;
+
+        arena.addPlayer(this);
+        initPlayer();
+        if (giveItems)
+            giveItems();
+        showMessages();
+        loadScoreboard();
+    }
+
     /*
     -----
     Methods all PaintballPlayer objects must implement, each object type will perform different tasks in these methods

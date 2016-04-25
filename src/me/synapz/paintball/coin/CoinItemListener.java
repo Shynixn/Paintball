@@ -78,6 +78,12 @@ public class CoinItemListener implements Listener {
         if (clickedItem == null) {
             return;
         }
+
+        if (player.isInsideVehicle()) {
+            Messenger.error(player, "You cannot use an item while riding something.");
+            return;
+        }
+
         if (clickedItem.hasSound()) {
             player.playSound(player.getLocation(), clickedItem.getSound(), 1.0F, 1.0F);
         }

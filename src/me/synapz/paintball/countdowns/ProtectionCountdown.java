@@ -6,6 +6,7 @@ import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.players.SpectatorPlayer;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -46,13 +47,22 @@ public class ProtectionCountdown extends PaintballCountdown {
         Messenger.msg(this.player, Messenger.PROTECTION_END);
         BountifulAPI.sendActionBar(this.player, Messenger.PROTECTION_END, 240);
 
-        if (asDeathbox && arena.getPaintballPlayer(player) != null && arena.getPaintballPlayer(player) instanceof SpectatorPlayer)
-            new ArenaPlayer(arena, team, player);
+        if (asDeathbox && arena.getPaintballPlayer(player) != null && arena.getPaintballPlayer(player) instanceof SpectatorPlayer) {
+            Utils.stripValues(player);
+
+            SpectatorPlayer sp = (SpectatorPlayer) arena.getPaintballPlayer(player);
+            sp.leave();
+            new ArenaPlayer(sp, team).teleportHorse();
+        }
     }
 
     // Called every iteration of run()
     public void onIteration() {
         String protectionMessage = Messenger.PROTECTION_TIME.replace("%time%", String.valueOf((int) counter-1));
+
+        if (asDeathbox)
+            protectionMessage.replace("Protection", "Respawn");
+
         BountifulAPI.sendActionBar(this.player, protectionMessage);
     }
 

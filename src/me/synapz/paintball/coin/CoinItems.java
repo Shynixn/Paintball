@@ -84,6 +84,8 @@ public class CoinItems implements Listener {
                 horse.setOwner(rider);
                 horse.setPassenger(rider);
 
+                event.getArenaPlayer().setHorse(horse);
+
                 rider.getInventory().remove(rider.getItemInHand());
             }
         };
