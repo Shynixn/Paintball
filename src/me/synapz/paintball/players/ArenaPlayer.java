@@ -3,6 +3,7 @@ package me.synapz.paintball.players;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.countdowns.*;
 import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
@@ -200,11 +201,9 @@ public class ArenaPlayer extends PaintballPlayer {
 
     public void teleportHorse() {
         if (horse != null) {
+            horse.eject();
+
             horse.teleport(player.getLocation());
-            horse.setTamed(true);
-            horse.setAdult();
-            horse.setOwner(player);
-            horse.setPassenger(player);
         }
     }
 
@@ -293,6 +292,11 @@ public class ArenaPlayer extends PaintballPlayer {
         if (item.requiresCoins()) {
             withdrawCoin(item.getCoins());
         }
+
+        if (coinItems == null)
+            coinItems = new HashMap<String, CoinItem>() {{
+                put(item.getItemName(true), item);
+            }};
 
         coinItems.put(item.getItemName(true), item);
     }

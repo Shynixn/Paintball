@@ -38,8 +38,10 @@ public class ProtectionCountdown extends PaintballCountdown {
             godPlayers.put(name, this);
         }
 
-        if (asDeathbox)
+        if (asDeathbox) {
+            arena.removePlayer(arenaPlayer, true);
             new SpectatorPlayer(arenaPlayer);
+        }
     }
 
     public void onFinish() {
@@ -61,7 +63,7 @@ public class ProtectionCountdown extends PaintballCountdown {
         String protectionMessage = Messenger.PROTECTION_TIME.replace("%time%", String.valueOf((int) counter-1));
 
         if (asDeathbox)
-            protectionMessage.replace("Protection", "Respawn");
+            protectionMessage = protectionMessage.replace("Protection", "Respawn");
 
         BountifulAPI.sendActionBar(this.player, protectionMessage);
     }

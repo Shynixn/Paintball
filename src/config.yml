@@ -43,7 +43,7 @@ Per-Arena-Settings:
     # The currency for money
     currency: "$"
     # The score (amount of kills) a team must get to win
-    max-score: 50
+    max-score: 15
     # How much time (in seconds) the game lasts. If no one reaches the kills-to-win when this timer ends the team with most kills is the winner
     time: 300
     # How many lives a player has before they are set to a spectator. 0 for unlimited lives, where they play until the time or max-score is reached
@@ -146,14 +146,14 @@ Per-Arena-Settings:
        # Lobby countdown configuration-- how long to wait for more players after the minimum is reached
        lobby:
          # How long it will take until players are teleported to their spawnpoints. The longer the more players may join. 0 for no countdown
-         countdown: 60
+         countdown: 20
          # The interval when showing the numbers. Ex. 60...50...40...
          # Set interval the same as the countdown to remove any countdown messages
-         interval: 10
+         interval: 5
          # The number at which there will be no delay in showing numbers. Ex. 15...10...5......3...2...1...
          no-interval: 10
        # Arena countdown configuration - after players have been set to their team spawnpoints, a countdown begins
        arena:
          countdown: 10
-         interval: 1
-         no-interval: 0
+         interval: 5
+         no-interval: 5

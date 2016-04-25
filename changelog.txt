@@ -1,9 +1,9 @@
 BETA-3.8.6
 - Renamed "deathbox-time" to "respawn-time"
-
+- Edited a lot of default config.yml values to be more realistic
 - Fixed players not being teleported back to their horse on death
 - Edited some respawning messages
-- Fully implemented respawn so it works flawlessly
+- Many fixes to respawn, however still has some weird gameplay to it
 
 BETA-3.8.5
 - Fixed blocks not restoring their data in Domination arena

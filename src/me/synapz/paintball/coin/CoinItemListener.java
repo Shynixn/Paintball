@@ -87,6 +87,7 @@ public class CoinItemListener implements Listener {
         if (clickedItem.hasSound()) {
             player.playSound(player.getLocation(), clickedItem.getSound(), 1.0F, 1.0F);
         }
+
         ArenaClickItemEvent event = new ArenaClickItemEvent(arenaPlayer, clickedItem, e.getAction());
         Bukkit.getServer().getPluginManager().callEvent(event);
         CoinItemHandler.getHandler().getAllItems().get(ChatColor.RESET + clickedItem.getItemName(false).replace(ChatColor.RESET + "", "")).onClickItem(event);
