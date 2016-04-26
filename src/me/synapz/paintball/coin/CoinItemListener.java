@@ -91,6 +91,9 @@ public class CoinItemListener implements Listener {
         ArenaClickItemEvent event = new ArenaClickItemEvent(arenaPlayer, clickedItem, e.getAction());
         Bukkit.getServer().getPluginManager().callEvent(event);
         CoinItemHandler.getHandler().getAllItems().get(ChatColor.RESET + clickedItem.getItemName(false).replace(ChatColor.RESET + "", "")).onClickItem(event);
+
+        arenaPlayer.setLastClickedItem(clickedItem);
+
         e.setCancelled(true);
     }
 }

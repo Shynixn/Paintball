@@ -31,6 +31,7 @@ public class ArenaPlayer extends PaintballPlayer {
     private Map<String, CoinItem> coinItems = new HashMap<>();
 
     private Horse horse;
+    private CoinItem lastClickedItem;
     private int heightKillStreak;
     private int killStreak;
     private int coins;
@@ -189,6 +190,14 @@ public class ArenaPlayer extends PaintballPlayer {
 
     public void incrementShots() {
         shots++;
+    }
+
+    public CoinItem getLastClickedItem() {
+        return lastClickedItem;
+    }
+
+    public void setLastClickedItem(CoinItem lastClickedItem) {
+        this.lastClickedItem = lastClickedItem;
     }
 
     public void setHorse(Horse horse) {

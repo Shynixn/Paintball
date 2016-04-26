@@ -343,6 +343,9 @@ public class Listeners implements Listener {
         if (arenaPlayer.getPlayer().getItemInHand() != null && arenaPlayer.getPlayer().getItemInHand().hasItemMeta() && arenaPlayer.getPlayer().getItemInHand().getItemMeta().hasDisplayName())
             clickedItem = arenaPlayer.getItemWithName(arenaPlayer.getPlayer().getItemInHand().getItemMeta().getDisplayName());
 
+        if (clickedItem == null)
+            clickedItem = arenaPlayer.getLastClickedItem();
+
         if (hitPlayer.hit(arenaPlayer.getTeam(), clickedItem == null ? 1 : clickedItem.getDamage())) {
             String action = "shot";
 
@@ -354,6 +357,8 @@ public class Listeners implements Listener {
             arenaPlayer.incrementHits();
             Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
         }
+
+
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
