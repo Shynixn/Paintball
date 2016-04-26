@@ -6,6 +6,10 @@ import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.players.DomArenaPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class DomGameCountdown extends GameCountdown {
 
     public DomGameCountdown(Arena a) {
@@ -27,17 +31,27 @@ public class DomGameCountdown extends GameCountdown {
         }
 
         if (counter % ((DomArena) arena).UPDATE_INTERVAL == 0) {
+            List<Team> winningTeams = new ArrayList<>();
+
             for (Team team : arena.getArenaTeamList()) {
 
                 if (arena instanceof DomArena) {
                     int score = ((DomArena) arena).getRunningScores().get(team);
 
                     while (score > 0) {
-                        arena.incrementTeamScore(team);
+                        arena.incrementTeamScore(team, false);
                         score--;
+
+                        // Do the win check AFTER we increment all scores in case there was a tie
+                        if (arena.getTeamScore(team) == arena.MAX_SCORE)
+                            winningTeams.add(team);
                     }
                 }
             }
+
+            // Now if the winningTeams is not empty we will determine the winners, or tiers
+            if (!winningTeams.isEmpty())
+                arena.win(winningTeams);
 
             arena.updateAllScoreboard();
         }

@@ -37,7 +37,7 @@ public abstract class FlagArenaPlayer extends ArenaPlayer {
 
         arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + "The " + team.getTitleName() + " has scored a flag!");
 
-        arena.incrementTeamScore(team);
+        arena.incrementTeamScore(team, true);
         arena.updateAllScoreboard();
 
         removeFlag();

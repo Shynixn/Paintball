@@ -1,3 +1,9 @@
+BETA-3.8.8
+- Fixed Domination arenas from not being able to tie
+- Update to 1.9.2
+- Stopped players from being able to duel wield (it can create unexpected and unfair gameplay)
+    - There will be a duel wield item soon to take advantage of this cool 1.9 feature
+
 BETA-3.8.7
 - Fixed major bug where if a clicked item disappears before it hit a player, the item would not be clearly identified (damage, action, etc)
 - This fixed things like Paintball Shower and Rocket Launcher which disapeared after it was clicked

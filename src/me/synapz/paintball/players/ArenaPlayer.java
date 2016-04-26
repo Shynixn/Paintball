@@ -272,7 +272,7 @@ public class ArenaPlayer extends PaintballPlayer {
         deposit(arena.MONEY_PER_KILL);
         depositCoin(arena.COIN_PER_KILL);
 
-        arena.incrementTeamScore(team);
+        arena.incrementTeamScore(team, true);
         arena.broadcastMessage(THEME + player.getName() + SECONDARY + " " + action + " " + THEME + arenaPlayer.getPlayer().getName());
 
         arena.updateAllScoreboard();

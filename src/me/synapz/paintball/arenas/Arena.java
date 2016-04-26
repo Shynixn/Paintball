@@ -545,10 +545,10 @@ public class Arena {
         return teams.get(team);
     }
 
-    public void incrementTeamScore(Team team) {
+    public void incrementTeamScore(Team team, boolean doWinCheck) {
         teams.replace(team, teams.get(team), teams.get(team)+1);
 
-        if (teams.get(team) == MAX_SCORE)
+        if (doWinCheck && teams.get(team) == MAX_SCORE)
             win(Arrays.asList(team));
     }
 

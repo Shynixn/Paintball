@@ -36,6 +36,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
@@ -187,11 +188,10 @@ public class Listeners implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onItemMoveInArena(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         ItemStack clickedItem = e.getCurrentItem();
-
 
         if (clickedItem == null || clickedItem.getType() == Material.AIR || clickedItem.hasItemMeta() && !clickedItem.getItemMeta().hasDisplayName())
             return;
@@ -242,6 +242,19 @@ public class Listeners implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onTryToDuelWield(InventoryClickEvent e) {
+        Player player = (Player) e.getWhoClicked();
+
+        e.setCancelled(e.getRawSlot() == 45 && stopAction(player, "You are not allowed to duel wield!"));
+    }
+
+    @EventHandler
+    public void onDuelWield(PlayerSwapHandItemsEvent e) {
+        if (stopAction(e.getPlayer(), "You are not allowed to duel wield!"))
+            e.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
