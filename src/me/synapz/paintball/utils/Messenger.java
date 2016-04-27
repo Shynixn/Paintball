@@ -4,6 +4,7 @@ package me.synapz.paintball.utils;
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,9 +23,19 @@ public class Messenger {
     public static final String TEAM_SWITCH_TIME = createPrefix("Team Switch") + SECONDARY + "%time%" + THEME + " seconds";
     public static final String TEAM_SWITCH_END = createPrefix("Team Switch") + SECONDARY + "Team switching unlocked";
     public static final String TEAM_SWITCH_ERROR = createPrefix("Team Switch") + SECONDARY + "Wait for the team switch cooldown to end.";
+
+    public static void error(CommandSender sender, Messages...msgs) {
+        for (Messages msg : msgs)
+            info(sender, RED + msg.getString());
+    }
+
     public static void error(CommandSender sender, String... msg) {
         for (String str : msg)
             info(sender, RED + str);
+    }
+
+    public static void success(CommandSender sender, Messages msg) {
+        info(sender, GREEN + msg.getString());
     }
 
     public static void success(CommandSender sender, String... msg) {

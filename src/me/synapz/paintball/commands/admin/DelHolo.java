@@ -2,6 +2,7 @@ package me.synapz.paintball.commands.admin;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.commands.PaintballCommand;
@@ -21,7 +22,7 @@ public class DelHolo extends PaintballCommand {
         int removed = 0;
 
         if (!Settings.HOLOGRAPHIC_DISPLAYS) {
-            Messenger.error(player, "Please download plugin HolographicDisplays to use this feature.", "http://dev.bukkit.org/bukkit-plugins/holographic-displays/");
+            Messenger.error(player, Messages.DOWNLOAD_HOLO, Messages.HOLO_LINK);
             return;
         }
 
@@ -29,13 +30,13 @@ public class DelHolo extends PaintballCommand {
             try {
                 radius = Integer.parseInt(args[2]);
             } catch (NumberFormatException exc) {
-                Messenger.error(player, "Please enter a valid number for radius");
+                Messenger.error(player, Messages.VALID_RADIUS);
                 return;
             }
         }
 
         if (Settings.ARENA.getHologramList().isEmpty()) {
-            Messenger.success(player, "No holograms were removed.");
+            Messenger.success(player, Messages.NO_HOLOGRAMS_REMOVED);
             return;
         }
 
@@ -68,14 +69,13 @@ public class DelHolo extends PaintballCommand {
         }
 
         if (removed == 0) {
-            Messenger.success(player, "No holograms were removed.");
+            Messenger.success(player, Messages.NO_HOLOGRAMS_REMOVED);
             return;
         }
 
-        Messenger.success(player, "Removed " + ChatColor.GRAY + removed + ChatColor.GREEN + " holograms.");
+        Messenger.success(player, Messages.HOLOGRAMS_REMOVED);
     }
 
-    // pb admin deloholo 1
     @Override
     public String getName() {
         return "delholo";
@@ -83,7 +83,7 @@ public class DelHolo extends PaintballCommand {
 
     @Override
     public String getInfo() {
-        return "Remove holograms around you.";
+        return Messages.COMMAND_HOLO_INFO.getString();
     }
 
     @Override

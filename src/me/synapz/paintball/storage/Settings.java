@@ -5,6 +5,7 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.coin.CoinItems;
+import me.synapz.paintball.enums.Messages;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,6 +38,7 @@ public class Settings {
 
     public static ArenaFile ARENA;
     public static PlayerData PLAYERDATA;
+    public static MessagesFile MESSAGES;
     public static FileConfiguration ARENA_FILE;
     public static ItemFile ITEMS;
     public static Database DATABASE;
@@ -76,6 +78,7 @@ public class Settings {
         ITEMS = new ItemFile(pb);
         ARENA = new ArenaFile(pb);
         DATABASE = new Database(pb);
+        MESSAGES = new MessagesFile(pb);
         DATABASE.setupDatabase(pb);
         ARENA_FILE = ARENA.getFileConfig();
         loadSettings(); // loads everything in config.yml into constants

@@ -1,3 +1,7 @@
+BETA-3.8.9
+- Started messages.yml! Change almost all messages the plugin sends!
+- Some internal fixes
+
 BETA-3.8.8
 - Fixed Domination arenas from not being able to tie
 - Update to 1.9.2

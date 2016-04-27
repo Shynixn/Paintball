@@ -7,6 +7,7 @@ import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.enums.ArenaType;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SpectatorLocation;
@@ -155,7 +156,7 @@ public class Arena {
     public void removeArena() {
         for (PaintballPlayer player : getAllPlayers().values()) {
             player.leave();
-            Messenger.error(player.getPlayer(), "Arena has been removed.");
+            Messenger.error(player.getPlayer(), Messages.ARENA_REMOVE);
         }
 
         setState(ArenaState.REMOVED);
