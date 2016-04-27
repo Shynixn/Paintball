@@ -2,6 +2,7 @@ package me.synapz.paintball.commands.player;
 
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
 import org.bukkit.entity.Player;
 
 import static me.synapz.paintball.storage.Settings.PLAYERDATA;
@@ -18,8 +19,8 @@ public class Stats extends PaintballCommand {
         return "stats";
     }
 
-    public String getInfo() {
-        return "View player's statistics (kills,deaths,etc)";
+    public Messages getInfo() {
+        return Messages.COMMAND_STATS_INFO;
     }
 
     public String getArgs() {

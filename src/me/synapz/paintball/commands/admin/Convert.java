@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands.admin;
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.ArenaType;
@@ -37,8 +38,8 @@ public class Convert extends ArenaCommand {
         return "convert";
     }
 
-    public String getInfo() {
-        return "Convert an arena to a different type.";
+    public Messages getInfo() {
+        return Messages.COMMAND_CONVERT_INFO;
     }
 
     public CommandType getCommandType() {

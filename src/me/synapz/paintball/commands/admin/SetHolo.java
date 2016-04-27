@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands.admin;
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.StatCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -44,8 +45,8 @@ public class SetHolo extends StatCommand {
     }
 
     @Override
-    public String getInfo() {
-        return "Creates a leaderboard hologram.";
+    public Messages getInfo() {
+        return Messages.COMMAND_SETHOLO_INFO;
     }
 
     @Override

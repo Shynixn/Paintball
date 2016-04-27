@@ -2,6 +2,7 @@ package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.FFAArena;
 import me.synapz.paintball.enums.ArenaType;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -48,8 +49,8 @@ public class SetMax extends ArenaCommand {
         return "max";
     }
 
-    public String getInfo() {
-        return "Set max number of players";
+    public Messages getInfo() {
+        return Messages.COMMAND_SETMAX_INFO;
     }
 
     public String getArgs() {

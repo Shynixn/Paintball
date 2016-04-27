@@ -3,6 +3,7 @@ package me.synapz.paintball.commands.player;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -41,8 +42,8 @@ public class Join extends TeamCommand {
         return "join";
     }
 
-    public String getInfo() {
-        return "Join an Arena";
+    public Messages getInfo() {
+        return Messages.COMMAND_JOIN_INFO;
     }
 
     public CommandType getCommandType() {

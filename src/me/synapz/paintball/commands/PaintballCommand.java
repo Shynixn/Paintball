@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands;
 
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
 import org.bukkit.entity.Player;
 
 public abstract class PaintballCommand {
@@ -11,7 +12,7 @@ public abstract class PaintballCommand {
 
     public abstract String getName();
 
-    public abstract String getInfo();
+    public abstract Messages getInfo();
 
     public abstract String getArgs();
 

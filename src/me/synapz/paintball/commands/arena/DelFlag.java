@@ -2,6 +2,7 @@ package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.CTFArena;
 import me.synapz.paintball.arenas.FlagArena;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -37,8 +38,8 @@ public class DelFlag extends TeamCommand {
         return "delflag";
     }
 
-    public String getInfo() {
-        return "Delete a Arena's flag point";
+    public Messages getInfo() {
+        return Messages.COMMAND_DELFLAG_INFO;
     }
 
     public CommandType getCommandType() {

@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands.player;
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -34,8 +35,8 @@ public class Spectate extends ArenaCommand {
         return "spectate";
     }
 
-    public String getInfo() {
-        return "Spectate an arena.";
+    public Messages getInfo() {
+        return Messages.COMMAND_SPECTATE_INFO;
     }
 
     public String getArgs() {

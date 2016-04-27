@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands.admin;
 
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -18,8 +19,8 @@ public class Reload extends PaintballCommand {
         return "reload";
     }
 
-    public String getInfo() {
-        return "Reload config.yml";
+    public Messages getInfo() {
+        return Messages.COMMAND_RELOAD_INFO;
     }
 
     public String getArgs() {

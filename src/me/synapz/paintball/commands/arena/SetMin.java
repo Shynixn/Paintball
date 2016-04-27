@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands.arena;
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -38,8 +39,8 @@ public class SetMin extends ArenaCommand {
         return "min";
     }
 
-    public String getInfo() {
-        return "Set min amount of players";
+    public Messages getInfo() {
+        return Messages.COMMAND_SETMIN_INFO;
     }
 
     public String getArgs() {

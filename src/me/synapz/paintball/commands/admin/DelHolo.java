@@ -82,8 +82,8 @@ public class DelHolo extends PaintballCommand {
     }
 
     @Override
-    public String getInfo() {
-        return Messages.COMMAND_HOLO_INFO.getString();
+    public Messages getInfo() {
+        return Messages.COMMAND_HOLO_INFO;
     }
 
     @Override

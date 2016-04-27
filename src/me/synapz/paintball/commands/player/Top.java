@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands.player;
 
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.StatCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -48,8 +49,8 @@ public class Top extends StatCommand {
         return "top";
     }
 
-    public String getInfo() {
-        return "View leaderboards.";
+    public Messages getInfo() {
+        return Messages.COMMAND_TOP_INFO;
     }
 
     public CommandType getCommandType() {

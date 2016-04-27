@@ -3,6 +3,7 @@ package me.synapz.paintball.commands.arena;
 import me.synapz.paintball.commands.CommandManager;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
 import org.bukkit.entity.Player;
 
 public class Arena extends PaintballCommand {
@@ -30,8 +31,8 @@ public class Arena extends PaintballCommand {
         return "arena";
     }
 
-    public String getInfo() {
-        return "Display all Paintball Arena setup commands";
+    public Messages getInfo() {
+        return Messages.COMMAND_ARENA_INFO;
     }
 
     public CommandType getCommandType() {

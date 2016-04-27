@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands.arena;
 
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -27,8 +28,8 @@ public class SetSpectate extends ArenaCommand {
         return "setspec";
     }
 
-    public String getInfo() {
-        return "Set Arena spectate location";
+    public Messages getInfo() {
+        return Messages.COMMAND_SETSPECTATE_INFO;
     }
 
     public CommandType getCommandType() {

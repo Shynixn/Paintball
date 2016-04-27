@@ -2,6 +2,7 @@ package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.arenas.RTFArena;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -41,8 +42,8 @@ public class SetFlag extends TeamCommand {
         return "setflag";
     }
 
-    public String getInfo() {
-        return "Set a Arena's flag point";
+    public Messages getInfo() {
+        return Messages.COMMAND_SETFLAG_INFO;
     }
 
     public CommandType getCommandType() {

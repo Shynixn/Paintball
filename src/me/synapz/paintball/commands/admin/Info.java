@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands.admin;
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.utils.Utils;
@@ -50,8 +51,8 @@ public class Info extends ArenaCommand {
         return "info";
     }
 
-    public String getInfo() {
-        return "Display Arena information.";
+    public Messages getInfo() {
+        return Messages.COMMAND_INFO_INFO;
     }
 
     public CommandType getCommandType() {

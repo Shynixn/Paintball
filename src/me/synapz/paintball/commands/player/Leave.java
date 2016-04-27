@@ -3,6 +3,7 @@ package me.synapz.paintball.commands.player;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -39,8 +40,8 @@ public class Leave extends PaintballCommand {
         return "leave";
     }
 
-    public String getInfo() {
-        return "Leave an Arena";
+    public Messages getInfo() {
+        return Messages.COMMAND_LEAVE_INFO;
     }
 
     public CommandType getCommandType() {

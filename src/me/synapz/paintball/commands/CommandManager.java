@@ -96,7 +96,7 @@ public class CommandManager implements CommandExecutor{
         for (PaintballCommand command : COMMANDS.values()) {
             String args = command.getArgs().equals("") ? "" : " " + command.getArgs();
             if (command.getCommandType() == type || command.getName().equals("admin") && player.hasPermission("paintball.admin.help") || command.getName().equals("arena") && player.hasPermission("paintball.arena.help")) {
-                player.sendMessage((command.getName().equals("arena") && type == CommandType.ADMIN ? THEME + "/pb arena" : command.getName().equals("admin") && type == CommandType.ARENA ? THEME + "/pb admin" : beginning) + ((command.getName().equals("admin") || command.getName().equals("arena")) && type != CommandType.PLAYER ? "" : command.getName()) + args + WHITE + " - " + SECONDARY + command.getInfo());
+                player.sendMessage((command.getName().equals("arena") && type == CommandType.ADMIN ? THEME + "/pb arena" : command.getName().equals("admin") && type == CommandType.ARENA ? THEME + "/pb admin" : beginning) + ((command.getName().equals("admin") || command.getName().equals("arena")) && type != CommandType.PLAYER ? "" : command.getName()) + args + WHITE + " - " + SECONDARY + command.getInfo().getString());
 
             }
         }

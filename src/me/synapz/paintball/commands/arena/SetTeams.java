@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands.arena;
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.commands.ArenaCommand;
@@ -71,8 +72,8 @@ public class SetTeams extends ArenaCommand {
         return "setteams";
     }
 
-    public String getInfo() {
-        return "Set teams via ChatColors seperated by commas ex. &1,&b,&c";
+    public Messages getInfo() {
+        return Messages.COMMAND_SETTEAMS_INFO;
     }
 
     public CommandType getCommandType() {

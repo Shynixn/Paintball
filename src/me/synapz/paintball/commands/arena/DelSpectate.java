@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands.arena;
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -31,8 +32,8 @@ public class DelSpectate extends ArenaCommand {
         return "delspec";
     }
 
-    public String getInfo() {
-        return "Delete Arena spectate location";
+    public Messages getInfo() {
+        return Messages.COMMAND_DELSPECTATE_INFO;
     }
 
     public CommandType getCommandType() {

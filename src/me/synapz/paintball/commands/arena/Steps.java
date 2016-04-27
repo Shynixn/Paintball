@@ -3,6 +3,7 @@ package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.commands.PaintballCommand;
@@ -33,8 +34,8 @@ public class Steps extends PaintballCommand {
         return "steps";
     }
 
-    public String getInfo() {
-        return "List steps of an Arena";
+    public Messages getInfo() {
+        return Messages.COMMAND_STEPS_INFO;
     }
 
     public CommandType getCommandType() {

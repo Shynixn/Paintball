@@ -4,6 +4,7 @@ package me.synapz.paintball.commands.player;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
 import org.bukkit.entity.Player;
 
 public class List extends PaintballCommand {
@@ -16,8 +17,8 @@ public class List extends PaintballCommand {
         return "list";
     }
 
-    public String getInfo() {
-        return "List of all arenas";
+    public Messages getInfo() {
+        return Messages.COMMAND_LIST_INFO;
     }
 
     public String getArgs() {

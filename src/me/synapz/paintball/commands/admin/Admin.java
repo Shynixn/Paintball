@@ -4,6 +4,7 @@ package me.synapz.paintball.commands.admin;
 import me.synapz.paintball.commands.CommandManager;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
 import org.bukkit.entity.Player;
 
 public class Admin extends PaintballCommand {
@@ -31,8 +32,8 @@ public class Admin extends PaintballCommand {
         return "admin";
     }
 
-    public String getInfo() {
-        return "Display all Paintball Admin commands";
+    public Messages getInfo() {
+        return Messages.COMMAND_ADMIN_INFO;
     }
 
     public CommandType getCommandType() {

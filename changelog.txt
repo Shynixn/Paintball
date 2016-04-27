@@ -1,3 +1,7 @@
+BETA-3.9.0
+- Added all command info's to messages.yml (your files will auto-update with them)
+- Edited some command info's
+
 BETA-3.8.9
 - Started messages.yml! Change almost all messages the plugin sends!
 - Some internal fixes

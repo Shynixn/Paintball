@@ -2,6 +2,7 @@ package me.synapz.paintball.commands;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.enums.CommandType;
 import org.bukkit.entity.Player;
@@ -43,7 +44,7 @@ public abstract class ArenaCommand extends PaintballCommand {
 
     public abstract String getName();
 
-    public abstract String getInfo();
+    public abstract Messages getInfo();
 
     public abstract String getArgs();
 

@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands.admin;
 
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.commands.ArenaCommand;
@@ -43,8 +44,8 @@ public class Disable extends ArenaCommand {
         return "disable";
     }
 
-    public String getInfo() {
-        return "Disable an Arena";
+    public Messages getInfo() {
+        return Messages.COMMAND_DISABLE_INFO;
     }
 
     public CommandType getCommandType() {

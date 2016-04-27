@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands.admin;
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.StatCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -30,8 +31,8 @@ public class Reset extends StatCommand {
         return "reset";
     }
 
-    public String getInfo() {
-        return "Reset a player's stats";
+    public Messages getInfo() {
+        return Messages.COMMAND_RESET_INFO;
     }
 
     public String getArgs() {

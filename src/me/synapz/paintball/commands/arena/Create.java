@@ -3,6 +3,7 @@ package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.ArenaType;
@@ -61,8 +62,8 @@ public class Create extends PaintballCommand {
         return "create";
     }
 
-    public String getInfo() {
-        return "Create a new Arena";
+    public Messages getInfo() {
+        return Messages.COMMAND_CREATE_INFO;
     }
 
     public String getArgs() {

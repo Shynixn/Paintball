@@ -1,6 +1,7 @@
 package me.synapz.paintball.commands.arena;
 
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
@@ -21,8 +22,8 @@ public class Remove extends ArenaCommand {
         return "remove";
     }
 
-    public String getInfo() {
-        return "Remove an arena";
+    public Messages getInfo() {
+        return Messages.COMMAND_REMOVE_INFO;
     }
 
     public String getArgs() {
