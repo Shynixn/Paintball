@@ -225,7 +225,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
         try {
             Connection conn;
             conn = getConnection();
-            PreparedStatement sql = conn.prepareStatement("INSERT INTO Paintball_Stats (id,stats) VALUES (1," + encoded + ")");
+            PreparedStatement sql = conn.prepareStatement("INSERT INTO Paintball_Stats (id,stats) VALUES (1,'" + encoded + "');");
             sql.execute();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -242,64 +242,66 @@ public class Database extends PaintballFile implements PluginMessageListener {
         }
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         String subchannel = in.readUTF();
-        if (subchannel.equals("Paintball")) {
-            String cmd = in.readUTF();
-            if (cmd.equalsIgnoreCase("IncomingPlayer")) {
-                String serverID = in.readUTF();
-                if (serverID.equalsIgnoreCase(this.SID)) {
-                    String player = in.readUTF();
-                    String arenaName = in.readUTF();
-                    Arena a = ArenaManager.getArenaManager().getArena(arenaName);
-                    if (a.getMax() < a.getAllPlayers().size()) {
-                        ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
-                        out1.writeUTF("Paintball");
-                        out1.writeUTF("Responce");
-                        out1.writeUTF(player);
-                        out1.writeUTF("true");
-                        Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
-                        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                        out.writeUTF("Connect");
-                        out.writeUTF(BID);
-                        Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
-                        UUID uuid = UUID.fromString(player);
-                        bungeePlayers.put(uuid, a);
-                    } else {
-                        ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
-                        out1.writeUTF("Paintball");
-                        out1.writeUTF("Responce");
-                        out1.writeUTF(player);
-                        out1.writeUTF("false");
-                        Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
-                    }
-                    updateBungeeSigns();
-                }
+        if (!subchannel.equals("Paintball")) {
+            return;
+        }
+        String cmd = in.readUTF();
+        if (!cmd.equalsIgnoreCase("IncomingPlayer")) {
+            return;
+        }
+        String serverID = in.readUTF();
+        if (serverID.equalsIgnoreCase(this.SID)) {
+            String player = in.readUTF();
+            String arenaName = in.readUTF();
+            Arena a = ArenaManager.getArenaManager().getArena(arenaName);
+            if (a.getMax() < a.getAllPlayers().size()) {
+                ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
+                out1.writeUTF("Paintball");
+                out1.writeUTF("Responce");
+                out1.writeUTF(player);
+                out1.writeUTF("true");
+                Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("Connect");
+                out.writeUTF(BID);
+                Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
+                UUID uuid = UUID.fromString(player);
+                bungeePlayers.put(uuid, a);
+            } else {
+                ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
+                out1.writeUTF("Paintball");
+                out1.writeUTF("Responce");
+                out1.writeUTF(player);
+                out1.writeUTF("false");
+                Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
             }
+            updateBungeeSigns();
         }
     }
 
     public static void updateBungeeSigns() {
-        if (pb.isEnabled()) {
-            int numb = 0;
-            String arenas = "";
-            String sign = "";
-            for (String an : ArenaManager.getArenaManager().getArenas().keySet()) {
-                Arena a = ArenaManager.getArenaManager().getArenas().get(an);
-                if (numb != 0) {
-                    arenas = arenas + ":" + a.getName();
-                    sign = sign + ":" + a.getSign();
-                } else {
-                    arenas = a.getName();
-                    sign = a.getSign();
-                }
-                numb++;
+        if (!pb.isEnabled()) return;
+        
+        int numb = 0;
+        String arenas = "";
+        String sign = "";
+        for (String an : ArenaManager.getArenaManager().getArenas().keySet()) {
+            Arena a = ArenaManager.getArenaManager().getArenas().get(an);
+            if (numb != 0) {
+                arenas = arenas + ":" + a.getName();
+                sign = sign + ":" + a.getSign();
+            } else {
+                arenas = a.getName();
+                sign = a.getSign();
             }
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("Paintball");
-            out.writeUTF("Arenas");
-            out.writeUTF(SID);
-            out.writeUTF(arenas);
-            out.writeUTF(sign);
-            Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
+            numb++;
         }
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Paintball");
+        out.writeUTF("Arenas");
+        out.writeUTF(SID);
+        out.writeUTF(arenas);
+        out.writeUTF(sign);
+        Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
     }
 }
