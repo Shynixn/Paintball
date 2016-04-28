@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
@@ -70,6 +71,15 @@ public class Utils {
         wool.setItemMeta(woolMeta);
 
         return wool;
+    }
+
+    public static ItemStack getSkull(Player player, String name) {
+        ItemStack skull = new ItemStack(397, 1, (short) 3);
+        SkullMeta meta = (SkullMeta) skull.getItemMeta();
+        meta.setDisplayName(name);
+        meta.setOwner(player.getName());
+        skull.setItemMeta(meta);
+        return skull;
     }
 
     // Makes wool from DyeColor and name, also adds lore. ex: 6/6 Full, so players can see if they can join

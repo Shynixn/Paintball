@@ -9,6 +9,7 @@ import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.HologramLocation;
 import me.synapz.paintball.locations.SignLocation;
+import me.synapz.paintball.locations.SkullLocation;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -198,6 +199,11 @@ public class ArenaFile extends PaintballFile {
         for (String rawLoc : fileConfig.getStringList("Signs.Autojoin")) {
             SignLocation signLoc = new SignLocation(SignLocation.SignLocations.AUTOJOIN, rawLoc);
             leaderboardAndJoinSigns.put(signLoc.getLocation(), signLoc);
+        }
+
+        for (String rawLoc : fileConfig.getStringList("Signs.Skull")) {
+            SkullLocation skullLoc = new SkullLocation(rawLoc);
+            leaderboardAndJoinSigns.put(skullLoc.getLocation(), skullLoc);
         }
 
         for (String rawLoc : fileConfig.getStringList("Signs.Leaderboard")) {

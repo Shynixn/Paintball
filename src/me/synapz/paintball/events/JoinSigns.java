@@ -7,7 +7,9 @@ import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,7 +28,7 @@ public class JoinSigns implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSignCreate(SignChangeEvent e) {
         // paintball.sign.use
-        if (e.getLines().length == 0 || !e.getLine(0).equalsIgnoreCase("pb") || e.getLine(1).equalsIgnoreCase("lb"))
+        if (e.getLines().length == 0 || !e.getLine(0).equalsIgnoreCase("pb") || e.getLine(1).contains("lb"))
             return;
 
         if (!e.getLine(1).equalsIgnoreCase("autojoin") && !e.getLine(1).equalsIgnoreCase("join")) {
@@ -125,33 +127,43 @@ public class JoinSigns implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSignBreak(BlockBreakEvent e) {
         // Check to make sure it is a sign
-        try {
-            Sign sign = (Sign) e.getBlock().getState();
-            sign.getType();
-        } catch (ClassCastException exc) {
+        BlockState state = e.getBlock().getState();
+
+        if (!(state instanceof Sign) && !(state instanceof Skull))
             return;
-        }
 
-        Sign sign = (Sign) e.getBlock().getState();
-        SignLocation autoJoinOrLbsign = Settings.ARENA.getSigns().get(sign.getLocation());
+        SignLocation autoJoinOrLbsign = Settings.ARENA.getSigns().get(e.getBlock().getLocation());
 
-        if (autoJoinOrLbsign != null) {
-            if (autoJoinOrLbsign.getType() == SignLocation.SignLocations.LEADERBOARD) {
-                if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.leaderboard.remove"))
-                    Messenger.success(e.getPlayer(), "Leaderboard sign has been successfully removed!");
+        if (state instanceof Sign) {
+            Sign sign = (Sign) e.getBlock().getState();
+
+            if (autoJoinOrLbsign != null) {
+                if (autoJoinOrLbsign.getType() == SignLocation.SignLocations.LEADERBOARD) {
+                    if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.leaderboard.remove"))
+                        Messenger.success(e.getPlayer(), "Leaderboard sign has been successfully removed!");
+                } else {
+                    if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.autojoin.remove"))
+                        Messenger.success(e.getPlayer(), "Autojoin sign has been successfully removed!");
+                }
+                autoJoinOrLbsign.removeSign();
             } else {
-                if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.autojoin.remove"))
-                    Messenger.success(e.getPlayer(), "Autojoin sign has been successfully removed!");
-            }
-            autoJoinOrLbsign.removeSign();
-        } else {
-            Arena a = ArenaManager.getArenaManager().getArena(sign.getLine(1));
-            if (a != null) {
-                if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.join.remove")) {
-                    a.getSignLocations().get(sign.getLocation()).removeSign();
-                    Messenger.success(e.getPlayer(), a.getName() + "'s join sign has been successfully removed!");
+                Arena a = ArenaManager.getArenaManager().getArena(sign.getLine(1));
+                if (a != null) {
+                    if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.join.remove")) {
+                        a.getSignLocations().get(sign.getLocation()).removeSign();
+                        Messenger.success(e.getPlayer(), a.getName() + "'s join sign has been successfully removed!");
+                    }
                 }
             }
+        } else if (state instanceof Skull) {
+            if (autoJoinOrLbsign != null) {
+                if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.leaderboard.remove"))
+                    Messenger.success(e.getPlayer(), "Leaderboard skull has been successfully removed!");
+
+                autoJoinOrLbsign.removeSign();
+            }
         }
+
+
     }
 }

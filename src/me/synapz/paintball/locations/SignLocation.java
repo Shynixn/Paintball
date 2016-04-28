@@ -7,11 +7,12 @@ import org.bukkit.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class SignLocation extends PaintballLocation {
+public class SignLocation extends PaintballLocation {
 
     public enum SignLocations {
         LEADERBOARD,
         JOIN,
+        SKULL,
         AUTOJOIN;
 
         @Override
@@ -20,7 +21,7 @@ public final class SignLocation extends PaintballLocation {
         }
     }
 
-    private final SignLocations type;
+    protected final SignLocations type;
 
     public SignLocation(Arena a, Location loc, SignLocations type) {
         super(a, loc);
@@ -45,8 +46,10 @@ public final class SignLocation extends PaintballLocation {
         super(null, loc);
         this.type = type;
 
-        setLocation();
-        Settings.ARENA.addSign(this);
+        if (!(this instanceof SkullLocation)) {
+            setLocation();
+            Settings.ARENA.addSign(this);
+        }
     }
 
     public SignLocations getType() {
@@ -57,7 +60,7 @@ public final class SignLocation extends PaintballLocation {
     public void removeSign() {
         String path;
 
-        if (type == SignLocations.LEADERBOARD || type == SignLocations.AUTOJOIN) {
+        if (type == SignLocations.LEADERBOARD || type == SignLocations.AUTOJOIN || type == SignLocations.SKULL) {
             path = "Signs." + type.toString();
             Settings.ARENA.removeSign(this);
         } else {
@@ -66,24 +69,24 @@ public final class SignLocation extends PaintballLocation {
         }
         List<String> signsList = Settings.ARENA_FILE.getStringList(path);
 
-        if (signsList == null || !(signsList.contains(super.toString()))) {
+        if (signsList == null || !(signsList.contains(toString()))) {
             return;
         }
-        signsList.remove(super.toString());
+        signsList.remove(toString());
         Settings.ARENA_FILE.set(path, signsList);
         Settings.ARENA.saveFile();
     }
 
     protected void setLocation() {
-        String path = type == SignLocations.LEADERBOARD || type == SignLocations.AUTOJOIN ? "Signs." + type.toString() : arena.getPath() + type.toString();
+        String path = type == SignLocations.LEADERBOARD || type == SignLocations.AUTOJOIN || type == SignLocations.SKULL ? "Signs." + type.toString() : arena.getPath() + type.toString();
         List<String> signsList = Settings.ARENA_FILE.getStringList(path);
 
         if (signsList == null)
             signsList = new ArrayList<String>();
-        if (signsList.contains(super.toString()))
+        if (signsList.contains(toString()))
             return;
 
-        signsList.add(super.toString());
+        signsList.add(toString());
         Settings.ARENA_FILE.set(path, signsList);
         Settings.ARENA.saveFile();
     }

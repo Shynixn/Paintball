@@ -43,7 +43,7 @@ public class SpectatorPlayer extends PaintballPlayer {
 
     @Override
     protected void giveItems() {
-        player.getInventory().setItem(0, getSkull(this.getPlayer(), TELEPORTER));
+        player.getInventory().setItem(0, Utils.getSkull(this.getPlayer(), TELEPORTER));
         player.getInventory().setItem(8, Utils.makeItem(Material.BED, LEAVE_ARENA, 1));
         player.updateInventory();
     }
@@ -86,7 +86,7 @@ public class SpectatorPlayer extends PaintballPlayer {
 
         for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
             Player player = arenaPlayer.getPlayer();
-            inv.addItem(getSkull(player, Settings.THEME + BOLD + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleport to " + ITALIC + player.getName()));
+            inv.addItem(Utils.getSkull(player, Settings.THEME + BOLD + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleport to " + ITALIC + player.getName()));
         }
 
         player.openInventory(inv);
@@ -96,15 +96,6 @@ public class SpectatorPlayer extends PaintballPlayer {
         Player target = arenaPlayer.getPlayer();
         player.teleport(target);
         Messenger.success(player, "Now spectating " + GRAY + target.getName() + GREEN + "!");
-    }
-
-    private ItemStack getSkull(Player player, String name) {
-        ItemStack skull = new ItemStack(397, 1, (short) 3);
-        SkullMeta meta = (SkullMeta) skull.getItemMeta();
-        meta.setDisplayName(name);
-        meta.setOwner(player.getName());
-        skull.setItemMeta(meta);
-        return skull;
     }
 
     @Override

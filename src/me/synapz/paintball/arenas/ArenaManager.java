@@ -6,10 +6,13 @@ import com.google.common.base.Joiner;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
+import me.synapz.paintball.locations.SkullLocation;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -120,35 +123,52 @@ public class ArenaManager {
     public void updateAllSignsOnServer() {
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
 
-        // TODO: fixed
         DATABASE.updateBungeeSigns();
 
         for (SignLocation signLoc : Settings.ARENA.getSigns().values()) {
-            if (!(signLoc.getLocation().getBlock().getState() instanceof Sign)) {
+            if (!(signLoc instanceof SkullLocation) && !(signLoc.getLocation().getBlock().getState() instanceof Sign)) {
                 signLoc.removeSign();
                 return;
             }
 
-            Sign sign = (Sign) signLoc.getLocation().getBlock().getState();
+            BlockState state = signLoc.getLocation().getBlock().getState();
             switch (signLoc.getType()) {
                 case AUTOJOIN:
-                    sign.setLine(0, prefix); // in case the prefix changes
-                    sign.update();
+                    if (state instanceof Sign) {
+                        Sign sign = (Sign) state;
+
+                        sign.setLine(0, prefix); // in case the prefix changes
+                        sign.update();
+                    }
                     break;
                 case LEADERBOARD:
-                    StatType type = StatType.getStatType(null, sign.getLine(2));
+                    if (state instanceof Sign) {
+                        Sign sign = (Sign) state;
 
-                    if (type == null) {
-                        signLoc.removeSign();
-                        return;
+                        sign.setLine(0, prefix); // in case the prefix changes
+                        sign.update();
+
+                        StatType type = StatType.getStatType(null, sign.getLine(2));
+
+                        if (type == null) {
+                            signLoc.removeSign();
+                            return;
+                        }
+
+                        Map<String, String> playerAndStat = PLAYERDATA.getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+
+                        sign.setLine(1, playerAndStat.keySet().toArray()[0] + "");
+                        sign.setLine(3, playerAndStat.values().toArray()[0] + "");
+                        sign.update();
                     }
-
-                    Map<String, String> playerAndStat = PLAYERDATA.getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
-
-                    sign.setLine(1, playerAndStat.keySet().toArray()[0] + "");
-                    sign.setLine(3, playerAndStat.values().toArray()[0] + "");
-                    sign.update();
                     break;
+                case SKULL:
+                    if (state instanceof Skull && signLoc instanceof SkullLocation) {
+                        SkullLocation skullLoc = (SkullLocation) signLoc;
+                        Skull skull = (Skull) state;
+
+                        skullLoc.makeSkullBlock(skull.getRotation());
+                    }
                 default:
                     break; // should never happen
             }

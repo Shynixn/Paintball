@@ -1,3 +1,8 @@
+BETA-3.9.1
+- Added leaderboard heads! Look on spigot page 'Signs' to see how to create them
+- Added internal changes to the way leaderboard signs loaded
+- MySQL should now work
+
 BETA-3.9.0
 - Added all command info's to messages.yml (your files will auto-update with them)
 - Edited some command info's

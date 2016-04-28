@@ -76,7 +76,7 @@ public class Messenger {
         if (player.hasPermission(permission)) {
             return true;
         } else {
-            error(player, "You don't have access for that sign!");
+            error(player, "You don't have access to click that!");
             return false;
         }
     }

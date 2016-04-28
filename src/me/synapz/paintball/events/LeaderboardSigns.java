@@ -1,11 +1,15 @@
 package me.synapz.paintball.events;
 
+import me.synapz.paintball.locations.SkullLocation;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Utils;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Sign;
+import org.bukkit.SkullType;
+import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,11 +25,10 @@ public class LeaderboardSigns implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSignCreate(SignChangeEvent e) {
-        if (e.getLines().length <= 3 || !e.getLine(0).equalsIgnoreCase("pb") || !e.getLine(1).equalsIgnoreCase("lb")) return;
+        if (e.getLines().length <= 3 || !e.getLine(0).equalsIgnoreCase("pb") || !e.getLine(1).contains("lb")) return;
 
-        if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.leaderboard.create")) {
+        if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.leaderboard.create"))
             return;
-        }
 
         StatType type = StatType.getStatType(e.getPlayer(), e.getLine(2));
 
@@ -47,35 +50,61 @@ public class LeaderboardSigns implements Listener {
             return;
         }
 
-        Messenger.success(e.getPlayer(), "Leaderboard sign successfully created!");
         Map<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(i, type);
-        e.setLine(0, "#" + i);
-        e.setLine(1, playerAndStat.keySet().toArray()[0] + "");
-        e.setLine(2, type.getName());
-        e.setLine(3, playerAndStat.values().toArray()[0] + "");
-        new SignLocation(e.getBlock().getLocation(), SignLocation.SignLocations.LEADERBOARD);
+        String player = (String) playerAndStat.keySet().toArray()[0];
+        String value = (String) playerAndStat.values().toArray()[0];
+
+        if (e.getLine(1).contains("skull")) {
+            Messenger.success(e.getPlayer(), "Leaderboard skull successfully created!");
+
+            Sign sign = (Sign) e.getBlock().getState();
+            BlockFace directionFacing = ((org.bukkit.material.Sign) sign.getData()).getFacing();
+
+            e.getBlock().breakNaturally();
+
+            new SkullLocation(e.getBlock().getLocation(), type, i).makeSkullBlock(directionFacing);
+        } else {
+            Messenger.success(e.getPlayer(), "Leaderboard sign successfully created!");
+
+            e.setLine(0, "#" + i);
+            e.setLine(1, player);
+            e.setLine(2, type.getName());
+            e.setLine(3, value);
+
+            new SignLocation(e.getBlock().getLocation(), SignLocation.SignLocations.LEADERBOARD);
+        }
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLeaderboardSignclick(PlayerInteractEvent e) {
-        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN)
+        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN && e.getClickedBlock().getType() != Material.SKULL && e.getClickedBlock().getType() != Material.SKULL_ITEM)
             return;
 
-        if (!(e.getClickedBlock().getState() instanceof Sign))
-            return;
-
-        Sign sign = (Sign) e.getClickedBlock().getState();
-
-        if (sign.getLines().length < 4)
-            return;
-
+        BlockState state = e.getClickedBlock().getState();
         Player player = e.getPlayer();
 
-        if (!isLeaderboardSign(sign))
-            return;
+        if (state instanceof Sign) {
+            Sign sign = (Sign) e.getClickedBlock().getState();
 
-        if (Messenger.signPermissionValidator(player, "paintball.leaderboard.use"))
-            Settings.PLAYERDATA.getStats(player, sign.getLine(1));
+            if (sign.getLines().length < 4)
+                return;
+
+            if (!isLeaderboardSign(sign))
+                return;
+
+            if (Messenger.signPermissionValidator(player, "paintball.leaderboard.use"))
+                Settings.PLAYERDATA.getStats(player, sign.getLine(1));
+        } else if (state instanceof Skull) {
+            SignLocation signLoc = Settings.ARENA.getSigns().get(Utils.simplifyLocation(e.getClickedBlock().getLocation()));
+
+            if (signLoc != null && signLoc instanceof SkullLocation && Messenger.signPermissionValidator(e.getPlayer(), "paintball.leaderboard.use")) {
+                Skull skull = (Skull) state;
+
+                Settings.PLAYERDATA.getStats(player, skull.getOwner());
+            }
+
+        }
     }
 
     private boolean isLeaderboardSign(Sign sign) {
