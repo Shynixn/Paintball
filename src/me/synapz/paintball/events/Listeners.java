@@ -35,6 +35,7 @@ import org.bukkit.inventory.ItemStack;
 public class Listeners implements Listener {
 
     //When a player joins, check if they are from a bungee server and send them to the arena if they are
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
@@ -118,61 +119,62 @@ public class Listeners implements Listener {
 
         String name = item.getItemMeta().getDisplayName();
 
-        if (isInArena(player)) {
-            Arena a = getArena(player);
-            PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
+        if (!isInArena(player)) {
+            return;
+        }
+        Arena a = getArena(player);
+        PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
 
-            if (gamePlayer instanceof LobbyPlayer) {
-                LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
-                if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (name.contains("Join")) { // check to make sure it is a team changing object
-                        for (Team t : a.getArenaTeamList()) {
-                            if (name.contains(t.getTitleName())) {
-                                if (!t.isFull()) {
-                                    lobbyPlayer.setTeam(t);
-                                } else {
-                                    Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
-                                    break;
-                                }
+        if (gamePlayer instanceof LobbyPlayer) {
+            LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
+            if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (name.contains("Join")) { // check to make sure it is a team changing object
+                    for (Team t : a.getArenaTeamList()) {
+                        if (name.contains(t.getTitleName())) {
+                            if (!t.isFull()) {
+                                lobbyPlayer.setTeam(t);
+                            } else {
+                                Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
+                                break;
                             }
                         }
-                        player.closeInventory();
-                    } else if (name.contains("Change Team")) {
-                        Inventory inv = Bukkit.createInventory(null, 18, "Team Switcher");
-                        for (Team t : a.getArenaTeamList()) {
-                            // Make a new inventory and place all teams (except the one they are on) into it
-                            if (t != lobbyPlayer.getTeam()) {
-                                inv.addItem(Utils.makeWool(t.getChatColor() + t.getTitleName(), t.getDyeColor(), t));
-                            }
-                        }
-                        player.openInventory(inv);
                     }
+                    player.closeInventory();
+                } else if (name.contains("Change Team")) {
+                    Inventory inv = Bukkit.createInventory(null, 18, "Team Switcher");
+                    for (Team t : a.getArenaTeamList()) {
+                        // Make a new inventory and place all teams (except the one they are on) into it
+                        if (t != lobbyPlayer.getTeam()) {
+                            inv.addItem(Utils.makeWool(t.getChatColor() + t.getTitleName(), t.getDyeColor(), t));
+                        }
+                    }
+                    player.openInventory(inv);
                 }
-                e.setCancelled(true);
-            } else if (gamePlayer instanceof ArenaPlayer) {
-                ArenaPlayer arenaPlayer = (ArenaPlayer) gamePlayer;
+            }
+            e.setCancelled(true);
+        } else if (gamePlayer instanceof ArenaPlayer) {
+            ArenaPlayer arenaPlayer = (ArenaPlayer) gamePlayer;
 
-                if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (name.contains("Coin Shop")) {
-                        arenaPlayer.giveShop();
-                        e.setCancelled(true);
-                        return;
-                    }
-                    arenaPlayer.shoot(e);
+            if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (name.contains("Coin Shop")) {
+                    arenaPlayer.giveShop();
                     e.setCancelled(true);
+                    return;
                 }
-            } else if (gamePlayer instanceof SpectatorPlayer) {
-                SpectatorPlayer spectatorPlayer = (SpectatorPlayer) gamePlayer;
-
-                if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    if (name.equals(SpectatorPlayer.LEAVE_ARENA)) {
-                        spectatorPlayer.leave();
-                    } else if (name.equals(SpectatorPlayer.TELEPORTER)) {
-                        spectatorPlayer.openMenu();
-                    }
-                }
+                arenaPlayer.shoot(e);
                 e.setCancelled(true);
             }
+        } else if (gamePlayer instanceof SpectatorPlayer) {
+            SpectatorPlayer spectatorPlayer = (SpectatorPlayer) gamePlayer;
+
+            if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (name.equals(SpectatorPlayer.LEAVE_ARENA)) {
+                    spectatorPlayer.leave();
+                } else if (name.equals(SpectatorPlayer.TELEPORTER)) {
+                    spectatorPlayer.openMenu();
+                }
+            }
+            e.setCancelled(true);
         }
     }
 

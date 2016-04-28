@@ -38,7 +38,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
         }
 
         if (settings.sql) {
-            setupSQL(pb, settings.host, settings.username, settings.password, settings.database);
+            setupSQL(pb, settings.database);
         }
 
         if (settings.bungee && settings.loadString(Databases.SERVER_ID).equalsIgnoreCase("Generate")) {
@@ -71,17 +71,17 @@ public class Database extends PaintballFile implements PluginMessageListener {
         }
     }
 
-    public void setupSQL(Plugin pb, String host, String username, String password, String database) {
+    public void setupSQL(Plugin pb, String database) {
         try {
             Connection conn;
             conn = getConnection();
-            PreparedStatement sql = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
-            sql.execute();
-            PreparedStatement sql0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS Paintball_Stats" +
+            PreparedStatement createDatabase = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
+            createDatabase.execute();
+            PreparedStatement createTable = conn.prepareStatement("CREATE TABLE IF NOT EXISTS Paintball_Stats" +
                     " (id INT NOT NULL,stats LONGTEXT,PRIMARY KEY (id));");
-            sql0.execute();
-            PreparedStatement sql1 = conn.prepareStatement("SELECT stats FROM Paintball_Stats WHERE id = 1;");
-            ResultSet result = sql1.executeQuery();
+            createTable.execute();
+            PreparedStatement query = conn.prepareStatement("SELECT stats FROM Paintball_Stats WHERE id = 1;");
+            ResultSet result = query.executeQuery();
             if (!result.next()) {
                 Bukkit.getLogger().info("sql ready!");
                 return;
@@ -152,7 +152,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
         try {
             Connection conn;
             conn = getConnection();
-            PreparedStatement sql = conn.prepareStatement("INSERT INTO Paintball_Stats (id,stats) VALUES (1,'" + encoded + "');");
+            PreparedStatement sql = conn.prepareStatement("INSERT INTO Paintball_Stats (id,stats) VALUES (1,'" + encoded + "') ON DUPLICATE KEY UPDATE id = " + 1 + ",stats = '" + encoded + "';");
             sql.execute();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
