@@ -3,7 +3,7 @@ package me.synapz.paintball.storage.sql;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 /**
  * Abstract Database class, serves as a base for any connection method (MySQL,
@@ -59,9 +59,8 @@ public abstract class Database {
      * @throws SQLException if the connection cannot be closed
      */
     public boolean closeConnection() throws SQLException {
-        if (connection == null) {
-            return false;
-        }
+        if (connection == null) return false;
+
         connection.close();
         return true;
     }
@@ -79,13 +78,10 @@ public abstract class Database {
      */
     public ResultSet querySQL(String query) throws SQLException,
             ClassNotFoundException {
-        if (!checkConnection()) {
-            openConnection();
-        }
+        if (!checkConnection()) openConnection();
 
-        Statement statement = connection.createStatement();
-
-        ResultSet result = statement.executeQuery(query);
+        PreparedStatement statement = connection.prepareStatement(query);
+        ResultSet result = statement.executeQuery();
 
         return result;
     }
@@ -102,13 +98,10 @@ public abstract class Database {
      */
     public int updateSQL(String query) throws SQLException,
             ClassNotFoundException {
-        if (!checkConnection()) {
-            openConnection();
-        }
+        if (!checkConnection()) openConnection();
 
-        Statement statement = connection.createStatement();
-
-        int result = statement.executeUpdate(query);
+        PreparedStatement statement = connection.prepareStatement(query);
+        int result = statement.executeUpdate();
 
         return result;
     }
