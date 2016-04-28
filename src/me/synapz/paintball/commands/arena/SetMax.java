@@ -1,11 +1,11 @@
 package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.FFAArena;
+import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.ArenaType;
+import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.commands.ArenaCommand;
-import me.synapz.paintball.enums.CommandType;
 
 import static org.bukkit.ChatColor.*;
 

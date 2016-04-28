@@ -1,10 +1,10 @@
 package me.synapz.paintball.commands.admin;
 
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
 
 public class Convert extends ArenaCommand {

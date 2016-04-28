@@ -1,7 +1,6 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
@@ -11,8 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Arrays;
 
 public abstract class FlagArenaPlayer extends ArenaPlayer {
 

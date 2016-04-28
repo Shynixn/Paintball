@@ -3,11 +3,10 @@ package me.synapz.paintball.commands.player;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
-import org.bukkit.Bukkit;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
 
 public class Leave extends PaintballCommand {

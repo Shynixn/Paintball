@@ -1,13 +1,12 @@
 package me.synapz.paintball.countdowns;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
-import me.synapz.paintball.arenas.*;
-import me.synapz.paintball.enums.Team;
-import me.synapz.paintball.locations.FlagLocation;
+import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.DomArena;
+import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

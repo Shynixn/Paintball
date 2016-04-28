@@ -5,7 +5,6 @@ import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 
 import static me.synapz.paintball.storage.Settings.ARENA_FILE;
 import static org.bukkit.ChatColor.*;

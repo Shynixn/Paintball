@@ -13,9 +13,13 @@ import java.io.IOException;
 public class PaintballFile extends File {
 
     protected FileConfiguration fileConfig;
+    protected DatabaseSettings settings;
 
     protected PaintballFile(Plugin pb, String name) {
         super(pb.getDataFolder(), name);
+
+        this.fileConfig = YamlConfiguration.loadConfiguration(this); // give settings a file to look into if it is the database file
+        settings = new DatabaseSettings(fileConfig);
 
         if (!this.exists()) {
             try {
@@ -25,18 +29,16 @@ public class PaintballFile extends File {
                 e.printStackTrace();
             }
         }
-        if (Database.SQL && this.getName().contains("playerdata")) {
-            this.fileConfig = Database.addStats(YamlConfiguration.loadConfiguration(this));
-        } else {
-            this.fileConfig = YamlConfiguration.loadConfiguration(this);
+        if (settings.sql && this.getName().contains("playerdata")) {
+            this.fileConfig = Settings.DATABASE.addStats(YamlConfiguration.loadConfiguration(this));
         }
         this.saveFile();
     }
 
     public void saveFile() {
         try {
-            if (Database.SQL && this.getName().contains("playerdata")) {
-                Database.removeStats(fileConfig).save(this);
+            if (settings.sql && this.getName().contains("playerdata")) {
+                Settings.DATABASE.removeStats(fileConfig).save(this);
             } else {
                 fileConfig.save(this);
             }

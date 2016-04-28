@@ -2,17 +2,10 @@ package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.CTFArena;
-import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
-import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Banner;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class CTFArenaPlayer extends FlagArenaPlayer {
 

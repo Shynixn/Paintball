@@ -2,8 +2,6 @@ package me.synapz.paintball.titles.nms;
 
 import me.synapz.paintball.titles.Titles;
 
-import java.lang.reflect.Field;
-
 /*
 import me.synapz.paintball.titles.Titles;
 import net.minecraft.server.v1_9_R1.IChatBaseComponent;

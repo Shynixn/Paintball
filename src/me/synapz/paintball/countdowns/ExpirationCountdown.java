@@ -1,12 +1,11 @@
 package me.synapz.paintball.countdowns;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
+import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
-import me.synapz.paintball.enums.Items;
+import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
-import me.synapz.paintball.coin.CoinItem;
-import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

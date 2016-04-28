@@ -3,9 +3,9 @@ package me.synapz.paintball.countdowns;
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.SpectatorPlayer;
 import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.entity.Player;
 

@@ -1,11 +1,11 @@
 package me.synapz.paintball.commands;
 
 
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.admin.*;
 import me.synapz.paintball.commands.arena.*;
 import me.synapz.paintball.commands.player.*;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

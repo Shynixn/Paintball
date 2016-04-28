@@ -1,12 +1,12 @@
 package me.synapz.paintball.commands;
 
 import me.synapz.paintball.arenas.RTFArena;
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.commands.arena.DelLocation;
 import me.synapz.paintball.commands.arena.SetLocation;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

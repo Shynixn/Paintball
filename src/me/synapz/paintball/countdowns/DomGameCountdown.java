@@ -7,7 +7,6 @@ import me.synapz.paintball.players.DomArenaPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DomGameCountdown extends GameCountdown {

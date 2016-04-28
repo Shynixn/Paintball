@@ -1,11 +1,11 @@
 package me.synapz.paintball.commands.admin;
 
 
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
 
 public class Reload extends PaintballCommand {

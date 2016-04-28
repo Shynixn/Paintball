@@ -2,10 +2,10 @@ package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.arenas.RTFArena;
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.TeamCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Location;
 
 public class SetFlag extends TeamCommand {

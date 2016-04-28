@@ -1,8 +1,6 @@
 package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.DomArena;
-import me.synapz.paintball.arenas.LTSArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.players.ArenaPlayer;
 

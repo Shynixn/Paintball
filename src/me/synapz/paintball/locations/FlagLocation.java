@@ -1,6 +1,5 @@
 package me.synapz.paintball.locations;
 
-import me.synapz.paintball.arenas.CTFArena;
 import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;

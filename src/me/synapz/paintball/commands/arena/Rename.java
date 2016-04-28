@@ -2,10 +2,10 @@ package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
 
 public class Rename extends ArenaCommand {

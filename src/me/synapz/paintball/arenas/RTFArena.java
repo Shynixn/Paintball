@@ -6,16 +6,15 @@ import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import static me.synapz.paintball.storage.Settings.ARENA;
 import static me.synapz.paintball.storage.Settings.ARENA_FILE;
-import static org.bukkit.ChatColor.GRAY;
-import static org.bukkit.ChatColor.RESET;
-import static org.bukkit.ChatColor.STRIKETHROUGH;
+import static org.bukkit.ChatColor.*;
 
 public class RTFArena extends FlagArena {
 

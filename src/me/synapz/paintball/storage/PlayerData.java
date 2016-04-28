@@ -1,11 +1,11 @@
 package me.synapz.paintball.storage;
 
 
+import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.utils.ExperienceManager;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
-import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

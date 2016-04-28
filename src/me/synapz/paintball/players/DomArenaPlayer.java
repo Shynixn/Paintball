@@ -5,7 +5,6 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.DomArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;

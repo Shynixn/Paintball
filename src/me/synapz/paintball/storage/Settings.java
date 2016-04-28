@@ -5,7 +5,6 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.coin.CoinItems;
-import me.synapz.paintball.enums.Messages;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -49,8 +48,6 @@ public class Settings {
 
     public Settings(Plugin plugin) {
         init(plugin); // init all config.yml stuff
-
-
         Settings.ARENA.setup(); // setup arena.yml
     }
 
@@ -67,19 +64,18 @@ public class Settings {
         this.pb = pb;
 
         loadFromJar("config.yml");
-
-        PLAYERDATA = new PlayerData(pb);
-
         loadEverything();
+
         ARENA.loadLeaderboards();
     }
 
     private void loadEverything() {
+        DATABASE = new Database(pb);
+        DATABASE.setupDatabase(pb);
+        PLAYERDATA = new PlayerData(pb);
         ITEMS = new ItemFile(pb);
         ARENA = new ArenaFile(pb);
-        DATABASE = new Database(pb);
         MESSAGES = new MessagesFile(pb);
-        DATABASE.setupDatabase(pb);
         ARENA_FILE = ARENA.getFileConfig();
         loadSettings(); // loads everything in config.yml into constants
 

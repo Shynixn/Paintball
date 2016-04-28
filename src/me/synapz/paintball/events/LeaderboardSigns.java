@@ -1,15 +1,16 @@
 package me.synapz.paintball.events;
 
-import me.synapz.paintball.locations.SkullLocation;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
+import me.synapz.paintball.locations.SkullLocation;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.SkullType;
-import org.bukkit.block.*;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
+import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,7 +19,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class LeaderboardSigns implements Listener {

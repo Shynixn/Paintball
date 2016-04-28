@@ -1,19 +1,14 @@
 package me.synapz.paintball.events;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
-import com.connorlinfoot.bountifulapi.CLUpdate;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
-import me.synapz.paintball.countdowns.DomGameCountdown;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
-import me.synapz.paintball.enums.ArenaType;
-import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.enums.UpdateResult;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
-import me.synapz.paintball.storage.Database;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Update;
@@ -22,7 +17,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -36,11 +30,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -51,9 +42,9 @@ public class Listeners implements Listener {
         Player player = e.getPlayer();
 
         //detect if they have been called over by bungee
-        if (Database.bungeePlayers.containsKey(player.getUniqueId())) {
+        if (Settings.DATABASE.getBungeePlayers().containsKey(player.getUniqueId())) {
             //if yes, send them to their arena
-            Database.bungeePlayers.get(player.getUniqueId()).joinLobby(player, null);
+            Settings.DATABASE.getBungeePlayers().get(player.getUniqueId()).joinLobby(player, null);
         }
     }
 

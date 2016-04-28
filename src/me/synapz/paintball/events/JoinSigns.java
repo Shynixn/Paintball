@@ -2,10 +2,10 @@ package me.synapz.paintball.events;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
-import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;

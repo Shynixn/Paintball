@@ -1,7 +1,5 @@
 package me.synapz.paintball.titles;
 
-import org.bukkit.entity.Player;
-
 public interface Titles {
 
     //void sendActionBar(Player p, String string);

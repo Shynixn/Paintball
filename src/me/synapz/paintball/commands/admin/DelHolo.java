@@ -2,14 +2,13 @@ package me.synapz.paintball.commands.admin;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.locations.HologramLocation;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.ChatColor;
+import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;

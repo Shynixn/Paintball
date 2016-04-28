@@ -1,11 +1,11 @@
 package me.synapz.paintball.commands.player;
 
 
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.StatCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Messenger;
 import net.md_5.bungee.api.ChatColor;
 
 public class Top extends StatCommand {

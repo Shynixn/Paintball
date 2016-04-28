@@ -1,10 +1,10 @@
 package me.synapz.paintball.utils;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
-import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.countdowns.PaintballCountdown;
+import me.synapz.paintball.enums.Team;
 import org.bukkit.*;
 import org.bukkit.block.Banner;
 import org.bukkit.block.BlockFace;
@@ -16,7 +16,6 @@ import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
 import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;

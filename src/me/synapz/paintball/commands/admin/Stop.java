@@ -2,10 +2,10 @@ package me.synapz.paintball.commands.admin;
 
 
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.utils.Messenger;
 
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;

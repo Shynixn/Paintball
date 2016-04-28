@@ -1,12 +1,8 @@
 package me.synapz.paintball.scoreboards;
 
-import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.enums.ScoreboardLine;
-import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.players.LobbyPlayer;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.players.PaintballPlayer;
-import me.synapz.paintball.players.SpectatorPlayer;
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

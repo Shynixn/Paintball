@@ -1,27 +1,22 @@
 package me.synapz.paintball.coin;
 
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.countdowns.PaintballCountdown;
-import me.synapz.paintball.events.ArenaBuyItemEvent;
-import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.enums.Team;
-import me.synapz.paintball.utils.Sounds;
-import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.enums.Items;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Sounds;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 

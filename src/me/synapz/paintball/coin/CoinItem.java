@@ -1,11 +1,11 @@
 package me.synapz.paintball.coin;
 
-import me.synapz.paintball.events.ArenaBuyItemEvent;
-import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.enums.Items;
+import me.synapz.paintball.events.ArenaBuyItemEvent;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;

@@ -1,9 +1,7 @@
 package me.synapz.paintball.countdowns;
 
-import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.Paintball;
-import me.synapz.paintball.arenas.DomArena;
-import me.synapz.paintball.arenas.LTSArena;
+import me.synapz.paintball.arenas.Arena;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 

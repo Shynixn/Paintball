@@ -1,14 +1,14 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.enums.Team;
-import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.countdowns.ChangeTeamCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.enums.ScoreboardLine;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static me.synapz.paintball.storage.Settings.PLAYERDATA;
-import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;
 
