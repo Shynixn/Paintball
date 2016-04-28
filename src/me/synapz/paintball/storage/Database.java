@@ -26,15 +26,13 @@ public class Database extends PaintballFile implements PluginMessageListener {
     private Plugin pb;
 
     public Database(Plugin pb) {
-
         super(pb, "database.yml");
     }
 
     public void setupDatabase(Plugin pb) {
         this.pb = pb;
 
-
-        if (!Bukkit.getServer().getMessenger().getIncomingChannels().contains("BungeeCord")) {
+        if (settings.bungee && !Bukkit.getServer().getMessenger().getIncomingChannels().contains("BungeeCord")) {
             Bukkit.getServer().getMessenger().registerIncomingPluginChannel(pb, "BungeeCord", this);
             Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "BungeeCord");
         }
@@ -43,7 +41,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
             setupSQL(pb, settings.host, settings.username, settings.password, settings.database);
         }
 
-        if (settings.loadString(Databases.SERVER_ID).equalsIgnoreCase("Generate")) {
+        if (settings.bungee && settings.loadString(Databases.SERVER_ID).equalsIgnoreCase("Generate")) {
             Random r = new Random(5);
             Integer base10ServerID = r.nextInt(9999);
             String serverIDString = Integer.toString(base10ServerID);
@@ -56,16 +54,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
     If any of the following are null (not set) this will set the file with the default value
     and return the default value.
     */
-
-    private Object loadValue(Databases type) {
-        return fileConfig.get(type.getPath());
-    }
-
-    private boolean isFoundInConfig(Databases type) {
-        Object value = fileConfig.get(type.getPath());
-
-        return value != null;
-    }
 
     private void setValue(String path, Object object) {
         fileConfig.set(path, object);

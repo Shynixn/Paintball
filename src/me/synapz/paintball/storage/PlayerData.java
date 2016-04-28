@@ -9,6 +9,7 @@ import me.synapz.paintball.utils.Utils;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -38,6 +39,9 @@ public final class PlayerData extends PaintballFile {
 
     public PlayerData(Plugin pb) {
         super(pb, "playerdata.yml");
+
+        if (settings.sql)
+            this.fileConfig = Settings.DATABASE.addStats(YamlConfiguration.loadConfiguration(this));
     }
 
     @Override
@@ -47,7 +51,18 @@ public final class PlayerData extends PaintballFile {
 
     @Override
     public void saveFile() {
-        super.saveFile();
+        if (settings.sql) { // if we have sql, load it
+            try {
+                if (settings.sql)
+                    Settings.DATABASE.removeStats(fileConfig).save(this);
+            } catch (Exception e) {
+                Messenger.error(Bukkit.getConsoleSender(), "Could not load " + getName() + " database.", "", "Stack trace");
+                e.printStackTrace();
+            }
+        } else { // if sql is false, just save the file
+            super.saveFile();
+        }
+
     }
 
     // Adds one to a player's stat

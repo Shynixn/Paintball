@@ -19,7 +19,9 @@ public class PaintballFile extends File {
         super(pb.getDataFolder(), name);
 
         this.fileConfig = YamlConfiguration.loadConfiguration(this); // give settings a file to look into if it is the database file
-        settings = new DatabaseSettings(fileConfig);
+
+        if (settings == null)
+            settings = new DatabaseSettings(fileConfig);
 
         if (!this.exists()) {
             try {
@@ -29,19 +31,13 @@ public class PaintballFile extends File {
                 e.printStackTrace();
             }
         }
-        if (settings.sql && this.getName().contains("playerdata")) {
-            this.fileConfig = Settings.DATABASE.addStats(YamlConfiguration.loadConfiguration(this));
-        }
+
         this.saveFile();
     }
 
     public void saveFile() {
         try {
-            if (settings.sql && this.getName().contains("playerdata")) {
-                Settings.DATABASE.removeStats(fileConfig).save(this);
-            } else {
-                fileConfig.save(this);
-            }
+            fileConfig.save(this);
         } catch (Exception e) {
             Messenger.error(Bukkit.getConsoleSender(), "Could not save " + getName() + ".", "", "Stack trace");
             e.printStackTrace();

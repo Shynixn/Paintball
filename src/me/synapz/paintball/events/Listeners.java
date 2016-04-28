@@ -26,10 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
@@ -232,6 +229,41 @@ public class Listeners implements Listener {
                     if (!player.getOpenInventory().getTitle().contains("Coin Shop"))
                         Messenger.error(player, "You are not allowed to move items in your inventory!");
                     player.closeInventory();
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSnowballShootCore(ProjectileHitEvent e) {
+        if ((e.getEntity()).getShooter() instanceof Player && e.getEntity() instanceof Snowball && isInArena((Player) e.getEntity().getShooter())) {
+            Player player = (Player) e.getEntity().getShooter();
+            Arena arena = getArena(player);
+
+            if (arena instanceof DTCArena) {
+                DTCArena dtcArena = (DTCArena) arena;
+
+                PaintballPlayer pbPlayer = arena.getPaintballPlayer(player);
+                Location hitLoc = Utils.simplifyLocation(e.getEntity().getLocation()); // turns the crazy decimal location into a block location
+                Team hitTeam = null;
+
+                for (Location loc : dtcArena.getCoreLocations().keySet()) {
+                    if (hitLoc.distance(loc) <= 1) {
+                        hitTeam = dtcArena.getCoreLocations().get(loc);
+                    }
+                }
+
+                if (pbPlayer instanceof ArenaPlayer && hitTeam != null && arena.getState() == Arena.ArenaState.IN_PROGRESS) {
+                    if (hitTeam == pbPlayer.getTeam()) {
+                        Messenger.error(player, "You cannot attack your own Core!");
+                    } else {
+                        arena.incrementTeamScore(hitTeam, true);
+
+                        if (arena.getTeamScore(hitTeam) % 5 == 0)
+                            arena.updateAllScoreboard();
+
+                        arena.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + hitTeam.getTitleName() + "'s Core is being attacked!");
+                    }
                 }
             }
         }

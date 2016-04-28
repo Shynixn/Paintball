@@ -431,6 +431,8 @@ public class Arena {
                 player = new DomArenaPlayer(this, p.getTeam(), p.getPlayer());
             else if (this instanceof LTSArena)
                 player = new LTSArenaPlayer(this, p.getTeam(), p.getPlayer());
+            else if (this instanceof DTCArena)
+                player = new DTCArenaPlayer(this, p.getTeam(), p.getPlayer());
             else
                 player = new ArenaPlayer(this, p.getTeam(), p.getPlayer());
 

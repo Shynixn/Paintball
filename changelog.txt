@@ -1,3 +1,7 @@
+BETA-3.9.3
+- DTC mode is fully complete!
+- Internal fixes to the way database loads
+
 BETA-3.9.2
 - Added 1.9 Duel Wield Item
 - Added onBuyItemEvent to API
