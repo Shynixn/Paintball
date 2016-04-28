@@ -280,7 +280,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
     }
 
     public static void updateBungeeSigns() {
-        if (!pb.isEnabled() && bungee) return;
+        if (!pb.isEnabled() || !bungee) return;
         int numb = 0;
         String arenas = "";
         String sign = "";
