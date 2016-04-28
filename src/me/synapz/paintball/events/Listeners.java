@@ -237,7 +237,9 @@ public class Listeners implements Listener {
             } else if (gamePlayer instanceof ArenaPlayer) {
                 if (player.getOpenInventory().getTitle().contains("Horse") || Utils.contains(clickedItem, "Team") || Utils.equals(clickedItem, ChatColor.GOLD + "Coin Shop") || player.getOpenInventory().getTitle().contains("Coin Shop")) {
                     e.setCancelled(true);
-                    Messenger.error(player, "You are not allowed to move items in your inventory!");
+
+                    if (!player.getOpenInventory().getTitle().contains("Coin Shop"))
+                        Messenger.error(player, "You are not allowed to move items in your inventory!");
                     player.closeInventory();
                 }
             }

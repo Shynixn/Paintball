@@ -1,3 +1,11 @@
+BETA-3.9.2
+- Added 1.9 Duel Wield Item
+- Added onBuyItemEvent to API
+- Fixes to MySQL
+- Fixes to Bungee
+- Fixed skulls not updating
+- Fixed leaderboard signs being confused with autojoin
+
 BETA-3.9.1
 - Added leaderboard heads! Look on spigot page 'Signs' to see how to create them
 - Added internal changes to the way leaderboard signs loaded

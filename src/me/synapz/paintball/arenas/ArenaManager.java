@@ -145,8 +145,8 @@ public class ArenaManager {
                     if (state instanceof Sign) {
                         Sign sign = (Sign) state;
 
-                        sign.setLine(0, prefix); // in case the prefix changes
-                        sign.update();
+                        if (sign.getLine(0).contains("Paintball"))
+                            break;
 
                         StatType type = StatType.getStatType(null, sign.getLine(2));
 
@@ -169,6 +169,7 @@ public class ArenaManager {
 
                         skullLoc.makeSkullBlock(skull.getRotation());
                     }
+                    break;
                 default:
                     break; // should never happen
             }

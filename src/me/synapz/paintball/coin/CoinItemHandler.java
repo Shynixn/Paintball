@@ -1,5 +1,6 @@
 package me.synapz.paintball.coin;
 
+import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +13,9 @@ public class CoinItemHandler {
 
     private static Map<String, CoinItem> items = new HashMap<>();
     private static CoinItemHandler handler = new CoinItemHandler();
+    private static final List<Items> duelWieldItems = new ArrayList<Items>() {{
+        add(Items.DUEL_WIELD);
+    }};
 
     private CoinItemHandler() {}
 
@@ -65,5 +69,9 @@ public class CoinItemHandler {
 
     public Map<String, CoinItem> getAllItems() {
         return items;
+    }
+
+    public List<Items> getDuelWieldItems() {
+        return duelWieldItems;
     }
 }

@@ -2,6 +2,7 @@ package me.synapz.paintball.coin;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.events.ArenaBuyItemEvent;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -49,6 +50,9 @@ public class CoinItemListener implements Listener {
             if ((coinItem.requiresMoney()) || (coinItem.requiresCoins())) {
                 arena.updateAllScoreboard();
             }
+
+            ArenaBuyItemEvent event = new ArenaBuyItemEvent(arenaPlayer, coinItem);
+            Bukkit.getServer().getPluginManager().callEvent(event);
         }
         e.setCancelled(true);
         player.closeInventory();
@@ -56,7 +60,6 @@ public class CoinItemListener implements Listener {
 
     @EventHandler
     public void onClickCoinItem(PlayerInteractEvent e) {
-
         Player player = e.getPlayer();
         ItemStack item = e.getItem();
         if (player == null) {

@@ -1,5 +1,6 @@
 package me.synapz.paintball.coin;
 
+import me.synapz.paintball.events.ArenaBuyItemEvent;
 import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.events.ArenaClickItemEvent;
@@ -35,6 +36,7 @@ public class CoinItem extends ItemStack {
     private final boolean showItem;
     private final Sound sound;
     private final int damage;
+    private Items coinEnumItem;
 
     public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, String action, Sound sound, int damage) {
         super(material, amount);
@@ -49,6 +51,7 @@ public class CoinItem extends ItemStack {
         this.sound = sound;
         this.action = action;
         this.damage = damage;
+        this.coinEnumItem = null;
 
         CoinItemHandler.getHandler().addItem(this);
     }
@@ -67,6 +70,8 @@ public class CoinItem extends ItemStack {
                 item.getAction(),
                 item.getSound(),
                 item.getDamage());
+
+        this.coinEnumItem = item;
     }
 
     public CoinItem(CoinItem item) {
@@ -82,6 +87,7 @@ public class CoinItem extends ItemStack {
         this.sound = item.getSound();
         this.action = item.getAction();
         this.damage = item.getDamage();
+        this.coinEnumItem = item.getCoinEnumItem();
     }
 
     // Gets the item name
@@ -107,6 +113,11 @@ public class CoinItem extends ItemStack {
     // Gets the item's expiration time
     public int getExpirationTime() {
         return expirationTime;
+    }
+
+    // Gets the item enum that was used to create the item
+    public Items getCoinEnumItem() {
+        return coinEnumItem;
     }
 
     // Gets the items permission
@@ -214,6 +225,9 @@ public class CoinItem extends ItemStack {
 
     // The method that gets fired whenever a player clicks on the item
     public void onClickItem(ArenaClickItemEvent event) {}
+
+    // The method that gets fired whenever a player buys an item
+    public void onBuyItem(ArenaBuyItemEvent event) {}
 
     // If there is an error when adding the item to the inventory (player doesn't have enough coins, permission, etc)
     public boolean hasError(ArenaPlayer player) {

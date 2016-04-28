@@ -1,6 +1,9 @@
 package me.synapz.paintball.coin;
 
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.countdowns.PaintballCountdown;
+import me.synapz.paintball.events.ArenaBuyItemEvent;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.utils.Sounds;
@@ -15,7 +18,10 @@ import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -23,8 +29,18 @@ public class CoinItems implements Listener {
 
     private static CoinItems instance = null;
 
+    private static boolean is1_9;
+
     public static CoinItems getCoinItems() {
         if (instance == null) {
+
+            try {
+                Sound.BLOCK_COMPARATOR_CLICK.toString();
+                is1_9 = true;
+            } catch (NoSuchFieldError exc) {
+                is1_9 = false;
+            }
+
             new CoinItems().loadItems();
         }
         return instance;
@@ -143,6 +159,24 @@ public class CoinItems implements Listener {
                 arenaPlayer.getPlayer().getInventory().remove(arenaPlayer.getPlayer().getItemInHand());
             }
         };
+
+        if (is1_9) {
+            new CoinItem(Items.DUEL_WIELD) {
+                @Override
+                public void onClickItem(ArenaClickItemEvent event) {
+                    Player player = event.getArenaPlayer().getPlayer();
+                    PlayerInventory inv = player.getInventory();
+
+                    if (inv.getItemInOffHand() == null || inv.getItemInOffHand().getType() == Material.AIR) {
+                        inv.setItemInOffHand(player.getItemInHand());
+                        inv.setItemInMainHand(new ItemStack(Material.AIR));
+                    } else {
+                        Utils.shootSnowball(player, event.getArena(), 0.1);
+                    }
+                }
+            };
+        }
+
         new CoinItem(Items.TIME_WARP) {
             public void onClickItem(ArenaClickItemEvent event) {
                 ArenaPlayer player = event.getArenaPlayer();
