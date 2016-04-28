@@ -150,7 +150,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
             PreparedStatement sql = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
             sql.execute();
             PreparedStatement sql0 = conn.prepareStatement("CREATE TABLE IF NOT EXISTS Paintball_Stats" +
-                    " (id INTEGER not null,stats STRING,PRIMARY KEY (id))");
+                    " (id INTEGER not null,stats LONGTEXT,PRIMARY KEY (id));");
             sql0.execute();
             PreparedStatement sql1 = conn.prepareStatement("SELECT stats FROM `Paintball_Stats` WHERE id = '1';");
             ResultSet result = sql1.executeQuery();
@@ -281,7 +281,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
 
     public static void updateBungeeSigns() {
         if (!pb.isEnabled()) return;
-        
         int numb = 0;
         String arenas = "";
         String sign = "";
