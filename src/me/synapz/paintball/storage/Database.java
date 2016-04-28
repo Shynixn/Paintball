@@ -32,7 +32,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
     private static String database = null;
     private static Plugin pb = null;
     private static String SID = "Generate";
-    public boolean bungee = false;
+    public static boolean bungee = false;
     private String BID = null;
 
     public Database(Plugin pb) {
@@ -237,7 +237,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
     //Bungee
 
     public void onPluginMessageReceived(String channel, Player sender, byte[] message) {
-        if (!channel.equals("BungeeCord")) {
+        if (!channel.equals("BungeeCord") || !bungee) {
             return;
         }
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
@@ -280,7 +280,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
     }
 
     public static void updateBungeeSigns() {
-        if (!pb.isEnabled()) return;
+        if (!pb.isEnabled() && bungee) return;
         int numb = 0;
         String arenas = "";
         String sign = "";
