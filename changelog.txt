@@ -7,6 +7,7 @@ BETA-3.9.6
 - Fixed CTF and RTF Arena flags which move down (they are placed in air) from not being identified
 - Fixed CTF and RTF flags from gaining points after arena ends
 - Fixed CTF and RTF reset and death locations for flags which move down
+- Fixed lag when sql stuff saves (arena end & reload)
 
 BETA-3.9.5
 - Fixed Bungee ID not being added

@@ -5,7 +5,6 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
-import me.synapz.paintball.storage_new.database.*;
 import me.synapz.paintball.utils.ExperienceManager;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
