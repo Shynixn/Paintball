@@ -238,9 +238,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("Connect");
-                // TODO: The bungee ID is supose to be in the config, I don't know why it was removed when it started using a enum
-                // TODO: it is the ID that the bungee network uses and needs to be put back into the database file
-                //out.writeUTF(Databases.BUNGEE_ID.getString());
+                out.writeUTF(Databases.BUNGEE_ID.getString());
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
                 UUID uuid = UUID.fromString(player);
                 bungeePlayers.put(uuid, a);

@@ -2,7 +2,7 @@ package me.synapz.paintball.countdowns;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.DomArena;
+import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
@@ -39,7 +39,7 @@ public class ArenaStartCountdown extends PaintballCountdown {
         arena.broadcastTitle(Settings.PREFIX, GREEN + "Game started", 0, 30, 20);
         tpAllPlayersBack();
 
-        if (arena instanceof DomArena) {
+        if (arena instanceof DOMArena) {
             new DomGameCountdown(arena);
             return;
         }

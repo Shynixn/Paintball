@@ -427,8 +427,8 @@ public class Arena {
                 player = new RTFArenaPlayer(this, p.getTeam(), p.getPlayer());
             else if (this instanceof FFAArena)
                 player = new FFAArenaPlayer(this, p.getTeam(), p.getPlayer());
-            else if (this instanceof DomArena)
-                player = new DomArenaPlayer(this, p.getTeam(), p.getPlayer());
+            else if (this instanceof DOMArena)
+                player = new DOMArenaPlayer(this, p.getTeam(), p.getPlayer());
             else if (this instanceof LTSArena)
                 player = new LTSArenaPlayer(this, p.getTeam(), p.getPlayer());
             else if (this instanceof DTCArena)

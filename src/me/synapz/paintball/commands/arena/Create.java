@@ -32,7 +32,7 @@ public class Create extends PaintballCommand {
                     a = new CTFArena(arenaName, arenaName, true);
                     break;
                 case DOM:
-                    a = new DomArena(arenaName, arenaName, true);
+                    a = new DOMArena(arenaName, arenaName, true);
                     break;
                 case DTC:
                     a = new DTCArena(arenaName, arenaName, true);

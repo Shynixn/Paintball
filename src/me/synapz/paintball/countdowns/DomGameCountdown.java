@@ -1,9 +1,9 @@
 package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.DomArena;
+import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.enums.Team;
-import me.synapz.paintball.players.DomArenaPlayer;
+import me.synapz.paintball.players.DOMArenaPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 
 import java.util.ArrayList;
@@ -19,8 +19,8 @@ public class DomGameCountdown extends GameCountdown {
         super.onIteration();
 
         for (PaintballPlayer player : arena.getAllPlayers().values()) {
-            if (player instanceof DomArenaPlayer) {
-                DomArenaPlayer domPlayer = (DomArenaPlayer) player;
+            if (player instanceof DOMArenaPlayer) {
+                DOMArenaPlayer domPlayer = (DOMArenaPlayer) player;
 
                 if (domPlayer.isSecuring()) {
                     domPlayer.incrementTimeSecuring();
@@ -29,13 +29,13 @@ public class DomGameCountdown extends GameCountdown {
             }
         }
 
-        if (counter % ((DomArena) arena).UPDATE_INTERVAL == 0) {
+        if (counter % ((DOMArena) arena).UPDATE_INTERVAL == 0) {
             List<Team> winningTeams = new ArrayList<>();
 
             for (Team team : arena.getArenaTeamList()) {
 
-                if (arena instanceof DomArena) {
-                    int score = ((DomArena) arena).getRunningScores().get(team);
+                if (arena instanceof DOMArena) {
+                    int score = ((DOMArena) arena).getRunningScores().get(team);
 
                     while (score > 0) {
                         arena.incrementTeamScore(team, false);

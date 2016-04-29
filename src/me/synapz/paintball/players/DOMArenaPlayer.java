@@ -2,21 +2,21 @@ package me.synapz.paintball.players;
 
 import com.connorlinfoot.bountifulapi.BountifulAPI;
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.DomArena;
+import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 
-public class DomArenaPlayer extends ArenaPlayer {
+public class DOMArenaPlayer extends ArenaPlayer {
 
     private boolean isSecuring;
     private int timeSecuring;
 
-    private DomArena domArena = (DomArena) arena;
+    private DOMArena domArena = (DOMArena) arena;
 
-    public DomArenaPlayer(Arena a, Team t, Player p) {
+    public DOMArenaPlayer(Arena a, Team t, Player p) {
         super(a, t, p);
     }
 

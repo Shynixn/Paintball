@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static me.synapz.paintball.storage.Settings.ARENA;
 
-public class DomArena extends FlagArena {
+public class DOMArena extends FlagArena {
 
     public int SECURE_TIME;
     public int GENERATE_SIZE;
@@ -32,7 +32,7 @@ public class DomArena extends FlagArena {
     private Map<Location, Location> centerLoc = new HashMap<>();
     private Map<Team, Integer> runningScore = new HashMap<>();
 
-    public DomArena(String name, String currentName, boolean addToConfig) {
+    public DOMArena(String name, String currentName, boolean addToConfig) {
         super(name, currentName, addToConfig);
     }
 

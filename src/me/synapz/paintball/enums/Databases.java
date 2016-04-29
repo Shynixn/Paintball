@@ -1,10 +1,5 @@
 package me.synapz.paintball.enums;
 
-import me.synapz.paintball.storage.Database;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import javax.xml.crypto.Data;
-
 public enum Databases {
 
     SQL_ENABLED("SQL.enabled", false, ReturnType.BOOLEAN),
@@ -16,7 +11,8 @@ public enum Databases {
     DATABASE("SQL.database", "Paintball", ReturnType.STRING),
 
     BUNGEE_ENABLED("Bungee.enabled", false, ReturnType.BOOLEAN),
-    SERVER_ID("Bungee.serverID", "Generate", ReturnType.STRING);
+    SERVER_ID("Bungee.serverID", "Generate", ReturnType.STRING),
+    BUNGEE_ID("Bungee.bungeeID", "id", ReturnType.STRING);
 
     private String path;
     private ReturnType returnType;

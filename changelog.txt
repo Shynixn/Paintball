@@ -1,3 +1,10 @@
+BETA-3.9.5
+- Fixed Bungee ID not being added
+- Fixed DTC not setting team color
+- Fixed DTC spam on attack, now it only sends the message every -10 points
+- Made DTC core look nicer, now it is surrounded by glass panes
+- Organized imports
+
 BETA-3.9.4
 - Added Kill Confirmed gamemode!
 - Added Safe Guard gamemode!

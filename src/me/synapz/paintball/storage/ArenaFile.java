@@ -123,7 +123,7 @@ public class ArenaFile extends PaintballFile {
                         a = new CTFArena(arenaName, name, false);
                         break;
                     case DOM:
-                        a = new DomArena(arenaName, name, false);
+                        a = new DOMArena(arenaName, name, false);
                         break;
                     case DTC:
                         a = new DTCArena(arenaName, name, false);

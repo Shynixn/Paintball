@@ -15,10 +15,10 @@ public abstract class FlagArena extends Arena {
         super(name, currentName, addToConfig);
     }
 
-    // Loads flag points. A CTFArena sets banners while a DomArena sets stained glass every 5 blocks
+    // Loads flag points. A CTFArena sets banners while a DOMArena sets stained glass every 5 blocks
     public abstract void loadFlags();
 
-    // Resets the flag points. A CTFArena turns all flags to AIR while DomArena resets changed blocks
+    // Resets the flag points. A CTFArena turns all flags to AIR while DOMArena resets changed blocks
     public abstract void resetFlags();
 
     public void setFlagLocation(Team team, Location loc) {
