@@ -1,6 +1,6 @@
 package me.synapz.paintball.countdowns;
 
-import com.connorlinfoot.bountifulapi.BountifulAPI;
+import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.arenas.FlagArena;
@@ -95,7 +95,7 @@ public class ArenaStartCountdown extends PaintballCountdown {
 
     private void sendGameInfo() {
         for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
-            BountifulAPI.sendActionBar(arenaPlayer.getPlayer(), Settings.THEME + ChatColor.BOLD + arena.getArenaType().getShortName().toUpperCase() + Messenger.SUFFIX + arena.getArenaType().getGameInfo());
+            TTA_Methods.sendActionBar(arenaPlayer.getPlayer(), Settings.THEME + ChatColor.BOLD + arena.getArenaType().getShortName().toUpperCase() + Messenger.SUFFIX + arena.getArenaType().getGameInfo());
         }
     }
 }

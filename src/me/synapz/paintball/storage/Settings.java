@@ -65,7 +65,8 @@ public class Settings {
         loadFromJar("config.yml");
         loadEverything();
 
-        ARENA.loadLeaderboards();
+        if (HOLOGRAPHIC_DISPLAYS)
+            ARENA.loadLeaderboards();
     }
 
     private void loadEverything() {

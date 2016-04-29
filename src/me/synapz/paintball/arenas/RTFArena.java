@@ -71,7 +71,7 @@ public class RTFArena extends FlagArena {
             block.setData(team.getDyeColor().getData());
         }
 
-        Utils.createFlag(null, getNuetralFlagLocation());
+        neutralFlagLocation = Utils.createFlag(null, getNuetralFlagLocation());
     }
 
     // Resets everything set in loadFlags()
@@ -83,7 +83,7 @@ public class RTFArena extends FlagArena {
             loc.getBlock().setType(Material.AIR);
         }
 
-        getNuetralFlagLocation().getBlock().setType(Material.AIR);
+        neutralFlagLocation.getBlock().setType(Material.AIR);
     }
 
     @Override
@@ -96,10 +96,7 @@ public class RTFArena extends FlagArena {
     }
 
     public Location getCurrentFlagLocation() {
-        if (neutralFlagLocation == null)
-            return getNuetralFlagLocation();
-        else
-            return neutralFlagLocation;
+        return neutralFlagLocation;
     }
 
     public void setCurrentFlagLocation(Location loc) {

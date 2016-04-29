@@ -1,3 +1,13 @@
+BETA-3.9.6
+- Fixed 1.8 issue when loading listeners from a 1.9 listener being non-existent
+- Major Change: BountifulAPI -> TTA
+- Fixed DTC points not fully being reset
+- Fixed DTC scores not updating when they get to 0
+- Stopped console throwing errors if you do not have (optional) HolographicDisplays installed
+- Fixed CTF and RTF Arena flags which move down (they are placed in air) from not being identified
+- Fixed CTF and RTF flags from gaining points after arena ends
+- Fixed CTF and RTF reset and death locations for flags which move down
+
 BETA-3.9.5
 - Fixed Bungee ID not being added
 - Fixed DTC not setting team color

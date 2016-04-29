@@ -1,6 +1,7 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.countdowns.GameCountdown;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
@@ -30,6 +31,9 @@ public abstract class FlagArenaPlayer extends ArenaPlayer {
     }
 
     public void scoreFlag() {
+        if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
+            return;
+
         captured++;
 
         arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + "The " + team.getTitleName() + " has scored a flag!");
@@ -42,7 +46,7 @@ public abstract class FlagArenaPlayer extends ArenaPlayer {
 
 
     public void pickupFlag(Location loc, Team pickedUp) {
-        if (pickedUp != null && pickedUp == team)
+        if (arena.getState() != Arena.ArenaState.IN_PROGRESS || pickedUp != null && pickedUp == team)
             return;
 
         isFlagHolder = true;

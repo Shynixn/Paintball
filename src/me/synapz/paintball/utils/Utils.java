@@ -1,6 +1,6 @@
 package me.synapz.paintball.utils;
 
-import com.connorlinfoot.bountifulapi.BountifulAPI;
+import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.countdowns.PaintballCountdown;
@@ -153,7 +153,7 @@ public class Utils {
         }
     }
 
-    public static void createFlag(Team team, Location location) {
+    public static Location createFlag(Team team, Location location) {
         DyeColor color = team == null ? DyeColor.WHITE : team.getDyeColor();
 
         while (location.clone().subtract(0, 1, 0).getBlock().getType() == Material.AIR && location.getBlockY() > 0)
@@ -172,6 +172,8 @@ public class Utils {
         // Updates the banner
         banner.update();
 
+        // In case the new location is lower
+        return location;
     }
 
     public static BlockFace yawToFace(float yaw) {
@@ -271,7 +273,7 @@ public class Utils {
     Removes an action bar if it is in a player
      */
     public static void removeActionBar(Player player) {
-        BountifulAPI.sendActionBar(player, "");
+        TTA_Methods.sendActionBar(player, "");
     }
 
     /*

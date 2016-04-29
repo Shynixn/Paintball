@@ -22,6 +22,9 @@ public class RTFArenaPlayer extends FlagArenaPlayer {
     public void pickupFlag(Location loc, Team pickedUp) {
         super.pickupFlag(loc, pickedUp);
 
+        if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
+            return;
+
         player.getWorld().playSound(player.getLocation(), rtfArena.FLAG_PICKUP, 5, 5);
 
         arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + player.getName() + " has stolen the flag!");
@@ -35,12 +38,14 @@ public class RTFArenaPlayer extends FlagArenaPlayer {
     public void scoreFlag() {
         super.scoreFlag();
 
+        if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
+            return;
+
         player.getWorld().playSound(player.getLocation(), rtfArena.FLAG_SCORE, 5, 5);
 
         Location toReset = rtfArena.getNuetralFlagLocation();
-        Utils.createFlag(null, toReset);
 
-        rtfArena.setCurrentFlagLocation(null);
+        rtfArena.setCurrentFlagLocation(Utils.createFlag(null, toReset));
     }
 
 
@@ -48,14 +53,14 @@ public class RTFArenaPlayer extends FlagArenaPlayer {
     public void dropFlag() {
         super.dropFlag();
 
+        if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
+            return;
+
         player.getWorld().playSound(player.getLocation(), rtfArena.FLAG_DROP, 5, 5);
 
         if (rtfArena.getHolder() != null) {
-            rtfArena.setCurrentFlagLocation(getLastLocation());
+            rtfArena.setCurrentFlagLocation(Utils.createFlag(null, getLastLocation()));
         }
-
-        Location toReset = rtfArena.getCurrentFlagLocation();
-        Utils.createFlag(null, toReset);
 
         rtfArena.setHolder(null);
     }

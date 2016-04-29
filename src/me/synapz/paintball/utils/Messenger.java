@@ -1,7 +1,6 @@
 package me.synapz.paintball.utils;
 
-
-import com.connorlinfoot.bountifulapi.BountifulAPI;
+import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
@@ -58,7 +57,7 @@ public class Messenger {
             info(sender, msg);
 
         if (TITLE && sender instanceof Player)
-            BountifulAPI.sendTitle((Player)sender, 10, 10, 10, PREFIX, msg);
+            TTA_Methods.sendTitle((Player)sender, PREFIX, 10, 10, 10, msg, 10, 10, 10);
     }
 
     // Checks to see if a player has a permission, returns true if they do false if they don't

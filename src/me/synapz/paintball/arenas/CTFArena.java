@@ -9,7 +9,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static me.synapz.paintball.storage.Settings.ARENA;
@@ -20,6 +22,7 @@ public class CTFArena extends FlagArena {
     public Sound FLAG_DROP;
     public Sound FLAG_SCORE;
 
+    private Map<Team, Location> startFlagLocations = new HashMap<>();
     private Map<Location, Team> dropedFlagLocations = new HashMap<Location, Team>();
 
     public CTFArena(String name, String currentName, boolean addToConfig) {
@@ -35,26 +38,23 @@ public class CTFArena extends FlagArena {
     public void loadFlags() {
         for (Team team : this.getArenaTeamList()) {
             Location loc = new FlagLocation(this, team).getLocation();
-            Utils.createFlag(team, loc);
+
+            startFlagLocations.put(team, Utils.createFlag(team, loc));
         }
     }
 
     @Override
     public void resetFlags() {
-        // Turns all start flag locations to air
-        for (Team team : getArenaTeamList()) {
-            Location loc;
-
-            if (Settings.ARENA_FILE.getString(team.getPath()) != null) {
-                loc = new FlagLocation(this, team).getLocation();
-
+        // Turns all start locations to air
+        for (Location loc : getStartFlagLocations().values())
                 loc.getBlock().setType(Material.AIR);
-            }
-        }
 
         // Turns all pickedup flag locations to air
         for (Location loc : getDropedFlagLocations().keySet())
             loc.getBlock().setType(Material.AIR);
+
+        startFlagLocations = new HashMap<>();
+        dropedFlagLocations = new HashMap<>();
     }
 
     @Override
@@ -68,6 +68,10 @@ public class CTFArena extends FlagArena {
 
     public Map<Location, Team> getDropedFlagLocations() {
         return dropedFlagLocations;
+    }
+
+    public Map<Team, Location> getStartFlagLocations() {
+        return startFlagLocations;
     }
 
     public void addFlagLocation(Location loc, Team team) {
