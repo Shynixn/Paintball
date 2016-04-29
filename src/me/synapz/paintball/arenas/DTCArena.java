@@ -15,6 +15,7 @@ import java.util.Map;
 public class DTCArena extends FlagArena implements Listener {
 
     private Map<Location, Team> coreLocations = new HashMap<>();
+    private List<Location> locationsToReset = new ArrayList<>();
 
     public DTCArena(String name, String currentName, boolean addToConfig) {
         super(name, currentName, addToConfig);
@@ -35,10 +36,8 @@ public class DTCArena extends FlagArena implements Listener {
 
     @Override
     public void resetFlags() {
-        for (Team team : getArenaTeamList()) {
-            Location flagLoc = Utils.simplifyLocation(getFlagLocation(team));
-
-            flagLoc.getBlock().setType(Material.AIR);
+        for (Location loc : locationsToReset) {
+            loc.getBlock().setType(Material.AIR);
         }
     }
 
@@ -59,7 +58,9 @@ public class DTCArena extends FlagArena implements Listener {
         for (Location loc : surroundedLocations) {
             loc.getBlock().setType(type);
             loc.getBlock().setData(data);
+            locationsToReset.add(loc);
         }
+        locationsToReset.add(center);
     }
 
     @Override

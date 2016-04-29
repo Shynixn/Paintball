@@ -1,6 +1,6 @@
 package me.synapz.paintball.events;
 
-import com.connorlinfoot.bountifulapi.BountifulAPI;
+import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
@@ -250,7 +250,7 @@ public class Listeners extends BaseListener implements Listener {
                 Team hitTeam = null;
 
                 for (Location loc : dtcArena.getCoreLocations().keySet()) {
-                    if (hitLoc.distance(loc) <= 1) {
+                    if (hitLoc.distance(loc) <= 2) {
                         hitTeam = dtcArena.getCoreLocations().get(loc);
                     }
                 }
@@ -259,11 +259,10 @@ public class Listeners extends BaseListener implements Listener {
                     if (hitTeam == pbPlayer.getTeam()) {
                         Messenger.error(player, "You cannot attack your own Core!");
                     } else {
+                        arena.incrementTeamScore(hitTeam, true);
                         int score = arena.getTeamScore(hitTeam);
 
-                        arena.incrementTeamScore(hitTeam, true);
-
-                        if (score % 5 == 0)
+                        if (score % 5 == 0 || score <= 1)
                             arena.updateAllScoreboard();
 
                         if (score % 10 == 0)
@@ -366,7 +365,7 @@ public class Listeners extends BaseListener implements Listener {
         } else if (ProtectionCountdown.godPlayers.keySet().contains(shooterPlayerName)) {
             // If they can stop on hit, stop the timer so they can hit
             if (arenaPlayer.getArena().STOP_PROT_ON_HIT) {
-                BountifulAPI.sendActionBar(arenaPlayer.getPlayer(), Messenger.createPrefix("Protection") + "Cancelled", 240);
+                TTA_Methods.sendActionBar(arenaPlayer.getPlayer(), Messenger.createPrefix("Protection") + "Cancelled");
                 ProtectionCountdown.godPlayers.get(shooterPlayerName).cancel();
             } else {
                 Messenger.error(arenaPlayer.getPlayer(), "You are still protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
@@ -431,8 +430,8 @@ public class Listeners extends BaseListener implements Listener {
                         clickedFlag = ((CTFArena) arena).getDropedFlagLocations().get(clickedLoc);
                     } else {
                         // Otherwise check if the banner is in one of the set flag locations
-                        for (Team team : arena.getArenaTeamList()) {
-                            Location flagLoc = ((CTFArena) arena).getFlagLocation(team);
+                        for (Team team : ((CTFArena) arena).getStartFlagLocations().keySet()) {
+                            Location flagLoc = ((CTFArena) arena).getStartFlagLocations().get(team);
 
                             if (flagLoc.getBlockX() == clickedLoc.getBlockX()
                                     && flagLoc.getBlockY() == clickedLoc.getBlockY()
@@ -526,7 +525,6 @@ public class Listeners extends BaseListener implements Listener {
             if (gamePlayer instanceof LobbyPlayer) {
                 player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
             } else if (gamePlayer instanceof ArenaPlayer) {
-
                 player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
             } else if (gamePlayer instanceof SpectatorPlayer) {
                 player.teleport(arena.getSpectatorLocation());
@@ -537,7 +535,7 @@ public class Listeners extends BaseListener implements Listener {
                 if (arena instanceof CTFArena && gamePlayer instanceof CTFArenaPlayer) {
                     CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
 
-                    if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getFlagLocation(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2) {
+                    if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getStartFlagLocations().get(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2) {
                         boolean flagIsHeld = false;
                         boolean flagIsDropped = ((CTFArena) arena).getDropedFlagLocations().values().contains(ctfPlayer.getTeam());
 
@@ -552,7 +550,7 @@ public class Listeners extends BaseListener implements Listener {
 
                         // Checks to make sure the dropped flag location is contains the players team
                         if (flagIsDropped || flagIsHeld)
-                            BountifulAPI.sendActionBar(ctfPlayer.getPlayer(), ChatColor.DARK_RED + "" + ChatColor.BOLD + "Error" + Messenger.SUFFIX + ChatColor.RED + "You are missing your team's flag!", 240);
+                            TTA_Methods.sendActionBar(ctfPlayer.getPlayer(), ChatColor.DARK_RED + "" + ChatColor.BOLD + "Error" + Messenger.SUFFIX + ChatColor.RED + "You are missing your team's flag!");
                         else
                             ctfPlayer.scoreFlag();
                     }

@@ -1,6 +1,6 @@
 package me.synapz.paintball.players;
 
-import com.connorlinfoot.bountifulapi.BountifulAPI;
+import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.enums.Team;
@@ -35,13 +35,13 @@ public class DOMArenaPlayer extends ArenaPlayer {
 
     public void setSecuring(boolean securing) {
         if (!securing) {
-            BountifulAPI.sendTitle(player, 0, 21, 0, "", "");
+            TTA_Methods.sendTitle(player, "", 0, 21, 0, "", 0, 21, 0);
             timeSecuring = 0;
         } else {
             if (timeSecuring >= domArena.SECURE_TIME+1)
-                BountifulAPI.sendTitle(player, 0, 21, 0, "", Settings.THEME + ChatColor.BOLD + "Position Secured!");
+                TTA_Methods.sendTitle(player, null, 0, 21, 0, Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0);
             else
-                BountifulAPI.sendTitle(player, 0, 21, 0, "", makeBar());
+                TTA_Methods.sendTitle(player, null, 0, 21, 0, makeBar(), 0, 21, 0);
         }
 
         this.isSecuring = securing;
@@ -59,10 +59,10 @@ public class DOMArenaPlayer extends ArenaPlayer {
         if (timeSecuring >= domArena.SECURE_TIME) {
             if (timeSecuring == domArena.SECURE_TIME) {
                 domArena.teamSecured(Utils.simplifyLocation(player.getLocation()), team);
-                BountifulAPI.sendTitle(player, 0, 21, 0, "", Settings.THEME + ChatColor.BOLD + "Position Secured!");
+                TTA_Methods.sendTitle(player, null, 0, 21, 0, Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0);
             }
         } else {
-            BountifulAPI.sendTitle(player, 0, 21, 0, "", makeBar());
+            TTA_Methods.sendTitle(player, null, 0, 21, 0, makeBar(), 0, 21, 0);
         }
     }
 

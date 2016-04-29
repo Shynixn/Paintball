@@ -20,6 +20,9 @@ public class CTFArenaPlayer extends FlagArenaPlayer {
     public void pickupFlag(Location loc, Team pickedUp) {
         super.pickupFlag(loc, pickedUp);
 
+        if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
+            return;
+
         heldFlag = pickedUp;
 
         player.getWorld().playSound(player.getLocation(), ctfArena.FLAG_PICKUP, 5, 5);
@@ -32,6 +35,9 @@ public class CTFArenaPlayer extends FlagArenaPlayer {
     public void dropFlag() {
         super.dropFlag();
 
+        if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
+            return;
+
         Utils.createFlag(heldFlag, getLastLocation());
         ctfArena.addFlagLocation(getLastLocation(), heldFlag);
 
@@ -43,6 +49,9 @@ public class CTFArenaPlayer extends FlagArenaPlayer {
     @Override
     public void scoreFlag() {
         super.scoreFlag();
+
+        if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
+            return;
 
         Location toReset = ctfArena.getFlagLocation(heldFlag);
         Utils.createFlag(heldFlag, toReset);

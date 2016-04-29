@@ -1,6 +1,6 @@
 package me.synapz.paintball.countdowns;
 
-import com.connorlinfoot.bountifulapi.BountifulAPI;
+import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.utils.Messenger;
@@ -29,12 +29,12 @@ public class ChangeTeamCountdown extends PaintballCountdown {
 
     public void onFinish() {
         teamPlayers.remove(name, this);
-        BountifulAPI.sendActionBar(this.player, Messenger.TEAM_SWITCH_END, 240);
+        TTA_Methods.sendActionBar(this.player, Messenger.TEAM_SWITCH_END);
     }
 
     // Called every iteration of run()
     public void onIteration() {
-        BountifulAPI.sendActionBar(this.player, Messenger.TEAM_SWITCH_TIME.replace("%time%", String.valueOf((int) counter)));
+        TTA_Methods.sendActionBar(this.player, Messenger.TEAM_SWITCH_TIME.replace("%time%", String.valueOf((int) counter)));
     }
 
     public boolean stop() {

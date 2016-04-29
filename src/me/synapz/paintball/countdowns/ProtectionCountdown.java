@@ -1,6 +1,6 @@
 package me.synapz.paintball.countdowns;
 
-import com.connorlinfoot.bountifulapi.BountifulAPI;
+import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -33,7 +33,7 @@ public class ProtectionCountdown extends PaintballCountdown {
         this.team = player.getTeam();
         this.asDeathbox = asDeathbox;
 
-        BountifulAPI.sendActionBar(this.player, Messenger.PROTECTION_TIME.replace("%time%", String.valueOf(counter)));
+        TTA_Methods.sendActionBar(this.player, Messenger.PROTECTION_TIME.replace("%time%", String.valueOf(counter)));
         if (!godPlayers.keySet().contains(name)) {
             godPlayers.put(name, this);
         }
@@ -47,7 +47,7 @@ public class ProtectionCountdown extends PaintballCountdown {
     public void onFinish() {
         godPlayers.remove(name, this);
         Messenger.msg(this.player, Messenger.PROTECTION_END);
-        BountifulAPI.sendActionBar(this.player, Messenger.PROTECTION_END, 240);
+        TTA_Methods.sendActionBar(this.player, Messenger.PROTECTION_END);
 
         if (asDeathbox && arena.getPaintballPlayer(player) != null && arena.getPaintballPlayer(player) instanceof SpectatorPlayer) {
             Utils.stripValues(player);
@@ -65,7 +65,7 @@ public class ProtectionCountdown extends PaintballCountdown {
         if (asDeathbox)
             protectionMessage = protectionMessage.replace("Protection", "Respawn");
 
-        BountifulAPI.sendActionBar(this.player, protectionMessage);
+        TTA_Methods.sendActionBar(this.player, protectionMessage);
     }
 
     public boolean stop() {

@@ -1,8 +1,8 @@
 package me.synapz.paintball.arenas;
 
 
-import com.connorlinfoot.bountifulapi.BountifulAPI;
 import com.google.common.base.Joiner;
+import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
@@ -21,6 +21,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -495,6 +496,10 @@ public class Arena {
                     Settings.THEME + "KD: " + Settings.SECONDARY + arenaPlayer.getKd(),
                     "Your team " + (teams.size() >= 2 ? "tied" : (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost")),
                     spaces + Utils.makeSpaces(title +  "123") + spaces);
+
+            if (arenaPlayer.isWinner()) {
+                // TTA_Methods.addEntityGlow((CraftEntity) arenaPlayer.getPlayer());
+            }
         }
 
         StringBuilder formattedWinnerList = new StringBuilder();
@@ -511,7 +516,7 @@ public class Arena {
         }
 
         for (PaintballPlayer player : getAllPlayers().values())
-            BountifulAPI.sendTitle(player.getPlayer(), 20, 40, 20, THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list));
+            TTA_Methods.sendTitle(player.getPlayer(), THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), 20, 40, 20, SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list), 20, 40, 20);
         new GameFinishCountdown(WIN_WAIT_TIME, this);
     }
 
@@ -523,7 +528,7 @@ public class Arena {
 
     public void broadcastTitle(String header, String footer, int fadeIn, int stay, int fadeOut) {
         for (Player player : allPlayers.keySet()) {
-            BountifulAPI.sendTitle(player, fadeIn, stay, fadeOut, header, footer);
+            TTA_Methods.sendTitle(player, header, fadeIn, stay, fadeOut, footer, fadeIn, stay, fadeOut);
         }
     }
 

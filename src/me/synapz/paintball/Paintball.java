@@ -18,8 +18,6 @@ import java.io.IOException;
 
 public class Paintball extends JavaPlugin implements Listener {
 
-    private Update updater;
-
     @Override
     public void onEnable() {
         new Settings(this);
@@ -72,7 +70,9 @@ public class Paintball extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         ArenaManager.getArenaManager().stopArenas();
-        Settings.ARENA.deleteLeaderboards();
+
+        if (Settings.HOLOGRAPHIC_DISPLAYS)
+            Settings.ARENA.deleteLeaderboards();
     }
 
     private void setupEconomy() {
