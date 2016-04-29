@@ -15,7 +15,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-import sun.reflect.generics.tree.ReturnType;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +51,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
             String serverIDString = Integer.toString(base10ServerID);
             String serverID = Base64.getEncoder().encodeToString(serverIDString.getBytes());
             setValue("Bungee.serverID", serverID);
+            Databases.SERVER_ID.setString(serverID);
         }
     }
 
@@ -238,8 +238,9 @@ public class Database extends PaintballFile implements PluginMessageListener {
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("Connect");
-                // TODO: Not sure if I am missing something here, but BID was never set so... Not sure what goes here
-                // out.writeUTF(Databases.BUNGEE_ID.get);
+                // TODO: The bungee ID is supose to be in the config, I don't know why it was removed when it started using a enum
+                // TODO: it is the ID that the bungee network uses and needs to be put back into the database file
+                //out.writeUTF(Databases.BUNGEE_ID.getString());
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
                 UUID uuid = UUID.fromString(player);
                 bungeePlayers.put(uuid, a);
