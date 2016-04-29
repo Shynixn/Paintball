@@ -17,8 +17,6 @@ public class PaintballFile extends File {
     protected PaintballFile(Plugin pb, String name) {
         super(pb.getDataFolder(), name);
 
-        this.fileConfig = YamlConfiguration.loadConfiguration(this); // give settings a file to look into if it is the database file
-
         if (!this.exists()) {
             try {
                 createNewFile();

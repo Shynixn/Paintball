@@ -1,6 +1,5 @@
 package me.synapz.paintball.storage;
 
-
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
@@ -19,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Settings {
-
 
     public static String WEBSITE;
     public static String PREFIX;

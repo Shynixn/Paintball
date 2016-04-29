@@ -1,9 +1,11 @@
 package me.synapz.paintball.storage;
 
 
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.storage_new.database.*;
 import me.synapz.paintball.utils.ExperienceManager;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
@@ -13,9 +15,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
@@ -49,17 +55,26 @@ public final class PlayerData extends PaintballFile {
     @Override
     public void saveFile() {
         if (Databases.SQL_ENABLED.getBoolean()) { // if we have sql, load it
-            try {
-                if (Databases.SQL_ENABLED.getBoolean())
-                    Settings.DATABASE.removeStats(fileConfig).save(this);
-            } catch (Exception e) {
-                Messenger.error(Bukkit.getConsoleSender(), "Could not load " + getName() + " database.", "", "Stack trace");
-                e.printStackTrace();
-            }
+            if (Databases.SQL_ENABLED.getBoolean())
+                saveAsynchronously(this);
         } else { // if sql is false, just save the file
             super.saveFile();
         }
 
+    }
+
+    private void saveAsynchronously(File file) {
+        Bukkit.getScheduler().runTaskAsynchronously(JavaPlugin.getProvidingPlugin(Paintball.class), new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Settings.DATABASE.removeStats(fileConfig).save(file);
+                } catch (IOException e)  {
+                    Messenger.error(Bukkit.getConsoleSender(), "Could not load " + getName() + " database.", "", "Stack trace");
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     // Adds one to a player's stat

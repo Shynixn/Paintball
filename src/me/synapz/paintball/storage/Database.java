@@ -146,44 +146,6 @@ public class Database extends PaintballFile implements PluginMessageListener {
         }
     }
 
-    public FileConfiguration addStats(FileConfiguration yaml) {
-        YamlConfiguration statsYaml = new YamlConfiguration();
-        try {
-            Connection conn;
-            conn = getConnection();
-            PreparedStatement sql = conn.prepareStatement("SELECT stats FROM Paintball_Stats WHERE id = 1;");
-            ResultSet result = sql.executeQuery();
-            result.next();
-            String base64Stats = result.getString("stats");
-            String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
-            statsYaml.loadFromString(yamlString);
-        } catch (InvalidConfigurationException | SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            Bukkit.getLogger().info("sql connection failed! Using offline backup until we can connect again");
-            if (yaml.contains("Stats")) {
-                String base64Stats = yaml.getString("Stats");
-                String yamlString = Base64.getDecoder().decode(base64Stats.getBytes()).toString();
-                try {
-                    statsYaml.loadFromString(yamlString);
-                } catch (InvalidConfigurationException e1) {
-                    e1.printStackTrace();
-                    Bukkit.getLogger().severe("Failed to load offline config! Please check sql connection and playerdata file!");
-                }
-            } else {
-                Bukkit.getLogger().severe("Statistics Down!! We have no sql connection and don't have a backup of stats!");
-            }
-        }
-
-        Set<String> keys = statsYaml.getConfigurationSection("Player-Data").getKeys(false);
-        for (String key : keys) {
-            String path = "Player-Data." + key + ".Stats";
-            ConfigurationSection stats = yaml.getConfigurationSection(path);
-
-            yaml.set(path, stats);
-        }
-        return yaml;
-    }
-
     public FileConfiguration removeStats(FileConfiguration yaml) {
         Set<String> keys = yaml.getConfigurationSection("Player-Data").getKeys(false);
         YamlConfiguration statsYaml = new YamlConfiguration();

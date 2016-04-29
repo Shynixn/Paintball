@@ -78,10 +78,10 @@ public class Arena {
     public List<String> ALLOWED_COMMANDS;
 
     // All the players in the arena (Lobby, Spec, InGame) linked to the player which is linked to the PaintballPLayer
-    private Map<Player, PaintballPlayer> allPlayers = new HashMap<Player, PaintballPlayer>();
-    private List<SpectatorPlayer> spectators = new ArrayList<SpectatorPlayer>();
-    private List<LobbyPlayer> lobby = new ArrayList<LobbyPlayer>();
-    private List<ArenaPlayer> inGame = new ArrayList<ArenaPlayer>();
+    private Map<Player, PaintballPlayer> allPlayers = new HashMap<>();
+    private List<SpectatorPlayer> spectators = new ArrayList<>();
+    private List<LobbyPlayer> lobby = new ArrayList<>();
+    private List<ArenaPlayer> inGame = new ArrayList<>();
 
     // Arena name is the current name of the arena
     // Arena currentName is the name set when setup, this is used for renaming: you can't change a path name so we keep the currentName for accessing paths
