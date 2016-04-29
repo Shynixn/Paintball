@@ -1,3 +1,9 @@
+BETA-3.9.4
+- Added Kill Confirmed gamemode!
+- Added Safe Guard gamemode!
+- Background SQL fixes
+- Fixes to the way things are loaded and stored
+
 BETA-3.9.3
 - DTC mode is fully complete!
 - Internal fixes to the way database loads
