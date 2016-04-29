@@ -32,7 +32,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class Listeners implements Listener {
+public class Listeners extends BaseListener implements Listener {
 
     //When a player joins, check if they are from a bungee server and send them to the arena if they are
     @EventHandler
@@ -279,12 +279,6 @@ public class Listeners implements Listener {
         Player player = (Player) e.getWhoClicked();
 
         e.setCancelled(e.getRawSlot() == 45 && stopAction(player, "You are not allowed to duel wield!"));
-    }
-
-    @EventHandler
-    public void onDuelWield(PlayerSwapHandItemsEvent e) {
-        if (stopAction(e.getPlayer(), "You are not allowed to duel wield!"))
-            e.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -583,16 +577,6 @@ public class Listeners implements Listener {
                 }
             }
         }
-    }
-
-    // Returns true if they are in an arena, and false if they aren't, and also sends the player the error message if they are in the arena
-    private boolean stopAction(Player player, String message) {
-        Arena a = ArenaManager.getArenaManager().getArena(player);
-        if (a != null) {
-            Messenger.error(player, message);
-            return true;
-        }
-        return false;
     }
 
     private boolean isInArena(Player player) {

@@ -3,10 +3,7 @@ package me.synapz.paintball;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.commands.CommandManager;
-import me.synapz.paintball.events.ChatSystem;
-import me.synapz.paintball.events.JoinSigns;
-import me.synapz.paintball.events.LeaderboardSigns;
-import me.synapz.paintball.events.Listeners;
+import me.synapz.paintball.events.*;
 import me.synapz.paintball.metrics.Metrics;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Update;
@@ -51,6 +48,7 @@ public class Paintball extends JavaPlugin implements Listener {
         PluginManager pm = Bukkit.getServer().getPluginManager();
 
         pm.registerEvents(new Listeners(), this);
+        pm.registerEvents(new Listeners1_9(), this);
         pm.registerEvents(new JoinSigns(), this);
         pm.registerEvents(new ChatSystem(), this);
         pm.registerEvents(new LeaderboardSigns(), this);

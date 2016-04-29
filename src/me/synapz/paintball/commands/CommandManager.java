@@ -82,7 +82,6 @@ public class CommandManager implements CommandExecutor{
             return false;
         }catch(Exception e) {
             Messenger.error(sender, COMMAND_NOT_FOUND);
-            e.printStackTrace();
             return true;
         }
     }
