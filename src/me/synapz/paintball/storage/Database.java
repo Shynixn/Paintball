@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import sun.reflect.generics.tree.ReturnType;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,24 +25,28 @@ import java.util.*;
 public class Database extends PaintballFile implements PluginMessageListener {
 
     private Plugin pb;
+    private HashMap<UUID, Arena> bungeePlayers = new HashMap<>();
 
     public Database(Plugin pb) {
         super(pb, "database.yml");
+
+        loadDatabaseValues();
+        setupDatabase(pb);
     }
 
-    public void setupDatabase(Plugin pb) {
+    private void setupDatabase(Plugin pb) {
         this.pb = pb;
 
-        if (settings.bungee && !Bukkit.getServer().getMessenger().getIncomingChannels().contains("BungeeCord")) {
+        if (Databases.BUNGEE_ENABLED.getBoolean() && !Bukkit.getServer().getMessenger().getIncomingChannels().contains("BungeeCord")) {
             Bukkit.getServer().getMessenger().registerIncomingPluginChannel(pb, "BungeeCord", this);
             Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "BungeeCord");
         }
 
-        if (settings.sql) {
-            setupSQL(pb, settings.database);
+        if (Databases.SQL_ENABLED.getBoolean()) {
+            setupSQL(pb, Databases.DATABASE.getString());
         }
 
-        if (settings.bungee && settings.loadString(Databases.SERVER_ID).equalsIgnoreCase("Generate")) {
+        if (Databases.BUNGEE_ENABLED.getBoolean() && Databases.SERVER_ID.getString().equalsIgnoreCase("Generate")) {
             Random r = new Random(5);
             Integer base10ServerID = r.nextInt(9999);
             String serverIDString = Integer.toString(base10ServerID);
@@ -55,6 +60,49 @@ public class Database extends PaintballFile implements PluginMessageListener {
     and return the default value.
     */
 
+    private int loadInt(Databases type) {
+        if (isFoundInConfig(type))
+            return (int) loadValue(type);
+        else
+            fileConfig.set(type.getPath(), type.getDefaultInt());
+
+        saveFile();
+
+        return type.getDefaultInt();
+    }
+
+    private String loadString(Databases type) {
+        if (isFoundInConfig(type))
+            return (String) loadValue(type);
+        else
+            fileConfig.set(type.getPath(), type.getDefaultString());
+
+        saveFile();
+
+        return type.getDefaultString();
+    }
+
+    private boolean loadBoolean(Databases type) {
+        if (isFoundInConfig(type))
+            return (boolean) loadValue(type);
+        else
+            fileConfig.set(type.getPath(), type.getDefaultBoolean());
+
+        saveFile();
+
+        return type.getDefaultBoolean();
+    }
+
+    private Object loadValue(Databases type) {
+        return fileConfig.get(type.getPath());
+    }
+
+    private boolean isFoundInConfig(Databases type) {
+        Object value = fileConfig.get(type.getPath());
+
+        return value != null;
+    }
+
     private void setValue(String path, Object object) {
         fileConfig.set(path, object);
     }
@@ -62,12 +110,12 @@ public class Database extends PaintballFile implements PluginMessageListener {
     //sql
 
     public Connection getConnection() throws SQLException, ClassNotFoundException {
-        if (settings.mysql) {
-            String port = settings.host.substring(settings.host.indexOf(":") + 1);
-            MySQL MySQL = new MySQL(settings.host.replace(":" + port, ""), port, settings.database, settings.username, settings.password);
+        if (Databases.MY_SQL.getBoolean()) {
+            String port = Databases.HOST.getString().substring(Databases.HOST.getString().indexOf(":") + 1);
+            MySQL MySQL = new MySQL(Databases.HOST.getString().replace(":" + port, ""), port, Databases.DATABASE.getString(), Databases.USERNAME.getString(), Databases.PASSWORD.getString());
             return MySQL.openConnection();
         } else {
-            return DriverManager.getConnection(settings.host, settings.username, settings.password);
+            return DriverManager.getConnection(Databases.HOST.getString(), Databases.USERNAME.getString(), Databases.PASSWORD.getString());
         }
     }
 
@@ -164,7 +212,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
     //Bungee
 
     public void onPluginMessageReceived(String channel, Player sender, byte[] message) {
-        if (!channel.equals("BungeeCord") || !settings.bungee) {
+        if (!channel.equals("BungeeCord") || !Databases.BUNGEE_ENABLED.getBoolean()) {
             return;
         }
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
@@ -177,7 +225,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
             return;
         }
         String serverID = in.readUTF();
-        if (serverID.equalsIgnoreCase(settings.SID)) {
+        if (serverID.equalsIgnoreCase(Databases.SERVER_ID.getString())) {
             String player = in.readUTF();
             String arenaName = in.readUTF();
             Arena a = ArenaManager.getArenaManager().getArena(arenaName);
@@ -190,10 +238,11 @@ public class Database extends PaintballFile implements PluginMessageListener {
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("Connect");
-                out.writeUTF(settings.BID);
+                // TODO: Not sure if I am missing something here, but BID was never set so... Not sure what goes here
+                // out.writeUTF(Databases.BUNGEE_ID.get);
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
                 UUID uuid = UUID.fromString(player);
-                settings.bungeePlayers.put(uuid, a);
+                bungeePlayers.put(uuid, a);
             } else {
                 ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
                 out1.writeUTF("Paintball");
@@ -207,7 +256,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
     }
 
     public void updateBungeeSigns() {
-        if (!pb.isEnabled() || !settings.bungee) return;
+        if (!pb.isEnabled() || !Databases.BUNGEE_ENABLED.getBoolean()) return;
         int numb = 0;
         String arenas = "";
         String sign = "";
@@ -225,14 +274,34 @@ public class Database extends PaintballFile implements PluginMessageListener {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Paintball");
         out.writeUTF("Arenas");
-        out.writeUTF(settings.SID);
+        out.writeUTF(Databases.SERVER_ID.getString());
         out.writeUTF(arenas);
         out.writeUTF(sign);
         Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
     }
 
     public HashMap<UUID, Arena> getBungeePlayers() {
+        return bungeePlayers;
+    }
 
-        return settings.bungeePlayers;
+    // Loads all enums to their value
+    private void loadDatabaseValues() {
+        for (Databases database : Databases.values()) {
+            Databases.ReturnType returnType = database.getReturnType();
+
+            switch (returnType) {
+                case BOOLEAN:
+                    database.setBoolean(loadBoolean(database));
+                    break;
+                case INT:
+                    database.setInteger(loadInt(database));
+                    break;
+                case STRING:
+                    database.setString(loadString(database));
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

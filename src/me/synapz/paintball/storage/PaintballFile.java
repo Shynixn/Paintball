@@ -13,15 +13,11 @@ import java.io.IOException;
 public class PaintballFile extends File {
 
     protected FileConfiguration fileConfig;
-    protected DatabaseSettings settings;
 
     protected PaintballFile(Plugin pb, String name) {
         super(pb.getDataFolder(), name);
 
         this.fileConfig = YamlConfiguration.loadConfiguration(this); // give settings a file to look into if it is the database file
-
-        if (settings == null)
-            settings = new DatabaseSettings(fileConfig);
 
         if (!this.exists()) {
             try {

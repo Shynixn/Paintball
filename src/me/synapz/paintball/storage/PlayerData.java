@@ -1,6 +1,7 @@
 package me.synapz.paintball.storage;
 
 
+import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.utils.ExperienceManager;
@@ -39,9 +40,6 @@ public final class PlayerData extends PaintballFile {
 
     public PlayerData(Plugin pb) {
         super(pb, "playerdata.yml");
-
-        if (settings.sql)
-            this.fileConfig = Settings.DATABASE.addStats(YamlConfiguration.loadConfiguration(this));
     }
 
     @Override
@@ -51,9 +49,9 @@ public final class PlayerData extends PaintballFile {
 
     @Override
     public void saveFile() {
-        if (settings.sql) { // if we have sql, load it
+        if (Databases.SQL_ENABLED.getBoolean()) { // if we have sql, load it
             try {
-                if (settings.sql)
+                if (Databases.SQL_ENABLED.getBoolean())
                     Settings.DATABASE.removeStats(fileConfig).save(this);
             } catch (Exception e) {
                 Messenger.error(Bukkit.getConsoleSender(), "Could not load " + getName() + " database.", "", "Stack trace");

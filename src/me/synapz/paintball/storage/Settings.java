@@ -57,6 +57,7 @@ public class Settings {
 
     private void init(Plugin pb) {
         instance = this; // inject the instance
+
         if (!pb.getDataFolder().exists()) {
             pb.getDataFolder().mkdir();
         }
@@ -71,14 +72,13 @@ public class Settings {
 
     private void loadEverything() {
         DATABASE = new Database(pb);
-        DATABASE.setupDatabase(pb);
         PLAYERDATA = new PlayerData(pb);
         ITEMS = new ItemFile(pb);
         ARENA = new ArenaFile(pb);
         MESSAGES = new MessagesFile(pb);
         ARENA_FILE = ARENA.getFileConfig();
-        loadSettings(); // loads everything in config.yml into constants
 
+        loadSettings(); // loads everything in config.yml into constants
         CoinItems.getCoinItems().loadItems();
     }
 
