@@ -6,7 +6,7 @@ import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 
 public class Top extends StatCommand {
 

@@ -1,3 +1,6 @@
+BETA-3.9.7
+- Major Fix: Plugin now works on Bukkit and not just Spigot
+
 BETA-3.9.6
 - Fixed 1.8 issue when loading listeners from a 1.9 listener being non-existent
 - Major Change: BountifulAPI -> TTA

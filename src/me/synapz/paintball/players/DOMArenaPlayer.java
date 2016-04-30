@@ -6,7 +6,7 @@ import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class DOMArenaPlayer extends ArenaPlayer {

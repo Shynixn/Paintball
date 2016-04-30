@@ -1,12 +1,11 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.countdowns.GameCountdown;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
