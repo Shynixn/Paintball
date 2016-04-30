@@ -44,7 +44,26 @@ public enum Messages {
     VALID_RADIUS("Please enter a valid number for radius"),
     HOLOGRAMS_REMOVED("Removed &7%amount% &aholograms."),
     NO_HOLOGRAMS_REMOVED("No holograms were removed."),
-    ARENA_REMOVE("Arena has been removed.");
+    NO_ARENAS("No arenas are currently opened."),
+    NOT_IN_ARENA("You are not in an arena."),
+    LEFT_ARENA("Successfully left arena."),
+    ARENA_NOT_SETUP("%arena% has not been fully setup."),
+    ARENA_DISABLED("%arena% is disabled."),
+    ARENA_NOT_IN_PROGRESS("%arena% is currently not in progress, nothing to spectate."),
+    IN_ARENA("You are already in an arena!"),
+    PAGE_REAL_NUMBER("Please specify a real number as the page."),
+    PAGE_BIGGER("The page cannot be lower than 0"),
+    PAGE_FIND_ERROR("Page %amount%/%max% cannot be found."),
+    ARENA_CREATE("%arena% successfully created!/n%steps%"),
+    ARENA_NAME_EXISTS("An arena named %arena% already exists!"),
+    ARENA_REMOVE("Arena has been removed."),
+    INVALID_ARENA("%arena% is an invalid arena."),
+    INVALID_TEAM("%team% is an invalid team. Choose either <%teams%>"),
+    INVALID_STAT("%stat% is an invalid statistic. Choose either %stats%"),
+    INVALID_COMMAND("Unknown Command! Type /paintball for a list of commands."),
+    INTERNAL_ERROR("An internal error occurred: %error%"),
+    NO_CONSOLE_PERMISSION("Console does not have access to that command!"),
+    NO_TEAMS_SET("%arena% does not have any teams set!");
 
     private final String defaultString;
     private String string;

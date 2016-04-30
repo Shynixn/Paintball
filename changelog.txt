@@ -1,3 +1,9 @@
+BETA-3.9.8
+- Added advanced Message building to allow me to easily add new message tags
+- Added many more messages which now include tags! (Player's commands are finished)
+- Added ability to add new line characters to messages.yml (\n) to specify a new line
+- Fixed RTF Arena null pointer on end
+
 BETA-3.9.7
 - Major Fix: Plugin now works on Bukkit and not just Spigot
 

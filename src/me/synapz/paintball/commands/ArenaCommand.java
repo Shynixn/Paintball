@@ -4,6 +4,8 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
 
@@ -29,7 +31,7 @@ public abstract class ArenaCommand extends PaintballCommand {
         this.arena = ArenaManager.getArenaManager().getArena(rawArenaName);
 
         if (arena == null && handleConditionsInSuperClass) {
-            Messenger.error(player, rawArenaName + " is an invalid arena.");
+            Messenger.error(player, new MessageBuilder(Messages.INVALID_ARENA).replace(Tag.ARENA, rawArenaName).build());
             return;
         }
 
