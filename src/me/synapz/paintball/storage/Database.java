@@ -9,7 +9,6 @@ import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.storage.sql.mysql.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -45,7 +44,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
             setupSQL(pb, Databases.DATABASE.getString());
         }
 
-        if (Databases.BUNGEE_ENABLED.getBoolean() && Databases.SERVER_ID.getString().equalsIgnoreCase("Generate")) {
+        if (Databases.SERVER_ID.getString().equalsIgnoreCase("Generating")) {
             Random r = new Random(5);
             Integer base10ServerID = r.nextInt(9999);
             String serverIDString = Integer.toString(base10ServerID);
@@ -194,7 +193,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
             if (a.getMax() < a.getAllPlayers().size()) {
                 ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
                 out1.writeUTF("Paintball");
-                out1.writeUTF("Responce");
+                out1.writeUTF("Response");
                 out1.writeUTF(player);
                 out1.writeUTF("true");
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
@@ -207,7 +206,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
             } else {
                 ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
                 out1.writeUTF("Paintball");
-                out1.writeUTF("Responce");
+                out1.writeUTF("Response");
                 out1.writeUTF(player);
                 out1.writeUTF("false");
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
