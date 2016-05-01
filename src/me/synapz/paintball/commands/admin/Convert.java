@@ -4,6 +4,8 @@ import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
 
@@ -18,10 +20,10 @@ public class Convert extends ArenaCommand {
             return;
 
         if (type == arena.getArenaType()) {
-            Messenger.error(player, arena.toString(ChatColor.RED) + " is already a " + type.getShortName().toUpperCase() + " arena.");
+            Messenger.error(player, new MessageBuilder(Messages.ARENA_CONVERT_SAME_TYPE).replace(Tag.ARENA, arena.toString(ChatColor.RED)).replace(Tag.ARENA_TYPE, type.getShortName().toUpperCase()).build());
         } else {
             arena.setArenaType(type);
-            Messenger.success(player, arena.toString(ChatColor.GREEN) + " has been converted to " + type.getFullName());
+            Messenger.success(player, new MessageBuilder(Messages.ARENA_CONVERT_SUCCESS).replace(Tag.ARENA,arena.toString(ChatColor.GREEN)).replace(Tag.ARENA_TYPE, type.getFullName()).build());
         }
     }
 

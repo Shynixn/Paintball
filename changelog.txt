@@ -1,3 +1,8 @@
+BETA-3.9.9
+- Fixed JobsReborn incompatibility
+- More messages for messages.yml
+- Internal fixes to how messages are loaded to ensure there is no tag spelling error on my part
+
 BETA-3.9.8
 - Added advanced Message building to allow me to easily add new message tags
 - Added many more messages which now include tags! (Player's commands are finished)

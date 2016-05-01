@@ -11,10 +11,13 @@ public enum Tag {
     STATS,
     ERROR,
     MAX,
-    STEPS;
+    STEPS,
+    ARENA_TYPE,
+    ARENA_TYPES,
+    COMMAND;
 
     @Override
     public String toString() {
-        return "%" + super.toString().toLowerCase() + "%"; // Turns ARENA into %arena%
+        return "%" + super.toString().toLowerCase().replace("_", "-") + "%"; // Turns ARENA into %arena%
     }
 }

@@ -178,7 +178,7 @@ public class Listeners extends BaseListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onItemMoveInArena(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         ItemStack clickedItem = e.getCurrentItem();
