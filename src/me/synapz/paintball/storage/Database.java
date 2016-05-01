@@ -50,6 +50,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
             String serverIDString = Integer.toString(base10ServerID);
             String serverID = Base64.getEncoder().encodeToString(serverIDString.getBytes());
             setValue("Bungee.serverID", serverID);
+            loadDatabaseValues();
         }
     }
 
