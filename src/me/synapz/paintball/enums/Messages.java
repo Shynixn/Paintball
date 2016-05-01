@@ -16,7 +16,7 @@ public enum Messages {
     COMMAND_RENAME_INFO("Rename an Arena"),
     COMMAND_SETMAX_INFO("Set max number of players"),
     COMMAND_SETMIN_INFO("Set min amount of players"),
-    COMMAND_SETTEAMS_INFO("Set teams via ChatColors seperated by commas ex. &1,&b,&c"),
+    COMMAND_SETTEAMS_INFO("Set teams via ChatColors seperated by commas ex. &1,&b,&c", false),
     COMMAND_STEPS_INFO("List steps of an Arena"),
 
 
@@ -74,10 +74,16 @@ public enum Messages {
 
     private final String defaultString;
     private String string;
+    private boolean parseChatColor = true;
 
     Messages(String defaultString) {
         this.defaultString = defaultString;
         this.string = defaultString;
+    }
+
+    Messages(String defaultString, boolean parseChatColor) {
+        this(defaultString);
+        this.parseChatColor = parseChatColor;
     }
 
     @Override
@@ -94,6 +100,6 @@ public enum Messages {
     }
 
     public void setString(String message) {
-        this.string = ChatColor.translateAlternateColorCodes('&', message);
+        this.string = parseChatColor ? ChatColor.translateAlternateColorCodes('&', message) : message;
     }
 }

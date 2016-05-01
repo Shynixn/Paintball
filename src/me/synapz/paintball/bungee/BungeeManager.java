@@ -86,25 +86,28 @@ public class BungeeManager implements PluginMessageListener {
             String arenaName = in.readUTF();
             Arena a = ArenaManager.getArenaManager().getArena(arenaName);
             if (a.getMax() < a.getAllPlayers().size()) {
-                ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
-                out1.writeUTF("Paintball");
-                out1.writeUTF("Response");
-                out1.writeUTF(player);
-                out1.writeUTF("true");
-                Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("Connect");
+                out.writeUTF("Paintball");
+                out.writeUTF("Response");
+                out.writeUTF(player);
+                out.writeUTF("true");
+                Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
+
+                out = ByteStreams.newDataOutput();
+                out.writeUTF("ConnectOther");
+                out.writeUTF(player);
                 out.writeUTF(Databases.BUNGEE_ID.getString());
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
+
                 UUID uuid = UUID.fromString(player);
                 bungeePlayers.put(uuid, a);
             } else {
-                ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
-                out1.writeUTF("Paintball");
-                out1.writeUTF("Response");
-                out1.writeUTF(player);
-                out1.writeUTF("false");
-                Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("Paintball");
+                out.writeUTF("Response");
+                out.writeUTF(player);
+                out.writeUTF("false");
+                Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
             }
             updateBungeeSigns();
         }

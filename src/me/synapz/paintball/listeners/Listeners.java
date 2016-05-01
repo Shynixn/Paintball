@@ -40,7 +40,7 @@ public class Listeners extends BaseListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
-        // detect if they have been called over by bungee
+        //detect if they have been called over by bungee
         if (Paintball.getInstance().getBungeeManager().getBungeePlayers().containsKey(player.getUniqueId())) {
             //if yes, send them to their arena
             Paintball.getInstance().getBungeeManager().getBungeePlayers().get(player.getUniqueId()).joinLobby(player, null);
@@ -179,12 +179,12 @@ public class Listeners extends BaseListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onItemMoveInArena(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         ItemStack clickedItem = e.getCurrentItem();
 
-        if (clickedItem == null || clickedItem.getType() == Material.AIR || clickedItem.hasItemMeta() && !clickedItem.getItemMeta().hasDisplayName())
+        if (clickedItem == null || clickedItem.getType() == Material.AIR || clickedItem.hasItemMeta() && !clickedItem.getItemMeta().hasDisplayName() && !isInArena(player))
             return;
 
         String name = clickedItem.getItemMeta().getDisplayName();
@@ -278,7 +278,8 @@ public class Listeners extends BaseListener implements Listener {
     public void onTryToDuelWield(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
 
-        e.setCancelled(e.getRawSlot() == 45 && stopAction(player, "You are not allowed to duel wield!"));
+        if (isInArena(player))
+            e.setCancelled(e.getRawSlot() == 45 && stopAction(player, "You are not allowed to duel wield!"));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
