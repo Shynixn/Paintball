@@ -56,10 +56,12 @@ public class SQLiteManager extends Database {
     @Override
     public void closeConnection() throws SQLException {
 
+        if (connection != null && !connection.isClosed()) connection.close();
     }
 
     @Override
     public FileConfiguration buildConfig() throws SQLException {
+
         FileConfiguration config = null;
         return config;
     }

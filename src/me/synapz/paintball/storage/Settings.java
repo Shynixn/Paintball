@@ -23,9 +23,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Jeremy on 4/29/2016.
- */
 public class Settings {
 
     public static String WEBSITE;
@@ -94,7 +91,7 @@ public class Settings {
             DATABASE.init();
             PLAYERDATA.setFileConfig(DATABASE.buildConfig());
         } catch (SQLException e) {
-            System.out.println("[Paintball] Could not initialize database connection!");
+           Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Paintball] Could not initialize database connection!"));
             e.printStackTrace();
         }
 

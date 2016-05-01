@@ -28,9 +28,6 @@ import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.RESET;
 import static org.bukkit.ChatColor.STRIKETHROUGH;
 
-/**
- * Created by Jeremy on 4/29/2016.
- */
 public class PlayerDataFile extends PaintballFile {
 
     private Map<String, Location> locations = new HashMap<>();

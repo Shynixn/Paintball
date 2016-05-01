@@ -9,9 +9,6 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by Jeremy on 4/29/2016.
- */
 public class PaintballFile extends File {
 
     protected FileConfiguration fileConfig;
