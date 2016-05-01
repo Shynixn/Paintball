@@ -89,7 +89,11 @@ public class Settings {
         try {
             DATABASE.openConnection();
             DATABASE.init();
-            if (Databases.SQL_ENABLED.getBoolean()) PLAYERDATA.setFileConfig(DATABASE.buildConfig());
+            if (Databases.SQL_ENABLED.getBoolean()) {
+                DATABASE.updateTable(PLAYERDATA.getFileConfig());
+                PLAYERDATA.setFileConfig(DATABASE.buildConfig());
+                PLAYERDATA.delete();
+            }
         } catch (SQLException e) {
            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Paintball] Could not initialize database connection!"));
             e.printStackTrace();
