@@ -26,9 +26,8 @@ public class Paintball extends JavaPlugin implements Listener {
     public void onEnable() {
         instance = this;
 
-        bungeeManager = new BungeeManager(this);
-
         new Settings(this);
+        bungeeManager = new BungeeManager(this);
         this.setupEconomy();
 
         CommandManager commandManager = new CommandManager();
@@ -78,6 +77,7 @@ public class Paintball extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         ArenaManager.getArenaManager().stopArenas();
+        Settings.PLAYERDATA.saveFile();
 
         if (Settings.HOLOGRAPHIC_DISPLAYS)
             Settings.ARENA.deleteLeaderboards();

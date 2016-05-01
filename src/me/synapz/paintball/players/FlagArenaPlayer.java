@@ -80,7 +80,6 @@ public abstract class FlagArenaPlayer extends ArenaPlayer {
 
         Settings.PLAYERDATA.addToStat(StatType.FLAGS_CAPTURED, this, captured);
         Settings.PLAYERDATA.addToStat(StatType.FLAGS_DROPPED, this, dropped);
-        Settings.PLAYERDATA.saveFile();
     }
 
     protected void removeFlag() {

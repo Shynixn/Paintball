@@ -454,8 +454,6 @@ public class Arena {
         for (PaintballPlayer player : copiedList)
             player.leave();
 
-        // Save states
-        Settings.PLAYERDATA.saveFile();
         // Update the save stats
         ArenaManager.getArenaManager().updateAllSignsOnServer();
 

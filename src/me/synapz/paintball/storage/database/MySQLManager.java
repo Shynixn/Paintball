@@ -124,7 +124,7 @@ public class MySQLManager extends Database{
     protected void attemptDataTransfer() throws SQLException {
         openConnection();
 
-        PreparedStatement statement = connection.prepareStatement("SHOW TABLES LIKE " + statsTable);
+        PreparedStatement statement = connection.prepareStatement("SHOW TABLES LIKE '" + statsTable + "';");
         ResultSet set = statement.executeQuery();
         if (!set.next()) return;
 
