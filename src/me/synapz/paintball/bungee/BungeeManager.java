@@ -109,4 +109,8 @@ public class BungeeManager implements PluginMessageListener {
             updateBungeeSigns();
         }
     }
+
+    public HashMap<UUID, Arena> getBungeePlayers() {
+        return bungeePlayers;
+    }
 }

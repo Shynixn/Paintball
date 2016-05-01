@@ -1,4 +1,4 @@
-package me.synapz.paintball.events;
+package me.synapz.paintball.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

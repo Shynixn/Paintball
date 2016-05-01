@@ -4,7 +4,7 @@ import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.bungee.BungeeManager;
 import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.commands.CommandManager;
-import me.synapz.paintball.events.*;
+import me.synapz.paintball.listeners.*;
 import me.synapz.paintball.metrics.Metrics;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Update;

@@ -1,4 +1,4 @@
-package me.synapz.paintball.events;
+package me.synapz.paintball.listeners;
 
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;

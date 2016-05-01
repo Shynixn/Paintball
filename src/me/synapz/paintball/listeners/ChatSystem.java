@@ -1,4 +1,4 @@
-package me.synapz.paintball.events;
+package me.synapz.paintball.listeners;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;

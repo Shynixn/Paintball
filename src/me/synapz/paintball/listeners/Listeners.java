@@ -1,6 +1,7 @@
-package me.synapz.paintball.events;
+package me.synapz.paintball.listeners;
 
 import de.Herbystar.TTA.TTA_Methods;
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
@@ -39,11 +40,11 @@ public class Listeners extends BaseListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
-        //detect if they have been called over by bungee
-//        if (Settings.DATABASE.getBungeePlayers().containsKey(player.getUniqueId())) {
-//            //if yes, send them to their arena
-//            Settings.DATABASE.getBungeePlayers().get(player.getUniqueId()).joinLobby(player, null);
-//        }
+        // detect if they have been called over by bungee
+        if (Paintball.getInstance().getBungeeManager().getBungeePlayers().containsKey(player.getUniqueId())) {
+            //if yes, send them to their arena
+            Paintball.getInstance().getBungeeManager().getBungeePlayers().get(player.getUniqueId()).joinLobby(player, null);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
