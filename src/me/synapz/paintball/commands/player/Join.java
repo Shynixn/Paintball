@@ -15,7 +15,7 @@ public class Join extends TeamCommand {
         if (args.length == 1) {
             Arena arena = ArenaManager.getArenaManager().getBestArena();
             if (arena == null) {
-                Messenger.error(player, "No arenas are currently opened.");
+                Messenger.error(player, Messages.NO_ARENAS);
                 return;
             } else {
                 arena.joinLobby(player, null);

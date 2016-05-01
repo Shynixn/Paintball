@@ -83,7 +83,8 @@ public class RTFArena extends FlagArena {
             loc.getBlock().setType(Material.AIR);
         }
 
-        neutralFlagLocation.getBlock().setType(Material.AIR);
+        if (neutralFlagLocation != null)
+            neutralFlagLocation.getBlock().setType(Material.AIR);
     }
 
     @Override

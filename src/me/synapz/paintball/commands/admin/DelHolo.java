@@ -6,8 +6,10 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.locations.HologramLocation;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -72,7 +74,7 @@ public class DelHolo extends PaintballCommand {
             return;
         }
 
-        Messenger.success(player, Messages.HOLOGRAMS_REMOVED);
+        Messenger.success(player, new MessageBuilder(Messages.HOLOGRAMS_REMOVED).replace(Tag.AMOUNT, removed + "").build());
     }
 
     @Override

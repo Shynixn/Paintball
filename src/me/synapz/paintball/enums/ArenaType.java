@@ -1,5 +1,6 @@
 package me.synapz.paintball.enums;
 
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
 
@@ -50,7 +51,7 @@ public enum ArenaType {
         }
 
         if (type == null && sender != null)
-            Messenger.error(sender, "Invalid arena type. Choose either <" + getReadableList() + ">");
+            Messenger.error(sender, new MessageBuilder(Messages.INVALID_ARENA_TYPE).replace(Tag.ARENA_TYPES, getReadableList()).build());
 
         return type;
     }

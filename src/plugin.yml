@@ -1,5 +1,9 @@
 name: Paintball
+<<<<<<< HEAD
 version: BETA-3.9.7
+=======
+version: BETA-3.9.9
+>>>>>>> 60960e9be501fb5b94ddaa7db86aa651a463162d
 description: Paintball 16 teams, 9 Game modes, SQL, Stats, Coin Shop, Unlimited arenas, Simultaneous games, Scoreboards
 authors: [Synapz_]
 main: me.synapz.paintball.Paintball

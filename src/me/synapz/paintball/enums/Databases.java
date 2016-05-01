@@ -11,8 +11,8 @@ public enum Databases {
     DATABASE("SQL.database", "Paintball", ReturnType.STRING),
 
     BUNGEE_ENABLED("Bungee.enabled", false, ReturnType.BOOLEAN),
-    SERVER_ID("Bungee.serverID", "Generate", ReturnType.STRING),
-    BUNGEE_ID("Bungee.bungeeID", "id", ReturnType.STRING);
+    SERVER_ID("Bungee.serverID", "Generating", ReturnType.STRING),
+    BUNGEE_ID("Bungee.bungeeID", "BungeeServerNameHere", ReturnType.STRING);
 
     private String path;
     private ReturnType returnType;

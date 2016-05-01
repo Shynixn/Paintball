@@ -5,6 +5,9 @@ import me.synapz.paintball.commands.admin.*;
 import me.synapz.paintball.commands.arena.*;
 import me.synapz.paintball.commands.player.*;
 import me.synapz.paintball.enums.CommandType;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,10 +24,6 @@ public class CommandManager implements CommandExecutor{
 
     private static Map<String, PaintballCommand> COMMANDS = new HashMap<String, PaintballCommand>();
 
-    private static final String NO_CONSOLE_PERMS = "Console does not have access to that command!";
-    private static final String COMMAND_NOT_FOUND = "Unknown Command! Type /paintball for a list of commands.";
-
-
     public void init() {
     	addCommands(new Join(), new Leave(), new Spectate(), new Stats(), new List(), new Admin(CommandType.PLAYER),
     			new Create(), new Remove(), new SetLocation(), new DelLocation(), new SetSpectate(), new DelSpectate(), new SetFlag(), new DelFlag(), new SetMin(),
@@ -36,7 +35,7 @@ public class CommandManager implements CommandExecutor{
 
         if (cmd.getName().equalsIgnoreCase("paintball")) {
             if (!(sender instanceof Player)) {
-                Messenger.error(sender, NO_CONSOLE_PERMS);
+                Messenger.error(sender, Messages.NO_CONSOLE_PERMISSION);
                 return true;
             }
 
@@ -81,7 +80,7 @@ public class CommandManager implements CommandExecutor{
             command.getName();
             return false;
         }catch(Exception e) {
-            Messenger.error(sender, COMMAND_NOT_FOUND);
+            Messenger.error(sender, Messages.INVALID_COMMAND);
             return true;
         }
     }
@@ -111,7 +110,7 @@ public class CommandManager implements CommandExecutor{
                 command.onCommand(player, args);
             }
         }catch (Exception e) {
-            Messenger.error(player, "An internal error occurred: " + e.getMessage());
+            Messenger.error(player, new MessageBuilder(Messages.INTERNAL_ERROR).replace(Tag.ERROR, e.getMessage()).build());
             e.printStackTrace();
         }
     }

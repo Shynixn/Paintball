@@ -18,12 +18,12 @@ public class Leave extends PaintballCommand {
             a = ArenaManager.getArenaManager().getArena(player);
             a.getName(); // used to see if it returns null
         }catch (NullPointerException e) {
-            Messenger.error(player, "You are not in an arena.");
+            Messenger.error(player, Messages.NOT_IN_ARENA);
             return;
         }
 
         a.getAllPlayers().get(player).leave();
-        Messenger.success(player, "Successfully left arena.");
+        Messenger.success(player, Messages.LEFT_ARENA);
     }
 
     public String getArgs() {

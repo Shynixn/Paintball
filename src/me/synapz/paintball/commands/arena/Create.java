@@ -7,6 +7,8 @@ import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -22,7 +24,7 @@ public class Create extends PaintballCommand {
             return;
 
         if (newArena != null) {
-            Messenger.error(player, "An arena named " + arenaName + " already exists!");
+            Messenger.error(player, new MessageBuilder(Messages.ARENA_NAME_EXISTS).replace(Tag.ARENA, arenaName).build());
             return;
         } else {
             Arena a;
@@ -59,7 +61,7 @@ public class Create extends PaintballCommand {
                     break;
             }
 
-            Messenger.success(player, a.toString(ChatColor.GREEN) + " successfully created!", a.getSteps());
+            Messenger.success(player, new MessageBuilder(Messages.ARENA_CREATE).replace(Tag.ARENA, a.toString(ChatColor.GREEN)).replace(Tag.STEPS, a.getSteps()).build());
         }
     }
 

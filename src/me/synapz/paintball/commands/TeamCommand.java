@@ -5,7 +5,9 @@ import me.synapz.paintball.commands.arena.DelLocation;
 import me.synapz.paintball.commands.arena.SetLocation;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -31,7 +33,7 @@ public abstract class TeamCommand extends ArenaCommand {
         }
 
         if (arena.getArenaTeamList().isEmpty()) {
-            Messenger.error(player, arena.toString(ChatColor.RED) + " does not have any teams set!");
+            Messenger.error(player, new MessageBuilder(Messages.NO_TEAMS_SET).replace(Tag.ARENA, arena.toString(ChatColor.RED)).build());
             return;
         }
 
@@ -85,7 +87,7 @@ public abstract class TeamCommand extends ArenaCommand {
         if (!(validTeams.toString().contains(" " + teamString.toLowerCase() + " "))) {
             // remove last space and replace spaces with /. So it should be <red/blue/green>
             finalValidTeams = validTeams.substring(1, validTeams.lastIndexOf(" "));
-            Messenger.error(player, teamString + " is an invalid team. Choose either <" + finalValidTeams.toString().replace(" ", "/") + ">");
+            Messenger.error(player, new MessageBuilder(Messages.INVALID_TEAM).replace(Tag.TEAM, teamString).replace(Tag.TEAMS, finalValidTeams.toString().replace(" ", "/")).build());
             return false;
         } else {
             return true;

@@ -1,5 +1,6 @@
 package me.synapz.paintball.enums;
 
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
 
@@ -73,10 +74,8 @@ public enum StatType {
         }
 
         if (type == null) {
-            String error = statString + " is an invalid statistic type.";
-
             if (player != null)
-                Messenger.error(player, error, "Choose either " + StatType.getReadableList());
+                Messenger.error(player, new MessageBuilder(Messages.INVALID_STAT).replace(Tag.STAT, statString).replace(Tag.STATS, StatType.getReadableList()).build());
         }
         return type;
     }

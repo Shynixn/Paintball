@@ -43,8 +43,11 @@ public class Messenger {
     }
 
     public static void info(CommandSender sender, String...msg) {
-        for (String str : msg)
-            sender.sendMessage(Settings.PREFIX + Settings.THEME + str);
+        for (String str : msg) {
+            for (String str1 : str.split("/n")) {
+                sender.sendMessage(Settings.PREFIX + Settings.THEME + str1);
+            }
+        }
     }
 
     public static void msg(CommandSender sender, String...msg) {
