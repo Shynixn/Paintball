@@ -40,10 +40,10 @@ public class Listeners extends BaseListener implements Listener {
         Player player = e.getPlayer();
 
         //detect if they have been called over by bungee
-        if (Settings.DATABASE.getBungeePlayers().containsKey(player.getUniqueId())) {
-            //if yes, send them to their arena
-            Settings.DATABASE.getBungeePlayers().get(player.getUniqueId()).joinLobby(player, null);
-        }
+//        if (Settings.DATABASE.getBungeePlayers().containsKey(player.getUniqueId())) {
+//            //if yes, send them to their arena
+//            Settings.DATABASE.getBungeePlayers().get(player.getUniqueId()).joinLobby(player, null);
+//        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

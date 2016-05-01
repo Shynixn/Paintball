@@ -1,6 +1,7 @@
 package me.synapz.paintball;
 
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.bungee.BungeeManager;
 import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.commands.CommandManager;
 import me.synapz.paintball.events.*;
@@ -18,8 +19,15 @@ import java.io.IOException;
 
 public class Paintball extends JavaPlugin implements Listener {
 
+    private static Paintball instance;
+    private BungeeManager bungeeManager;
+
     @Override
     public void onEnable() {
+        instance = this;
+
+        bungeeManager = new BungeeManager(this);
+
         new Settings(this);
         this.setupEconomy();
 
@@ -85,5 +93,13 @@ public class Paintball extends JavaPlugin implements Listener {
             if (Settings.ECONOMY == null)
                 Settings.VAULT = false;
         }
+    }
+
+    public static Paintball getInstance() {
+        return instance;
+    }
+
+    public BungeeManager getBungeeManager() {
+        return bungeeManager;
     }
 }

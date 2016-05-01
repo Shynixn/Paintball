@@ -1,6 +1,5 @@
 package me.synapz.paintball.commands.arena;
 
-
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.commands.PaintballCommand;
