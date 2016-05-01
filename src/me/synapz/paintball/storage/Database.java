@@ -199,7 +199,8 @@ public class Database extends PaintballFile implements PluginMessageListener {
                 out1.writeUTF("true");
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out1.toByteArray());
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("Connect");
+                out.writeUTF("ConnectOther");
+                out.writeUTF(player);
                 out.writeUTF(Databases.BUNGEE_ID.getString());
                 Bukkit.getServer().sendPluginMessage(pb, "BungeeCord", out.toByteArray());
                 UUID uuid = UUID.fromString(player);
