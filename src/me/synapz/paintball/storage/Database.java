@@ -191,6 +191,7 @@ public class Database extends PaintballFile implements PluginMessageListener {
             String player = in.readUTF();
             String arenaName = in.readUTF();
             Arena a = ArenaManager.getArenaManager().getArena(arenaName);
+            //TODO: a better method for checking if a player can join
             if (a.getMax() < a.getAllPlayers().size()) {
                 ByteArrayDataOutput out1 = ByteStreams.newDataOutput();
                 out1.writeUTF("Paintball");
