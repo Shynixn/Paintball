@@ -129,11 +129,12 @@ public class MySQLManager extends Database{
         if (!set.next()) return;
 
         FileConfiguration config = buildConfig();
-        File playerData = new File(JavaPlugin.getProvidingPlugin(Paintball.class).getDataFolder(), "playerdata.yml");
+        File playerData = new File(Paintball.getInstance().getDataFolder(), "playerdata.yml");
         try {
-            if (!playerData.exists())
+            if (!playerData.exists()) {
                 playerData.createNewFile();
-            config.save(playerData);
+                config.save(playerData);
+            }
 
             PreparedStatement drop = connection.prepareStatement("DROP TABLE " + statsTable);
             drop.executeUpdate();
