@@ -1,11 +1,9 @@
 package me.synapz.paintball.storage.database;
 
 import me.synapz.paintball.Paintball;
-import me.synapz.paintball.enums.Databases;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +18,6 @@ public class MySQLManager extends Database{
     private Connection connection;
 
     public MySQLManager() {
-
         super();
     }
 
@@ -105,6 +102,26 @@ public class MySQLManager extends Database{
     }
 
     @Override
+    public void addStats(FileConfiguration config) throws SQLException {
+        openConnection();
+        if (!config.contains("Player-Data")) return;
+        Set<String> keys = config.getConfigurationSection("Player-Data").getKeys(false);
+        for (String uuid : keys) {
+            ConfigurationSection section = config.getConfigurationSection("Player-Data." + uuid);
+            PreparedStatement statement = connection.prepareStatement("UPDATE " + statsTable + " SET kills = kills + " +
+                    section.getInt("Kills") + ",deaths = deaths + " + section.getInt("Deaths") +
+                    ",shots = shots + " + section.getInt("Shots") + ",hits = hits + " + section.getInt("Hits") +
+                    ",highest_kill_streak = highest_kill_streak + " + section.getInt("Highest-Kill-Streak") +
+                    ",games_played = games_played + " + section.getInt("Games-Played") + ",wins = wins + " +
+                    section.getInt("Wins") + ",defeats = defeats + " + section.getInt("Defeats") + ",ties = ties + " +
+                    section.getInt("Ties") + ",flags_captured = flags_captured + " + section.getInt("Flags-Captured") +
+                    ",flags_dropped = flags_dropped + " + section.getInt("Flags-Dropped") + ",time_played = time_played + " +
+                    section.getInt("Time-Played") + ";");
+            statement.executeUpdate();
+        }
+    }
+
+    @Override
     protected void setupDatabase() throws SQLException {
         PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
         statement.executeUpdate();
@@ -129,11 +146,12 @@ public class MySQLManager extends Database{
         if (!set.next()) return;
 
         FileConfiguration config = buildConfig();
-        File playerData = new File(JavaPlugin.getProvidingPlugin(Paintball.class).getDataFolder(), "playerdata.yml");
+        File playerData = new File(Paintball.getInstance().getDataFolder(), "playerdata.yml");
         try {
-            if (!playerData.exists())
+            if (!playerData.exists()) {
                 playerData.createNewFile();
-            config.save(playerData);
+                config.save(playerData);
+            }
 
             PreparedStatement drop = connection.prepareStatement("DROP TABLE " + statsTable);
             drop.executeUpdate();

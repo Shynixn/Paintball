@@ -18,7 +18,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-import static me.synapz.paintball.storage.Settings.*;
+import static me.synapz.paintball.storage.Settings.PLAYERDATA;
+import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.*;
 
 public class ArenaManager {

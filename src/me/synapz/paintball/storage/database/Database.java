@@ -34,6 +34,8 @@ public abstract class Database {
 
     public abstract FileConfiguration buildConfig() throws  SQLException;
 
+    public abstract void addStats(FileConfiguration config) throws SQLException;
+
     protected abstract void setupDatabase() throws SQLException;
 
     protected abstract void setupTable() throws SQLException;

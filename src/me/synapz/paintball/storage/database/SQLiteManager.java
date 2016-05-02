@@ -1,7 +1,5 @@
 package me.synapz.paintball.storage.database;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,11 +11,12 @@ import java.sql.SQLException;
  *
  * @author tips48
  */
-public class SQLiteManager extends Database {
+public class SQLiteManager extends MySQLManager {
     private final String dbLocation;
     private Connection connection;
 
     public SQLiteManager(String dbLocation) {
+        super();
         this.dbLocation = dbLocation;
     }
 
@@ -46,43 +45,5 @@ public class SQLiteManager extends Database {
         }
 
         connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder + "/"+ dbLocation);
-    }
-
-    @Override
-    public void init() throws SQLException {
-
-    }
-
-    @Override
-    public void closeConnection() throws SQLException {
-
-        if (connection != null && !connection.isClosed()) connection.close();
-    }
-
-    @Override
-    public FileConfiguration buildConfig() throws SQLException {
-
-        FileConfiguration config = null;
-        return config;
-    }
-
-    @Override
-    public void updateTable(FileConfiguration config) throws SQLException {
-
-    }
-
-    @Override
-    protected void setupDatabase() throws SQLException {
-
-    }
-
-    @Override
-    protected  void setupTable() throws SQLException {
-
-    }
-
-    @Override
-    protected void attemptDataTransfer() throws SQLException {
-
     }
 }
