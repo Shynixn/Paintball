@@ -4,7 +4,7 @@ public enum Databases {
 
     SQL_ENABLED("SQL.enabled", false, ReturnType.BOOLEAN),
     MY_SQL("SQL.MySQL", true, ReturnType.BOOLEAN),
-    HOST("SQL.host", "localhost:1433", ReturnType.STRING),
+    HOST("SQL.host", "localhost", ReturnType.STRING),
     PORT("SQL.port", 1433, ReturnType.INT),
     USERNAME("SQL.username", "admin", ReturnType.STRING),
     PASSWORD("SQL.password", "password", ReturnType.STRING),

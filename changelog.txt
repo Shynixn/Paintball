@@ -1,7 +1,14 @@
-BETA-3.4.1
+BETA-4.0.3
+- Fixed small issue where host would append the port instead of being in the port subsectiona
+
+BETA-4.0.2
+- Fixed wrong version numbers
+- General SQL improvements
+
+BETA-4.0.1
 - Full major implementation of SQL, MySQL, and SQLLite
 
-BETA-3.4.0
+BETA-4.0.0
 - Major InventoryClickEvent fix
 
 BETA-3.9.9
