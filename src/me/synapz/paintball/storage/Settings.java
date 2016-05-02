@@ -91,7 +91,7 @@ public class Settings {
             DATABASE.openConnection();
             DATABASE.init();
             if (Databases.SQL_ENABLED.getBoolean()) {
-                if (PLAYERDATA.exists()) {
+                if (PLAYERDATA.exists() && DATABASE.doesTableExist()) {
                     DATABASE.addStats(PLAYERDATA.getFileConfig());
                 }
                 else {
