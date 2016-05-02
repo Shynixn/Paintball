@@ -17,9 +17,6 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
-/**
- * Created by Jeremy(Refrigerbater) on 4/29/2016.
- */
 public class BungeeManager implements PluginMessageListener {
 
     private Plugin pb;
@@ -85,6 +82,7 @@ public class BungeeManager implements PluginMessageListener {
             String player = in.readUTF();
             String arenaName = in.readUTF();
             Arena a = ArenaManager.getArenaManager().getArena(arenaName);
+            // TODO: find a better way of checking if an arena is joinable
             if (a.getMax() < a.getAllPlayers().size()) {
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("Paintball");
