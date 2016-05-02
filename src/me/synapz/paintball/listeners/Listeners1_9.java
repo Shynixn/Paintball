@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 /**
  * Created by Jeremy on 4/29/2016.
  */
-public class Listeners1_9 extends BaseListener implements Listener{
+public class Listeners1_9 extends BaseListener implements Listener {
 
     @EventHandler
     public void onDuelWield(PlayerSwapHandItemsEvent e) {

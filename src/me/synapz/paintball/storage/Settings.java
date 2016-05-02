@@ -9,6 +9,7 @@ import me.synapz.paintball.storage.database.Database;
 import me.synapz.paintball.storage.database.MySQLManager;
 import me.synapz.paintball.storage.database.SQLiteManager;
 import me.synapz.paintball.storage.files.*;
+import me.synapz.paintball.utils.Messenger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -100,9 +101,11 @@ public class Settings {
                 PLAYERDATA.delete();
             }
         } catch (SQLException e) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Paintball] Could not initialize database connection! Reverting to local storage."));
-            Databases.SQL_ENABLED.setBoolean(false);
-            DATABASE_FILE.saveFile();
+            if (Databases.SQL_ENABLED.getBoolean()) {
+                Messenger.error(Bukkit.getConsoleSender(), "Could not initialize database connection!");
+                Databases.SQL_ENABLED.setBoolean(false);
+                DATABASE_FILE.saveFile();
+            }
         }
 
         loadSettings(); // loads everything in config.yml into constants
