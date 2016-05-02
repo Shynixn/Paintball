@@ -101,20 +101,10 @@ public class Settings {
                 PLAYERDATA.delete();
             }
         } catch (SQLException e) {
-<<<<<<< HEAD
-            // Bug where if SQL is disabled and they don't or never had an SQL connection it would throw this error
-            // We want to throw it only if SQL is enabled because then it is a true error
-            // Yes, if they turn off SQL and it wants to sends their stats back and it errors, this will not be sent
-            // That should not happen anyway if they previously had a good connection
-            if (Databases.SQL_ENABLED.getBoolean()) {
-                Messenger.error(Bukkit.getConsoleSender(), "Could not initialize database connection!"); // will automatically add the prefix and set the text to red
-                e.printStackTrace();
-=======
             if (Databases.SQL_ENABLED.getBoolean()) {
                 Messenger.error(Bukkit.getConsoleSender(), "Could not initialize database connection!");
                 Databases.SQL_ENABLED.setBoolean(false);
                 DATABASE_FILE.saveFile();
->>>>>>> 35bf27efd6c56067f90663d2d4bbe7777d85d31b
             }
         }
 
