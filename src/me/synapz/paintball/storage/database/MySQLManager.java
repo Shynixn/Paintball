@@ -122,7 +122,16 @@ public class MySQLManager extends Database{
     }
 
     @Override
+    public boolean doesTableExist() throws SQLException {
+        openConnection();
+        PreparedStatement statement = connection.prepareStatement("SHOW TABLES LIKE '" + statsTable + "';");
+        ResultSet set = statement.executeQuery();
+        return set.next();
+    }
+
+    @Override
     protected void setupDatabase() throws SQLException {
+        openConnection();
         PreparedStatement statement = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS " + database);
         statement.executeUpdate();
     }
