@@ -12,7 +12,6 @@ import me.synapz.paintball.storage.files.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -20,7 +19,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,13 +90,19 @@ public class Settings {
             DATABASE.openConnection();
             DATABASE.init();
             if (Databases.SQL_ENABLED.getBoolean()) {
-                DATABASE.updateTable(PLAYERDATA.getFileConfig());
+                if (PLAYERDATA.exists()) {
+                    DATABASE.addStats(PLAYERDATA.getFileConfig());
+                }
+                else {
+                    DATABASE.updateTable(PLAYERDATA.getFileConfig());
+                }
                 PLAYERDATA.setFileConfig(DATABASE.buildConfig());
                 PLAYERDATA.delete();
             }
         } catch (SQLException e) {
-           Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Paintball] Could not initialize database connection!"));
-            e.printStackTrace();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Paintball] Could not initialize database connection! Reverting to local storage."));
+            Databases.SQL_ENABLED.setBoolean(false);
+            DATABASE_FILE.saveFile();
         }
 
         loadSettings(); // loads everything in config.yml into constants

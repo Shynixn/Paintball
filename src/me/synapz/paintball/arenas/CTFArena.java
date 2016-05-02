@@ -3,15 +3,12 @@ package me.synapz.paintball.arenas;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.FlagLocation;
-import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static me.synapz.paintball.storage.Settings.ARENA;
