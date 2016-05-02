@@ -13,7 +13,6 @@ import me.synapz.paintball.utils.Messenger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -21,7 +20,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,11 +91,17 @@ public class Settings {
             DATABASE.openConnection();
             DATABASE.init();
             if (Databases.SQL_ENABLED.getBoolean()) {
-                DATABASE.updateTable(PLAYERDATA.getFileConfig());
+                if (PLAYERDATA.exists()) {
+                    DATABASE.addStats(PLAYERDATA.getFileConfig());
+                }
+                else {
+                    DATABASE.updateTable(PLAYERDATA.getFileConfig());
+                }
                 PLAYERDATA.setFileConfig(DATABASE.buildConfig());
                 PLAYERDATA.delete();
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
             // Bug where if SQL is disabled and they don't or never had an SQL connection it would throw this error
             // We want to throw it only if SQL is enabled because then it is a true error
             // Yes, if they turn off SQL and it wants to sends their stats back and it errors, this will not be sent
@@ -105,6 +109,12 @@ public class Settings {
             if (Databases.SQL_ENABLED.getBoolean()) {
                 Messenger.error(Bukkit.getConsoleSender(), "Could not initialize database connection!"); // will automatically add the prefix and set the text to red
                 e.printStackTrace();
+=======
+            if (Databases.SQL_ENABLED.getBoolean()) {
+                Messenger.error(Bukkit.getConsoleSender(), "Could not initialize database connection!");
+                Databases.SQL_ENABLED.setBoolean(false);
+                DATABASE_FILE.saveFile();
+>>>>>>> 35bf27efd6c56067f90663d2d4bbe7777d85d31b
             }
         }
 
