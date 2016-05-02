@@ -4,6 +4,11 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.coin.CoinItems;
+import me.synapz.paintball.enums.Databases;
+import me.synapz.paintball.storage.database.Database;
+import me.synapz.paintball.storage.database.MySQLManager;
+import me.synapz.paintball.storage.database.SQLiteManager;
+import me.synapz.paintball.storage.files.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +19,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,11 +40,12 @@ public class Settings {
     public static Economy ECONOMY = null;
 
     public static ArenaFile ARENA;
-    public static PlayerData PLAYERDATA;
+    public static PlayerDataFile PLAYERDATA;
     public static MessagesFile MESSAGES;
     public static FileConfiguration ARENA_FILE;
     public static ItemFile ITEMS;
     public static Database DATABASE;
+    public static DatabaseFile DATABASE_FILE;
 
     // Variables
     private static Settings instance;
@@ -65,17 +72,32 @@ public class Settings {
         loadFromJar("config.yml");
         loadEverything();
 
-        if (HOLOGRAPHIC_DISPLAYS)
-            ARENA.loadLeaderboards();
+        ARENA.loadLeaderboards();
     }
 
     private void loadEverything() {
-        DATABASE = new Database(pb);
-        PLAYERDATA = new PlayerData(pb);
+        PLAYERDATA = new PlayerDataFile(pb);
+        DATABASE_FILE = new DatabaseFile(pb);
         ITEMS = new ItemFile(pb);
         ARENA = new ArenaFile(pb);
         MESSAGES = new MessagesFile(pb);
         ARENA_FILE = ARENA.getFileConfig();
+
+        // Tries to connect to database if SQL is enabled. If not, attempts to load previous data from the database and
+        // transfers to playerdata.yml if the table exists, then drops the table.
+        DATABASE = Databases.MY_SQL.getBoolean() ? new MySQLManager() : new SQLiteManager("database.db");
+        try {
+            DATABASE.openConnection();
+            DATABASE.init();
+            if (Databases.SQL_ENABLED.getBoolean()) {
+                DATABASE.updateTable(PLAYERDATA.getFileConfig());
+                PLAYERDATA.setFileConfig(DATABASE.buildConfig());
+                PLAYERDATA.delete();
+            }
+        } catch (SQLException e) {
+           Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Paintball] Could not initialize database connection!"));
+            e.printStackTrace();
+        }
 
         loadSettings(); // loads everything in config.yml into constants
         CoinItems.getCoinItems().loadItems();

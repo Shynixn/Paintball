@@ -1,4 +1,4 @@
-package me.synapz.paintball.storage;
+package me.synapz.paintball.storage.files;
 
 import me.synapz.paintball.enums.Messages;
 import org.bukkit.plugin.Plugin;

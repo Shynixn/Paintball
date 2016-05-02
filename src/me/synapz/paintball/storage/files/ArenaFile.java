@@ -1,4 +1,4 @@
-package me.synapz.paintball.storage;
+package me.synapz.paintball.storage.files;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
@@ -10,6 +10,7 @@ import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.HologramLocation;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SkullLocation;
+import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -123,7 +123,7 @@ public class ArenaManager {
     public void updateAllSignsOnServer() {
         String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
 
-        DATABASE.updateBungeeSigns();
+        Paintball.getInstance().getBungeeManager().updateBungeeSigns();
 
         for (SignLocation signLoc : Settings.ARENA.getSigns().values()) {
             if (!(signLoc instanceof SkullLocation) && !(signLoc.getLocation().getBlock().getState() instanceof Sign)) {

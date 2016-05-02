@@ -1,9 +1,10 @@
 package me.synapz.paintball;
 
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.bungee.BungeeManager;
 import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.commands.CommandManager;
-import me.synapz.paintball.events.*;
+import me.synapz.paintball.listeners.*;
 import me.synapz.paintball.metrics.Metrics;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Update;
@@ -18,9 +19,15 @@ import java.io.IOException;
 
 public class Paintball extends JavaPlugin implements Listener {
 
+    private static Paintball instance;
+    private BungeeManager bungeeManager;
+
     @Override
     public void onEnable() {
+        instance = this;
+
         new Settings(this);
+        bungeeManager = new BungeeManager(this);
         this.setupEconomy();
 
         CommandManager commandManager = new CommandManager();
@@ -70,6 +77,7 @@ public class Paintball extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         ArenaManager.getArenaManager().stopArenas();
+        Settings.PLAYERDATA.saveFile();
 
         if (Settings.HOLOGRAPHIC_DISPLAYS)
             Settings.ARENA.deleteLeaderboards();
@@ -85,5 +93,13 @@ public class Paintball extends JavaPlugin implements Listener {
             if (Settings.ECONOMY == null)
                 Settings.VAULT = false;
         }
+    }
+
+    public static Paintball getInstance() {
+        return instance;
+    }
+
+    public BungeeManager getBungeeManager() {
+        return bungeeManager;
     }
 }

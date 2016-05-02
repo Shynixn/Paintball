@@ -1,5 +1,4 @@
-package me.synapz.paintball.storage;
-
+package me.synapz.paintball.storage.files;
 
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Bukkit;
@@ -17,7 +16,7 @@ public class PaintballFile extends File {
     protected PaintballFile(Plugin pb, String name) {
         super(pb.getDataFolder(), name);
 
-        this.fileConfig = YamlConfiguration.loadConfiguration(this);
+        this.fileConfig = YamlConfiguration.loadConfiguration(this); // give settings a file to look into if it is the database file
 
         if (!this.exists()) {
             try {
@@ -42,5 +41,9 @@ public class PaintballFile extends File {
 
     public FileConfiguration getFileConfig() {
         return this.fileConfig;
+    }
+
+    public void setFileConfig(FileConfiguration fileConfig) {
+        this.fileConfig = fileConfig;
     }
 }

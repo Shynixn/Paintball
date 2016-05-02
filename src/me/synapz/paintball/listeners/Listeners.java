@@ -1,6 +1,7 @@
-package me.synapz.paintball.events;
+package me.synapz.paintball.listeners;
 
 import de.Herbystar.TTA.TTA_Methods;
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
@@ -40,9 +41,9 @@ public class Listeners extends BaseListener implements Listener {
         Player player = e.getPlayer();
 
         //detect if they have been called over by bungee
-        if (Settings.DATABASE.getBungeePlayers().containsKey(player.getUniqueId())) {
+        if (Paintball.getInstance().getBungeeManager().getBungeePlayers().containsKey(player.getUniqueId())) {
             //if yes, send them to their arena
-            Settings.DATABASE.getBungeePlayers().get(player.getUniqueId()).joinLobby(player, null);
+            Paintball.getInstance().getBungeeManager().getBungeePlayers().get(player.getUniqueId()).joinLobby(player, null);
         }
     }
 
@@ -178,12 +179,12 @@ public class Listeners extends BaseListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onItemMoveInArena(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         ItemStack clickedItem = e.getCurrentItem();
 
-        if (clickedItem == null || clickedItem.getType() == Material.AIR || clickedItem.hasItemMeta() && !clickedItem.getItemMeta().hasDisplayName())
+        if (clickedItem == null || clickedItem.getType() == Material.AIR || clickedItem.hasItemMeta() && !clickedItem.getItemMeta().hasDisplayName() && !isInArena(player))
             return;
 
         String name = clickedItem.getItemMeta().getDisplayName();
@@ -277,7 +278,8 @@ public class Listeners extends BaseListener implements Listener {
     public void onTryToDuelWield(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
 
-        e.setCancelled(e.getRawSlot() == 45 && stopAction(player, "You are not allowed to duel wield!"));
+        if (isInArena(player))
+            e.setCancelled(e.getRawSlot() == 45 && stopAction(player, "You are not allowed to duel wield!"));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

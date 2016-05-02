@@ -39,7 +39,7 @@ public enum StatType {
     }
 
     public String getPath(UUID id) {
-        return "Player-Data." + id + ".Stats" + this.path;
+        return "Player-Data." + id + this.path;
     }
 
     public String getName() {
