@@ -9,6 +9,7 @@ import me.synapz.paintball.storage.database.Database;
 import me.synapz.paintball.storage.database.MySQLManager;
 import me.synapz.paintball.storage.database.SQLiteManager;
 import me.synapz.paintball.storage.files.*;
+import me.synapz.paintball.utils.Messenger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -97,8 +98,14 @@ public class Settings {
                 PLAYERDATA.delete();
             }
         } catch (SQLException e) {
-           Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Paintball] Could not initialize database connection!"));
-            e.printStackTrace();
+            // Bug where if SQL is disabled and they don't or never had an SQL connection it would throw this error
+            // We want to throw it only if SQL is enabled because then it is a true error
+            // Yes, if they turn off SQL and it wants to sends their stats back and it errors, this will not be sent
+            // That should not happen anyway if they previously had a good connection
+            if (Databases.SQL_ENABLED.getBoolean()) {
+                Messenger.error(Bukkit.getConsoleSender(), "Could not initialize database connection!"); // will automatically add the prefix and set the text to red
+                e.printStackTrace();
+            }
         }
 
         loadSettings(); // loads everything in config.yml into constants

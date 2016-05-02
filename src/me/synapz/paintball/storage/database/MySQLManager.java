@@ -20,7 +20,6 @@ public class MySQLManager extends Database{
     private Connection connection;
 
     public MySQLManager() {
-
         super();
     }
 
