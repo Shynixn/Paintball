@@ -35,6 +35,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Listeners extends BaseListener implements Listener {
 
     @EventHandler
@@ -274,14 +278,33 @@ public class Listeners extends BaseListener implements Listener {
                     if (hitTeam == pbPlayer.getTeam()) {
                         Messenger.error(player, "You cannot attack your own Core!");
                     } else {
-                        arena.incrementTeamScore(hitTeam, true);
+                        arena.incrementTeamScore(hitTeam, false);
                         int score = arena.getTeamScore(hitTeam);
 
-                        if (score % 5 == 0 || score <= 1)
+                        if (score % 5 == 0 || score == arena.MAX_SCORE)
                             arena.updateAllScoreboard();
 
                         if (score % 10 == 0)
                             arena.broadcastMessage(ChatColor.GOLD + "" + ChatColor.BOLD + hitTeam.getTitleName() + "'s Core is being attacked!");
+
+                        // Turn the team into spectator mode since their core was destroyed & reset the core
+                        if (score == arena.MAX_SCORE) {
+                            for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
+                                if (arenaPlayer.getTeam() == hitTeam) {
+                                    Messenger.error(arenaPlayer.getPlayer(), "Your Core has been destroyed!");
+                                    arenaPlayer.turnToSpectator();
+                                } else {
+                                    Messenger.success(arenaPlayer.getPlayer(), "Team " + hitTeam.getTitleName() + "'s Core has been destroyed!");
+                                }
+                            }
+
+                            dtcArena.resetFlagCore(hitTeam);
+
+                            // Checks to see if there is 1 team left, if there is that team one
+                            if (dtcArena.getCoreLocations().values().size() == 1) {
+                                dtcArena.win(Arrays.asList((Team) dtcArena.getCoreLocations().values().toArray()[0]));
+                            }
+                        }
                     }
                 }
             }

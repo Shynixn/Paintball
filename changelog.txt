@@ -1,3 +1,19 @@
+v4.0.6
+- Fixed DTC Spectator bugs
+
+v4.0.5
+- Added paintball.leave.create
+- Added paintball.leave.remove
+- Added paintball.leave.use
+- Added Paintball leave signs
+- Fixed Join sign showing object reference instead of arena name
+- Fixed arena not restarting if 1 person sometimes bug
+- Fixed DTCArena code not being reset when destroyed
+- Fixed DTCArena players not being kicked after their Core was destroyed
+- Fixed DTCArena imcrementing the wrong score
+- Fixed Vault updating even if it was disabled
+- Full stable release!
+
 BETA-4.0.4
 - Enhancements to horse coin item
 - Temp stopped deathbox/respawn-time option so it does not break gameplay

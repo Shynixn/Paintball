@@ -120,9 +120,15 @@ public class ArenaPlayer extends PaintballPlayer {
         double bal = Settings.VAULT ? Settings.ECONOMY.getBalance(player) : 0;
 
         int size = arena.getArenaTeamList().size()-1;
-        pbSb.reloadTeams(false)
-                .reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, size+2)
-                .reloadLine(ScoreboardLine.KD, getKd(), size+3)
+
+        pbSb.reloadTeams(false);
+
+        if (Settings.VAULT)
+            pbSb.reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, size+2, Settings.VAULT);
+        else
+            size--;
+
+        pbSb.reloadLine(ScoreboardLine.KD, getKd(), size+3)
                 .reloadLine(ScoreboardLine.COIN, String.valueOf(getCoins()), size+4, arena.COINS);
 
         if (!arena.COINS)
@@ -337,10 +343,7 @@ public class ArenaPlayer extends PaintballPlayer {
 
             // If they have no more lives turn them into a spectator player until the game ends
             if (arena.LIVES > 0 && lives == 0) {
-                arena.removePlayer(this, false);
-                team.playerLeaveTeam();
-                Utils.stripValues(player);
-                new SpectatorPlayer(this);
+                turnToSpectator();
                 return;
             } else {
                 // Reloads their settings for them to go back... Sets their health, kill streak, location, protection and updates their scoreboard
@@ -355,6 +358,13 @@ public class ArenaPlayer extends PaintballPlayer {
                 new ProtectionCountdown(arena.RESPAWN_TIME > 0 ? arena.RESPAWN_TIME : arena.SAFE_TIME, this);
             }
         }
+    }
+
+    public void turnToSpectator() {
+        arena.removePlayer(this, false);
+        team.playerLeaveTeam();
+        Utils.stripValues(player);
+        new SpectatorPlayer(this);
     }
 
     /**

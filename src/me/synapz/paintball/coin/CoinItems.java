@@ -1,5 +1,6 @@
 package me.synapz.paintball.coin;
 
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.enums.Team;
@@ -24,18 +25,8 @@ public class CoinItems implements Listener {
 
     private static CoinItems instance = null;
 
-    private static boolean is1_9;
-
     public static CoinItems getCoinItems() {
         if (instance == null) {
-
-            try {
-                Sound.BLOCK_COMPARATOR_CLICK.toString();
-                is1_9 = true;
-            } catch (NoSuchFieldError exc) {
-                is1_9 = false;
-            }
-
             new CoinItems().loadItems();
         }
         return instance;
@@ -155,7 +146,7 @@ public class CoinItems implements Listener {
             }
         };
 
-        if (is1_9) {
+        if (Paintball.IS_1_9) {
             new CoinItem(Items.DUEL_WIELD) {
                 @Override
                 public void onClickItem(ArenaClickItemEvent event) {

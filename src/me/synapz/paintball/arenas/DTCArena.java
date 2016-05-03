@@ -7,10 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DTCArena extends FlagArena implements Listener {
 
@@ -38,6 +35,16 @@ public class DTCArena extends FlagArena implements Listener {
     public void resetFlags() {
         for (Location loc : locationsToReset) {
             loc.getBlock().setType(Material.AIR);
+        }
+    }
+
+    public void resetFlagCore(Team team) {
+        Set<Location> copyLocations = coreLocations.keySet();
+        for (Location loc : copyLocations) {
+            if (coreLocations.get(loc) == team) {
+                loc.getBlock().setType(Material.AIR);
+                coreLocations.remove(loc, team);
+            }
         }
     }
 

@@ -8,8 +8,10 @@ import me.synapz.paintball.listeners.*;
 import me.synapz.paintball.metrics.Metrics;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Update;
+import me.synapz.paintball.utils.Utils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -19,12 +21,15 @@ import java.io.IOException;
 
 public class Paintball extends JavaPlugin implements Listener {
 
+    public static boolean IS_1_9;
     private static Paintball instance;
     private BungeeManager bungeeManager;
 
     @Override
     public void onEnable() {
         instance = this;
+
+        this.IS_1_9 = is1_9();
 
         new Settings(this);
         bungeeManager = new BungeeManager(this);
@@ -33,32 +38,17 @@ public class Paintball extends JavaPlugin implements Listener {
         CommandManager commandManager = new CommandManager();
         commandManager.init();
 
-        /*
-        Non-Important Things
-        - Leave signs
-        - Spectator join signs
-        - Tie support
-        - Spectator thing add next page
-        - Way better ActionBar
-
-        Future Features
-        - Ranks
-        - More Coin items
-        - Command hovers
-            - Arena hovers, (who is in the arena, setup, etc)
-        - Spectate Autojoin and signs
-        - Holographic displays that pop out, like +1$ and +1 score etc.
-        */
-
         PluginManager pm = Bukkit.getServer().getPluginManager();
 
         pm.registerEvents(new Listeners(), this);
-        pm.registerEvents(new Listeners1_9(), this);
         pm.registerEvents(new JoinSigns(), this);
         pm.registerEvents(new ChatSystem(), this);
         pm.registerEvents(new LeaderboardSigns(), this);
         pm.registerEvents(new CoinItemListener(), this);
         pm.registerEvents(this, this);
+
+        if (IS_1_9)
+            pm.registerEvents(new Listeners1_9(), this);
 
         getCommand("paintball").setExecutor(commandManager);
 
@@ -101,5 +91,14 @@ public class Paintball extends JavaPlugin implements Listener {
 
     public BungeeManager getBungeeManager() {
         return bungeeManager;
+    }
+
+    private boolean is1_9() {
+        try {
+            Sound.BLOCK_COMPARATOR_CLICK.toString();
+            return true;
+        } catch (NoSuchFieldError exc) {
+            return false;
+        }
     }
 }

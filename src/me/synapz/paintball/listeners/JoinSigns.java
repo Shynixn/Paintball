@@ -3,6 +3,7 @@ package me.synapz.paintball.listeners;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.locations.SignLocation;
+import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
@@ -20,8 +21,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import static me.synapz.paintball.storage.Settings.THEME;
-import static org.bukkit.ChatColor.DARK_GRAY;
-import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.*;
 
 public class JoinSigns implements Listener {
 
@@ -31,7 +31,7 @@ public class JoinSigns implements Listener {
         if (e.getLines().length == 0 || !e.getLine(0).equalsIgnoreCase("pb") || e.getLine(1).contains("lb"))
             return;
 
-        if (!e.getLine(1).equalsIgnoreCase("autojoin") && !e.getLine(1).equalsIgnoreCase("join")) {
+        if (!e.getLine(1).equalsIgnoreCase("autojoin") && !e.getLine(1).equalsIgnoreCase("join") && !e.getLine(1).equalsIgnoreCase("leave")) {
             Messenger.error(e.getPlayer(), "Wrong syntax for creating Paintball sign.");
             e.getBlock().breakNaturally();
             return;
@@ -62,12 +62,21 @@ public class JoinSigns implements Listener {
                 e.setLine(1, a.getName());
                 e.setLine(2, a.getStateAsString());
                 e.setLine(3, "0/" + (a.getMax() <= 0 ? "0" : a.getMax()));
-                Messenger.success(e.getPlayer(), a + " join sign successfully created!");
+                Messenger.success(e.getPlayer(), a.toString(GREEN) + " join sign successfully created!");
                 new SignLocation(a, e.getBlock().getLocation(), SignLocation.SignLocations.JOIN);
             } else {
                 e.getBlock().breakNaturally();
                 return;
             }
+        }
+
+        if (e.getLine(1).equalsIgnoreCase("leave")) {
+            if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.leave.create"))
+                return;
+
+            e.setLine(0, prefix);
+            e.setLine(1, RED + "Leave");
+            Messenger.success(e.getPlayer(), "Loin sign successfully created!");
         }
     }
 
@@ -80,10 +89,25 @@ public class JoinSigns implements Listener {
         Player player = e.getPlayer();
         if (!sign.getLine(0).contains("Paintball") || sign.getLine(1) == null) return;
 
+        if (sign.getLine(1).equals(RED + "Leave")) {
+            if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.leave.use"))
+                return;
+
+            Arena arena = ArenaManager.getArenaManager().getArena(player);
+            if (arena == null) {
+                Messenger.error(player, "You are not in an arena!");
+                return;
+            } else {
+                arena.getPaintballPlayer(player).leave();
+                return;
+            }
+        }
+
         if (ArenaManager.getArenaManager().getArena(player) != null) {
             Messenger.error(player, "You are already in an arena!");
             return;
         }
+
         if (sign.getLine(1).equals(GREEN + "Auto Join")) {
             if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.autojoin.use"))
                 return;
@@ -153,6 +177,9 @@ public class JoinSigns implements Listener {
                         a.getSignLocations().get(sign.getLocation()).removeSign();
                         Messenger.success(e.getPlayer(), a.getName() + "'s join sign has been successfully removed!");
                     }
+                } else if (sign.getLine(1).equals(RED + "Leave")) {
+                    if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.leave.remove"))
+                        Messenger.success(e.getPlayer(), "Leave sign has been successfully removed!");
                 }
             }
         } else if (state instanceof Skull) {
