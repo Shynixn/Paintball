@@ -19,6 +19,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -32,8 +33,21 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 public class Listeners extends BaseListener implements Listener {
+
+    @EventHandler
+    public void onHorseDismount(EntityDismountEvent e) {
+        if (e.getDismounted() instanceof Horse && e.getEntity() instanceof Player && isInArena((Player) e.getEntity())) {
+            Player player = (Player) e.getEntity();
+            Arena arena = getArena(player);
+            PaintballPlayer pbPlayer = arena.getPaintballPlayer(player);
+
+            if (pbPlayer instanceof ArenaPlayer)
+                ((ArenaPlayer) pbPlayer).killHorse();
+        }
+    }
 
     //When a player joins, check if they are from a bungee server and send them to the arena if they are
     @EventHandler

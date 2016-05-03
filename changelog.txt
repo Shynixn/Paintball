@@ -1,3 +1,7 @@
+BETA-4.0.4
+- Enhancements to horse coin item
+- Temp stopped deathbox/respawn-time option so it does not break gameplay
+
 BETA-4.0.3
 - Fixed small issue where host would append the port instead of being in the port subsectiona
 

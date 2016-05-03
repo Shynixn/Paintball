@@ -35,6 +35,8 @@ public class ArenaPlayer extends PaintballPlayer {
     private Map<String, CoinItem> coinItems = new HashMap<>();
 
     private Horse horse;
+    private CoinItem horseItem;
+
     private CoinItem lastClickedItem;
     private int heightKillStreak;
     private int killStreak;
@@ -204,19 +206,15 @@ public class ArenaPlayer extends PaintballPlayer {
         this.lastClickedItem = lastClickedItem;
     }
 
-    public void setHorse(Horse horse) {
+    public void setHorse(CoinItem item, Horse horse) {
         this.horse = horse;
+        this.horseItem = item;
     }
 
-    public Horse getHorse() {
-        return horse;
-    }
-
-    public void teleportHorse() {
-        if (horse != null) {
-            horse.eject();
-
-            horse.teleport(player.getLocation());
+    public void killHorse() {
+        if (horse != null && horseItem != null) {
+            horse.setHealth(0);
+            addItem(horseItem);
         }
     }
 
@@ -311,7 +309,8 @@ public class ArenaPlayer extends PaintballPlayer {
                 put(item.getItemName(true), item);
             }};
 
-        coinItems.put(item.getItemName(true), item);
+        if (!coinItems.containsValue(coinItems))
+            coinItems.put(item.getItemName(true), item);
     }
 
     /**
@@ -348,13 +347,12 @@ public class ArenaPlayer extends PaintballPlayer {
                 health = arena.HITS_TO_KILL;
                 killStreak = 0;
                 updateScoreboard();
+                killHorse();
 
-                if (!(arena.RESPAWN_TIME > 0)) {
+                if (!(arena.RESPAWN_TIME > 0))
                     player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
-                    teleportHorse();
-                }
 
-                new ProtectionCountdown(arena.RESPAWN_TIME > 0 ? arena.RESPAWN_TIME : arena.SAFE_TIME, this, arena.RESPAWN_TIME > 0);
+                new ProtectionCountdown(arena.RESPAWN_TIME > 0 ? arena.RESPAWN_TIME : arena.SAFE_TIME, this);
             }
         }
     }

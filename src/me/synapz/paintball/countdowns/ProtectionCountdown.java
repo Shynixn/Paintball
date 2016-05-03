@@ -21,9 +21,8 @@ public class ProtectionCountdown extends PaintballCountdown {
     private Player player;
     private Arena arena;
     private Team team;
-    private boolean asDeathbox;
 
-    public ProtectionCountdown(int counter, ArenaPlayer player, boolean asDeathbox) {
+    public ProtectionCountdown(int counter, ArenaPlayer player) {
         super(counter+1); // adds 1 so to human eyes it goes from 5 to 1 instead of 4 to 0
         end = 1;
         this.name = player.getPlayer().getName();
@@ -31,16 +30,10 @@ public class ProtectionCountdown extends PaintballCountdown {
         this.player = player.getPlayer();
         this.arena = player.getArena();
         this.team = player.getTeam();
-        this.asDeathbox = asDeathbox;
 
         TTA_Methods.sendActionBar(this.player, Messenger.PROTECTION_TIME.replace("%time%", String.valueOf(counter)));
         if (!godPlayers.keySet().contains(name)) {
             godPlayers.put(name, this);
-        }
-
-        if (asDeathbox) {
-            arena.removePlayer(arenaPlayer, true);
-            new SpectatorPlayer(arenaPlayer);
         }
     }
 
@@ -48,22 +41,11 @@ public class ProtectionCountdown extends PaintballCountdown {
         godPlayers.remove(name, this);
         Messenger.msg(this.player, Messenger.PROTECTION_END);
         TTA_Methods.sendActionBar(this.player, Messenger.PROTECTION_END);
-
-        if (asDeathbox && arena.getPaintballPlayer(player) != null && arena.getPaintballPlayer(player) instanceof SpectatorPlayer) {
-            Utils.stripValues(player);
-
-            SpectatorPlayer sp = (SpectatorPlayer) arena.getPaintballPlayer(player);
-            sp.leave();
-            new ArenaPlayer(sp, team).teleportHorse();
-        }
     }
 
     // Called every iteration of run()
     public void onIteration() {
         String protectionMessage = Messenger.PROTECTION_TIME.replace("%time%", String.valueOf((int) counter-1));
-
-        if (asDeathbox)
-            protectionMessage = protectionMessage.replace("Protection", "Respawn");
 
         TTA_Methods.sendActionBar(this.player, protectionMessage);
     }
