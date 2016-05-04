@@ -38,10 +38,14 @@ public class DOMArenaPlayer extends ArenaPlayer {
             TTA_Methods.sendTitle(player, "", 0, 21, 0, "", 0, 21, 0);
             timeSecuring = 0;
         } else {
-            if (timeSecuring >= domArena.SECURE_TIME+1)
+            if (timeSecuring >= domArena.SECURE_TIME+1) {
                 TTA_Methods.sendTitle(player, null, 0, 21, 0, Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0);
-            else
+                player.getWorld().playSound(player.getLocation(), domArena.SECURE, 5, 5);
+            } else {
+                if (timeSecuring == 1)
+                    player.getWorld().playSound(player.getLocation(), domArena.START_SECURE, 5, 5);
                 TTA_Methods.sendTitle(player, null, 0, 21, 0, makeBar(), 0, 21, 0);
+            }
         }
 
         this.isSecuring = securing;
@@ -60,6 +64,7 @@ public class DOMArenaPlayer extends ArenaPlayer {
             if (timeSecuring == domArena.SECURE_TIME) {
                 domArena.teamSecured(Utils.simplifyLocation(player.getLocation()), team);
                 TTA_Methods.sendTitle(player, null, 0, 21, 0, Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0);
+                player.getWorld().playSound(player.getLocation(), domArena.SECURE, 5, 5);
             }
         } else {
             TTA_Methods.sendTitle(player, null, 0, 21, 0, makeBar(), 0, 21, 0);

@@ -1,3 +1,10 @@
+v4.0.8
+- Fixed ability to move flag head
+- Fixed Domination arena Sounds not being played
+
+v4.0.7
+- Fixed Arena resetting if a LobbyPlayer left instead of just an ArenaPlayer
+
 v4.0.6
 - Fixed DTC Spectator bugs
 

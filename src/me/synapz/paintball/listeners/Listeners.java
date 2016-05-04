@@ -244,7 +244,7 @@ public class Listeners extends BaseListener implements Listener {
                 }
                 e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
-                if (player.getOpenInventory().getTitle().contains("Horse") || Utils.contains(clickedItem, "Team") || Utils.equals(clickedItem, ChatColor.GOLD + "Coin Shop") || player.getOpenInventory().getTitle().contains("Coin Shop")) {
+                if (player.getOpenInventory().getTitle().contains("Horse") || Utils.contains(clickedItem, "Team") || Utils.contains(clickedItem, "Flag") || Utils.equals(clickedItem, ChatColor.GOLD + "Coin Shop") || player.getOpenInventory().getTitle().contains("Coin Shop")) {
                     e.setCancelled(true);
 
                     if (!player.getOpenInventory().getTitle().contains("Coin Shop"))
