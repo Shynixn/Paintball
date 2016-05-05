@@ -1,11 +1,10 @@
 name: Paintball
-version: 4.0.8
+version: 4.0.9
 description: Paintball 16 teams, 9 Game modes, SQL, Stats, Coin Shop, Unlimited arenas, Simultaneous games, Scoreboards
 authors: [Synapz_]
 main: me.synapz.paintball.Paintball
 website: http://bit.ly/23QqV4S
-depend: [Vault]
-softdepend: [HolographicDisplays]
+softdepend: [HolographicDisplays, Vault]
 
 commands:
    paintball:

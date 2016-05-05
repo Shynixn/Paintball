@@ -58,7 +58,7 @@ public class Messenger {
         if (inText)
             info(sender, msg);
 
-        if (TITLE && sender instanceof Player)
+        if (sender instanceof Player)
             new Title(PREFIX, msg, 10, 10, 10).send((Player) sender);
     }
 

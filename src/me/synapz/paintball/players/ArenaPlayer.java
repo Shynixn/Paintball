@@ -95,7 +95,12 @@ public class ArenaPlayer extends PaintballPlayer {
 
     @Override
     public PaintballScoreboard createScoreboard() {
-        double bal = Settings.VAULT ? Settings.ECONOMY.getBalance(player) : 0;
+        double bal;
+
+        if (Settings.VAULT)
+            bal = Settings.ECONOMY.getBalance(player);
+        else
+            bal = 0;
 
         PaintballScoreboard sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
                 .addTeams(false)

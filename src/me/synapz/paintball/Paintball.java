@@ -74,6 +74,11 @@ public class Paintball extends JavaPlugin implements Listener {
     }
 
     private void setupEconomy() {
+        if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
+            Settings.VAULT = false;
+            return;
+        }
+
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
             Settings.VAULT = false;

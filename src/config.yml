@@ -4,10 +4,6 @@ prefix: '&8[&3Paintball&8] '
 theme-color: '&3'
 # Secondary color of messages. Used as a secondary color in with theme-color
 secondary-color: '&7'
-# Allows hooking into vault and doing money trnasfers
-vault: true
-# Allows hooking into BountifulAPI to send title messages that display in the middle of the screen
-title: true
 # Allows the plugin to check for update and notify OP's and players with paintball.notify if there is an update on join
 update-check: true
 

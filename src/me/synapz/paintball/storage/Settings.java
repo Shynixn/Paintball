@@ -35,7 +35,6 @@ public class Settings {
 
     public static boolean UPDATE_CHECK;
     public static boolean VAULT;
-    public static boolean TITLE;
     public static boolean HOLOGRAPHIC_DISPLAYS;
 
     public static Economy ECONOMY = null;
@@ -122,8 +121,6 @@ public class Settings {
         PREFIX = ChatColor.translateAlternateColorCodes('&', loadString("prefix"));
         THEME = ChatColor.translateAlternateColorCodes('&', loadString("theme-color"));
         SECONDARY = ChatColor.translateAlternateColorCodes('&', loadString("secondary-color"));
-        VAULT = loadBoolean("vault");
-        TITLE = loadBoolean("title");
         UPDATE_CHECK = loadBoolean("update-check");
         HOLOGRAPHIC_DISPLAYS = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
     }

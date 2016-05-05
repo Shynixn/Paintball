@@ -1,3 +1,7 @@
+v4.0.9
+- Removed Vault & TTA Dependency!
+    - Plugin requires 0 dependencies! (There are optional ones though)
+
 v4.0.8
 - Fixed ability to move flag head
 - Fixed Domination arena Sounds not being played
