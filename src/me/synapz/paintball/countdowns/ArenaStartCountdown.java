@@ -1,11 +1,11 @@
 package me.synapz.paintball.countdowns;
 
-import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.ActionBar;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -95,7 +95,7 @@ public class ArenaStartCountdown extends PaintballCountdown {
 
     private void sendGameInfo() {
         for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
-            TTA_Methods.sendActionBar(arenaPlayer.getPlayer(), Settings.THEME + ChatColor.BOLD + arena.getArenaType().getShortName().toUpperCase() + Messenger.SUFFIX + arena.getArenaType().getGameInfo());
+            ActionBar.sendActionBar(arenaPlayer.getPlayer(), Settings.THEME + ChatColor.BOLD + arena.getArenaType().getShortName().toUpperCase() + Messenger.SUFFIX + arena.getArenaType().getGameInfo());
         }
     }
 }

@@ -1,10 +1,10 @@
 package me.synapz.paintball.players;
 
-import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -35,16 +35,17 @@ public class DOMArenaPlayer extends ArenaPlayer {
 
     public void setSecuring(boolean securing) {
         if (!securing) {
-            TTA_Methods.sendTitle(player, "", 0, 21, 0, "", 0, 21, 0);
+            // TODO Is this meant to clear the title? if so use {@link Title}.clear(player)
+            new Title("", "", 0, 21, 0).send(player);
             timeSecuring = 0;
         } else {
             if (timeSecuring >= domArena.SECURE_TIME+1) {
-                TTA_Methods.sendTitle(player, null, 0, 21, 0, Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0);
+                new Title(null, Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0).send(player);
                 player.getWorld().playSound(player.getLocation(), domArena.SECURE, 5, 5);
             } else {
                 if (timeSecuring == 1)
                     player.getWorld().playSound(player.getLocation(), domArena.START_SECURE, 5, 5);
-                TTA_Methods.sendTitle(player, null, 0, 21, 0, makeBar(), 0, 21, 0);
+                new Title(null, makeBar(), 0, 21, 0).send(player);
             }
         }
 
@@ -63,11 +64,11 @@ public class DOMArenaPlayer extends ArenaPlayer {
         if (timeSecuring >= domArena.SECURE_TIME) {
             if (timeSecuring == domArena.SECURE_TIME) {
                 domArena.teamSecured(Utils.simplifyLocation(player.getLocation()), team);
-                TTA_Methods.sendTitle(player, null, 0, 21, 0, Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0);
+                new Title(null, Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0).send(player);
                 player.getWorld().playSound(player.getLocation(), domArena.SECURE, 5, 5);
             }
         } else {
-            TTA_Methods.sendTitle(player, null, 0, 21, 0, makeBar(), 0, 21, 0);
+            new Title(null, makeBar(), 0, 21, 0).send(player);
         }
     }
 

@@ -1,6 +1,5 @@
 package me.synapz.paintball.listeners;
 
-import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
@@ -11,6 +10,7 @@ import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.ActionBar;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Update;
 import me.synapz.paintball.utils.Utils;
@@ -404,7 +404,7 @@ public class Listeners extends BaseListener implements Listener {
         } else if (ProtectionCountdown.godPlayers.keySet().contains(shooterPlayerName)) {
             // If they can stop on hit, stop the timer so they can hit
             if (arenaPlayer.getArena().STOP_PROT_ON_HIT) {
-                TTA_Methods.sendActionBar(arenaPlayer.getPlayer(), Messenger.createPrefix("Protection") + "Cancelled");
+                ActionBar.sendActionBar(arenaPlayer.getPlayer(), Messenger.createPrefix("Protection") + "Cancelled");
                 ProtectionCountdown.godPlayers.get(shooterPlayerName).cancel();
             } else {
                 Messenger.error(arenaPlayer.getPlayer(), "You are still protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
@@ -589,7 +589,7 @@ public class Listeners extends BaseListener implements Listener {
 
                         // Checks to make sure the dropped flag location is contains the players team
                         if (flagIsDropped || flagIsHeld)
-                            TTA_Methods.sendActionBar(ctfPlayer.getPlayer(), ChatColor.DARK_RED + "" + ChatColor.BOLD + "Error" + Messenger.SUFFIX + ChatColor.RED + "You are missing your team's flag!");
+                            ActionBar.sendActionBar(ctfPlayer.getPlayer(), ChatColor.DARK_RED + "" + ChatColor.BOLD + "Error" + Messenger.SUFFIX + ChatColor.RED + "You are missing your team's flag!");
                         else
                             ctfPlayer.scoreFlag();
                     }

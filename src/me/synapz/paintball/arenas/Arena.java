@@ -2,7 +2,6 @@ package me.synapz.paintball.arenas;
 
 
 import com.google.common.base.Joiner;
-import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
@@ -15,6 +14,7 @@ import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -495,7 +495,7 @@ public class Arena {
                     spaces + Utils.makeSpaces(title +  "123") + spaces);
 
             if (arenaPlayer.isWinner()) {
-                // TTA_Methods.addEntityGlow((CraftEntity) arenaPlayer.getPlayer());
+                // TODO implement a glow api with reflection.
             }
         }
 
@@ -512,8 +512,10 @@ public class Arena {
             broadcastMessage((teams.size() == 1 ? "The " + list + " team won!" : "There was a tie between " + list));
         }
 
-        for (PaintballPlayer player : getAllPlayers().values())
-            TTA_Methods.sendTitle(player.getPlayer(), THEME +(teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), 20, 40, 20, SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list), 20, 40, 20);
+        for (PaintballPlayer player : getAllPlayers().values()) {
+            Title title = new Title(THEME + (teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list), 20, 40, 20);
+            title.send(player.getPlayer());
+        }
         new GameFinishCountdown(WIN_WAIT_TIME, this);
     }
 
@@ -525,7 +527,8 @@ public class Arena {
 
     public void broadcastTitle(String header, String footer, int fadeIn, int stay, int fadeOut) {
         for (Player player : allPlayers.keySet()) {
-            TTA_Methods.sendTitle(player, header, fadeIn, stay, fadeOut, footer, fadeIn, stay, fadeOut);
+            Title title = new Title(header, footer, fadeIn, stay, fadeOut);
+            title.send(player);
         }
     }
 

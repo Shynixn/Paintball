@@ -1,6 +1,5 @@
 package me.synapz.paintball.utils;
 
-import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
@@ -60,7 +59,7 @@ public class Messenger {
             info(sender, msg);
 
         if (TITLE && sender instanceof Player)
-            TTA_Methods.sendTitle((Player)sender, PREFIX, 10, 10, 10, msg, 10, 10, 10);
+            new Title(PREFIX, msg, 10, 10, 10).send((Player) sender);
     }
 
     // Checks to see if a player has a permission, returns true if they do false if they don't

@@ -1,8 +1,8 @@
 package me.synapz.paintball.countdowns;
 
-import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.utils.ActionBar;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
 
@@ -29,12 +29,12 @@ public class ChangeTeamCountdown extends PaintballCountdown {
 
     public void onFinish() {
         teamPlayers.remove(name, this);
-        TTA_Methods.sendActionBar(this.player, Messenger.TEAM_SWITCH_END);
+        ActionBar.sendActionBar(this.player, Messenger.TEAM_SWITCH_END);
     }
 
     // Called every iteration of run()
     public void onIteration() {
-        TTA_Methods.sendActionBar(this.player, Messenger.TEAM_SWITCH_TIME.replace("%time%", String.valueOf((int) counter)));
+        ActionBar.sendActionBar(this.player, Messenger.TEAM_SWITCH_TIME.replace("%time%", String.valueOf((int) counter)));
     }
 
     public boolean stop() {

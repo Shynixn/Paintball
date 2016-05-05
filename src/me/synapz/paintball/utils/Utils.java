@@ -1,6 +1,5 @@
 package me.synapz.paintball.utils;
 
-import de.Herbystar.TTA.TTA_Methods;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.countdowns.PaintballCountdown;
@@ -273,7 +272,7 @@ public class Utils {
     Removes an action bar if it is in a player
      */
     public static void removeActionBar(Player player) {
-        TTA_Methods.sendActionBar(player, "");
+        ActionBar.sendActionBar(player, "");
     }
 
     /*
