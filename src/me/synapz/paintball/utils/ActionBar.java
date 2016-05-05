@@ -27,10 +27,11 @@ public class ActionBar {
             Object connection = ReflectionUtil.getConnection(player);
             Method sendPacket = ReflectionUtil.getMethod(connection.getClass(), "sendPacket", packet);
             Object serialized = chatSerializerPacket.getConstructor(String.class).newInstance(ChatColor.translateAlternateColorCodes('&', message));
-            Object packet = chatPacket.getConstructor(chatBasePacket, byte.class).newInstance(serialized);
+            Object packet = chatPacket.getConstructor(chatBasePacket, byte.class).newInstance(serialized, (byte) 2);
             sendPacket.invoke(connection, packet);
         } catch (NoSuchFieldException | IllegalAccessException | InvocationTargetException | NoSuchMethodException  | InstantiationException e) {
             Messenger.error(Bukkit.getConsoleSender(), "Error sending action bar to player: " + player.getName());
+            e.printStackTrace();
         }
     }
 
