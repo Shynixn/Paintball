@@ -304,7 +304,8 @@ public class PlayerDataFile extends PaintballFile {
         ExperienceManager exp = new ExperienceManager(player);
         String id = player.getName();
 
-        player.teleport(locations.get(id));
+        if (locations.containsKey(id))
+            player.teleport(locations.get(id));
         player.getInventory().setContents(inventories.get(id));
         player.getInventory().setArmorContents(armour.get(id));
         player.setFoodLevel(foodLevels.get(id));

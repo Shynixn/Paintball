@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.List;
+
 import static me.synapz.paintball.storage.Settings.PREFIX;
 
 public abstract class PaintballPlayer implements ScoreboardPlayer {
@@ -100,7 +102,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
     }
 
     // Formats a message with the config, then sends a chat message to all
-    public void chat(String message) {
+    public void chat(String message, boolean perTeamChat) {
         String chat = arena.getSpectators().contains(this) ? arena.SPEC_CHAT : arena.ARENA_CHAT;
 
         chat = chat.replace("%TEAMNAME%", team.getTitleName());
@@ -108,8 +110,9 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         chat = chat.replace("%MSG%", message);
         chat = chat.replace("%PREFIX%", PREFIX);
         chat = chat.replace("%PLAYER%", player.getName());
-        for (Player player : arena.getAllPlayers().keySet()) {
-            player.sendMessage(chat);
+        for (PaintballPlayer player : arena.getAllPlayers().values()) {
+            if (!perTeamChat || perTeamChat && player.getTeam() == team)
+                player.getPlayer().sendMessage(chat);
         }
     }
 

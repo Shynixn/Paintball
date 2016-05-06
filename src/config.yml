@@ -65,8 +65,8 @@ Per-Arena-Settings:
 
     # Settings for when a player joins an arena
     Join-Arena:
-      # True - Chat will only send to players on the same team. False - Chat will send to whole arena (only for when in lobby)
-      per-team-chat: true
+      # True - Chat will only send to players on the same team. False - Chat will send to whole arena
+      per-team-chat: false
       # True - Will give a colored wool helmet. False - Will give a colored armour helmet
       wool-helmet: true
 
@@ -74,8 +74,8 @@ Per-Arena-Settings:
     Join-Lobby:
       # True - will give the player a item that allows them to switch team. False - player will not be able to switch team unless they leave and join
       give-team-switcher: true
-      # True - Chat will only send to players on the same team. False - Chat will send to whole arena (in arena)
-      per-team-chat: true
+      # True - Chat will only send to players on the same team. False - Chat will send to whole arena
+      per-team-chat: false
       # True - Will give a colored wool helmet. False - Will give a colored armour helmet
       wool-helmet: true
 

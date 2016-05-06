@@ -73,6 +73,7 @@ public class Arena {
     public boolean ARENA_WOOL_HELMET;
     public boolean LOBBY_WOOL_HELMET;
     public boolean NAMETAGS;
+    public boolean PER_TEAM_CHAT;
 
     public List<String> BLOCKED_COMMANDS;
     public List<String> ALLOWED_COMMANDS;

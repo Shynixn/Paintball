@@ -1,3 +1,7 @@
+v4.1.1
+- Added per-team-chat option for arena players or lobby players in case you wanted to filter chat to per team
+- Maybe fixed teleportation bug
+
 v4.1.0
 - Added ability to change scoreboard lines
 
