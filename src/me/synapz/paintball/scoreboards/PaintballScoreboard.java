@@ -1,8 +1,10 @@
 package me.synapz.paintball.scoreboards;
 
 import me.synapz.paintball.enums.ScoreboardLine;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.players.PaintballPlayer;
+import me.synapz.paintball.utils.MessageBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -82,12 +84,12 @@ public class PaintballScoreboard {
     }
 
     public PaintballScoreboard addLine(ScoreboardLine sbLine, int startValue) {
-        addLine(sbLine.toString() + SECONDARY + startValue);
+        addLine(THEME + new MessageBuilder(sbLine.getMessage()).replace(Tag.AMOUNT, "" + startValue).build());
         return this;
     }
 
     public PaintballScoreboard addLine(ScoreboardLine sbLine, String startValue) {
-        addLine(sbLine.toString() + SECONDARY + startValue);
+        addLine(THEME + new MessageBuilder(sbLine.getMessage()).replace(Tag.AMOUNT, startValue).build());
         return this;
     }
 
@@ -135,7 +137,7 @@ public class PaintballScoreboard {
 
     public PaintballScoreboard reloadLine(ScoreboardLine sbLine, String score, int line) {
         String oldScore = lines.get(line);
-        String newScore = sbLine.toString() + score;
+        String newScore = THEME + new MessageBuilder(sbLine.getMessage()).replace(Tag.AMOUNT, score).build();
 
         if (oldScore == null)
             return this;

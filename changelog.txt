@@ -1,3 +1,6 @@
+v4.1.0
+- Added ability to change scoreboard lines
+
 v4.0.9
 - Removed Vault & TTA Dependency!
     - Plugin requires 0 dependencies! (There are optional ones though)

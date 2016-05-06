@@ -70,7 +70,19 @@ public enum Messages {
     CHOOSE_ENABLE_OR_DISABLE(Tag.COMMAND + " is an invalid choice. Use either enable/disable"),
     DISABLE_SUCCESS(Tag.ARENA + " has been disabled!"),
     ENABLE_SUCCESS(Tag.ARENA + " has been enabled!"),
-    ARENA_ENABLED(Tag.ARENA + " is already enabled.");
+    ARENA_ENABLED(Tag.ARENA + " is already enabled."),
+
+    SCOREBOARD_COINS("Coins &7» " + Tag.AMOUNT),
+    SCOREBOARD_KILLS("Kills &7» " + Tag.AMOUNT),
+    SCOREBOARD_KILL_STREAK("Kill Streak &7» " + Tag.AMOUNT),
+    SCOREBOARD_KD("K/D &7» " + Tag.AMOUNT),
+    SCOREBOARD_MONEY("Money &7» " + Tag.AMOUNT),
+    SCOREBOARD_LINE("&7&m                    "),
+    SCOREBOARD_STATUS("Status &7» " + Tag.AMOUNT),
+    SCOREBOARD_LIVES("Lives &6» " + Tag.AMOUNT),
+    SCOREBOARD_MODE("Mode &7» " + Tag.AMOUNT),
+    SCOREBOARD_HEALTH("Health &7» " + Tag.AMOUNT),
+    SCOREBOARD_TEAM("Team &7» " + Tag.AMOUNT);
 
     private final String defaultString;
     private String string;
