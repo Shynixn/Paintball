@@ -2,6 +2,9 @@ package me.synapz.paintball.arenas;
 
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.players.DOMArenaPlayer;
+import me.synapz.paintball.players.PaintballPlayer;
+import me.synapz.paintball.players.ScoreboardPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Location;
@@ -15,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import static me.synapz.paintball.storage.Settings.ARENA;
+import static me.synapz.paintball.storage.Settings.SECONDARY;
+import static me.synapz.paintball.storage.Settings.THEME;
 
 public class DOMArena extends FlagArena {
 
@@ -120,6 +125,8 @@ public class DOMArena extends FlagArena {
 
         runningScore.put(pastTeam, --pastScore);
         runningScore.put(team, ++newPastScore);
+
+        broadcastMessage(THEME + team.getTitleName() + SECONDARY + " has secured " + THEME + pastTeam.getTitleName());
     }
 
     public Map<Location, Team> getSecureLocations() {

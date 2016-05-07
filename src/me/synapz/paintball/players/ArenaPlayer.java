@@ -225,6 +225,8 @@ public class ArenaPlayer extends PaintballPlayer {
     public void killHorse() {
         if (horse != null && horseItem != null) {
             horse.setHealth(0);
+
+            horseItem.remove(this);
             addItem(horseItem);
         }
     }

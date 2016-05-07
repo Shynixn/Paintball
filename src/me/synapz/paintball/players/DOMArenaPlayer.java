@@ -35,17 +35,15 @@ public class DOMArenaPlayer extends ArenaPlayer {
 
     public void setSecuring(boolean securing) {
         if (!securing) {
-            // TODO Is this meant to clear the title? if so use {@link Title}.clear(player)
-            new Title("", "", 0, 21, 0).send(player);
+            new Title("", "", 0, 21, 0).clear(player);
             timeSecuring = 0;
+            updateScoreboard();
         } else {
             if (timeSecuring >= domArena.SECURE_TIME+1) {
-                new Title(null, Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0).send(player);
+                new Title("", Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0).send(player);
                 player.getWorld().playSound(player.getLocation(), domArena.SECURE, 5, 5);
             } else {
-                if (timeSecuring == 1)
-                    player.getWorld().playSound(player.getLocation(), domArena.START_SECURE, 5, 5);
-                new Title(null, makeBar(), 0, 21, 0).send(player);
+                new Title("", makeBar(), 0, 21, 0).send(player);
             }
         }
 
@@ -64,16 +62,19 @@ public class DOMArenaPlayer extends ArenaPlayer {
         if (timeSecuring >= domArena.SECURE_TIME) {
             if (timeSecuring == domArena.SECURE_TIME) {
                 domArena.teamSecured(Utils.simplifyLocation(player.getLocation()), team);
-                new Title(null, Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0).send(player);
+                new Title("", Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0).send(player);
                 player.getWorld().playSound(player.getLocation(), domArena.SECURE, 5, 5);
             }
         } else {
-            new Title(null, makeBar(), 0, 21, 0).send(player);
+            new Title("", makeBar(), 0, 21, 0).send(player);
         }
     }
 
     private String makeBar() {
         String bar = "";
+
+        if (timeSecuring == 1)
+            player.getWorld().playSound(player.getLocation(), domArena.START_SECURE, 5, 5);
 
         for (int i = 0; i < domArena.SECURE_TIME; i++) {
             if (timeSecuring <= i)

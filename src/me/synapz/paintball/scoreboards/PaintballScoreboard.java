@@ -120,6 +120,23 @@ public class PaintballScoreboard {
         return this;
     }
 
+    public PaintballScoreboard reloadTeams(boolean teamSize, int timeSecuring, Team beingSecured) {
+        int size = 0;
+        for (Team team : pbPlayer.getArena().getArenaTeamList()) {
+            String oldValue = lines.get(size);
+            String newValue = team.getChatColor() + ((timeSecuring != 0 && timeSecuring % 2 == 0 && team == beingSecured) ? ChatColor.WHITE + "" : "") + team.getTitleName() + ": " + SECONDARY + (!teamSize ? (pbPlayer.getArena().MAX_SCORE - pbPlayer.getArena().getTeamScore(team)) : team.getSize());
+
+            sb.resetScores(oldValue);
+            Score teamScore = objective.getScore(newValue);
+            teamScore.setScore(size);
+            lines.replace(size, oldValue, newValue);
+            size++;
+        }
+        updateNametags();
+
+        return this;
+    }
+
     public PaintballScoreboard updateNametags() {
         for (PaintballPlayer pbPlayer : this.pbPlayer.getArena().getAllPlayers().values()) {
             final org.bukkit.scoreboard.Team playerTeam = sb.getTeam(pbPlayer.getTeam().getTitleName());

@@ -607,6 +607,9 @@ public class Listeners extends BaseListener implements Listener {
                     if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
                         return;
 
+                    if (!domArena.getSecureLocations().containsKey(xloc))
+                        return;
+
                     if (domArena.getSecureLocations().containsKey(xloc) && domArena.getSecureLocations().get(xloc) != domPlayer.getTeam())
                         domPlayer.setSecuring(true);
                     else
