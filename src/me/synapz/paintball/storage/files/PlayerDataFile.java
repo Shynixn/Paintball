@@ -300,12 +300,15 @@ public class PlayerDataFile extends PaintballFile {
 
     // Restores all of the player's settings, then sets the info to null
     public void restorePlayerInformation(Player player) {
-        Utils.stripValues(player);
-        ExperienceManager exp = new ExperienceManager(player);
         String id = player.getName();
 
-        if (locations.containsKey(id))
-            player.teleport(locations.get(id));
+        if (!locations.containsKey(id))
+            return;
+
+        Utils.stripValues(player);
+        ExperienceManager exp = new ExperienceManager(player);
+
+        player.teleport(locations.get(id));
         player.getInventory().setContents(inventories.get(id));
         player.getInventory().setArmorContents(armour.get(id));
         player.setFoodLevel(foodLevels.get(id));

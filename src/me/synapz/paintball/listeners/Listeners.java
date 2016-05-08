@@ -611,9 +611,9 @@ public class Listeners extends BaseListener implements Listener {
                         return;
 
                     if (domArena.getSecureLocations().containsKey(xloc) && domArena.getSecureLocations().get(xloc) != domPlayer.getTeam())
-                        domPlayer.setSecuring(true);
+                        domPlayer.setSecuring(true, domArena.getSecureLocations().get(xloc));
                     else
-                        domPlayer.setSecuring(false);
+                        domPlayer.setSecuring(false, domArena.getSecureLocations().get(xloc));
                 }
             }
         }

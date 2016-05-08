@@ -372,6 +372,9 @@ public class ArenaPlayer extends PaintballPlayer {
         team.playerLeaveTeam();
         Utils.stripValues(player);
         new SpectatorPlayer(this);
+
+        if (arena.getAllArenaPlayers().size() <= 1)
+            arena.win(Arrays.asList(((ArenaPlayer) arena.getAllArenaPlayers().toArray()[0]).getTeam()));
     }
 
     /**

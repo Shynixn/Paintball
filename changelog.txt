@@ -1,3 +1,12 @@
+v4.1.4
+- Major: Fixed leave rare errors (Only happened with some plugin clashes)
+- Major: Fixed plugin not hooking into Vault when there was Vault
+
+v4.1.3
+- Added Domination start secure message
+- Fixed DTCArena not auto stopping on win
+- Internal bug fixes
+
 v4.1.2
 - Fixed horse leads duplicating
 - Fixed Domination secure error

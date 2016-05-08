@@ -13,6 +13,7 @@ public class DOMArenaPlayer extends ArenaPlayer {
 
     private boolean isSecuring;
     private int timeSecuring;
+    private boolean messageSent;
 
     private DOMArena domArena = (DOMArena) arena;
 
@@ -33,16 +34,21 @@ public class DOMArenaPlayer extends ArenaPlayer {
         // TODO: Increment Points Secured
     }
 
-    public void setSecuring(boolean securing) {
+    public void setSecuring(boolean securing, Team beingSecured) {
         if (!securing) {
             new Title("", "", 0, 21, 0).clear(player);
             timeSecuring = 0;
+            messageSent = false;
             updateScoreboard();
         } else {
             if (timeSecuring >= domArena.SECURE_TIME+1) {
                 new Title("", Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0).send(player);
                 player.getWorld().playSound(player.getLocation(), domArena.SECURE, 5, 5);
             } else {
+                if (timeSecuring == 5 && messageSent == false) {
+                    arena.broadcastMessage(Settings.THEME + beingSecured.getTitleName() + Settings.SECONDARY + " is being secured by " + Settings.THEME + team.getTitleName());
+                    messageSent = true;
+                }
                 new Title("", makeBar(), 0, 21, 0).send(player);
             }
         }

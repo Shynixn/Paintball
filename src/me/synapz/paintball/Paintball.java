@@ -86,6 +86,7 @@ public class Paintball extends JavaPlugin implements Listener {
             Settings.VAULT = false;
         } else {
             Settings.ECONOMY = rsp.getProvider();
+            Settings.VAULT = true;
 
             if (Settings.ECONOMY == null)
                 Settings.VAULT = false;
