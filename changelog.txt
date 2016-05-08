@@ -1,5 +1,5 @@
 v4.1.4
-- Major: Fixed leave rare errors (Only happened with some plugin clashes)
+- Major: Fixed leave rare errors (Only happened with some plugin that mess with some events)
 - Major: Fixed plugin not hooking into Vault when there was Vault
 
 v4.1.3
