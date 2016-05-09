@@ -1,6 +1,9 @@
 package me.synapz.paintball.storage.files;
 
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
+import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.MessageBuilder;
 import org.bukkit.plugin.Plugin;
 
 public class MessagesFile extends PaintballFile {
@@ -21,6 +24,9 @@ public class MessagesFile extends PaintballFile {
             this.saveFile();
         }
 
-        return fileConfig.getString(path);
+        return fileConfig.getString(path)
+                .replace(Tag.THEME.toString(), Settings.THEME)
+                .replace(Tag.SECONDARY.toString(), Settings.SECONDARY)
+                .replace(Tag.PREFIX.toString(), Settings.PREFIX);
     }
 }

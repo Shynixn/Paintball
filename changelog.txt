@@ -1,3 +1,12 @@
+v4.1.6
+- Added 20 messages!
+- Paintball scoreboard is now 100% configurable, even change the title
+- Added ability yo use %theme%, %secondary%, or %prefix% anywhere
+
+v4.1.5
+- Added more messages to messages.yml
+- Background internal fixes
+
 v4.1.4
 - Major: Fixed leave rare errors (Only happened with some plugin that mess with some events)
 - Major: Fixed plugin not hooking into Vault when there was Vault

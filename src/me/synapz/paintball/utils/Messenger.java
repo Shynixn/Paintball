@@ -12,7 +12,6 @@ import static org.bukkit.ChatColor.*;
 
 public class Messenger {
     
-    public static final String NO_PERMS = "You don't have access to that command!";
     public static final String SUFFIX = SECONDARY + " » ";
     public static final String EXPIRATION_TIME = createPrefix("Expiration") + SECONDARY + "%time%" + THEME + " seconds";
     public static final String EXPIRATION_END = createPrefix("Expiration") + SECONDARY + "Item %item% " + SECONDARY + "has expired";
@@ -67,7 +66,7 @@ public class Messenger {
         if (player.hasPermission(permission)) {
             return true;
         } else {
-            error(player, NO_PERMS);
+            error(player, Messages.NO_PERMISSION);
             return false;
         }
     }

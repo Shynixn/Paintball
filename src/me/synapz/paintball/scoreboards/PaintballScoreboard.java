@@ -1,5 +1,6 @@
 package me.synapz.paintball.scoreboards;
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
@@ -22,7 +23,6 @@ import static me.synapz.paintball.storage.Settings.THEME;
 public class PaintballScoreboard {
 
     private static int id = 0;
-    private static final String DISPLAY_NAME = THEME + ChatColor.BOLD + "  Paintball " + ChatColor.RESET + SECONDARY +  "%time%  ";
 
     private final PaintballPlayer pbPlayer;
     private final Player player;
@@ -56,14 +56,15 @@ public class PaintballScoreboard {
     }
 
     public void setDisplayNameCounter(int time) {
-        String name = DISPLAY_NAME.replace("%time%", convertToNumberFormat(time));
-        objective.setDisplayName(name);
+        String title = new MessageBuilder(Messages.SCOREBOARD_TITLE).replace(Tag.TIME, convertToNumberFormat(time)).build();
+
+        objective.setDisplayName(title);
         player.setScoreboard(sb);
     }
 
     public void setDisplayNameCounter(String prefix, int time) {
-        String name = DISPLAY_NAME.replace("%time%", convertToNumberFormat(time));
-        objective.setDisplayName(prefix + name);
+        String title = new MessageBuilder(Messages.SCOREBOARD_TITLE).replace(Tag.TIME, convertToNumberFormat(time)).build();
+        objective.setDisplayName(prefix + title);
         player.setScoreboard(sb);
     }
 

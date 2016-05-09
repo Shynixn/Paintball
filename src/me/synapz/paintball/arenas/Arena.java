@@ -7,12 +7,14 @@ import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
@@ -394,7 +396,7 @@ public class Arena {
             startGame();
         } else {
             setState(ArenaState.WAITING);
-            this.broadcastMessage(this.toString(RED) + " has been force stopped.");
+            this.broadcastMessage(new MessageBuilder(Messages.ARENA_FORCE_STOPPED).replace(Tag.ARENA, this.toString(RED)).build());
             this.forceLeaveArena();
         }
     }

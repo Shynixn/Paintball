@@ -76,6 +76,7 @@ public class Settings {
     }
 
     private void loadEverything() {
+        loadSettings(); // loads everything in config.yml into constants
         PLAYERDATA = new PlayerDataFile(pb);
         DATABASE_FILE = new DatabaseFile(pb);
         ITEMS = new ItemFile(pb);
@@ -107,7 +108,6 @@ public class Settings {
             }
         }
 
-        loadSettings(); // loads everything in config.yml into constants
         CoinItems.getCoinItems().loadItems();
     }
 

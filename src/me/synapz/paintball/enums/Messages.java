@@ -2,6 +2,9 @@ package me.synapz.paintball.enums;
 
 import org.bukkit.ChatColor;
 
+import static me.synapz.paintball.storage.Settings.SECONDARY;
+import static me.synapz.paintball.storage.Settings.THEME;
+
 public enum Messages {
 
     COMMAND_ARENA_INFO("Display all Paintball Arena setup commands"),
@@ -46,17 +49,20 @@ public enum Messages {
     NO_HOLOGRAMS_REMOVED("No holograms were removed."),
     NO_ARENAS("No arenas are currently opened."),
     NOT_IN_ARENA("You are not in an arena."),
+    CANNOT_JOIN("Error: arena is not available to join!"),
     LEFT_ARENA("Successfully left arena."),
     ARENA_NOT_SETUP(Tag.ARENA + " has not been fully setup."),
     ARENA_DISABLED(Tag.ARENA + " is disabled."),
-    ARENA_NOT_IN_PROGRESS(Tag.ARENA + " is currently not in progress, nothing to spectate."),
+    ARENA_NOT_IN_PROGRESS(Tag.ARENA + " is currently not in progress"),
     IN_ARENA("You are already in an arena!"),
+    ARENA_NOT_FOUND("No arena named " + Tag.ARENA + " found."),
     PAGE_REAL_NUMBER("Please specify a real number as the page."),
     PAGE_BIGGER("The page cannot be lower than 0"),
     PAGE_FIND_ERROR("Page " + Tag.AMOUNT + "/" + Tag.MAX + " cannot be found."),
     ARENA_CREATE(Tag.ARENA + " successfully created!/n" + Tag.STEPS),
     ARENA_NAME_EXISTS("An arena named" + Tag.ARENA + " already exists!"),
     ARENA_REMOVE("Arena has been removed."),
+    ARENA_FORCE_STOPPED(Tag.ARENA + " has been force stopped!"),
     ARENA_CONVERT_SAME_TYPE(Tag.ARENA + " is already a " + Tag.ARENA_TYPE + " arena."),
     ARENA_CONVERT_SUCCESS(Tag.ARENA + " has been converted to " + Tag.ARENA_TYPE),
     INVALID_ARENA(Tag.ARENA + " is an invalid arena."),
@@ -64,6 +70,7 @@ public enum Messages {
     INVALID_STAT(Tag.STAT + " is an invalid statistic. Choose either " + Tag.STATS),
     INVALID_COMMAND("Unknown Command! Type /paintball for a list of commands."),
     INTERNAL_ERROR("An internal error occurred: " + Tag.ERROR),
+    NO_PERMISSION("You don't have access to that command!"),
     NO_CONSOLE_PERMISSION("Console does not have access to that command!"),
     NO_TEAMS_SET(Tag.ARENA + " does not have any teams set!"),
     INVALID_ARENA_TYPE("Invalid arena type. Choose either <" + Tag.ARENA_TYPES + ">"),
@@ -72,6 +79,7 @@ public enum Messages {
     ENABLE_SUCCESS(Tag.ARENA + " has been enabled!"),
     ARENA_ENABLED(Tag.ARENA + " is already enabled."),
 
+    SCOREBOARD_TITLE(Tag.THEME + "&l  Paintball &f" + Tag.SECONDARY + "%time%  "),
     SCOREBOARD_COINS("Coins &7» " + Tag.AMOUNT),
     SCOREBOARD_KILLS("Kills &7» " + Tag.AMOUNT),
     SCOREBOARD_KILL_STREAK("Kill Streak &7» " + Tag.AMOUNT),
@@ -82,7 +90,18 @@ public enum Messages {
     SCOREBOARD_LIVES("Lives &6» " + Tag.AMOUNT),
     SCOREBOARD_MODE("Mode &7» " + Tag.AMOUNT),
     SCOREBOARD_HEALTH("Health &7» " + Tag.AMOUNT),
-    SCOREBOARD_TEAM("Team &7» " + Tag.AMOUNT);
+    SCOREBOARD_TEAM("Team &7» " + Tag.AMOUNT),
+
+    SIGN_WRONG_SYNTAX("Wrong syntax for creating Paintball sign."),
+    SIGN_AUTOJOIN_CREATED("Auto Join sign successfully created!"),
+    SIGN_JOIN_CREATED("Join sign successfully created!"),
+    SIGN_LEAVE_CREATED("Leave sign successfully created!"),
+    SIGN_LEADERBOARD_REMOVED("Leaderboard sign has been successfully removed!"),
+    SIGN_LEAVE_REMOVED("Leave sign has been successfully removed!"),
+    SIGN_AUTOJOIN_REMOVED("Autojoin sign has been successfully removed!"),
+    SIGN_JOIN_REMOVED(Tag.ARENA + "'s join sign has been successfully removed!"),
+    SKULL_LEADERBOARD_REMOVED("Leaderboard skull has been successfully removed!")
+            ;
 
     private final String defaultString;
     private String string;

@@ -14,7 +14,11 @@ public enum Tag {
     STEPS,
     ARENA_TYPE,
     ARENA_TYPES,
-    COMMAND;
+    COMMAND,
+    THEME,
+    TIME,
+    SECONDARY,
+    PREFIX;
 
     @Override
     public String toString() {

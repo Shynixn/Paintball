@@ -5,6 +5,8 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 
 import static org.bukkit.ChatColor.GREEN;
@@ -16,11 +18,11 @@ public class Stop extends ArenaCommand {
         if (arena.getState() == Arena.ArenaState.IN_PROGRESS || arena.getState() == Arena.ArenaState.STARTING || arena.getState() == Arena.ArenaState.STOPPING) {
             // if the player isn't in the arena send them a message, otherwise the forceStart method will send the message to everyone
             if (!arena.getAllPlayers().keySet().contains(player))
-                Messenger.success(player, arena.toString(GREEN) + " has been force stopped!");
+                Messenger.success(player, new MessageBuilder(Messages.ARENA_FORCE_STOPPED).replace(Tag.ARENA, arena.toString(GREEN)).build());
             arena.forceStart(false);
             return;
         }
-        Messenger.error(player, arena.toString(RED) + " is not in progress.");
+        Messenger.error(player, new MessageBuilder(Messages.ARENA_NOT_IN_PROGRESS).replace(Tag.ARENA, arena.toString(RED)).build());
     }
 
     public String getArgs() {
