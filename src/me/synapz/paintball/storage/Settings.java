@@ -118,7 +118,6 @@ public class Settings {
         WEBSITE = pluginYML.getWebsite();
         VERSION = pluginYML.getVersion();
         AUTHOR = pluginYML.getAuthors().toString();
-        PREFIX = ChatColor.translateAlternateColorCodes('&', loadString("prefix"));
         THEME = ChatColor.translateAlternateColorCodes('&', loadString("theme-color"));
         SECONDARY = ChatColor.translateAlternateColorCodes('&', loadString("secondary-color"));
         UPDATE_CHECK = loadBoolean("update-check");

@@ -61,8 +61,8 @@ public class ArenaPlayer extends PaintballPlayer {
      * @param t Team they are on
      * @param p Player they are connected to
      */
-    public ArenaPlayer(Arena a, Team t, Player p) {
-        super(a, t, p);
+    public ArenaPlayer(LobbyPlayer lobbyPlayer) {
+        super(lobbyPlayer.getArena(), lobbyPlayer.getTeam(), lobbyPlayer.getPlayer());
     }
 
     public ArenaPlayer(SpectatorPlayer sp, Team team) {

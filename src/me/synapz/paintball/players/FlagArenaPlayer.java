@@ -17,8 +17,8 @@ public abstract class FlagArenaPlayer extends ArenaPlayer {
     private int dropped;
     private boolean isFlagHolder;
 
-    public FlagArenaPlayer(Arena a, Team t, Player p) {
-        super(a, t, p);
+    public FlagArenaPlayer(LobbyPlayer lobbyPlayer) {
+        super(lobbyPlayer);
     }
 
     public void dropFlag() {

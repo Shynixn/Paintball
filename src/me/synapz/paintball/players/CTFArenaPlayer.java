@@ -12,8 +12,8 @@ public class CTFArenaPlayer extends FlagArenaPlayer {
     private CTFArena ctfArena = (CTFArena) arena;
     private Team heldFlag;
 
-    public CTFArenaPlayer(Arena a, Team t, Player p) {
-        super(a, t, p);
+    public CTFArenaPlayer(LobbyPlayer lobbyPlayer) {
+        super(lobbyPlayer);
     }
 
     @Override

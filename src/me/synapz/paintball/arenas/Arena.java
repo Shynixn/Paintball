@@ -425,19 +425,23 @@ public class Arena {
             ArenaPlayer player;
 
             if (this instanceof CTFArena)
-                player = new CTFArenaPlayer(this, p.getTeam(), p.getPlayer());
+                player = new CTFArenaPlayer(p);
             else if (this instanceof RTFArena)
-                player = new RTFArenaPlayer(this, p.getTeam(), p.getPlayer());
+                player = new RTFArenaPlayer(p);
             else if (this instanceof FFAArena)
-                player = new FFAArenaPlayer(this, p.getTeam(), p.getPlayer());
+                player = new FFAArenaPlayer(p);
             else if (this instanceof DOMArena)
-                player = new DOMArenaPlayer(this, p.getTeam(), p.getPlayer());
+                player = new DOMArenaPlayer(p);
             else if (this instanceof LTSArena)
-                player = new LTSArenaPlayer(this, p.getTeam(), p.getPlayer());
+                player = new LTSArenaPlayer(p);
             else if (this instanceof DTCArena)
-                player = new DTCArenaPlayer(this, p.getTeam(), p.getPlayer());
+                player = new DTCArenaPlayer(p);
+            else if (this instanceof SFGArena)
+                player = new SFGArenaPlayer(p);
+            else if (this instanceof KCArena)
+                player = new KCArenaPlayer(p);
             else
-                player = new ArenaPlayer(this, p.getTeam(), p.getPlayer());
+                player = new ArenaPlayer(p);
 
             startLocs.put(player.getPlayer(), player.getPlayer().getLocation());
         }
@@ -528,12 +532,25 @@ public class Arena {
                 Messenger.info(player, chatMessage);
     }
 
+    public void broadcastMessage(Messages chatMessage) {
+        for (Player player : allPlayers.keySet())
+            Messenger.info(player, chatMessage);
+    }
+
     public void broadcastTitle(String header, String footer, int fadeIn, int stay, int fadeOut) {
         for (Player player : allPlayers.keySet()) {
             Title title = new Title(header, footer, fadeIn, stay, fadeOut);
             title.send(player);
         }
     }
+
+    public void broadcastTitle(Messages header, Messages footer, int fadeIn, int stay, int fadeOut) {
+        for (Player player : allPlayers.keySet()) {
+            Title title = new Title(header.getString(), footer.getString(), fadeIn, stay, fadeOut);
+            title.send(player);
+        }
+    }
+
 
     // Returns the team with less players for when someone joins
     private Team getTeamWithLessPlayers() {

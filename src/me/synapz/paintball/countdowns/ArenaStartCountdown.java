@@ -3,6 +3,7 @@ package me.synapz.paintball.countdowns;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.arenas.FlagArena;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.ActionBar;
@@ -34,9 +35,9 @@ public class ArenaStartCountdown extends PaintballCountdown {
         if (arena instanceof FlagArena)
             ((FlagArena) arena).loadFlags();
 
-        arena.broadcastMessage(GREEN + "Game started");
+        arena.broadcastMessage(Messages.ARENA_START_MESSAGE);
         arena.setState(Arena.ArenaState.IN_PROGRESS);
-        arena.broadcastTitle(Settings.PREFIX, GREEN + "Game started", 0, 30, 20);
+        arena.broadcastTitle(Messages.PREFIX, Messages.ARENA_START_MESSAGE, 0, 30, 20);
         tpAllPlayersBack();
 
         if (arena instanceof DOMArena) {

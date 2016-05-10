@@ -27,6 +27,6 @@ public class MessagesFile extends PaintballFile {
         return fileConfig.getString(path)
                 .replace(Tag.THEME.toString(), Settings.THEME)
                 .replace(Tag.SECONDARY.toString(), Settings.SECONDARY)
-                .replace(Tag.PREFIX.toString(), Settings.PREFIX);
+                .replace(Tag.PREFIX.toString(), Messages.PREFIX.getString());
     }
 }

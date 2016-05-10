@@ -1,5 +1,3 @@
-# Prefix of the plugin, shown in all messages sent by the plugin
-prefix: '&8[&3Paintball&8] '
 # Theme color of messages. This is the main color used in main text. Set it to match your server
 theme-color: '&3'
 # Secondary color of messages. Used as a secondary color in with theme-color

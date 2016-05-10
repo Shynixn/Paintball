@@ -9,8 +9,8 @@ public class DTCArenaPlayer extends ArenaPlayer {
 
     private DTCArena dtcArena = (DTCArena) arena;
 
-    public DTCArenaPlayer(Arena a, Team t, Player p) {
-        super(a, t, p);
+    public DTCArenaPlayer(LobbyPlayer lobbyPlayer) {
+        super(lobbyPlayer);
     }
 
     @Override

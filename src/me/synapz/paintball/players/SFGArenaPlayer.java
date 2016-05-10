@@ -4,9 +4,9 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Team;
 import org.bukkit.entity.Player;
 
-public class FFAArenaPlayer extends ArenaPlayer {
+public class SFGArenaPlayer extends ArenaPlayer {
 
-    public FFAArenaPlayer(LobbyPlayer lobbyPlayer) {
-        super(lobbyPlayer);
-    }
+    public SFGArenaPlayer(LobbyPlayer lobbyPlayer) {
+            super(lobbyPlayer);
+        }
 }

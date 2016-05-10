@@ -43,7 +43,15 @@ public class Messenger {
     public static void info(CommandSender sender, String...msg) {
         for (String str : msg) {
             for (String str1 : str.split("/n")) {
-                sender.sendMessage(Settings.PREFIX + Settings.THEME + str1);
+                sender.sendMessage(Messages.PREFIX.getString() + Settings.THEME + str1);
+            }
+        }
+    }
+
+    public static void info(CommandSender sender, Messages...msg) {
+        for (Messages str : msg) {
+            for (String str1 : str.getString().split("/n")) {
+                sender.sendMessage(Messages.PREFIX.getString() + Settings.THEME + str1);
             }
         }
     }
@@ -58,7 +66,7 @@ public class Messenger {
             info(sender, msg);
 
         if (sender instanceof Player)
-            new Title(PREFIX, msg, 10, 10, 10).send((Player) sender);
+            new Title(Messages.PREFIX.getString(), msg, 10, 10, 10).send((Player) sender);
     }
 
     // Checks to see if a player has a permission, returns true if they do false if they don't

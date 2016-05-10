@@ -4,6 +4,7 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.enums.UpdateResult;
 import me.synapz.paintball.locations.FlagLocation;
@@ -20,6 +21,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -363,6 +365,9 @@ public class Listeners extends BaseListener implements Listener {
 
         Player hitBySnowball = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
 
+        if (event.getEntity() instanceof Horse && event.getEntity().getPassenger() instanceof Player)
+            hitBySnowball = (Player) event.getEntity().getPassenger();
+
         if (hitBySnowball == null)
             return;
 
@@ -618,6 +623,35 @@ public class Listeners extends BaseListener implements Listener {
             }
         }
     }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPickupItem(PlayerPickupItemEvent e) {
+        Player player = e.getPlayer();
+        Arena arena = getArena(player);
+        ItemStack item = e.getItem().getItemStack();
+
+        if (arena != null) {
+            PaintballPlayer paintballPlayer = arena.getPaintballPlayer(player);
+
+            if (paintballPlayer instanceof KCArenaPlayer) {
+                KCArenaPlayer kcArenaPlayer = (KCArenaPlayer) paintballPlayer;
+
+                if (item.getType() == Material.WOOL && Utils.contains(item, "Dog Tag")) {
+                    if (item.getData().getData() == kcArenaPlayer.getTeam().getDyeColor().getData()) {
+                        // picked up their own teams one
+                        Messenger.info(player, Messages.KILL_DENIED);
+                        item.setType(Material.AIR);
+                    } else {
+                        Messenger.info(player, Messages.KILL_CONFIRMED);
+                        kcArenaPlayer.score();
+                    }
+                }
+            } else {
+                e.setCancelled(true);
+            }
+        }
+    }
+
 
     private boolean isInArena(Player player) {
         return getArena(player) != null;

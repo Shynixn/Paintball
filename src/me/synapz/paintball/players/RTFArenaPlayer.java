@@ -14,8 +14,8 @@ public class RTFArenaPlayer extends FlagArenaPlayer {
 
     RTFArena rtfArena = (RTFArena) arena;
 
-    public RTFArenaPlayer(Arena a, Team t, Player p) {
-        super(a, t, p);
+    public RTFArenaPlayer(LobbyPlayer lobbyPlayer) {
+        super(lobbyPlayer);
     }
 
     @Override

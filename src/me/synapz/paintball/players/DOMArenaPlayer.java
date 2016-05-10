@@ -14,11 +14,12 @@ public class DOMArenaPlayer extends ArenaPlayer {
     private boolean isSecuring;
     private int timeSecuring;
     private boolean messageSent;
+    private Team beingSecured;
 
     private DOMArena domArena = (DOMArena) arena;
 
-    public DOMArenaPlayer(Arena a, Team t, Player p) {
-        super(a, t, p);
+    public DOMArenaPlayer(LobbyPlayer lobbyPlayer) {
+        super(lobbyPlayer);
     }
 
     @Override
@@ -39,17 +40,15 @@ public class DOMArenaPlayer extends ArenaPlayer {
             new Title("", "", 0, 21, 0).clear(player);
             timeSecuring = 0;
             messageSent = false;
+            this.beingSecured = null;
             updateScoreboard();
         } else {
             if (timeSecuring >= domArena.SECURE_TIME+1) {
                 new Title("", Settings.THEME + ChatColor.BOLD + "Position Secured!", 0, 21, 0).send(player);
                 player.getWorld().playSound(player.getLocation(), domArena.SECURE, 5, 5);
             } else {
-                if (timeSecuring == 5 && messageSent == false) {
-                    arena.broadcastMessage(Settings.THEME + beingSecured.getTitleName() + Settings.SECONDARY + " is being secured by " + Settings.THEME + team.getTitleName());
-                    messageSent = true;
-                }
                 new Title("", makeBar(), 0, 21, 0).send(player);
+                this.beingSecured = beingSecured;
             }
         }
 
@@ -72,6 +71,11 @@ public class DOMArenaPlayer extends ArenaPlayer {
                 player.getWorld().playSound(player.getLocation(), domArena.SECURE, 5, 5);
             }
         } else {
+            if (timeSecuring == 5 && messageSent == false && beingSecured != null) {
+                arena.broadcastMessage(Settings.THEME + beingSecured.getTitleName() + Settings.SECONDARY + " is being secured by " + Settings.THEME + team.getTitleName());
+                messageSent = true;
+            }
+
             new Title("", makeBar(), 0, 21, 0).send(player);
         }
     }

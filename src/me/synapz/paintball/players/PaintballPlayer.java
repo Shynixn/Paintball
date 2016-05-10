@@ -1,16 +1,13 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
-
-import java.util.List;
-
-import static me.synapz.paintball.storage.Settings.PREFIX;
 
 public abstract class PaintballPlayer implements ScoreboardPlayer {
 
@@ -108,7 +105,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         chat = chat.replace("%TEAMNAME%", team.getTitleName());
         chat = chat.replace("%TEAMCOLOR%", team.getChatColor() + "");
         chat = chat.replace("%MSG%", message);
-        chat = chat.replace("%PREFIX%", PREFIX);
+        chat = chat.replace("%PREFIX%", Messages.PREFIX.getString());
         chat = chat.replace("%PLAYER%", player.getName());
         for (PaintballPlayer player : arena.getAllPlayers().values()) {
             if (!perTeamChat || perTeamChat && player.getTeam() == team)

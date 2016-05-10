@@ -7,6 +7,8 @@ import static me.synapz.paintball.storage.Settings.THEME;
 
 public enum Messages {
 
+    PREFIX("&8[&3Paintball&8] "),
+
     COMMAND_ARENA_INFO("Display all Paintball Arena setup commands"),
     COMMAND_CREATE_INFO("Create a new Arena"),
     COMMAND_SETFLAG_INFO("Set Arena flag point"),
@@ -100,7 +102,13 @@ public enum Messages {
     SIGN_LEAVE_REMOVED("Leave sign has been successfully removed!"),
     SIGN_AUTOJOIN_REMOVED("Autojoin sign has been successfully removed!"),
     SIGN_JOIN_REMOVED(Tag.ARENA + "'s join sign has been successfully removed!"),
-    SKULL_LEADERBOARD_REMOVED("Leaderboard skull has been successfully removed!")
+    SKULL_LEADERBOARD_REMOVED("Leaderboard skull has been successfully removed!"),
+
+    ARENA_START_MESSAGE("Game started"),
+
+    KILL_CONFIRMED("&c&lKill Denied!"),
+    KILL_DENIED("&e&lKill Confirmed!")
+
             ;
 
     private final String defaultString;
