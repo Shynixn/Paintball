@@ -20,10 +20,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -635,16 +632,19 @@ public class Listeners extends BaseListener implements Listener {
 
             if (paintballPlayer instanceof KCArenaPlayer) {
                 KCArenaPlayer kcArenaPlayer = (KCArenaPlayer) paintballPlayer;
+                KCArena kcArena = (KCArena) arena;
 
                 if (item.getType() == Material.WOOL && Utils.contains(item, "Dog Tag")) {
                     if (item.getData().getData() == kcArenaPlayer.getTeam().getDyeColor().getData()) {
                         // picked up their own teams one
                         Messenger.info(player, Messages.KILL_DENIED);
-                        item.setType(Material.AIR);
                     } else {
                         Messenger.info(player, Messages.KILL_CONFIRMED);
                         kcArenaPlayer.score();
                     }
+                    kcArena.removeDogTag(e.getItem());
+                    e.getItem().remove();
+                    e.setCancelled(true);
                 }
             } else {
                 e.setCancelled(true);

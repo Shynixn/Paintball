@@ -106,8 +106,8 @@ public enum Messages {
 
     ARENA_START_MESSAGE("Game started"),
 
-    KILL_CONFIRMED("&c&lKill Denied!"),
-    KILL_DENIED("&e&lKill Confirmed!")
+    KILL_CONFIRMED("&e&lKill Confirmed!"),
+    KILL_DENIED("&c&lKill Denied!")
 
             ;
 
