@@ -1,16 +1,14 @@
 package me.synapz.paintball.storage.database;
 
+import me.synapz.paintball.utils.Messenger;
+import org.bukkit.Bukkit;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Connects to and uses a SQLite database
- *
- * @author tips48
- */
 public class SQLiteManager extends MySQLManager {
     private final String dbLocation;
     private Connection connection;
@@ -34,14 +32,14 @@ public class SQLiteManager extends MySQLManager {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                System.out.println("Unable to create database!");
+                Messenger.error(Bukkit.getConsoleSender(), "Unable to create database!");
             }
         }
 
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            System.out.println("Unable to connect to database!");
+            Messenger.error(Bukkit.getConsoleSender(), "Unable to connect to database!");
         }
 
         connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder + "/"+ dbLocation);

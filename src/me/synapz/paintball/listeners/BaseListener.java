@@ -16,4 +16,12 @@ public class BaseListener {
         }
         return false;
     }
+
+    protected boolean isInArena(Player player) {
+        return getArena(player) != null;
+    }
+
+    protected Arena getArena(Player player) {
+        return ArenaManager.getArenaManager().getArena(player);
+    }
 }
