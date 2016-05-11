@@ -4,6 +4,7 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.enums.UpdateResult;
 import me.synapz.paintball.locations.FlagLocation;
@@ -363,6 +364,9 @@ public class Listeners extends BaseListener implements Listener {
 
         Player hitBySnowball = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
 
+        if (event.getEntity() instanceof Horse && event.getEntity().getPassenger() instanceof Player)
+            hitBySnowball = (Player) event.getEntity().getPassenger();
+        
         if (hitBySnowball == null)
             return;
 
@@ -615,6 +619,37 @@ public class Listeners extends BaseListener implements Listener {
                     else
                         domPlayer.setSecuring(false, domArena.getSecureLocations().get(xloc));
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPickupItem(PlayerPickupItemEvent e) {
+        Player player = e.getPlayer();
+        Arena arena = getArena(player);
+        ItemStack item = e.getItem().getItemStack();
+
+        if (arena != null) {
+            PaintballPlayer paintballPlayer = arena.getPaintballPlayer(player);
+
+            if (paintballPlayer instanceof KCArenaPlayer) {
+                KCArenaPlayer kcArenaPlayer = (KCArenaPlayer) paintballPlayer;
+                KCArena kcArena = (KCArena) arena;
+
+                if (item.getType() == Material.WOOL && Utils.contains(item, "Dog Tag")) {
+                    if (item.getData().getData() == kcArenaPlayer.getTeam().getDyeColor().getData()) {
+                        // picked up their own teams one
+                        Messenger.info(player, Messages.KILL_DENIED);
+                    } else {
+                        Messenger.info(player, Messages.KILL_CONFIRMED);
+                        kcArenaPlayer.score();
+                    }
+                    kcArena.removeDogTag(e.getItem());
+                    e.getItem().remove();
+                    e.setCancelled(true);
+                }
+            } else {
+                e.setCancelled(true);
             }
         }
     }
