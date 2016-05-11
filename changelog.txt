@@ -3,9 +3,7 @@ v4.2.3
 - Added KC Kill Denied sound
 
 v4.2.2
-- Blocked ouside players from teleporting to PaintballPlayers
-- Blocked PaintballPlayers from being teleported from outside an arena
-- Stopped Plugins from blocking teleportation while a player is inside an arena (WorldGuard, etc)
+- Stopped Plugins, like WorldGuard from blocking teleportation while a player is inside an arena, which can ruin the gameplay
 
 v4.2.1
 - Fixed "Dog tags" items on the ground not being removed on arena end

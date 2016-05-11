@@ -366,7 +366,7 @@ public class Listeners extends BaseListener implements Listener {
 
         if (event.getEntity() instanceof Horse && event.getEntity().getPassenger() instanceof Player)
             hitBySnowball = (Player) event.getEntity().getPassenger();
-        
+
         if (hitBySnowball == null)
             return;
 
@@ -651,6 +651,17 @@ public class Listeners extends BaseListener implements Listener {
             } else {
                 e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onTeleportInArena(PlayerTeleportEvent e) {
+        Player whoTeleported = e.getPlayer();
+
+        if (isInArena(whoTeleported)) {
+            // Even though this allows someone to teleport to a player in the arena, it stops plugins like
+            // WorldGuard from blocking the teleportation events like some people have reported to me
+            e.setCancelled(false);
         }
     }
 }
