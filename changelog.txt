@@ -1,6 +1,13 @@
+v4.2.4
+- Renamed database.yml's SQL Settings to Database Settings
+- Added SQL configurable table name
+- Balanced teams?
+- Added CoinItem messages. Not setup (it is pretty complex)
+
 v4.2.3
 - Added KC Kill Confirm sound
 - Added KC Kill Denied sound
+- Internal improvements on how sounds are loaded
 
 v4.2.2
 - Stopped Plugins, like WorldGuard from blocking teleportation while a player is inside an arena, which can ruin the gameplay

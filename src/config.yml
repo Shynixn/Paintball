@@ -111,6 +111,12 @@ Per-Arena-Settings:
       # Sound played when a player secures a base
       secure: "VILLAGER_YES"
 
+    KC:
+      # Sound played when a player confirms a kill (picks up another team's wool)
+      kill-confirmed: "ITEM_PICKUP"
+      # Sound played when a player denies a kill (picks up their own team's wool before other team does)
+      kill-denied: "PIG_DEATH"
+
     # Default rewards
     Rewards:
       # Rewards having to do with coins. Coins are basically money recived on a kill, which can be used to buy special items. Coins are reset every game.

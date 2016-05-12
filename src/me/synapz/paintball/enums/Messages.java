@@ -1,5 +1,6 @@
 package me.synapz.paintball.enums;
 
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
@@ -71,7 +72,7 @@ public enum Messages {
     INVALID_TEAM(Tag.TEAM + " is an invalid team. Choose either <" + Tag.TEAMS + ">"),
     INVALID_STAT(Tag.STAT + " is an invalid statistic. Choose either " + Tag.STATS),
     INVALID_COMMAND("Unknown Command! Type /paintball for a list of commands."),
-    INTERNAL_ERROR("An internal error occurred: " + Tag.ERROR),
+    INTERNAL_ERROR("An internal error has occurred: "),
     NO_PERMISSION("You don't have access to that command!"),
     NO_CONSOLE_PERMISSION("Console does not have access to that command!"),
     NO_TEAMS_SET(Tag.ARENA + " does not have any teams set!"),
@@ -107,9 +108,18 @@ public enum Messages {
     ARENA_START_MESSAGE("Game started"),
 
     KILL_CONFIRMED("&e&lKill Confirmed!"),
-    KILL_DENIED("&c&lKill Denied!")
+    KILL_DENIED("&c&lKill Denied!"),
 
-            ;
+    COIN_ITEM_LORE_LAYOUT(Tag.DESCRIPTION + "/n" + Tag.LASTS + "/n" + Tag.COINS + "/n" + Tag.COST + "/n" + Tag.ERROR),
+    COIN_ITEM_DESCRIPTION(Tag.THEME + "Description: " + Tag.SECONDARY + Tag.DESCRIPTION),
+    COIN_ITEM_LAST(Tag.THEME + "Lasts: " + Tag.SECONDARY + Tag.TIME + " seconds"),
+    COIN_ITEM_COST(Tag.THEME + "Cost: " + Tag.SECONDARY + Tag.CURRENCY + Tag.AMOUNT),
+    COIN_ITEM_COINS(Tag.THEME + "Coins: " + Tag.SECONDARY + Tag.AMOUNT),
+    COIN_ITEM_ERROR_1("You don't have permission to use this item!"),
+    COIN_ITEM_ERROR_2("You don't have enough coins!"),
+    COIN_ITEM_ERROR_3("You don't have enough money!");
+
+    ;
 
     private final String defaultString;
     private String string;

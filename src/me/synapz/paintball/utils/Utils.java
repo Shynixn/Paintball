@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import static me.synapz.paintball.storage.Settings.ARENA;
 import static org.bukkit.ChatColor.RED;
 
 public class Utils {
@@ -248,6 +249,10 @@ public class Utils {
      */
     public static boolean contains(ItemStack item, String name) {
         return item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().contains(name);
+    }
+
+    public static Sound loadSound(String strSound) {
+        return (strSound.equals("")) ? null : Utils.strToSound(strSound);
     }
 
     /*

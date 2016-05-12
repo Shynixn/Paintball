@@ -18,7 +18,12 @@ public enum Tag {
     THEME,
     TIME,
     SECONDARY,
-    PREFIX;
+    PREFIX,
+    DESCRIPTION,
+    CURRENCY,
+    LASTS,
+    COINS,
+    COST;
 
     @Override
     public String toString() {

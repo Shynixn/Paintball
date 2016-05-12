@@ -1,10 +1,13 @@
 package me.synapz.paintball.coin;
 
 import me.synapz.paintball.enums.Items;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.events.ArenaBuyItemEvent;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -179,13 +182,13 @@ public class CoinItem extends ItemStack {
         List<String> builder = new ArrayList<>();
 
         if (this.hasPermission() && !player.getPlayer().hasPermission(permission)) {
-            builder.add("You don't have permission to use this item!");
+            builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_1).build());
         } else {
             if (this.requiresCoins() && player.getCoins() < this.getCoins())
-                builder.add("You don't have enough coins ");
+                builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_2).build());
 
             if (this.requiresMoney() && Settings.VAULT && Settings.ECONOMY.getBalance(player.getPlayer()) < getMoney())
-                builder.add("You don't have enough money");
+                builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_3).build());
         }
 
         if (!builder.isEmpty()) {

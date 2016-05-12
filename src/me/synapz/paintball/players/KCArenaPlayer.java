@@ -41,5 +41,11 @@ public class KCArenaPlayer extends ArenaPlayer {
     public void score() {
         arena.incrementTeamScore(team, true);
         arena.updateAllScoreboard();
+
+        player.getWorld().playSound(player.getLocation(), ((KCArena) arena).killConfirmedSound, 5, 5);
+    }
+
+    public void deny() {
+        player.getWorld().playSound(player.getLocation(), ((KCArena) arena).killDeniedSound, 5, 5);
     }
 }
