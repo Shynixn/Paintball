@@ -9,6 +9,7 @@ public enum Databases {
     USERNAME("SQL.username", "admin", ReturnType.STRING),
     PASSWORD("SQL.password", "password", ReturnType.STRING),
     DATABASE("SQL.database", "Paintball", ReturnType.STRING),
+    TABLE("SQL.table", "Paintball_Stats", ReturnType.STRING),
 
     BUNGEE_ENABLED("Bungee.enabled", false, ReturnType.BOOLEAN),
     SERVER_ID("Bungee.serverID", "Generating", ReturnType.STRING),

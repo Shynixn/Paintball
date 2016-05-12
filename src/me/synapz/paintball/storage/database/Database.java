@@ -23,7 +23,7 @@ public abstract class Database {
         this.port = Databases.PORT.getInteger();
         this.username = Databases.USERNAME.getString();
         this.password = Databases.PASSWORD.getString();
-        this.statsTable = "Paintball_Stats";
+        this.statsTable = Databases.TABLE.getString();
     }
 
     public abstract void openConnection() throws SQLException;
