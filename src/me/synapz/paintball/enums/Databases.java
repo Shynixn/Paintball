@@ -2,14 +2,14 @@ package me.synapz.paintball.enums;
 
 public enum Databases {
 
-    SQL_ENABLED("SQL.enabled", false, ReturnType.BOOLEAN),
-    MY_SQL("SQL.MySQL", true, ReturnType.BOOLEAN),
-    HOST("SQL.host", "localhost", ReturnType.STRING),
-    PORT("SQL.port", 1433, ReturnType.INT),
-    USERNAME("SQL.username", "admin", ReturnType.STRING),
-    PASSWORD("SQL.password", "password", ReturnType.STRING),
-    DATABASE("SQL.database", "Paintball", ReturnType.STRING),
-    TABLE("SQL.table", "Paintball_Stats", ReturnType.STRING),
+    SQL_ENABLED("Database.enabled", false, ReturnType.BOOLEAN),
+    MY_SQL("Database.Use-MySQL", true, ReturnType.BOOLEAN),
+    HOST("Database.host", "localhost", ReturnType.STRING),
+    PORT("Database.port", 3306, ReturnType.INT),
+    USERNAME("Database.username", "username", ReturnType.STRING),
+    PASSWORD("Database.password", "password", ReturnType.STRING),
+    DATABASE("Database.database", "Paintball", ReturnType.STRING),
+    TABLE("Database.table", "Paintball_Stats", ReturnType.STRING),
 
     BUNGEE_ENABLED("Bungee.enabled", false, ReturnType.BOOLEAN),
     SERVER_ID("Bungee.serverID", "Generating", ReturnType.STRING),
