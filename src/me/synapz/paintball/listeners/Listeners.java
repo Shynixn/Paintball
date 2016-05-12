@@ -152,7 +152,11 @@ public class Listeners extends BaseListener implements Listener {
                     for (Team t : a.getArenaTeamList()) {
                         if (name.contains(t.getTitleName())) {
                             if (!t.isFull()) {
-                                lobbyPlayer.setTeam(t);
+                                if (t.getSize() - gamePlayer.getTeam().getSize() > 0) {
+                                    lobbyPlayer.setTeam(t);
+                                } else {
+                                    Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " has too many players!");
+                                }
                             } else {
                                 Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
                                 break;
@@ -217,8 +221,12 @@ public class Listeners extends BaseListener implements Listener {
                     for (Team t : a.getArenaTeamList()) {
                         if (name.contains(t.getTitleName())) {
                             if (!t.isFull()) {
-                                LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
-                                lobbyPlayer.setTeam(t);
+                                if (t.getSize() - gamePlayer.getTeam().getSize() > 0) {
+                                    LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
+                                    lobbyPlayer.setTeam(t);
+                                } else {
+                                    Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " has too many players!");
+                                }
                             } else {
                                 Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
                             }
