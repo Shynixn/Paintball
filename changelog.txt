@@ -1,10 +1,10 @@
-v4.2.5
-<<<<<<< HEAD
+v4.2.6
 - Fixed players from being able to switch onto a team before having a playable game
-=======
+- Accidentally removed HolographicDisplay leaderboards from updating, re-added.
+
+v4.2.5
 - Added ten important messages player's see right when they join
 - Fixed internal error message
->>>>>>> 6e6084f9de037adee8999208d02a0ef5b8cd1622
 
 v4.2.4
 - Renamed database.yml's SQL Settings to Database Settings

@@ -159,7 +159,7 @@ public class Listeners extends BaseListener implements Listener {
                                 // then the game is playable because it is not a 2v0.
                                 // Also, if the team they are switching to is already empty, they will not need to worry about this at all
                                 for (Team team : a.getArenaTeamList()) {
-                                    if (team.getSize() > 0 && team != t&& !teamsBalanced) {
+                                    if ((team == lobbyPlayer.getTeam() ? team.getSize()-1 : team.getSize()) > 0 && team != t && !teamsBalanced) {
                                         teamsBalanced = true;
                                     }
                                 }

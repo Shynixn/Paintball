@@ -176,5 +176,27 @@ public class ArenaManager {
                     break; // should never happen
             }
         }
+
+        if (Settings.HOLOGRAPHIC_DISPLAYS) {
+            Collection<Hologram> holograms = HologramsAPI.getHolograms(JavaPlugin.getProvidingPlugin(Paintball.class));
+
+            for (Hologram holo : holograms) {
+                String line = ChatColor.stripColor(holo.getLine(0).toString());
+                StatType type = null;
+                int page;
+
+                if (holo.getLine(0).toString().contains("Top")) {
+                    page = Integer.parseInt(line.split(" ")[14]);
+                } else {
+                    type = StatType.getStatType(null, line.split(" ")[13]);
+                    page = Integer.parseInt(line.split(" ")[15].split("/")[0]);
+                }
+                holo.clearLines();
+
+                for (String statLine : PLAYERDATA.getPage(type, page)) {
+                    holo.appendTextLine(statLine);
+                }
+            }
+        }
     }
 }
