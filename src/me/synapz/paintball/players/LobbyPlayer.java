@@ -3,10 +3,13 @@ package me.synapz.paintball.players;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.countdowns.ChangeTeamCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.ScoreboardLine;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
@@ -96,9 +99,9 @@ public class LobbyPlayer extends PaintballPlayer {
      */
     @Override
     protected void showMessages() {
-        arena.broadcastMessage(team.getChatColor() + player.getName() + GREEN + " has joined the arena! " + GRAY + arena.getLobbyPlayers().size() + "/" + arena.getMax());
-        arena.broadcastTitle(GREEN + "Joined arena", GRAY + "" + arena.getLobbyPlayers().size() + "/" + arena.getMax(), 20, 20, 20);
-        Messenger.titleMsg(player, true, GREEN + "You have joined the arena!");
+        arena.broadcastMessage(new MessageBuilder(Messages.ARENA_JOIN_MESSAGE).replace(Tag.TEAM_COLOR, team.getChatColor().toString()).replace(Tag.SENDER, player.getName()).replace(Tag.AMOUNT, arena.getLobbyPlayers().size() + "").replace(Tag.MAX, arena.getMax() + "").build());
+        arena.broadcastTitle(Messages.ARENA_JOINED.getString(), new MessageBuilder(Messages.ARENA_SIZE).replace(Tag.AMOUNT, arena.getLobbyPlayers().size() + "").replace(Tag.MAX, arena.getMax() + "").build(), 20, 20, 20);
+        Messenger.titleMsg(player, true, Messages.ARENA_YOU_JOINED.getString());
     }
 
     /**
@@ -152,7 +155,7 @@ public class LobbyPlayer extends PaintballPlayer {
         team.playerLeaveTeam();
         team = newTeam;
         team.playerJoinTeam();
-        Messenger.titleMsg(player, true, GREEN + "You are now on the " + team.getChatColor() + team.getTitleName() + " Team!");
+        Messenger.titleMsg(player, true, new MessageBuilder(Messages.ARENA_TEAM_CHANGE).replace(Tag.TEAM_COLOR, team.getChatColor().toString()).replace(Tag.TEAM, team.getTitleName()).build());
         updateDisplayName();
 
         if (arena.TELEPORT_TEAM_SWITCH)

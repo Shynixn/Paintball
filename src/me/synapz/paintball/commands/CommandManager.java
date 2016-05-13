@@ -109,7 +109,7 @@ public class CommandManager implements CommandExecutor{
                 command.onCommand(player, args);
             }
         } catch (Exception e) {
-            Messenger.error(player, Messages.INTERNAL_ERROR);
+            Messenger.error(player, new MessageBuilder(Messages.INTERNAL_ERROR).replace(Tag.ERROR, e.getMessage()).build());
             e.printStackTrace();
         }
     }
