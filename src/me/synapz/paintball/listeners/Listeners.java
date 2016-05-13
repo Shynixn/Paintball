@@ -152,11 +152,22 @@ public class Listeners extends BaseListener implements Listener {
                     for (Team t : a.getArenaTeamList()) {
                         if (name.contains(t.getTitleName())) {
                             if (!t.isFull()) {
-                                if (t.getSize() - gamePlayer.getTeam().getSize() > 0) {
-                                    lobbyPlayer.setTeam(t);
-                                } else {
-                                    Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " has too many players!");
+                                boolean teamsBalanced = (t.getSize() == 0);
+
+                                // Loops through all teams
+                                // If there is at least one team (other than the one they are switching to) that has more than 1 player
+                                // then the game is playable because it is not a 2v0.
+                                // Also, if the team they are switching to is already empty, they will not need to worry about this at all
+                                for (Team team : a.getArenaTeamList()) {
+                                    if (team.getSize() > 0 && team != t&& !teamsBalanced) {
+                                        teamsBalanced = true;
+                                    }
                                 }
+
+                                if (teamsBalanced)
+                                    lobbyPlayer.setTeam(t);
+                                else
+                                    Messenger.error(player, Messages.ARENA_TEAMS_NOT_BALANCED);
                             } else {
                                 Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
                                 break;

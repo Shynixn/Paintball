@@ -106,6 +106,7 @@ public enum Messages {
     SKULL_LEADERBOARD_REMOVED("Leaderboard skull has been successfully removed!"),
 
     ARENA_START_MESSAGE("Game started"),
+    ARENA_TEAMS_NOT_BALANCED("You cannot change to this team until the teams are balanced."),
 
     KILL_CONFIRMED("&e&lKill Confirmed!"),
     KILL_DENIED("&c&lKill Denied!"),

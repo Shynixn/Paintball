@@ -1,3 +1,6 @@
+v4.2.5
+- Fixed players from being able to switch onto a team before having a playable game
+
 v4.2.4
 - Renamed database.yml's SQL Settings to Database Settings
 - Added SQL configurable table name
