@@ -1,9 +1,12 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -24,7 +27,7 @@ public abstract class FlagArenaPlayer extends ArenaPlayer {
     public void dropFlag() {
         dropped++;
 
-        arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + player.getName() + " has dropped the flag!");
+        arena.broadcastMessage(Settings.THEME + new MessageBuilder(Messages.ARENA_FLAG_DROP).replace(Tag.TEAM, team.getTitleName()).build());
 
         removeFlag();
     }
@@ -35,7 +38,7 @@ public abstract class FlagArenaPlayer extends ArenaPlayer {
 
         captured++;
 
-        arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + "The " + team.getTitleName() + " has scored a flag!");
+        arena.broadcastMessage(Settings.THEME + new MessageBuilder(Messages.ARENA_FLAG_SCORE).replace(Tag.TEAM, team.getTitleName()).build());
 
         arena.incrementTeamScore(team, true);
         arena.updateAllScoreboard();
@@ -55,7 +58,7 @@ public abstract class FlagArenaPlayer extends ArenaPlayer {
         if (pickedUp == null)
             return;
 
-        arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + player.getName() + " has stolen " + pickedUp.getTitleName() + "'s flag!");
+        arena.broadcastMessage(Settings.THEME + new MessageBuilder(Messages.ARENA_FLAG_STEAL).replace(Tag.SENDER, player.getName()).replace(Tag.TEAM, pickedUp.getTitleName()).build());
 
         player.getInventory().setHelmet(Utils.makeBanner(pickedUp.getChatColor() + pickedUp.getTitleName() + "'s Flag", pickedUp.getDyeColor()));
         player.updateInventory();

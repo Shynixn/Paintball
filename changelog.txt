@@ -1,3 +1,7 @@
+v4.2.5
+- Added ten important messages player's see right when they join
+- Fixed internal error message
+
 v4.2.4
 - Renamed database.yml's SQL Settings to Database Settings
 - Added SQL configurable table name

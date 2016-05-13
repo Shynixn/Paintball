@@ -5,6 +5,9 @@ import org.bukkit.ChatColor;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
 import static me.synapz.paintball.storage.Settings.THEME;
+import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
 
 public enum Messages {
 
@@ -72,7 +75,7 @@ public enum Messages {
     INVALID_TEAM(Tag.TEAM + " is an invalid team. Choose either <" + Tag.TEAMS + ">"),
     INVALID_STAT(Tag.STAT + " is an invalid statistic. Choose either " + Tag.STATS),
     INVALID_COMMAND("Unknown Command! Type /paintball for a list of commands."),
-    INTERNAL_ERROR("An internal error has occurred: "),
+    INTERNAL_ERROR("An internal error has occurred: %error%"),
     NO_PERMISSION("You don't have access to that command!"),
     NO_CONSOLE_PERMISSION("Console does not have access to that command!"),
     NO_TEAMS_SET(Tag.ARENA + " does not have any teams set!"),
@@ -81,6 +84,15 @@ public enum Messages {
     DISABLE_SUCCESS(Tag.ARENA + " has been disabled!"),
     ENABLE_SUCCESS(Tag.ARENA + " has been enabled!"),
     ARENA_ENABLED(Tag.ARENA + " is already enabled."),
+
+    ARENA_FLAG_DROP("&lThe " + Tag.SECONDARY + Tag.TEAM + Tag.THEME + " team has dropped the flag!"),
+    ARENA_FLAG_SCORE("&lThe " + Tag.SECONDARY + Tag.TEAM + Tag.THEME + " team has scored a flag!"),
+    ARENA_FLAG_STEAL("&lPlayer " + Tag.SECONDARY + Tag.SENDER + Tag.THEME + " has stolen " + Tag.SECONDARY + Tag.TEAM + Tag.THEME + "'s flag!"),
+    ARENA_JOIN_MESSAGE(Tag.TEAM_COLOR + "" + Tag.SENDER + "&a has joined the arena! &7" + Tag.AMOUNT + "/" + Tag.MAX),
+    ARENA_YOU_JOINED("&aYou have joined the arena!"),
+    ARENA_JOINED("&aJoined arena"),
+    ARENA_SIZE("&7" + Tag.AMOUNT + "/" + Tag.MAX),
+    ARENA_TEAM_CHANGE("&aYou are now on the " + Tag.TEAM_COLOR + "" + Tag.TEAM + " Team!"),
 
     SCOREBOARD_TITLE(Tag.THEME + "&l  Paintball &f" + Tag.SECONDARY + "%time%  "),
     SCOREBOARD_COINS("Coins &7» " + Tag.AMOUNT),

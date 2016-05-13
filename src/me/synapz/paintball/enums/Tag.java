@@ -23,7 +23,8 @@ public enum Tag {
     CURRENCY,
     LASTS,
     COINS,
-    COST;
+    COST,
+    TEAM_COLOR;
 
     @Override
     public String toString() {
