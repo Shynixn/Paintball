@@ -63,7 +63,6 @@ public class Paintball extends JavaPlugin implements Listener {
         }
 
         new Update(this);
-        ScoreboardLine.loadScoreboardLines();
     }
 
     @Override

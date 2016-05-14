@@ -5,6 +5,7 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.coin.CoinItems;
 import me.synapz.paintball.enums.Databases;
+import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.storage.database.Database;
 import me.synapz.paintball.storage.database.MySQLManager;
 import me.synapz.paintball.storage.database.SQLiteManager;
@@ -83,6 +84,7 @@ public class Settings {
         ARENA = new ArenaFile(pb);
         MESSAGES = new MessagesFile(pb);
         ARENA_FILE = ARENA.getFileConfig();
+        ScoreboardLine.loadScoreboardLines();
 
         // Tries to connect to database if SQL is enabled. If not, attempts to load previous data from the database and
         // transfers to playerdata.yml if the table exists, then drops the table.

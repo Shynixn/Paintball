@@ -1,6 +1,11 @@
+v4.2.7
+- Fixed Scoreboard Lines not being reloaded from messages.yml on /pb admin reload
+- Updated to 1.9.4
+
 v4.2.6
 - Fixed players from being able to switch onto a team before having a playable game
 - Accidentally removed HolographicDisplay leaderboards from updating, re-added.
+- More messages
 
 v4.2.5
 - Added ten important messages player's see right when they join
