@@ -5,6 +5,7 @@ import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
 import me.synapz.paintball.coin.CoinItems;
 import me.synapz.paintball.countdowns.*;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Team;
@@ -242,7 +243,7 @@ public class ArenaPlayer extends PaintballPlayer {
         CoinItems.getCoinItems().getMainItem().giveItemToPlayer(this);
 
         if (arena.COIN_SHOP)
-            inv.setItem(8, Utils.makeItem(Material.MAGMA_CREAM, ChatColor.GOLD + "Coin Shop", 1));
+            inv.setItem(8, Utils.makeItem(Material.MAGMA_CREAM, Messages.ARENA_SHOP_NAME.getString(), 1));
 
         if (arena.ARENA_WOOL_HELMET)
             giveWoolHelmet();

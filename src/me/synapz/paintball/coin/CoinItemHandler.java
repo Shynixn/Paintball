@@ -1,6 +1,7 @@
 package me.synapz.paintball.coin;
 
 import me.synapz.paintball.enums.Items;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,7 +30,7 @@ public class CoinItemHandler {
 
     public void showInventory(ArenaPlayer arenaPlayer) {
         Player player = arenaPlayer.getPlayer();
-        Inventory inv = Bukkit.createInventory(null, 18, ChatColor.GOLD + "Coin Shop");
+        Inventory inv = Bukkit.createInventory(null, 18, Messages.ARENA_SHOP_NAME.getString());
         Map<Integer, CoinItem> sortedItems = new HashMap<>();
 
         for (CoinItem item : items.values()) {

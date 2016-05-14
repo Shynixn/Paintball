@@ -1,6 +1,9 @@
 package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
+import me.synapz.paintball.utils.MessageBuilder;
 
 import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;
@@ -12,15 +15,15 @@ public class LobbyCountdown extends PaintballCountdown {
     }
 
     public void onFinish() {
-        arena.broadcastMessage(GREEN + "Teleporting into arena...");
+        arena.broadcastMessage(Messages.TELEPORTING);
         arena.startGame();
         this.cancel();
     }
 
     // Called every iteration of run()
     public void onIteration() {
-        String prefix = GREEN + "Waiting";
-        String suffix = GRAY + "" + ((int) counter) + GREEN + " seconds!";
+        String prefix = Messages.ARENA_LOBBY_COUNTDOWN_HEADER.getString();
+        String suffix = new MessageBuilder(Messages.ARENA_LOBBY_COUNTDOWN_FOOTER).replace(Tag.TIME, ((int) counter) + "").build();
 
         arena.broadcastMessage(prefix + " " + suffix);
         arena.broadcastTitle(prefix, suffix, 0, 30, 20);

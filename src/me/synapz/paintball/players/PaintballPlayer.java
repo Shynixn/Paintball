@@ -135,7 +135,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
     @Override
     public void updateDisplayName() {
         if (pbSb != null) {
-            pbSb.setDisplayNameCounter(team.getChatColor() + "█ ", Utils.getCurrentCounter(arena));
+            pbSb.setDisplayNameCounter(team.getChatColor() + "█ ", Utils.getCurrentCounter(arena) == -1 ? arena.LOBBY_COUNTDOWN : Utils.getCurrentCounter(arena));
         }
     }
 }

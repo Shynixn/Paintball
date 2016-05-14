@@ -88,7 +88,7 @@ public class Listeners extends BaseListener implements Listener {
     // Don't let players break blocks in arena
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockBreakInArena(BlockBreakEvent e) {
-        if (stopAction(e.getPlayer(), "You are not allowed to break blocks while in the arena!"))
+        if (stopAction(e.getPlayer(), Messages.ARENA_CANNOT_BREAK_BLOCKS.getString()))
             e.setCancelled(true);
     }
 
@@ -107,7 +107,7 @@ public class Listeners extends BaseListener implements Listener {
             // If the command is in blocked commands, block it. If the command is in allowed commands, return.
             if (arena.BLOCKED_COMMANDS.contains(baseCommand)) {
                 e.setCancelled(true);
-                Messenger.error(player, "That command is disabled while in the arena.");
+                Messenger.error(player, Messages.ARENA_COMMAND_DISABLED);
                 return;
             } else if (arena.ALLOWED_COMMANDS.contains(baseCommand)) {
                 return;
@@ -115,7 +115,7 @@ public class Listeners extends BaseListener implements Listener {
                 return;
             } else if (arena.DISABLE_ALL_COMMANDS) {
                 e.setCancelled(true);
-                Messenger.error(player, "That command is disabled while in the arena.");
+                Messenger.error(player, Messages.ARENA_COMMAND_DISABLED);
                 return;
             }
         }
@@ -124,7 +124,7 @@ public class Listeners extends BaseListener implements Listener {
     // Don't let players place blocks in arena
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlaceInArena(BlockPlaceEvent e) {
-        if (stopAction(e.getPlayer(), "You are not allowed to place blocks while in the arena!"))
+        if (stopAction(e.getPlayer(), Messages.ARENA_CANNOT_BREAK_BLOCKS.getString()))
             e.setCancelled(true);
     }
 
@@ -191,7 +191,7 @@ public class Listeners extends BaseListener implements Listener {
             ArenaPlayer arenaPlayer = (ArenaPlayer) gamePlayer;
 
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (name.contains("Coin Shop")) {
+                if (name.contains(Messages.ARENA_SHOP_NAME.getString())) {
                     arenaPlayer.giveShop();
                     e.setCancelled(true);
                     return;
@@ -247,7 +247,7 @@ public class Listeners extends BaseListener implements Listener {
                     player.closeInventory();
                 } else {
                     e.setCancelled(true);
-                    Messenger.error(player, "You are not allowed to move items in your inventory!");
+                    Messenger.error(player, Messages.ARENA_MOVE_ERROR);
                     player.closeInventory();
                 }
                 e.setCancelled(true);
@@ -258,17 +258,17 @@ public class Listeners extends BaseListener implements Listener {
 
                     ((SpectatorPlayer) gamePlayer).spectate(target);
                 } else {
-                    Messenger.error(player, "You are not allowed to move items in your inventory!");
+                    Messenger.error(player, Messages.ARENA_MOVE_ERROR);
                     e.setCancelled(true);
                     player.closeInventory();
                 }
                 e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
-                if (player.getOpenInventory().getTitle().contains("Horse") || Utils.contains(clickedItem, "Team") || Utils.contains(clickedItem, "Flag") || Utils.equals(clickedItem, ChatColor.GOLD + "Coin Shop") || player.getOpenInventory().getTitle().contains("Coin Shop")) {
+                if (player.getOpenInventory().getTitle().contains("Horse") || Utils.contains(clickedItem, "Team") || Utils.contains(clickedItem, "Flag") || Utils.equals(clickedItem, ChatColor.GOLD + Messages.ARENA_SHOP_NAME.getString()) || player.getOpenInventory().getTitle().contains(Messages.ARENA_SHOP_NAME.getString())) {
                     e.setCancelled(true);
 
-                    if (!player.getOpenInventory().getTitle().contains("Coin Shop"))
-                        Messenger.error(player, "You are not allowed to move items in your inventory!");
+                    if (!player.getOpenInventory().getTitle().contains(Messages.ARENA_SHOP_NAME.getString()))
+                        Messenger.error(player, Messages.ARENA_MOVE_ERROR);
                     player.closeInventory();
                 }
             }
@@ -336,7 +336,7 @@ public class Listeners extends BaseListener implements Listener {
         Player player = (Player) e.getWhoClicked();
 
         if (isInArena(player))
-            e.setCancelled(e.getRawSlot() == 45 && stopAction(player, "You are not allowed to duel wield!"));
+            e.setCancelled(e.getRawSlot() == 45 && stopAction(player, Messages.ARENA_NO_DUEL_WIELD.getString()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -415,7 +415,7 @@ public class Listeners extends BaseListener implements Listener {
         String shooterPlayerName = arenaPlayer.getPlayer().getName();
 
         if (a.getState() == Arena.ArenaState.STOPPING) {
-            Messenger.error(arenaPlayer.getPlayer(), "Game is already finished.");
+            Messenger.error(arenaPlayer.getPlayer(), Messages.ARENA_IS_FINISHED.getString());
             event.setCancelled(true);
             return;
         }
@@ -445,7 +445,7 @@ public class Listeners extends BaseListener implements Listener {
             clickedItem = arenaPlayer.getLastClickedItem();
 
         if (hitPlayer.hit(arenaPlayer.getTeam(), clickedItem == null ? 1 : clickedItem.getDamage())) {
-            String action = "shot";
+            String action = Messages.ARENA_DEFAULT_ACTION.getString();
 
             if (clickedItem != null)
                 action = clickedItem.getAction();
@@ -517,7 +517,7 @@ public class Listeners extends BaseListener implements Listener {
 
                                 ((CTFArena) arena).remFlagLocation(clickedLoc);
                             } else {
-                                Messenger.error(player, "You cannot pickup your own team's flag!");
+                                Messenger.error(player, Messages.ARENA_CANNOT_PICKUP_FLAG.getString());
                             }
                             return;
                         } else {

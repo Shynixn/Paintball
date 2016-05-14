@@ -1,3 +1,9 @@
+v4.2.8
+- Finished adding arena countdown messages to messages.yml
+- Added arena shop to messages @
+- Around 20 new messages
+- Fixed LobbyPlayer's scoreboard showing -1 sometimes
+
 v4.2.7
 - Fixed Scoreboard Lines not being reloaded from messages.yml on /pb admin reload
 - Updated to 1.9.4

@@ -2,6 +2,7 @@ package me.synapz.paintball.coin;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.events.ArenaBuyItemEvent;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;
@@ -40,7 +41,7 @@ public class CoinItemListener implements Listener {
         if (coinItem == null) {
             return;
         }
-        if (!e.getInventory().getName().contains("Coin Shop")) {
+        if (!e.getInventory().getName().contains(Messages.ARENA_SHOP_NAME.getString())) {
             return;
         }
         if (coinItem.hasError(arenaPlayer)) {

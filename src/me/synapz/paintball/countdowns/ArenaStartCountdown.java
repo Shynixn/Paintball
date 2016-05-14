@@ -4,9 +4,11 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.arenas.FlagArena;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.ActionBar;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -50,10 +52,10 @@ public class ArenaStartCountdown extends PaintballCountdown {
 
     // Called every iteration of run()
     public void onIteration() {
-        String prefix = GREEN + "Starting";
-        String suffix = GRAY + "" + ((int) counter) + GREEN + " seconds!";
+        String prefix = Messages.ARENA_START_COUNTDOWN_HEADER.getString();
+        String suffix = new MessageBuilder(Messages.ARENA_START_COUNTDOWN_FOOTER).replace(Tag.TIME, ((int) counter) + "").build();
 
-        arena.broadcastMessage(prefix + " "+ suffix);
+        arena.broadcastMessage(prefix + " " + suffix);
         arena.broadcastTitle(prefix, suffix, 0, 30, 20);
     }
 
