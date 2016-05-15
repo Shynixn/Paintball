@@ -1,3 +1,6 @@
+v2.3.1
+- Fixed player's stats not being reset because their health scale was edited by another plugin (<20) (@Jame)
+
 v4.3.0
 - Fixed (sometimes) ConcurrentModificationException in DTC (@enarkay)
 - Fixed plugin breaking stairs & half slabs on flag drops
