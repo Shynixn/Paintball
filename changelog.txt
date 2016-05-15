@@ -1,8 +1,14 @@
+v4.3.0
+- Fixed (sometimes) ConcurrentModificationException in DTC (@enarkay)
+- Fixed plugin breaking stairs & half slabs on flag drops
+- Fixed not being able to re-set teams on FFAArena because of the auto max
+- Fixed /nnavy blue showing to the next line because it saw /n as a newline
+
 v4.2.9
-- Added fireworks to play for the winning team(s) after an arena ends (@theCav)
-- Added ability to change Coin Shop item (@November_Kilo - set coin-shop-type to GOLD_NUGGET)
-- Fixed DTCArena Core's being able to be shot 2 blocks away (@HewDaily)
-- Added Arena game mode names & descriptions to messages.yml (@enarkay)
+- for the winning team(s) after an arena ends
+- Added ability to change Coin Shop item
+- Fixed DTCArena Core's being able to be shot 2 blocks away
+- Added Arena game mode names & descriptions to messages.yml
 
 v4.2.8
 - Finished adding arena countdown messages to messages.yml

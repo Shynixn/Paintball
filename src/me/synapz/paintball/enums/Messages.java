@@ -66,7 +66,7 @@ public enum Messages {
     PAGE_BIGGER("The page cannot be lower than 0"),
     PAGE_FIND_ERROR("Page " + Tag.AMOUNT + "/" + Tag.MAX + " cannot be found."),
     ARENA_CREATE(Tag.ARENA + " successfully created!/n" + Tag.STEPS),
-    ARENA_NAME_EXISTS("An arena named" + Tag.ARENA + " already exists!"),
+    ARENA_NAME_EXISTS("An arena named " + Tag.ARENA + " already exists!"),
     ARENA_REMOVE("Arena has been removed."),
     ARENA_FORCE_STOPPED(Tag.ARENA + " has been force stopped!"),
     ARENA_CONVERT_SAME_TYPE(Tag.ARENA + " is already a " + Tag.ARENA_TYPE + " arena."),

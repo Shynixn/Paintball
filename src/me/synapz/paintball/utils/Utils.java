@@ -167,8 +167,15 @@ public class Utils {
     public static Location createFlag(Team team, Location location) {
         DyeColor color = team == null ? DyeColor.WHITE : team.getDyeColor();
 
+        // Makes sure the bottom block is not air, because barriers cannot be palced over air
         while (location.clone().subtract(0, 1, 0).getBlock().getType() == Material.AIR && location.getBlockY() > 0)
             location.subtract(0, 1, 0);
+
+        // Makes sure the block is not a stair or a slab, those are half blocks and the plugin will break those blocks
+        String name = location.clone().getBlock().getType().toString();
+        while (name.contains("STAIRS") || name.contains("SLAB"))
+            location.add(0, 1, 0);
+
 
         // Sets the location to a banner then updates the banner to the team color
         location.getBlock().setType(Material.STANDING_BANNER);

@@ -5,6 +5,8 @@ import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
 
@@ -15,7 +17,7 @@ public class Rename extends ArenaCommand {
 		 Arena newArena = ArenaManager.getArenaManager().getArena(args[3]);
 
 		 if (newArena != null) {
-			 Messenger.error(player, "An arena named " + newName + " already exists!");
+			 Messenger.error(player, new MessageBuilder(Messages.ARENA_NAME_EXISTS).replace(Tag.ARENA, newName).build());
 			 return;
 		 } else {
 			 arena.rename(newName);

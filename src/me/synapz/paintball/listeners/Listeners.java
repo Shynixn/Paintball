@@ -309,7 +309,7 @@ public class Listeners extends BaseListener implements Listener {
 
                         // Turn the team into spectator mode since their core was destroyed & reset the core
                         if (score == arena.MAX_SCORE) {
-                            for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
+                            for (ArenaPlayer arenaPlayer : new ArrayList<>(arena.getAllArenaPlayers())) {
                                 if (arenaPlayer.getTeam() == hitTeam) {
                                     Messenger.error(arenaPlayer.getPlayer(), "Your Core has been destroyed!");
                                     arenaPlayer.turnToSpectator();

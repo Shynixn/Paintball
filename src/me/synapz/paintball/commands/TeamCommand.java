@@ -85,9 +85,9 @@ public abstract class TeamCommand extends ArenaCommand {
         }
 
         if (!(validTeams.toString().contains(" " + teamString.toLowerCase() + " "))) {
-            // remove last space and replace spaces with /. So it should be <red/blue/green>
+            // remove last space and replace spaces with /. So it should be <red,blue,green>
             finalValidTeams = validTeams.substring(1, validTeams.lastIndexOf(" "));
-            Messenger.error(player, new MessageBuilder(Messages.INVALID_TEAM).replace(Tag.TEAM, teamString).replace(Tag.TEAMS, finalValidTeams.toString().replace(" ", "/")).build());
+            Messenger.error(player, new MessageBuilder(Messages.INVALID_TEAM).replace(Tag.TEAM, teamString).replace(Tag.TEAMS, finalValidTeams.toString().replace(" ", ",")).build());
             return false;
         } else {
             return true;

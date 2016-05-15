@@ -1,5 +1,6 @@
 package me.synapz.paintball.commands.arena;
 
+import me.synapz.paintball.arenas.FFAArena;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
@@ -22,7 +23,7 @@ public class SetTeams extends ArenaCommand {
         // used to make sure a team isn't added two times
         List<String> added = new ArrayList<String>();
             // The amount of teams have to be greater than or equal to the max, this will only check if min was never set
-        if (colors.size() > arena.getMax() && arena.getMax() != 0) {
+        if (colors.size() > arena.getMax() && arena.getMax() != 0 && !(arena instanceof FFAArena)) {
             Messenger.error(player, "The amount of teams (" + GRAY + colors.size()+ RED + ") must be greater than or equal to the max amount of players (" + GRAY + arena.getMax() + RED + ")!");
             return;
         }
