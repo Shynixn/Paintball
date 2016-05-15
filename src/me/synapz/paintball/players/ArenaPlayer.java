@@ -243,7 +243,7 @@ public class ArenaPlayer extends PaintballPlayer {
         CoinItems.getCoinItems().getMainItem().giveItemToPlayer(this);
 
         if (arena.COIN_SHOP)
-            inv.setItem(8, Utils.makeItem(Material.MAGMA_CREAM, Messages.ARENA_SHOP_NAME.getString(), 1));
+            inv.setItem(8, Utils.makeItem(arena.COIN_SHOP_TYPE, Messages.ARENA_SHOP_NAME.getString(), 1));
 
         if (arena.ARENA_WOOL_HELMET)
             giveWoolHelmet();

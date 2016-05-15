@@ -6,36 +6,40 @@ import org.bukkit.entity.Player;
 
 public enum ArenaType {
 
-    CTF("Capture the Flag", "Capture other team's flags and bring them to your base"),
-    TDM("Team Deathmatch", "Kill players on the other team"),
-    FFA("Free For All", "Everyone is on their own team"),
-    DOM("Domination", "Secure other team's beacon points"),
-    LTS("Last Team Standing", "Limited lives, last team standing wins"),
-    RTF("Rush the Flag", "Capture the neutral flag and bring it to your base"),
-    DTC("Destroy the Core", "Get to the other team's Core and shoot it to destroy it"),
-    SFG("Safe Guard", "Bring your zombie to your base by standing close to it"),
-    KC("Kill Confirmed", "After you kill a player, confirm the kill before the other team does");
+    CTF(Messages.CTF_LONG_NAME, Messages.CTF_DESCRIPTION, Messages.CTF_SHORT_NAME),
+    TDM(Messages.TDM_LONG_NAME, Messages.TDM_DESCRIPTION, Messages.TDM_SHORT_NAME),
+    FFA(Messages.FFA_LONG_NAME, Messages.FFA_DESCRIPTION, Messages.FFA_SHORT_NAME),
+    DOM(Messages.DOM_LONG_NAME, Messages.DOM_DESCRIPTION, Messages.DOM_SHORT_NAME),
+    LTS(Messages.LTS_LONG_NAME, Messages.LTS_DESCRIPTION, Messages.LTS_SHORT_NAME),
+    RTF(Messages.RTF_LONG_NAME, Messages.RTF_DESCRIPTION, Messages.RTF_SHORT_NAME),
+    DTC(Messages.DTC_LONG_NAME, Messages.DTC_DESCRIPTION, Messages.DTC_SHORT_NAME),
+    SFG(Messages.SFG_LONG_NAME, Messages.SFG_DESCRIPTION, Messages.SFG_SHORT_NAME),
+    KC(Messages.KC_LONG_NAME, Messages.KC_DESCRIPTION, Messages.KC_SHORT_NAME);
 
-    private String fullName;
-    private String shortName;
-    private String gameInfo;
+    private Messages fullName;
+    private Messages shortName;
+    private Messages gameInfo;
 
-    private ArenaType(String fullName, String gameInfo) {
+    ArenaType(Messages fullName, Messages gameInfo, Messages shortName) {
         this.fullName = fullName;
-        this.shortName = toString().toLowerCase();
+        this.shortName = shortName;
         this.gameInfo = gameInfo;
     }
 
     public String getFullName() {
-        return fullName;
+        return fullName.getString();
     }
 
     public String getShortName() {
-        return shortName;
+        return shortName.getString();
+    }
+
+    public String getStaticName() {
+        return this.toString();
     }
 
     public String getGameInfo() {
-        return gameInfo;
+        return gameInfo.getString();
     }
 
     public static ArenaType getArenaType(Player sender, String strType) {
@@ -46,7 +50,7 @@ public enum ArenaType {
             return FFA;
 
         for (ArenaType t : ArenaType.values()) {
-            if (t.getFullName().equalsIgnoreCase(strType) || t.getShortName().equalsIgnoreCase(strType))
+            if (t.getFullName().equalsIgnoreCase(strType) || t.getShortName().equalsIgnoreCase(strType) || t.getStaticName().equalsIgnoreCase(strType))
                 type = t;
         }
 
@@ -65,5 +69,4 @@ public enum ArenaType {
 
         return builder.substring(0, builder.lastIndexOf("/"));
     }
-
 }

@@ -18,12 +18,12 @@ import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.*;
 
@@ -58,6 +58,7 @@ public class Arena {
     public String ARENA_CHAT;
     public String SPEC_CHAT;
     public String CURRENCY;
+    public Material COIN_SHOP_TYPE;
 
     public boolean COINS;
     public boolean FIREWORK_ON_DEATH;
@@ -135,7 +136,7 @@ public class Arena {
     }
 
     public void setArenaType(ArenaType type) {
-        ARENA_FILE.set(getPath() + "Type", type.getShortName());
+        ARENA_FILE.set(getPath() + "Type", type.getStaticName());
         Settings.ARENA.loadArenasFromFile();
     }
 
@@ -485,11 +486,19 @@ public class Arena {
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
             Player player = arenaPlayer.getPlayer();
             if (teams.contains(arenaPlayer.getTeam())) {
-                if (teams.size() != 1)
+                if (teams.size() != 1) {
                     arenaPlayer.setTie();
-                else
+                } else {
                     arenaPlayer.setWon();
+                }
+
+                final Firework firework = player.getWorld().spawn(player.getLocation().add(0, 4, 0), Firework.class);
+                FireworkMeta meta = firework.getFireworkMeta();
+                meta.addEffects(FireworkEffect.builder().withColor(arenaPlayer.getTeam().getColor(), arenaPlayer.getTeam().getColor()).withTrail().build());
+                firework.setVelocity(firework.getVelocity().multiply(10));
+                firework.setFireworkMeta(meta);
             }
+
             String spaces = Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(20);
             String title = THEME + " Games Stats ";
             Messenger.msg(player, spaces + title + spaces,
@@ -790,5 +799,7 @@ public class Arena {
 
         BLOCKED_COMMANDS           = config.getStringList("Commands.Blocked");
         ALLOWED_COMMANDS           = config.getStringList("Commands.Allowed");
+
+        COIN_SHOP_TYPE             = Utils.loadMaterial(ARENA.loadString("coin-shop-type", this), Material.MAGMA_CREAM);
     }
 }

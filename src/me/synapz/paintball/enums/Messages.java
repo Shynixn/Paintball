@@ -142,7 +142,43 @@ public enum Messages {
     COIN_ITEM_COINS(Tag.THEME + "Coins: " + Tag.SECONDARY + Tag.AMOUNT),
     COIN_ITEM_ERROR_1("You don't have permission to use this item!"),
     COIN_ITEM_ERROR_2("You don't have enough coins!"),
-    COIN_ITEM_ERROR_3("You don't have enough money!");
+    COIN_ITEM_ERROR_3("You don't have enough money!"),
+
+    CTF_SHORT_NAME("CTF"),
+    CTF_LONG_NAME("Capture the Flag"),
+    CTF_DESCRIPTION("Capture other team's flags and bring them to your base"),
+
+    TDM_SHORT_NAME("TDM"),
+    TDM_LONG_NAME("Team Deathmatch"),
+    TDM_DESCRIPTION("Kill players on the other team"),
+
+    FFA_SHORT_NAME("FFA"),
+    FFA_LONG_NAME("Free For All"),
+    FFA_DESCRIPTION("Everyone is on their own team"),
+
+    DOM_SHORT_NAME("DOM"),
+    DOM_LONG_NAME("Domination"),
+    DOM_DESCRIPTION("Secure other team's beacon points"),
+
+    LTS_SHORT_NAME("LTS"),
+    LTS_LONG_NAME("Last Team Standing"),
+    LTS_DESCRIPTION("Limited lives, last team standing wins"),
+
+    RTF_SHORT_NAME("RTF"),
+    RTF_LONG_NAME("Rush the Flag"),
+    RTF_DESCRIPTION("Capture the neutral flag and bring it to your base"),
+
+    DTC_SHORT_NAME("DTC"),
+    DTC_LONG_NAME("Destroy the Core"),
+    DTC_DESCRIPTION("Get to the other team's Core and shoot it to destroy it"),
+
+    SFG_SHORT_NAME("SFG"),
+    SFG_LONG_NAME("Safe Guard"),
+    SFG_DESCRIPTION("Bring your zombie to your base by standing close to it"),
+
+    KC_SHORT_NAME("KC"),
+    KC_LONG_NAME("Kill Confirmed"),
+    KC_DESCRIPTION("After you kill a player, confirm the kill before the other team does"),
 
     ;
 

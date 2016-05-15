@@ -289,7 +289,7 @@ public class Listeners extends BaseListener implements Listener {
                 Team hitTeam = null;
 
                 for (Location loc : dtcArena.getCoreLocations().keySet()) {
-                    if (hitLoc.distance(loc) <= 2) {
+                    if (hitLoc.distance(loc) <= 1) {
                         hitTeam = dtcArena.getCoreLocations().get(loc);
                     }
                 }

@@ -78,11 +78,11 @@ public class Settings {
 
     private void loadEverything() {
         loadSettings(); // loads everything in config.yml into constants
+        MESSAGES = new MessagesFile(pb);
         PLAYERDATA = new PlayerDataFile(pb);
         DATABASE_FILE = new DatabaseFile(pb);
         ITEMS = new ItemFile(pb);
         ARENA = new ArenaFile(pb);
-        MESSAGES = new MessagesFile(pb);
         ARENA_FILE = ARENA.getFileConfig();
         ScoreboardLine.loadScoreboardLines();
 

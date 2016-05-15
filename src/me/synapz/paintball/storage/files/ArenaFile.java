@@ -65,7 +65,7 @@ public class ArenaFile extends PaintballFile {
     public void addNewArenaToFile(Arena arena) {
         fileConfig.set(arena.getPath() + "Name", arena.getName());
         fileConfig.set(arena.getPath() + "Enabled", false);
-        fileConfig.set(arena.getPath() + "Type", arena.getArenaType().getShortName());
+        fileConfig.set(arena.getPath() + "Type", arena.getArenaType().getStaticName());
 
         ArenaManager.getArenaManager().getArenas().put(arena.getName(), arena);
         addNewConfigSection(arena);

@@ -72,6 +72,17 @@ public class Utils {
         return wool;
     }
 
+    public static Material loadMaterial(String material, Material notFound) {
+        Material found;
+
+        try {
+            found = Material.valueOf(material);
+        } catch (NoSuchFieldError exc) {
+            found = notFound;
+        }
+        return found;
+    }
+
     public static ItemStack getSkull(Player player, String name) {
         ItemStack skull = new ItemStack(397, 1, (short) 3);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
