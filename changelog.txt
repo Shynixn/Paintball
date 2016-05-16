@@ -1,3 +1,7 @@
+v4.3.1
+- Fixed FlagArena's drop flag on stair bug (@HewDaily)
+- Fixed FFA not balancing teams correctly
+
 v4.3.0
 - Fixed (sometimes) ConcurrentModificationException in DTC (@enarkay)
 - Fixed plugin breaking stairs & half slabs on flag drops

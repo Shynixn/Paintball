@@ -1,6 +1,7 @@
 package me.synapz.paintball.arenas;
 
 import me.synapz.paintball.enums.ArenaType;
+import me.synapz.paintball.enums.Team;
 
 public class FFAArena extends Arena {
 
@@ -14,6 +15,18 @@ public class FFAArena extends Arena {
     @Override
     public int getMax() {
         return getArenaTeamList().size();
+    }
+
+    /*
+    Since it is FFA, just put them into the arena with less players
+     */
+    @Override
+    protected Team getTeamWithLessPlayers() {
+        for (Team t : getArenaTeamList()) {
+            if (t.getSize() == 0)
+                return t;
+        }
+        return null;
     }
 
     @Override
