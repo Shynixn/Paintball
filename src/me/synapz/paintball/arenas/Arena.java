@@ -562,7 +562,7 @@ public class Arena {
 
 
     // Returns the team with less players for when someone joins
-    private Team getTeamWithLessPlayers() {
+    protected Team getTeamWithLessPlayers() {
         return Utils.max(this);
     }
 

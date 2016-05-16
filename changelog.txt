@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 v2.3.1
 - Fixed player's stats not being reset because their health scale was edited by another plugin (<20) (@Jame)
+=======
+v4.3.1
+- Fixed FlagArena's drop flag on stair bug (@HewDaily)
+- Fixed FFA not balancing teams correctly
+>>>>>>> 3a038ab0ba93cf1d3c5b2dcf1b891fa23a248239
 
 v4.3.0
 - Fixed (sometimes) ConcurrentModificationException in DTC (@enarkay)
