@@ -79,6 +79,21 @@ Per-Arena-Settings:
       # True - Will give a colored wool helmet. False - Will give a colored armour helmet
       wool-helmet: true
 
+    # If you want a command to be typed by a player, I recommend using Essential's sudo command
+    # Avaiable tags: %player%, %arena%
+    # To add commands, just add another - "" under the shown commands. By default these commands are disabled, remove the # to enable them
+    # List of commands that will be sent by the Console when a player wins
+    Win-Commands:
+    #- "say %player% has won on %arena%! :)"
+
+    # List of commands that will be sent by the Console when a player looses
+    Loose-Commands:
+    #- "say %player% has lost on %arena%! :("
+
+    # List of commands that will be sent by the Console when a player ties
+    Tie-Commands:
+    #- "say %player% has tied on %arena%! :I"
+
     # Specific extra settings for CTF arenas
     CTF:
       # Played sounds look at plugin page for the sound list specific to your version. By default there is no sound ("") because of different sound names for 1.8 and 1.9
@@ -101,6 +116,7 @@ Per-Arena-Settings:
       # Sound played on flag pickyup
       Flag-Pickup: "DIG_WOOL"
 
+    # Specific extra settings for DOM arenas
     DOM:
       # How long it takes for someone to secure a base
       secure-time: 10
@@ -113,6 +129,7 @@ Per-Arena-Settings:
       # Sound played when a player secures a base
       secure: "VILLAGER_YES"
 
+    # Specific extra settings for KC arenas
     KC:
       # Sound played when a player confirms a kill (picks up another team's wool)
       kill-confirmed: "ITEM_PICKUP"

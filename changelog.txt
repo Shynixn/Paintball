@@ -1,14 +1,17 @@
-<<<<<<< HEAD
-v2.3.1
-- Fixed player's stats not being reset because their health scale was edited by another plugin (<20) (@Jame)
-=======
+v2.3.3
+- Added Loose-Commands - Commands that will be typed when a player looses
+- Added Win-Commands   - Commands that will be typed when a player wins
+- Added Tie-Commands   - Commands that will be typed when a player ties
+
+v2.3.2
+- Fixed player's stats not being reset because their health scale was edited by another plugin (<20)
+
 v4.3.1
-- Fixed FlagArena's drop flag on stair bug (@HewDaily)
+- Fixed FlagArena's drop flag on stair bug
 - Fixed FFA not balancing teams correctly
->>>>>>> 3a038ab0ba93cf1d3c5b2dcf1b891fa23a248239
 
 v4.3.0
-- Fixed (sometimes) ConcurrentModificationException in DTC (@enarkay)
+- Fixed (sometimes) ConcurrentModificationException in DTC
 - Fixed plugin breaking stairs & half slabs on flag drops
 - Fixed not being able to re-set teams on FFAArena because of the auto max
 - Fixed /nnavy blue showing to the next line because it saw /n as a newline

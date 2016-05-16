@@ -14,7 +14,7 @@ public enum StatType {
     KILLS("Kills", ".Kills", "kills"),
     DEATHS("Deaths", ".Deaths", "deaths"),
 
-    ACCURACY("Accuracy", "none", "accuracy"),
+    ACCURACY("Accuracy", "none", "accuracy", "%"),
     SHOTS("Shots", ".Shots", "shots"),
     HITS("Hits", ".Hits", "hits"),
 
@@ -26,16 +26,22 @@ public enum StatType {
     FLAGS_CAPTURED("Flags Captured", ".Flags-Captured", "flagscaptured"),
     FLAGS_DROPPED("Flags Dropped", ".Flags-Dropped", "flagsdropped"),
 
-    TIME_PLAYED("Time Played", ".Time-Played", "timeplayed");
+    TIME_PLAYED("Time Played", ".Time-Played", "timeplayed", "s");
 
     private String name;
     private String path;
     private String sign;
+    private String suffix = "";
 
     StatType(String name, String path, String signName) {
         this.name = name;
         this.path = path;
         this.sign = signName;
+    }
+
+    StatType(String name, String path, String signName, String suffix) {
+        this(name, path, signName);
+        this.suffix = suffix;
     }
 
     public String getPath(UUID id) {
@@ -48,6 +54,10 @@ public enum StatType {
 
     public String getSignName() {
         return this.sign;
+    }
+
+    public String getSuffix() {
+        return suffix;
     }
 
     public static String getReadableList() {

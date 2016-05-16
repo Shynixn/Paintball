@@ -170,6 +170,17 @@ public class ArenaFile extends PaintballFile {
         return ChatColor.translateAlternateColorCodes('&', (String) loadValue(item, arena));
     }
 
+    public List<String> loadStringList(String item, Arena arena) {
+        List<String> whiteList = (List<String>) loadValue(item, arena);
+        List<String> coloredList = new ArrayList<>();
+
+        for (String toColor : whiteList) {
+            coloredList.add(ChatColor.translateAlternateColorCodes('&', toColor));
+        }
+
+        return coloredList;
+    }
+
     public boolean loadBoolean(String item, Arena arena) {
         return (boolean) loadValue(item, arena);
     }
