@@ -817,7 +817,7 @@ public class Arena {
         BLOCKED_COMMANDS           = config.getStringList("Commands.Blocked");
         ALLOWED_COMMANDS           = config.getStringList("Commands.Allowed");
         WIN_COMMANDS               = ARENA.loadStringList("Win-Commands", this);
-        LOOSE_COMMANDS             = ARENA.loadStringList("Loose-Commands", this);
+        LOOSE_COMMANDS             = ARENA.loadStringList("Lose-Commands", this);
         TIE_COMMANDS               = ARENA.loadStringList("Tie-Commands", this);
 
         COIN_SHOP_TYPE             = Utils.loadMaterial(ARENA.loadString("coin-shop-type", this), Material.MAGMA_CREAM);

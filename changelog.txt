@@ -1,7 +1,6 @@
-<<<<<<< HEAD
-v4.3.2
-- Fixed FlagArena's drop flag on stair bug (@HewDaily)
-=======
+v4.3.5
+- Fixed config create spam
+
 v4.3.4
 - Fixed Domination secure bug (@enarkay -- tested, works great! small logical mistake on my part)
 - Renamed loose to lose (@HewDaily - sorry my english is too loose for you :P #puns)
@@ -18,7 +17,6 @@ v4.3.2
 
 v4.3.1
 - Fixed FlagArena's drop flag on stair bug
->>>>>>> 04bfed3643e987812e4b45be6cc475befd205788
 - Fixed FFA not balancing teams correctly
 
 v4.3.0
