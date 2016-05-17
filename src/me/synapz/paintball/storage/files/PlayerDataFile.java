@@ -312,13 +312,18 @@ public class PlayerDataFile extends PaintballFile {
         player.getInventory().setContents(inventories.get(id));
         player.getInventory().setArmorContents(armour.get(id));
         player.setFoodLevel(foodLevels.get(id));
-        player.setHealth(health.get(id));
         player.setGameMode(gamemodes.get(id));
         player.setScoreboard(scoreboards.get(id));
         player.setAllowFlight(allowFly.get(id));
         player.setFlying(flying.get(id));
         exp.setExp(expLevels.get(id));
         player.addPotionEffects(potions.get(id));
+
+        if (health.get(id) > 20) {
+            player.setHealth(20);
+        } else {
+            player.setHealth(health.get(id));
+        }
 
         locations.remove(id);
         gamemodes.remove(id);
