@@ -4,6 +4,7 @@ public enum Tag {
 
     ARENA,
     SENDER,
+    PLAYER,
     AMOUNT,
     TEAM,
     TEAMS,

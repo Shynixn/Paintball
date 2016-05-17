@@ -76,10 +76,12 @@ public class Arena {
     public boolean ARENA_WOOL_HELMET;
     public boolean LOBBY_WOOL_HELMET;
     public boolean NAMETAGS;
-    public boolean PER_TEAM_CHAT;
 
     public List<String> BLOCKED_COMMANDS;
     public List<String> ALLOWED_COMMANDS;
+    public List<String> WIN_COMMANDS;
+    public List<String> LOOSE_COMMANDS;
+    public List<String> TIE_COMMANDS;
 
     // All the players in the arena (Lobby, Spec, InGame) linked to the player which is linked to the PaintballPLayer
     private Map<Player, PaintballPlayer> allPlayers = new HashMap<>();
@@ -488,8 +490,12 @@ public class Arena {
             if (teams.contains(arenaPlayer.getTeam())) {
                 if (teams.size() != 1) {
                     arenaPlayer.setTie();
+
+                    sendCommands(player, TIE_COMMANDS);
                 } else {
                     arenaPlayer.setWon();
+
+                    sendCommands(player, WIN_COMMANDS);
                 }
 
                 final Firework firework = player.getWorld().spawn(player.getLocation().add(0, 4, 0), Firework.class);
@@ -497,6 +503,10 @@ public class Arena {
                 meta.addEffects(FireworkEffect.builder().withColor(arenaPlayer.getTeam().getColor(), arenaPlayer.getTeam().getColor()).withTrail().build());
                 firework.setVelocity(firework.getVelocity().multiply(10));
                 firework.setFireworkMeta(meta);
+            }
+
+            if (!arenaPlayer.isTie() && !arenaPlayer.isWinner()) {
+                sendCommands(player, LOOSE_COMMANDS);
             }
 
             String spaces = Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(20);
@@ -511,7 +521,7 @@ public class Arena {
                     spaces + Utils.makeSpaces(title +  "123") + spaces);
 
             if (arenaPlayer.isWinner()) {
-                // TODO implement a glow api with reflection.
+
             }
         }
 
@@ -748,6 +758,13 @@ public class Arena {
         }
     }
 
+    private void sendCommands(Player player, List<String> commands) {
+        for (String command : commands) {
+            command = command.replace(Tag.PLAYER.toString(), player.getName()).replace(Tag.ARENA.toString(), this.getName());
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        }
+    }
+
     public void loadConfigValues() {
         FileConfiguration config = Settings.getSettings().getConfig();
 
@@ -799,6 +816,9 @@ public class Arena {
 
         BLOCKED_COMMANDS           = config.getStringList("Commands.Blocked");
         ALLOWED_COMMANDS           = config.getStringList("Commands.Allowed");
+        WIN_COMMANDS               = ARENA.loadStringList("Win-Commands", this);
+        LOOSE_COMMANDS             = ARENA.loadStringList("Loose-Commands", this);
+        TIE_COMMANDS               = ARENA.loadStringList("Tie-Commands", this);
 
         COIN_SHOP_TYPE             = Utils.loadMaterial(ARENA.loadString("coin-shop-type", this), Material.MAGMA_CREAM);
     }

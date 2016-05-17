@@ -319,7 +319,11 @@ public class PlayerDataFile extends PaintballFile {
         exp.setExp(expLevels.get(id));
         player.addPotionEffects(potions.get(id));
 
+<<<<<<< HEAD
         if (health.get(id) > 20) {
+=======
+        if (health.get(id) > 20d || health.get(id) < 0) {
+>>>>>>> 04bfed3643e987812e4b45be6cc475befd205788
             player.setHealth(20);
         } else {
             player.setHealth(health.get(id));

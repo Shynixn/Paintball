@@ -163,18 +163,29 @@ public class ArenaFile extends PaintballFile {
     }
 
     public int loadInt(String item, Arena arena) {
-        return (int) loadValue(item, arena);
+        return (int) loadValue(item, arena, false);
     }
 
     public String loadString(String item, Arena arena) {
-        return ChatColor.translateAlternateColorCodes('&', (String) loadValue(item, arena));
+        return ChatColor.translateAlternateColorCodes('&', (String) loadValue(item, arena, false));
+    }
+
+    public List<String> loadStringList(String item, Arena arena) {
+        List<String> whiteList = (List<String>) loadValue(item, arena, true);
+        List<String> coloredList = new ArrayList<>();
+
+        for (String toColor : whiteList) {
+            coloredList.add(ChatColor.translateAlternateColorCodes('&', toColor));
+        }
+
+        return coloredList;
     }
 
     public boolean loadBoolean(String item, Arena arena) {
-        return (boolean) loadValue(item, arena);
+        return (boolean) loadValue(item, arena, false);
     }
 
-    private Object loadValue(String item, Arena arena) {
+    private Object loadValue(String item, Arena arena, boolean asStringList) {
         Map<String, File> allFiles = new HashMap<String, File>(){{
             for (File file : JavaPlugin.getProvidingPlugin(Paintball.class).getDataFolder().listFiles())
                 put(file.getName(), file);
@@ -185,7 +196,11 @@ public class ArenaFile extends PaintballFile {
         boolean notFoundInConfig = YamlConfiguration.loadConfiguration(allFiles.get("config.yml")).get(getArenaConfigPath(item)) == null;
 
         if (notFoundInArena) {
-            fileConfig.set(path, "default");
+
+            if (asStringList)
+                fileConfig.set(path,  new ArrayList<String>() {{ add("default"); }});
+            else
+                fileConfig.set(path, "default");
         }
 
         /*
@@ -196,10 +211,20 @@ public class ArenaFile extends PaintballFile {
             Settings.getSettings().backupConfig("config");
         }
 
-        if (fileConfig.getString(path).equalsIgnoreCase("default"))
-            return Settings.getSettings().getConfig().get(getArenaConfigPath(item));
-        else
+        if (asStringList && fileConfig.getStringList(path).contains("default") || fileConfig.getString(path).equalsIgnoreCase("default")) {
+            Object value = Settings.getSettings().getConfig().get(getArenaConfigPath(item));
+
+            if (value == null) {
+                if (asStringList)
+                    return new ArrayList<>();
+                else
+                    return new String();
+            } else {
+                return value;
+            }
+        } else {
             return fileConfig.get(path);
+        }
     }
 
     private void loadSigns() {

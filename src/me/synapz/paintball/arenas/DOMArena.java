@@ -7,6 +7,7 @@ import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.players.ScoreboardPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;

@@ -136,6 +136,7 @@ public class JoinSigns implements Listener {
             Messenger.error(player, new MessageBuilder(Messages.ARENA_NOT_FOUND).replace(Tag.ARENA, sign.getLine(1)).build());
             return;
         }
+
         Arena arenaToJoin = ArenaManager.getArenaManager().getArenas().get(sign.getLine(1));
 
         // In case the sign is not found in config, add it so it can auto-update
