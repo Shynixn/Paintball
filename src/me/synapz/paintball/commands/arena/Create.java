@@ -55,6 +55,7 @@ public class Create extends PaintballCommand {
                     break;
                 case KC:
                     a = new KCArena(arenaName, arenaName, true);
+                    break;
                 default:
                     a = new Arena(arenaName, arenaName, true);
                     break;

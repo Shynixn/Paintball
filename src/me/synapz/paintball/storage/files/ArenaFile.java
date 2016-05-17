@@ -196,7 +196,6 @@ public class ArenaFile extends PaintballFile {
         boolean notFoundInConfig = YamlConfiguration.loadConfiguration(allFiles.get("config.yml")).get(getArenaConfigPath(item)) == null;
 
         if (notFoundInArena) {
-
             if (asStringList)
                 fileConfig.set(path,  new ArrayList<String>() {{ add("default"); }});
             else
@@ -213,7 +212,6 @@ public class ArenaFile extends PaintballFile {
 
         if (asStringList && fileConfig.getStringList(path).contains("default") || fileConfig.getString(path).equalsIgnoreCase("default")) {
             Object value = Settings.getSettings().getConfig().get(getArenaConfigPath(item));
-
             if (value == null) {
                 if (asStringList)
                     return new ArrayList<>();

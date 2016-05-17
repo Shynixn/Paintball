@@ -1,3 +1,7 @@
+v4.3.6
+- Removed double RTFArenaPlayer messages being sent
+- Fixed config spam again
+
 v4.3.5
 - Fixed config create spam
 

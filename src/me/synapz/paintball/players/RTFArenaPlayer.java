@@ -27,8 +27,6 @@ public class RTFArenaPlayer extends FlagArenaPlayer {
 
         player.getWorld().playSound(player.getLocation(), rtfArena.FLAG_PICKUP, 5, 5);
 
-        arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + player.getName() + " has stolen the flag!");
-
         rtfArena.setHolder(this);
         player.getInventory().setHelmet(Utils.makeBanner(ChatColor.WHITE + "Neutral Flag", DyeColor.WHITE));
         player.updateInventory();

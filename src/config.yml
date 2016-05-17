@@ -82,16 +82,17 @@ Per-Arena-Settings:
     # If you want a command to be typed by a player, I recommend using Essential's sudo command
     # Avaiable tags: %player%, %arena%
     # To add commands, just add another - "" under the shown commands. By default these commands are disabled, remove the # to enable them
+    # By default the list is empty, if you add stuff don't forget to remove the [] in their name
     # List of commands that will be sent by the Console when a player wins
-    Win-Commands:
+    Win-Commands: []
     #- "say %player% has won on %arena%! :)"
 
     # List of commands that will be sent by the Console when a player looses
-    Lose-Commands:
+    Lose-Commands: []
     #- "say %player% has lost on %arena%! :("
 
     # List of commands that will be sent by the Console when a player ties
-    Tie-Commands:
+    Tie-Commands: []
     #- "say %player% has tied on %arena%! :I"
 
     # Specific extra settings for CTF arenas

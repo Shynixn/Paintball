@@ -76,7 +76,7 @@ public class Listeners extends BaseListener implements Listener {
     }
 
     // When ever a player leaves the game, make them leave the arena so they get their stuff
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onArenaQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(player);
