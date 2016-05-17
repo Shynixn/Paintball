@@ -1,13 +1,11 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.DOMArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 public class DOMArenaPlayer extends ArenaPlayer {
 
@@ -41,6 +39,7 @@ public class DOMArenaPlayer extends ArenaPlayer {
             timeSecuring = 0;
             messageSent = false;
             this.beingSecured = null;
+            this.isSecuring = false;
             updateScoreboard();
         } else {
             if (timeSecuring >= domArena.SECURE_TIME+1) {
@@ -50,9 +49,9 @@ public class DOMArenaPlayer extends ArenaPlayer {
                 new Title("", makeBar(), 0, 21, 0).send(player);
                 this.beingSecured = beingSecured;
             }
+            this.isSecuring = true;
         }
 
-        this.isSecuring = securing;
     }
 
     public boolean isSecuring() {

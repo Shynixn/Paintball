@@ -87,7 +87,7 @@ Per-Arena-Settings:
     #- "say %player% has won on %arena%! :)"
 
     # List of commands that will be sent by the Console when a player looses
-    Loose-Commands:
+    Lose-Commands:
     #- "say %player% has lost on %arena%! :("
 
     # List of commands that will be sent by the Console when a player ties

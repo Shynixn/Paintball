@@ -1,9 +1,15 @@
-v2.3.3
+v4.3.4
+- Fixed Domination secure bug (@enarkay -- tested, works great! small logical mistake on my part)
+- Renamed loose to lose (@HewDaily - sorry my english is too loose for you :P #puns)
+- Fixed issue with loading and creating arenas (@HewDaily & @theCAV)
+- Fixed issue where slabs/steps were being removed from flag drop (@HewDaily)
+
+v4.3.3
 - Added Loose-Commands - Commands that will be typed when a player looses
 - Added Win-Commands   - Commands that will be typed when a player wins
 - Added Tie-Commands   - Commands that will be typed when a player ties
 
-v2.3.2
+v4.3.2
 - Fixed player's stats not being reset because their health scale was edited by another plugin (<20)
 
 v4.3.1
