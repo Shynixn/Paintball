@@ -168,6 +168,10 @@ public class Settings {
         init(JavaPlugin.getProvidingPlugin(Paintball.class));
     }
 
+    public PlayerDataFile getPlayerData() {
+        return PLAYERDATA;
+    }
+
     private int loadInt(String path) {
         return (int) loadValue("config.yml", path);
     }

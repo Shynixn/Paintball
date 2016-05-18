@@ -1,3 +1,7 @@
+v4.3.8
+- Updated for LeaderboardHeads optional dependency
+    - https://www.spigotmc.org/resources/leaderheads.2079/
+
 v4.3.7
 - Added leaderboard layout config to /pb top <all>
 - Added leaderboard layout config to /pb top <stat>

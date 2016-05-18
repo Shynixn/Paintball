@@ -125,6 +125,7 @@ public class PlayerDataFile extends PaintballFile {
     }
 
     public void addToStat(StatType type, ArenaPlayer arenaPlayer, int toAdd) {
+
         UUID id = ((OfflinePlayer) arenaPlayer.getPlayer()).getUniqueId();
 
         getFileConfig().set(type.getPath(id), getFileConfig().getInt(type.getPath(id)) + toAdd);
@@ -200,6 +201,10 @@ public class PlayerDataFile extends PaintballFile {
                 stats.put(type, type == StatType.KD ? getKD(target) : type == StatType.ACCURACY ? getAccuracy(target) : getFileConfig().getString(type.getPath(target)));
         }
         return stats;
+    }
+
+    public String getStats(UUID target, StatType type) {
+        return getPlayerStats(target).get(type);
     }
 
     public int getMaxPage() {
