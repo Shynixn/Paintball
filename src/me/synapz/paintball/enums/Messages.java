@@ -180,6 +180,8 @@ public enum Messages {
     KC_LONG_NAME("Kill Confirmed"),
     KC_DESCRIPTION("After you kill a player, confirm the kill before the other team does"),
 
+    TOP_LEADERBOARD_LAYOUT(Tag.THEME + "#" + Tag.RANK + " " + Tag.SECONDARY + Tag.STAT + " » " + Tag.THEME + Tag.SENDER + " " + Tag.SECONDARY + "- " + Tag.AMOUNT),
+    PER_LEADERBOARD_LAYOUT(Tag.THEME + "#" + Tag.RANK + "" + Tag.SECONDARY + " » " + Tag.THEME + Tag.SENDER + " " + Tag.SECONDARY + "- "  + Tag.AMOUNT)
     ;
 
     private final String defaultString;

@@ -2,11 +2,14 @@ package me.synapz.paintball.storage.files;
 
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.Databases;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.database.Database;
 import me.synapz.paintball.utils.ExperienceManager;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.*;
@@ -225,7 +228,12 @@ public class PlayerDataFile extends PaintballFile {
                 Map<String, String> playerAndStat = Settings.PLAYERDATA.getPlayerAtRank(page, type);
                 String value = playerAndStat.values().toArray()[0].toString();
 
-                stats.add(Settings.THEME + "#" + page + Settings.SECONDARY + " " + type.getName() + Messenger.SUFFIX + Settings.THEME + playerAndStat.keySet().toArray()[0] + Settings.SECONDARY + "  - " + value);
+                stats.add(new MessageBuilder(Messages.TOP_LEADERBOARD_LAYOUT)
+                        .replace(Tag.RANK, page + "")
+                        .replace(Tag.STAT, type.getName())
+                        .replace(Tag.SENDER, playerAndStat.keySet().toArray()[0] + "")
+                        .replace(Tag.AMOUNT, value)
+                        .build());
             }
         } else {
             for (int i = start; i <= end; i++) {
@@ -236,7 +244,11 @@ public class PlayerDataFile extends PaintballFile {
                     if (!playerName.equals("Unknown")) {
                         String value = playerAndStat.values().toArray()[0].toString();
 
-                        stats.add(Settings.THEME + "#" + i + Messenger.SUFFIX + Settings.THEME + playerName + Settings.SECONDARY + "  - " + value);
+                        stats.add(new MessageBuilder(Messages.PER_LEADERBOARD_LAYOUT)
+                                .replace(Tag.RANK, i + "")
+                                .replace(Tag.SENDER, playerName)
+                                .replace(Tag.AMOUNT, value)
+                                .build());
                     }
                 }
             }

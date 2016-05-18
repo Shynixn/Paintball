@@ -1,3 +1,9 @@
+v4.3.7
+- Added leaderboard layout config to /pb top <all>
+- Added leaderboard layout config to /pb top <stat>
+- Added leaderboard layout config to holographic displays (@)
+- Soon you can customize the Stat names & titles so leaderboards will be 100% configurable
+
 v4.3.6
 - Removed double RTFArenaPlayer messages being sent
 - Fixed config spam again
