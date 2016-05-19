@@ -15,7 +15,7 @@ public abstract class Database {
     protected int port;
     protected String username;
     protected String password;
-    protected String statsTable; // This should be configurable
+    protected String statsTable;
 
     public Database() {
         this.host = Databases.HOST.getString();
