@@ -223,7 +223,7 @@ public class PlayerDataFile extends PaintballFile {
         int start = end-10;
 
         // Adds the title
-        String title = statType == null ? Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10) + ChatColor.RESET + Settings.THEME + " Paintball Top " + Settings.SECONDARY + page + Settings.THEME + " Leaderboard " + Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10) : Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10) + ChatColor.RESET + Settings.THEME + " Paintball " + statType.getName() + " Leaderboard " + ChatColor.GRAY + page + Settings.THEME + "/" + ChatColor.GRAY + getMaxPage() + " " + Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(10);
+        String title = statType == null ? new MessageBuilder(Messages.TOP_LEADERBOARD_TITLE).replace(Tag.PAGE, page + "").build() : new MessageBuilder(Messages.PER_LEADERBOARD_TITLE).replace(Tag.STAT, statType.getName()).replace(Tag.MAX, getMaxPage() + "").replace(Tag.PAGE, page + "").build();
         stats.add(title);
 
         // Starts adding the values to the stats list

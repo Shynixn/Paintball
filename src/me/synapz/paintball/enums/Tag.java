@@ -26,7 +26,8 @@ public enum Tag {
     COINS,
     COST,
     TEAM_COLOR,
-    RANK;
+    RANK,
+    PAGE;
 
     @Override
     public String toString() {

@@ -1,3 +1,9 @@
+v4.4.0
+- Fixed major arena leave issue which sometimes linked a null inventory (spammed errors sometimes)
+
+v4.3.9
+- Added ability to change leaderboard title for command & hologram in messages.yml
+
 v4.3.8
 - Updated for LeaderboardHeads optional dependency
     - https://www.spigotmc.org/resources/leaderheads.2079/
