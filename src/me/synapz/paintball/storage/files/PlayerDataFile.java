@@ -110,6 +110,7 @@ public class PlayerDataFile extends PaintballFile {
                 return;
             case HIGEST_KILL_STREAK:
                 getFileConfig().set(StatType.HIGEST_KILL_STREAK.getPath(id), player.getKillStreak());
+                if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
                 return;
             case GAMES_PLAYED:
                 if (player.isWinner())
@@ -122,6 +123,7 @@ public class PlayerDataFile extends PaintballFile {
         }
 
         addOneToPath(type.getPath(id));
+        if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
     }
 
     public void addToStat(StatType type, ArenaPlayer arenaPlayer, int toAdd) {
@@ -129,20 +131,24 @@ public class PlayerDataFile extends PaintballFile {
         UUID id = ((OfflinePlayer) arenaPlayer.getPlayer()).getUniqueId();
 
         getFileConfig().set(type.getPath(id), getFileConfig().getInt(type.getPath(id)) + toAdd);
+        if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
     }
 
     public void setStat(StatType type, ArenaPlayer arenaPlayer, int toSet) {
         UUID id = ((OfflinePlayer) arenaPlayer.getPlayer()).getUniqueId();
 
         getFileConfig().set(type.getPath(id), toSet);
+        if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
     }
 
     // Resets a specific stat
     public void resetStats(StatType type, OfflinePlayer player) {
         UUID id = player.getUniqueId();
 
-        if (!type.isCalculated())
+        if (!type.isCalculated()) {
             getFileConfig().set(type.getPath(id), 0);
+            if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
+        }
     }
 
     // Gets a player at a rank, returns Unknown if no player can be found at rank
@@ -382,6 +388,7 @@ public class PlayerDataFile extends PaintballFile {
     // Increments the set path by one
     private void addOneToPath(String path) {
         getFileConfig().set(path, getFileConfig().getInt(path) + 1);
+        if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
     }
 
     private void setValue(String path, Object object) {
