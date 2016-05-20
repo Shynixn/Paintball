@@ -181,6 +181,22 @@ public enum Messages {
     KC_LONG_NAME("Kill Confirmed"),
     KC_DESCRIPTION("After you kill a player, confirm the kill before the other team does"),
 
+    HIGEST_KILL_STREAK("Highest Killstreak"),
+
+    KD("K/D"),
+    KILLS("Kills"),
+    DEATHS("Deaths"),
+    ACCURACY("Accuracy"),
+    SHOTS("Shots"),
+    HITS("Hits"),
+    GAMES_PLAYED("Games Played"),
+    WINS("Wins"),
+    DEFEATS("Defeats"),
+    TIES("Ties"),
+    FLAGS_CAPTURED("Flags Captured"),
+    FLAGS_DROPPED("Flags Dropped"),
+    TIME_PLAYED("Time Played"),
+
     TOP_LEADERBOARD_TITLE(Tag.SECONDARY + "&m          " + Tag.THEME + " Paintball Top " + Tag.SECONDARY + Tag.PAGE + Tag.THEME + " Leaderboard " + Tag.SECONDARY + "&m          "),
     PER_LEADERBOARD_TITLE(Tag.SECONDARY + "&m          " + Tag.THEME + " Paintball " + Tag.STAT + " Leaderboard &7" + Tag.PAGE + Tag.THEME + "/&7" + Tag.MAX + " " + Tag.SECONDARY + "&m          "),
     TOP_LEADERBOARD_LAYOUT(Tag.THEME + "#" + Tag.RANK + " " + Tag.SECONDARY + Tag.STAT + " » " + Tag.THEME + Tag.SENDER + " " + Tag.SECONDARY + "- " + Tag.AMOUNT),

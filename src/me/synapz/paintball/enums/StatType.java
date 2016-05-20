@@ -6,41 +6,45 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
+import static me.synapz.paintball.storage.Settings.SECONDARY;
+import static me.synapz.paintball.storage.Settings.THEME;
+
 public enum StatType {
 
-    HIGEST_KILL_STREAK("Highest Killstreak", ".Highest-Kill-Streak", "killstreak"),
+    HIGEST_KILL_STREAK(Messages.HIGEST_KILL_STREAK, ".Highest-Kill-Streak", "killstreak"),
 
-    KD("K/D", "none", "kd"),
-    KILLS("Kills", ".Kills", "kills"),
-    DEATHS("Deaths", ".Deaths", "deaths"),
+    KD(Messages.KD, "none", "kd"),
+    KILLS(Messages.KILLS, ".Kills", "kills"),
+    DEATHS(Messages.DEATHS, ".Deaths", "deaths"),
 
-    ACCURACY("Accuracy", "none", "accuracy", "%"),
-    SHOTS("Shots", ".Shots", "shots"),
-    HITS("Hits", ".Hits", "hits"),
+    ACCURACY(Messages.ACCURACY, "none", "accuracy", "%"),
+    SHOTS(Messages.SHOTS, ".Shots", "shots"),
+    HITS(Messages.HITS, ".Hits", "hits"),
 
-    GAMES_PLAYED("Games Played", ".Games-Played", "gamesplayed"),
-    WINS("Wins", ".Wins", "wins"),
-    DEFEATS("Defeats", ".Defeats", "defeats"),
-    TIES("Ties", ".Ties", "ties"),
+    GAMES_PLAYED(Messages.GAMES_PLAYED, ".Games-Played", "gamesplayed"),
+    WINS(Messages.WINS, ".Wins", "wins"),
+    DEFEATS(Messages.DEFEATS, ".Defeats", "defeats"),
+    TIES(Messages.TIES, ".Ties", "ties"),
 
-    FLAGS_CAPTURED("Flags Captured", ".Flags-Captured", "flagscaptured"),
-    FLAGS_DROPPED("Flags Dropped", ".Flags-Dropped", "flagsdropped"),
+    FLAGS_CAPTURED(Messages.FLAGS_CAPTURED, ".Flags-Captured", "flagscaptured"),
+    FLAGS_DROPPED(Messages.FLAGS_DROPPED, ".Flags-Dropped", "flagsdropped"),
 
-    TIME_PLAYED("Time Played", ".Time-Played", "timeplayed", "s");
+    TIME_PLAYED(Messages.TIME_PLAYED, ".Time-Played", "timeplayed", "s");
 
-    private String name;
+    private Messages message;
+    String name;
     private String path;
     private String sign;
     private String suffix = "";
 
-    StatType(String name, String path, String signName) {
-        this.name = name;
+    StatType(Messages message, String path, String signName) {
+        this.message = message;
         this.path = path;
         this.sign = signName;
     }
 
-    StatType(String name, String path, String signName, String suffix) {
-        this(name, path, signName);
+    StatType(Messages message, String path, String signName, String suffix) {
+        this(message, path, signName);
         this.suffix = suffix;
     }
 
@@ -49,7 +53,7 @@ public enum StatType {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public String getSignName() {
@@ -73,6 +77,20 @@ public enum StatType {
     // useful for calculated stats like KD and Accuracy, which have their own method instead of being stored in config
     public boolean isCalculated() {
         return path.equals("none");
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    private void loadMessage() {
+        this.name = message.getString();
+    }
+
+    public static void loadStatNames() {
+        for (StatType type : StatType.values())
+            type.loadMessage();
     }
 
     public static StatType getStatType(Player player, String statString) {
