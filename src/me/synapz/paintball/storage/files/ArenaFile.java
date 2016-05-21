@@ -73,6 +73,9 @@ public class ArenaFile extends PaintballFile {
     }
 
     public void loadLeaderboards() {
+        if (!Settings.HOLOGRAPHIC_DISPLAYS)
+            return;
+
         for (String loc : getHologramList()) {
             HologramLocation hologramLocation = new HologramLocation(loc);
             addLeaderboard(hologramLocation.getLocation(), hologramLocation.getType(), hologramLocation.getPage(), false);
@@ -80,6 +83,9 @@ public class ArenaFile extends PaintballFile {
     }
 
     public void addLeaderboard(Location loc, StatType statType, int page, boolean addToFile) {
+        if (!Settings.HOLOGRAPHIC_DISPLAYS)
+            return;
+
         Hologram hologram = HologramsAPI.createHologram(JavaPlugin.getProvidingPlugin(Paintball.class), loc);
 
         for (String statLine : PLAYERDATA.getPage(statType, page)) {

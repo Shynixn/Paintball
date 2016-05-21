@@ -1,3 +1,12 @@
+v4.4.4
+- Fixed horses being shot by own teamate
+
+v4.4.3
+- Made it so health is also reflected on health bar & scoreboard
+    - For exmaple, 5 hits to kill would make the player have 5 hearts. Every hit their heart would go down once
+- Added double checks so if you had HolographicDisplays then removed it, the plugin will not throw errors & try to load the leaderboards
+- Disabled health regen in arena
+
 v4.4.2
 - Fixed horse saddles not being auto removed when they die (@Jame)
 - Fixed RTF not showing pickup message when it is picked up (@HeyDaily)

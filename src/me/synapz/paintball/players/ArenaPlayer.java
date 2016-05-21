@@ -56,12 +56,6 @@ public class ArenaPlayer extends PaintballPlayer {
     private boolean isWinner;
     private boolean isTie;
 
-    /**
-     * Creates a new ArenaPlayer
-     * @param a Arena for them to be added in
-     * @param t Team they are on
-     * @param p Player they are connected to
-     */
     public ArenaPlayer(LobbyPlayer lobbyPlayer) {
         super(lobbyPlayer.getArena(), lobbyPlayer.getTeam(), lobbyPlayer.getPlayer());
     }
@@ -87,6 +81,9 @@ public class ArenaPlayer extends PaintballPlayer {
         giveItems = arena.getState() == Arena.ArenaState.IN_PROGRESS ? true : false;
         health = arena.HITS_TO_KILL;
         lives = arena.LIVES;
+
+        player.setHealthScale(arena.HITS_TO_KILL*2); // times two because one health is a half heart, we want full hearts
+        player.setHealth(player.getMaxHealth());
     }
 
     @Override
@@ -264,10 +261,16 @@ public class ArenaPlayer extends PaintballPlayer {
         int newHealth = health -= damage;
 
         if (newHealth > 0) {
+            double health = (20 / arena.HITS_TO_KILL) * newHealth;
+;
+            if (health > 0)
+                player.setHealth(health);
+
             updateScoreboard();
             return false;
         } else {
             setHealth(fromTeam, newHealth);
+            player.setHealth(player.getMaxHealth());
             return true;
         }
     }

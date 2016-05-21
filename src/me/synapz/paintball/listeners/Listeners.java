@@ -550,6 +550,12 @@ public class Listeners extends BaseListener implements Listener {
         e.setCancelled(true);
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onHealthRegen(EntityRegainHealthEvent e) {
+        if (e.getEntity() instanceof Player && isInArena((Player) e.getEntity()))
+            e.setCancelled(true);
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamageAsLobbyOrSpectator(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player))
