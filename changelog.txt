@@ -1,3 +1,8 @@
+v4.4.2
+- Fixed horse saddles not being auto removed when they die (@Jame)
+- Fixed RTF not showing pickup message when it is picked up (@HeyDaily)
+- I think I fixed the scoreboard issue (@Jame)
+
 v4.4.1
 - Added all leaderboard names to messages.yml
 - This edits all leaderboards, holograms, signs, /pb stats, /pb top, everything that shows a leaderboard name

@@ -2,8 +2,11 @@ package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.RTFArena;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -26,6 +29,8 @@ public class RTFArenaPlayer extends FlagArenaPlayer {
             return;
 
         player.getWorld().playSound(player.getLocation(), rtfArena.FLAG_PICKUP, 5, 5);
+
+        arena.broadcastMessage(Settings.THEME + new MessageBuilder(Messages.ARENA_FLAG_STEAL).replace(Tag.SENDER, player.getName()).replace(Tag.TEAM, "Neutral").build());
 
         rtfArena.setHolder(this);
         player.getInventory().setHelmet(Utils.makeBanner(ChatColor.WHITE + "Neutral Flag", DyeColor.WHITE));

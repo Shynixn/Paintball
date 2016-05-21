@@ -143,11 +143,17 @@ public class Team {
     }
 
     public void playerJoinTeam() {
+        if (size < 0)
+            size = 0;
+
         size++;
         arena.updateAllScoreboard();
     }
 
     public void playerLeaveTeam() {
+        if (size < 0)
+            size = 1;
+
         size--;
         arena.updateAllScoreboard();
     }

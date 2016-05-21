@@ -151,8 +151,10 @@ public class ArenaPlayer extends PaintballPlayer {
         super.leave();
         team.playerLeaveTeam();
 
-        if (horse != null)
+        if (horse != null) {
+            horse.getInventory().clear();
             horse.setHealth(0);
+        }
 
         if (Settings.VAULT) {
             if (isWinner)
@@ -225,6 +227,7 @@ public class ArenaPlayer extends PaintballPlayer {
 
     public void killHorse() {
         if (horse != null && horseItem != null) {
+            horse.getInventory().clear();
             horse.setHealth(0);
 
             horseItem.remove(this);
