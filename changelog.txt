@@ -1,3 +1,6 @@
+v4.4.6
+- Added more messages to messages.yml
+
 v4.4.5
 - Fixed team switch balance for arenas with more than 9 teams
 - Added 5 more game messages

@@ -84,7 +84,7 @@ public class Messenger {
         if (player.hasPermission(permission)) {
             return true;
         } else {
-            error(player, "You don't have access to click that!");
+            error(player, Messages.NO_SIGN_PERMISSION);
             return false;
         }
     }
@@ -92,9 +92,9 @@ public class Messenger {
     // Sends a message if there is some type of wrong usage
     public static void wrongUsage(PaintballCommand command, Player player, Usage usage) {
         if (usage.equals(Usage.TO_MANY_ARGS)) {
-            error(player, "To many arguments!", command.getCorrectUsage());
+            error(player, Messages.TOO_MANY_ARGUMENTS.getString(), command.getCorrectUsage());
         } else {
-            error(player, "Not enough arguments!", command.getCorrectUsage());
+            error(player, Messages.NOT_ENOUGH_ARGUMENTS.getString(), command.getCorrectUsage());
         }
     }
 
