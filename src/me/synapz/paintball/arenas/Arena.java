@@ -1,6 +1,7 @@
 package me.synapz.paintball.arenas;
 
 
+import com.avaje.ebeaninternal.server.cluster.mcast.Message;
 import com.google.common.base.Joiner;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
@@ -101,18 +102,23 @@ public class Arena {
     private boolean toReload;
 
     public enum ArenaState {
-        NOT_SETUP,
-        WAITING,
-        DISABLED,
-        STARTING,
-        STOPPING,
-        IN_PROGRESS,
-        REMOVED;
+        NOT_SETUP(Messages.NOT_SETUP),
+        WAITING(Messages.WAITING),
+        DISABLED(Messages.DISABLED),
+        STARTING(Messages.STARTING),
+        STOPPING(Messages.STOPPING),
+        IN_PROGRESS(Messages.IN_PROGRESS),
+        REMOVED(Messages.REMOVED);
+
+        private final Messages message;
+        ArenaState(Messages message) {
+            this.message = message;
+        }
 
         @Override
         public String toString() {
             // This giant line replaces _ with a space, and makes the first letter capital
-            return super.toString().toLowerCase().replace("_", " ").replaceFirst(String.valueOf(super.toString().toLowerCase().toCharArray()[0]), String.valueOf(super.toString().toUpperCase().toCharArray()[0]));
+            return message.toString();
         }
     }
 

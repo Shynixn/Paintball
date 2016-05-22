@@ -5,16 +5,14 @@ import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.enums.UpdateResult;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.utils.ActionBar;
-import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.utils.Update;
-import me.synapz.paintball.utils.Utils;
+import me.synapz.paintball.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -169,7 +167,7 @@ public class Listeners extends BaseListener implements Listener {
                                 else
                                     Messenger.error(player, Messages.ARENA_TEAMS_NOT_BALANCED);
                             } else {
-                                Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
+                                Messenger.titleMsg(player, true, new MessageBuilder(Messages.TEAM_FULL).replace(Tag.TEAM, t.getTitleName().toLowerCase()).build());
                                 break;
                             }
                         }
@@ -228,30 +226,41 @@ public class Listeners extends BaseListener implements Listener {
             PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
 
             if (gamePlayer instanceof LobbyPlayer) {
+                LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                 if (e.getInventory().getName().contains("Team Switcher")) {
                     for (Team t : a.getArenaTeamList()) {
                         if (name.contains(t.getTitleName())) {
                             if (!t.isFull()) {
-                                if (t.getSize() - gamePlayer.getTeam().getSize() > 0) {
-                                    LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
-                                    lobbyPlayer.setTeam(t);
-                                } else {
-                                    Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " has too many players!");
+                                boolean teamsBalanced = (t.getSize() == 0);
+
+                                // Loops through all teams
+                                // If there is at least one team (other than the one they are switching to) that has more than 1 player
+                                // then the game is playable because it is not a 2v0.
+                                // Also, if the team they are switching to is already empty, they will not need to worry about this at all
+                                for (Team team : a.getArenaTeamList()) {
+                                    if ((team == lobbyPlayer.getTeam() ? team.getSize()-1 : team.getSize()) > 0 && team != t && !teamsBalanced) {
+                                        teamsBalanced = true;
+                                    }
                                 }
+
+                                if (teamsBalanced)
+                                    lobbyPlayer.setTeam(t);
+                                else
+                                    Messenger.error(player, Messages.ARENA_TEAMS_NOT_BALANCED);
                             } else {
-                                Messenger.titleMsg(player, true, ChatColor.RED + "Team " + t.getTitleName().toLowerCase() + ChatColor.RED + " is full!");
+                                Messenger.titleMsg(player, true, new MessageBuilder(Messages.TEAM_FULL).replace(Tag.TEAM, t.getTitleName().toLowerCase()).build());
+                                break;
                             }
-                            break;
+                            player.closeInventory();
                         }
                     }
-                    player.closeInventory();
                 } else {
                     e.setCancelled(true);
                     Messenger.error(player, Messages.ARENA_MOVE_ERROR);
                     player.closeInventory();
                 }
                 e.setCancelled(true);
-            } else if (gamePlayer instanceof SpectatorPlayer) {
+            }else if (gamePlayer instanceof SpectatorPlayer) {
                 if (clickedItem.getType() == Material.SKULL_ITEM) {
                     String targetName = ChatColor.stripColor(name.split(" ")[4]);
                     ArenaPlayer target = (ArenaPlayer) a.getPaintballPlayer(Bukkit.getPlayer(targetName));
@@ -408,7 +417,7 @@ public class Listeners extends BaseListener implements Listener {
         if (arenaPlayer == null || hitPlayer == null)
             return;
 
-        if (arenaPlayer == hitPlayer) // player hit themself
+        if (arenaPlayer.getTeam() == hitPlayer.getTeam()) // player hit themself or hit a player on the same team or hit a passenger riding horse on same team
             return;
 
         String hitPlayerName = hitPlayer.getPlayer().getName();
@@ -421,7 +430,7 @@ public class Listeners extends BaseListener implements Listener {
         }
 
         if (ProtectionCountdown.godPlayers.keySet().contains(hitPlayerName)) {
-            Messenger.error(arenaPlayer.getPlayer(), "That player is protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
+            Messenger.error(arenaPlayer.getPlayer(), new MessageBuilder(Messages.THEY_ARE_PROTECTED).replace(Tag.TIME, (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + "").build());
             event.setCancelled(true);
             return;
         } else if (ProtectionCountdown.godPlayers.keySet().contains(shooterPlayerName)) {
@@ -430,7 +439,7 @@ public class Listeners extends BaseListener implements Listener {
                 ActionBar.sendActionBar(arenaPlayer.getPlayer(), Messenger.createPrefix("Protection") + "Cancelled");
                 ProtectionCountdown.godPlayers.get(shooterPlayerName).cancel();
             } else {
-                Messenger.error(arenaPlayer.getPlayer(), "You are still protected. Protection: " + (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + " seconds");
+                Messenger.error(arenaPlayer.getPlayer(), new MessageBuilder(Messages.YOU_ARE_PROTECTED).replace(Tag.TIME, (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + "").build());
                 event.setCancelled(true);
                 return;
             }
@@ -453,7 +462,7 @@ public class Listeners extends BaseListener implements Listener {
             arenaPlayer.kill(hitPlayer, action);
         } else {
             arenaPlayer.incrementHits();
-            Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + "Hit player! " + hitPlayer.getHealth() + "/" + arenaPlayer.getArena().HITS_TO_KILL);
+            Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + new MessageBuilder(Messages.HIT_PLAYER).replace(Tag.AMOUNT, hitPlayer.getHealth() + "").replace(Tag.MAX, arenaPlayer.getArena().HITS_TO_KILL + ""));
         }
 
 

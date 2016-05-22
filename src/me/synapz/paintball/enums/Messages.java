@@ -1,5 +1,6 @@
 package me.synapz.paintball.enums;
 
+import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
@@ -200,7 +201,21 @@ public enum Messages {
     TOP_LEADERBOARD_TITLE(Tag.SECONDARY + "&m          " + Tag.THEME + " Paintball Top " + Tag.SECONDARY + Tag.PAGE + Tag.THEME + " Leaderboard " + Tag.SECONDARY + "&m          "),
     PER_LEADERBOARD_TITLE(Tag.SECONDARY + "&m          " + Tag.THEME + " Paintball " + Tag.STAT + " Leaderboard &7" + Tag.PAGE + Tag.THEME + "/&7" + Tag.MAX + " " + Tag.SECONDARY + "&m          "),
     TOP_LEADERBOARD_LAYOUT(Tag.THEME + "#" + Tag.RANK + " " + Tag.SECONDARY + Tag.STAT + " » " + Tag.THEME + Tag.SENDER + " " + Tag.SECONDARY + "- " + Tag.AMOUNT),
-    PER_LEADERBOARD_LAYOUT(Tag.THEME + "#" + Tag.RANK + "" + Tag.SECONDARY + " » " + Tag.THEME + Tag.SENDER + " " + Tag.SECONDARY + "- "  + Tag.AMOUNT)
+    PER_LEADERBOARD_LAYOUT(Tag.THEME + "#" + Tag.RANK + "" + Tag.SECONDARY + " » " + Tag.THEME + Tag.SENDER + " " + Tag.SECONDARY + "- "  + Tag.AMOUNT),
+
+    YOU_ARE_PROTECTED("That player is protected. Protection: " + Tag.TIME + " seconds"),
+    THEY_ARE_PROTECTED("You are still protected. Protection: " + Tag.TIME + " seconds"),
+
+    HIT_PLAYER("Hit player! " + Tag.AMOUNT + "/" + Tag.MAX),
+    TEAM_FULL("&rTeam " + Tag.TEAM + " is full!"),
+
+    NOT_SETUP("Not Setup"),
+    WAITING("Waiting"),
+    DISABLED("Disabled"),
+    STARTING("Starting"),
+    STOPPING("Stopping"),
+    IN_PROGRESS("In Progress"),
+    REMOVED("Remoaced");
     ;
 
     private final String defaultString;
