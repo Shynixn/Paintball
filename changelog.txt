@@ -1,3 +1,7 @@
+v4.5.0
+- Added Paintball command title to messages.yml
+- Added Paintball sign title to messages.yml (@Hako)
+
 v4.4.9
 - Fixed health scale not being saved
     - Really dumb mistake, I set & re-set the player's max health instead of their health scale

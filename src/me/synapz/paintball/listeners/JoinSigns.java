@@ -40,7 +40,7 @@ public class JoinSigns implements Listener {
             return;
         }
 
-        String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
+        String prefix = Messages.SIGN_TITLE.getString();
         // For Auto joining
         if (e.getLine(1).equalsIgnoreCase("autojoin")) {
             if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.autojoin.create"))
@@ -90,7 +90,7 @@ public class JoinSigns implements Listener {
         if (!(e.getClickedBlock().getState() instanceof Sign)) return;
         Sign sign = (Sign) e.getClickedBlock().getState();
         Player player = e.getPlayer();
-        if (!sign.getLine(0).contains("Paintball") || sign.getLine(1) == null) return;
+        if (!sign.getLine(0).contains(Messages.SIGN_TITLE.getString()) || sign.getLine(1) == null) return;
 
         if (sign.getLine(1).equals(RED + "Leave")) {
             if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.leave.use"))

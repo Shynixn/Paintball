@@ -13,6 +13,8 @@ import static org.bukkit.ChatColor.GREEN;
 
 public enum Messages {
 
+    SIGN_TITLE("&8[" + Tag.THEME + "Paintball&8]"),
+    COMMAND_TITLE("&lPaintball"),
     PREFIX("&8[&3Paintball&8] "),
 
     COMMAND_ARENA_INFO("Display all Paintball Arena setup commands"),

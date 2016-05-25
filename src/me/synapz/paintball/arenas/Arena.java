@@ -358,7 +358,7 @@ public class Arena {
     }
 
     public void updateSigns() {
-        String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
+        String prefix = Messages.SIGN_TITLE.getString();
         for (SignLocation signLoc : getSignLocations().values()) {
             Location loc = signLoc.getLocation();
             if (loc != null && loc.getBlock() != null && loc.getBlock().getState() != null && !(loc.getBlock().getState() instanceof Sign)) {

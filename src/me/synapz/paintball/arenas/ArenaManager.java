@@ -123,7 +123,7 @@ public class ArenaManager {
 
     // Updates every type of sign (Leaderboard, Join, Autojoin)
     public void updateAllSignsOnServer() {
-        String prefix = DARK_GRAY + "[" + THEME + "Paintball" + DARK_GRAY + "]";
+        String prefix = Messages.SIGN_TITLE.getString();
 
         Paintball.getInstance().getBungeeManager().updateBungeeSigns();
 
@@ -146,9 +146,6 @@ public class ArenaManager {
                 case LEADERBOARD:
                     if (state instanceof Sign) {
                         Sign sign = (Sign) state;
-
-                        if (sign.getLine(0).contains("Paintball"))
-                            break;
 
                         StatType type = StatType.getStatType(null, sign.getLine(2));
 

@@ -100,7 +100,7 @@ public class Messenger {
 
     // Get's the help associated with the command type
     public static String getHelpTitle(CommandType type) {
-        String title = BOLD + "Paintball";
+        String title = Messages.COMMAND_TITLE.getString();
         if (type == CommandType.ADMIN) {
             title += " Admin";
         } else if (type == CommandType.ARENA) {
