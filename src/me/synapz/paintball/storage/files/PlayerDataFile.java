@@ -43,7 +43,7 @@ public class PlayerDataFile extends PaintballFile {
     private Map<String, Scoreboard> scoreboards = new HashMap<>();
     private Map<String, Boolean> flying = new HashMap<>();
     private Map<String, Boolean> allowFly = new HashMap<>();
-    private Map<String, Double> maxHealth = new HashMap<>();
+    private Map<String, Double> healthScale = new HashMap<>();
     private Map<String, Collection<PotionEffect>> potions = new HashMap<>();
 
     private Database database;
@@ -300,7 +300,7 @@ public class PlayerDataFile extends PaintballFile {
         armour.put(id, player.getInventory().getArmorContents());
         expLevels.put(id, exp.getCurrentExp());
         scoreboards.put(id, player.getScoreboard() == null ? Bukkit.getScoreboardManager().getNewScoreboard() : player.getScoreboard());
-        maxHealth.put(id, player.getMaxHealth());
+        healthScale.put(id, player.getHealthScale());
         allowFly.put(id,  player.getAllowFlight());
         flying.put(id, player.isFlying());
         potions.put(id, player.getActivePotionEffects());
@@ -350,7 +350,7 @@ public class PlayerDataFile extends PaintballFile {
             player.setHealth(health.get(id));
         }
 
-        player.setMaxHealth(maxHealth.get(id));
+        player.setHealthScale(healthScale.get(id));
 
         locations.remove(id);
         gamemodes.remove(id);

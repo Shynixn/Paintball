@@ -462,7 +462,7 @@ public class Listeners extends BaseListener implements Listener {
             arenaPlayer.kill(hitPlayer, action);
         } else {
             arenaPlayer.incrementHits();
-            Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + new MessageBuilder(Messages.HIT_PLAYER).replace(Tag.AMOUNT, hitPlayer.getHealth() + "").replace(Tag.MAX, arenaPlayer.getArena().HITS_TO_KILL + ""));
+            Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + new MessageBuilder(Messages.HIT_PLAYER).replace(Tag.AMOUNT, hitPlayer.getHealth() + "").replace(Tag.MAX, arenaPlayer.getArena().HITS_TO_KILL + "").build());
         }
 
 

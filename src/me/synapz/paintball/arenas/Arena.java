@@ -111,8 +111,13 @@ public class Arena {
         REMOVED(Messages.REMOVED);
 
         private final Messages message;
+
         ArenaState(Messages message) {
             this.message = message;
+        }
+
+        public Messages getMessage() {
+            return message;
         }
 
         @Override
@@ -650,7 +655,7 @@ public class Arena {
                 color = DARK_RED;
                 break;
         }
-        return color + state.toString();
+        return color + state.getMessage().getString();
     }
 
     public void removePlayer(PaintballPlayer pbPlayer, boolean restoreData) {

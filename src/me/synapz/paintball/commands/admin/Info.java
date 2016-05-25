@@ -25,7 +25,7 @@ public class Info extends ArenaCommand {
 
         Messenger.msg(player,
                 LINE,
-                THEME + "State: " + SECONDARY + arena.getState(),
+                THEME + "State: " + SECONDARY + arena.getStateAsString(),
                 THEME + "Type: " + SECONDARY + arena.getArenaType().getFullName(),
                 THEME + "Min: " + SECONDARY + arena.getMin(),
                 THEME + "Max: " + SECONDARY + arena.getMax(),
