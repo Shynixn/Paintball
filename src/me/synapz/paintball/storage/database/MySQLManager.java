@@ -50,11 +50,11 @@ public class MySQLManager extends Database{
         for (String uuid : keys) {
             ConfigurationSection section = config.getConfigurationSection("Player-Data." + uuid);
             PreparedStatement statement = connection.prepareStatement("INSERT INTO " + statsTable + " VALUES('" + uuid + "'" +
-                    "," + section.getInt("Kills") + "," + section.getInt("Deaths") + "," + section.getInt("Shots") +
+                    ",'" + section.getString("Username") + "'," + section.getInt("Kills") + "," + section.getInt("Deaths") + "," + section.getInt("Shots") +
                     "," + section.getInt("Hits") + "," + section.getInt("Highest-Kill-Streak") + "," + section.getInt("Games-Played") +
                     "," + section.getInt("Wins") + "," + section.getInt("Defeats") + "," + section.getInt("Ties") +
                     "," + section.getInt("Flags-Captured") + "," + section.getInt("Flags-Dropped") + "," + section.getInt("Time-Played") +
-                    ") ON DUPLICATE KEY UPDATE kills = " + section.getInt("Kills") + ",deaths = " + section.getInt("Deaths") +
+                    ") ON DUPLICATE KEY UPDATE" + " username = '" + section.getString("Username") + "',kills = " + section.getInt("Kills") + ",deaths = " + section.getInt("Deaths") +
                     ",shots = " + section.getInt("Shots") + ",hits = " + section.getInt("Hits") + ",highest_kill_streak = " +
                     section.getInt("Highest-Kill-Streak") + ",games_played = " + section.getInt("Games-Played") + ",wins = " +
                     section.getInt("Wins") + ",defeats = " + section.getInt("Defeats") + ",ties = " + section.getInt("Ties") +
@@ -72,6 +72,7 @@ public class MySQLManager extends Database{
         ResultSet set = statement.executeQuery();
         while (set.next()) {
             String uuid = set.getString("uuid");
+            String username = set.getString("username");
             int kills = set.getInt("kills");
             int deaths = set.getInt("deaths");
             int shots = set.getInt("shots");
@@ -85,6 +86,7 @@ public class MySQLManager extends Database{
             int flag_drop = set.getInt("flags_dropped");
             int time_played = set.getInt("time_played");
 
+            config.set("Player-Data." + uuid + ".Username", username);
             config.set("Player-Data." + uuid + ".Kills", kills);
             config.set("Player-Data." + uuid + ".Deaths", deaths);
             config.set("Player-Data." + uuid + ".Shots", shots);
@@ -116,7 +118,7 @@ public class MySQLManager extends Database{
                     section.getInt("Wins") + ",defeats = defeats + " + section.getInt("Defeats") + ",ties = ties + " +
                     section.getInt("Ties") + ",flags_captured = flags_captured + " + section.getInt("Flags-Captured") +
                     ",flags_dropped = flags_dropped + " + section.getInt("Flags-Dropped") + ",time_played = time_played + " +
-                    section.getInt("Time-Played") + ";");
+                    section.getInt("Time-Played") + " WHERE (uuid = '" + uuid + "');");
             statement.executeUpdate();
         }
     }
@@ -140,7 +142,7 @@ public class MySQLManager extends Database{
     protected void setupTable() throws SQLException {
         openConnection();
         PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + statsTable +
-                " (uuid VARCHAR(48) NOT NULL,kills INT NOT NULL,deaths INT NOT NULL,shots INT NOT NULL,hits INT NOT NULL," +
+                " (uuid VARCHAR(48) NOT NULL,username VARCHAR(16) NOT NULL,kills INT NOT NULL,deaths INT NOT NULL,shots INT NOT NULL,hits INT NOT NULL," +
                 "highest_kill_streak INT NOT NULL,games_played INT NOT NULL,wins INT NOT NULL,defeats INT NOT NULL," +
                 "ties INT NOT NULL,flags_captured INT NOT NULL,flags_dropped INT NOT NULL,time_played INT NOT NULL,PRIMARY KEY (uuid));");
         statement.executeUpdate();

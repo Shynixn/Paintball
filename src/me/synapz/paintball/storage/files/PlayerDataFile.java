@@ -368,6 +368,7 @@ public class PlayerDataFile extends PaintballFile {
     private void addStatsIfNotYetAdded(UUID id) {
         // checks to make sure the stat's are in config, if not make it
         if (getFileConfig().getConfigurationSection("Player-Data." + id) == null) {
+            getFileConfig().set("Player-Data." + id + ".Username", Bukkit.getOfflinePlayer(id).getName());
             // set the values to 0
             for (StatType value : StatType.values()) {
                 if (!value.isCalculated())
