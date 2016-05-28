@@ -6,9 +6,11 @@ import com.google.common.base.Joiner;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SkullLocation;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.ChatColor;
 import org.bukkit.block.BlockState;
@@ -99,8 +101,10 @@ public class ArenaManager {
         }
 
         String out = Joiner.on(GRAY + ", ").join(list);
-        Messenger.info(player, BLUE + "Arenas: " + out,
-                GREEN + "█-" + GRAY + "Joinable " + RED + "█-" + GRAY + "InProgress " + GRAY + "█-" + GRAY + "Disabled/Not-Setup");
+
+
+        Messenger.info(player, new MessageBuilder(Messages.ARENA_LIST_COMMAND).replace(Tag.ARENA, out).build(),
+                GREEN + "█-" + GRAY + Messages.WAITING.getString() + RED + " █-" + GRAY + Messages.IN_PROGRESS.getString() + GRAY + " █-" + GRAY + Messages.DISABLED.getString());
     }
 
     public Arena getBestArena() {

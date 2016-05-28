@@ -286,6 +286,7 @@ public class ArenaPlayer extends PaintballPlayer {
         kills++;
         killStreak++;
 
+        arena.sendCommands(this.getPlayer(), arena.KILL_COMMANDS);
         if (killStreak > heightKillStreak)
             heightKillStreak = killStreak;
 

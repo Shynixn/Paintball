@@ -78,7 +78,7 @@ public class JoinSigns implements Listener {
                 return;
 
             e.setLine(0, prefix);
-            e.setLine(1, RED + "Leave");
+            e.setLine(1, Messages.SIGN_LEAVE.getString());
             Messenger.success(e.getPlayer(), Messages.SIGN_LEAVE_CREATED);
         }
     }
@@ -92,7 +92,7 @@ public class JoinSigns implements Listener {
         Player player = e.getPlayer();
         if (!sign.getLine(0).contains(Messages.SIGN_TITLE.getString()) || sign.getLine(1) == null) return;
 
-        if (sign.getLine(1).equals(RED + "Leave")) {
+        if (sign.getLine(1).equals(Messages.SIGN_LEAVE.getString())) {
             if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.leave.use"))
                 return;
 
@@ -181,7 +181,7 @@ public class JoinSigns implements Listener {
                         a.getSignLocations().get(sign.getLocation()).removeSign();
                         Messenger.success(e.getPlayer(), new MessageBuilder(Messages.SIGN_JOIN_REMOVED).replace(Tag.ARENA, a.getName()).build());
                     }
-                } else if (sign.getLine(1).equals(RED + "Leave")) {
+                } else if (sign.getLine(1).equals(Messages.SIGN_LEAVE.getString())) {
                     if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.leave.remove"))
                         Messenger.success(e.getPlayer(), Messages.SIGN_LEAVE_REMOVED);
                 }

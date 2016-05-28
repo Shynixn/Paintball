@@ -1,3 +1,10 @@
+v4.5.2
+- Added command kills in config.yml and arenas.yml (@Hako)
+
+v4.5.1
+- Added translations to /pb list
+- Added Paintball leave sign leave message to messages.yml
+
 v4.5.0
 - Added Paintball command title to messages.yml
 - Added Paintball sign title to messages.yml (@Hako)

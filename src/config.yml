@@ -95,6 +95,10 @@ Per-Arena-Settings:
     Tie-Commands: []
     #- "say %player% has tied on %arena%! :I"
 
+    # List of commands that will be sent by the Console when a player kills another player
+    Kill-Commands: []
+      #- "say %player% has killed someone on %arena%! :O"
+
     # Specific extra settings for CTF arenas
     CTF:
       # Played sounds look at plugin page for the sound list specific to your version. By default there is no sound ("") because of different sound names for 1.8 and 1.9

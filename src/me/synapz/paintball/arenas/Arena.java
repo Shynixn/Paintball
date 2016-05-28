@@ -83,6 +83,7 @@ public class Arena {
     public List<String> WIN_COMMANDS;
     public List<String> LOOSE_COMMANDS;
     public List<String> TIE_COMMANDS;
+    public List<String> KILL_COMMANDS;
 
     // All the players in the arena (Lobby, Spec, InGame) linked to the player which is linked to the PaintballPLayer
     private Map<Player, PaintballPlayer> allPlayers = new HashMap<>();
@@ -769,7 +770,7 @@ public class Arena {
         }
     }
 
-    private void sendCommands(Player player, List<String> commands) {
+    public void sendCommands(Player player, List<String> commands) {
         for (String command : commands) {
             command = command.replace(Tag.PLAYER.toString(), player.getName()).replace(Tag.ARENA.toString(), this.getName());
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
@@ -830,6 +831,7 @@ public class Arena {
         WIN_COMMANDS               = ARENA.loadStringList("Win-Commands", this);
         LOOSE_COMMANDS             = ARENA.loadStringList("Lose-Commands", this);
         TIE_COMMANDS               = ARENA.loadStringList("Tie-Commands", this);
+        KILL_COMMANDS              = ARENA.loadStringList("Kill-Commands", this);
 
         COIN_SHOP_TYPE             = Utils.loadMaterial(ARENA.loadString("coin-shop-type", this), Material.MAGMA_CREAM);
     }
