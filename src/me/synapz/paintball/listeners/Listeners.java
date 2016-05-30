@@ -182,6 +182,8 @@ public class Listeners extends BaseListener implements Listener {
                         }
                     }
                     player.openInventory(inv);
+                } else if (name.equals(Messages.ITEM_LEAVE_ARENA.getString())) {
+                    lobbyPlayer.leave();
                 }
             }
             e.setCancelled(true);
@@ -201,7 +203,7 @@ public class Listeners extends BaseListener implements Listener {
             SpectatorPlayer spectatorPlayer = (SpectatorPlayer) gamePlayer;
 
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (name.equals(SpectatorPlayer.LEAVE_ARENA)) {
+                if (name.equals(Messages.ITEM_LEAVE_ARENA.getString())) {
                     spectatorPlayer.leave();
                 } else if (name.equals(SpectatorPlayer.TELEPORTER)) {
                     spectatorPlayer.openMenu();

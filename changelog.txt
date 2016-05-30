@@ -1,3 +1,8 @@
+v4.5.3
+- Added usernames to sql database (@theCav)
+- Added leave arena item to lobby players (@guy)
+- Added item leave name to messages.yml
+
 v4.5.2
 - Added command kills in config.yml and arenas.yml (@Hako)
 

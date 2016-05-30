@@ -2,14 +2,13 @@ package me.synapz.paintball.enums;
 
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
 import static me.synapz.paintball.storage.Settings.THEME;
-import static org.bukkit.ChatColor.DARK_GRAY;
-import static org.bukkit.ChatColor.GRAY;
-import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.*;
 
 public enum Messages {
 
@@ -132,6 +131,7 @@ public enum Messages {
     SCOREBOARD_HEALTH("Health &7» " + Tag.AMOUNT),
     SCOREBOARD_TEAM("Team &7» " + Tag.AMOUNT),
 
+    ITEM_LEAVE_ARENA("&c&lClick" + Tag.SECONDARY + " » &4Leave Arena"),
     SIGN_WRONG_SYNTAX("Wrong syntax for creating Paintball sign."),
     SIGN_AUTOJOIN_CREATED("Auto Join sign successfully created!"),
     SIGN_JOIN_CREATED("Join sign successfully created!"),

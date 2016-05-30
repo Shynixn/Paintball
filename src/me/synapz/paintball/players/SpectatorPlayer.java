@@ -1,6 +1,7 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
@@ -17,7 +18,6 @@ import static org.bukkit.ChatColor.*;
 
 public class SpectatorPlayer extends PaintballPlayer {
 
-    public static final String LEAVE_ARENA = RED + "" + BOLD + "Click" + Messenger.SUFFIX + RESET + DARK_RED + "Leave Arena";
     public static final String TELEPORTER = RED + "" + Settings.THEME + String.valueOf(BOLD) + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleporter";
 
     public SpectatorPlayer(Arena a, Player p) {
@@ -42,7 +42,7 @@ public class SpectatorPlayer extends PaintballPlayer {
     @Override
     protected void giveItems() {
         player.getInventory().setItem(0, Utils.getSkull(this.getPlayer(), TELEPORTER));
-        player.getInventory().setItem(8, Utils.makeItem(Material.BED, LEAVE_ARENA, 1));
+        player.getInventory().setItem(8, Utils.makeItem(Material.BED, Messages.ITEM_LEAVE_ARENA.getString(), 1));
         player.updateInventory();
     }
 

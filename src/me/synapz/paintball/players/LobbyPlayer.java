@@ -116,8 +116,10 @@ public class LobbyPlayer extends PaintballPlayer {
         if (!arena.GIVE_TEAM_SWITCHER)
             return;
 
+        player.getInventory().setItem(8, Utils.makeItem(Material.BED, Messages.ITEM_LEAVE_ARENA.getString(), 1));
+
         // For if the amount of teams are larger than 9 slots (how would they click the 10th or 11th? The -1 is because the player is on 1 team, we don't show that team
-        if (arena.getArenaTeamList().size()-1 > 9) {
+        if (arena.getArenaTeamList().size()-1 > 8) {
             // Just creates a wool item, which when you click will open a change menu
             player.getInventory().setItem(0, Utils.makeWool(team.getChatColor() + "" + ChatColor.BOLD + "Click" + Messenger.SUFFIX + ChatColor.RESET + team.getChatColor() + "Change Team", team.getDyeColor()));
             return;
