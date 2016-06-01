@@ -367,10 +367,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 updateScoreboard();
                 killHorse();
 
-                if (!(arena.RESPAWN_TIME > 0))
-                    player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
-
-                new ProtectionCountdown(arena.RESPAWN_TIME > 0 ? arena.RESPAWN_TIME : arena.SAFE_TIME, this);
+                new ProtectionCountdown(arena.SAFE_TIME, this);
             }
         }
     }

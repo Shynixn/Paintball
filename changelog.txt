@@ -1,3 +1,6 @@
+v4.5.4
+- Temp removed some things from config.yml for better implementations
+
 v4.5.3
 - Added usernames to sql database (@theCav)
 - Added leave arena item to lobby players (@guy)
