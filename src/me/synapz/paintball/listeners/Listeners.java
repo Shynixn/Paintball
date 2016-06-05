@@ -322,7 +322,7 @@ public class Listeners extends BaseListener implements Listener {
                         if (score == arena.MAX_SCORE) {
                             for (ArenaPlayer arenaPlayer : new ArrayList<>(arena.getAllArenaPlayers())) {
                                 if (arenaPlayer.getTeam() == hitTeam) {
-                                    Messenger.error(arenaPlayer.getPlayer(), "Your Core has been destroyed!");
+                                    Messenger.error(arenaPlayer.getPlayer(), Messages.CORE_DESTROYED);
                                     arenaPlayer.turnToSpectator();
                                 } else {
                                     Messenger.success(arenaPlayer.getPlayer(), "Team " + hitTeam.getTitleName() + "'s Core has been destroyed!");

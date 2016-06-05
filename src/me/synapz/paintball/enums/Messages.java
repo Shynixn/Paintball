@@ -103,6 +103,7 @@ public enum Messages {
     ARENA_LOBBY_COUNTDOWN_HEADER("&aWaiting"),
     ARENA_LOBBY_COUNTDOWN_FOOTER("&7" + Tag.TIME + "&a seconds!"),
     ARENA_MOVE_ERROR("You are not allowed to move items in your inventory!"),
+    CORE_DESTROYED("Your Core has been destroyed!"),
     ARENA_SHOP_NAME("&6Coin Shop"),
     ARENA_NO_DUEL_WIELD("You are not allowed to duel wield!"),
     TELEPORTING("&aTeleporting into arena..."),

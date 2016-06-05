@@ -1,3 +1,6 @@
+v4.5.9
+- Added more messages
+
 v4.5.5
 - Fixed players not respawning
 
