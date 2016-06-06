@@ -1,3 +1,11 @@
+v4.6.1
+- Fixed some errors inside scoreboard formatting
+- Made it so scoreboard value is colored to secondary-color instead of &7 in messages.yml
+- Added new line to show total player count and max in messages.yml. Ex: "Players >> 2/8" (To be implemented)
+
+v4.6.0
+- Fixed leave item being removed if a config item give team switcher is false
+
 v4.5.9
 - Added more messages
 

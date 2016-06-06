@@ -113,10 +113,10 @@ public class LobbyPlayer extends PaintballPlayer {
     protected void giveItems() {
         player.getInventory().clear();
 
+        player.getInventory().setItem(8, Utils.makeItem(Material.BED, Messages.ITEM_LEAVE_ARENA.getString(), 1));
+
         if (!arena.GIVE_TEAM_SWITCHER)
             return;
-
-        player.getInventory().setItem(8, Utils.makeItem(Material.BED, Messages.ITEM_LEAVE_ARENA.getString(), 1));
 
         // For if the amount of teams are larger than 9 slots (how would they click the 10th or 11th? The -1 is because the player is on 1 team, we don't show that team
         if (arena.getArenaTeamList().size()-1 > 8) {
