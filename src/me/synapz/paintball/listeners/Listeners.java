@@ -36,7 +36,6 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Listeners extends BaseListener implements Listener {
 
