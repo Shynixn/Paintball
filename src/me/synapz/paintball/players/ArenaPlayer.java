@@ -12,6 +12,7 @@ import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.FireworkEffect;
@@ -103,7 +104,7 @@ public class ArenaPlayer extends PaintballPlayer {
         PaintballScoreboard sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
                 .addTeams(false)
                 .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, Settings.VAULT)
+                .addLine(ScoreboardLine.MONEY, shortenMoney(bal), Settings.VAULT)
                 .addLine(ScoreboardLine.KD, "0.00")
                 .addLine(ScoreboardLine.COIN, 0, arena.COINS)
                 .addLine(ScoreboardLine.KILL_STREAK, 0)
@@ -127,7 +128,7 @@ public class ArenaPlayer extends PaintballPlayer {
         pbSb.reloadTeams(false);
 
         if (Settings.VAULT)
-            pbSb.reloadLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, size+2, Settings.VAULT);
+            pbSb.reloadLine(ScoreboardLine.MONEY, shortenMoney(bal), size+2, Settings.VAULT);
         else
             size--;
 
@@ -187,17 +188,7 @@ public class ArenaPlayer extends PaintballPlayer {
         if (Settings.PLAYERDATA.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath(player.getUniqueId())) < heightKillStreak)
             Settings.PLAYERDATA.setStat(StatType.HIGEST_KILL_STREAK, this, heightKillStreak);
 
-
-        int left = 0;
-        // There must be at least one team
-        for (Team team : arena.getArenaTeamList()) {
-            if (team.getSize() >= 1) {
-                left++;
-            }
-        }
-
-        // If there is less than one team with a player, end the game
-        if (left <= 1 && arena.getAllPlayers().keySet().size() >= 1)
+        if (stopGame())
             arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
     }
 
@@ -359,6 +350,10 @@ public class ArenaPlayer extends PaintballPlayer {
             // If they have no more lives turn them into a spectator player until the game ends
             if (arena.LIVES > 0 && lives == 0) {
                 turnToSpectator();
+
+                if (stopGame())
+                    arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
+
                 return;
             } else {
                 // Reloads their settings for them to go back... Sets their health, kill streak, location, protection and updates their scoreboard
@@ -368,6 +363,8 @@ public class ArenaPlayer extends PaintballPlayer {
                 killHorse();
 
                 player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
+
+                new Title(Messages.ARENA_DIE_HEADER.getString(), Messages.ARENA_DIE_FOOTER.getString(), 10, 21, 10).send(player);
 
                 new ProtectionCountdown(arena.SAFE_TIME, this);
             }
@@ -503,6 +500,36 @@ public class ArenaPlayer extends PaintballPlayer {
         if (lastLocation == null)
             return player.getLocation();
         return lastLocation;
+    }
+
+    private boolean stopGame() {
+        int left = 0;
+        // There must be at least one team
+        for (Team team : arena.getArenaTeamList()) {
+            if (team.getSize() >= 1) {
+                left++;
+            }
+        }
+
+        // If there is less than one team with a player, end the game
+        return left <= 1 && arena.getAllPlayers().keySet().size() >= 1;
+    }
+
+    private String shortenMoney(double money) {
+        double calculatedMoney = money;
+        String suffix = "";
+
+        if (money >= 1000) {
+            if (money >= 1000000) {
+                calculatedMoney = money / 1000000;
+                suffix = "M";
+            } else {
+                calculatedMoney = money / 1000;
+                suffix = "K";
+            }
+        }
+
+        return String.format("%s%.2f%s", arena.CURRENCY, calculatedMoney, suffix);
     }
 
     private boolean reachedGoal() {

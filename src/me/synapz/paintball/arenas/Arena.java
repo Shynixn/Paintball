@@ -1,7 +1,6 @@
 package me.synapz.paintball.arenas;
 
 
-import com.avaje.ebeaninternal.server.cluster.mcast.Message;
 import com.google.common.base.Joiner;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
@@ -107,7 +106,7 @@ public class Arena {
         DISABLED(Messages.DISABLED),
         STARTING(Messages.STARTING),
         STOPPING(Messages.STOPPING),
-        IN_PROGRESS(Messages.IN_PROGRESS),
+        IN_PROGRESS(Messages.PLAYING),
         REMOVED(Messages.REMOVED);
 
         private final Messages message;

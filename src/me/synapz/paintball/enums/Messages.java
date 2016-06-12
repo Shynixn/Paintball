@@ -12,11 +12,6 @@ import static org.bukkit.ChatColor.*;
 
 public enum Messages {
 
-    /*
-    BLUE + "Arenas: " + out,
-    GREEN + "█-" + GRAY + "Joinable " + RED + "█-" + GRAY + "InProgress " + GRAY + "█-" + GRAY + "Disabled/Not-Setup";
-    */
-
     SIGN_TITLE("&8[" + Tag.THEME + "Paintball&8]"),
     COMMAND_TITLE("&lPaintball"),
     PREFIX("&8[&3Paintball&8] "),
@@ -118,6 +113,8 @@ public enum Messages {
     ARENA_CANNOT_PICKUP_FLAG("You cannot pickup your own team's flag!"),
     ARENA_CANNOT_BREAK_BLOCKS("You are not allowed to break blocks while in the arena!"),
     ARENA_COMMAND_DISABLED("That command is disabled while in the arena."),
+    ARENA_DIE_HEADER("&4&lYou died!"),
+    ARENA_DIE_FOOTER("&7Respawning..."),
 
     SCOREBOARD_TITLE(Tag.THEME + "&l  Paintball &f" + Tag.SECONDARY + "%time%  "),
     SCOREBOARD_COINS("Coins " + Tag.SECONDARY + "» " + Tag.AMOUNT),
@@ -228,7 +225,7 @@ public enum Messages {
     DISABLED("Disabled"),
     STARTING("Starting"),
     STOPPING("Stopping"),
-    IN_PROGRESS("In Progress"),
+    PLAYING("Playing"),
     REMOVED("Remoaced");
     ;
 

@@ -37,6 +37,11 @@ public class SpectatorPlayer extends PaintballPlayer {
         Settings.PLAYERDATA.savePlayerInformation(player);
         player.setAllowFlight(true);
         player.setFlying(true);
+
+        // Hides all spectator players from game players
+        for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
+            arenaPlayer.getPlayer().hidePlayer(player);
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package me.synapz.paintball.listeners;
 
+import me.synapz.paintball.enums.Messages;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,7 +23,9 @@ public class Listeners1_9 extends BaseListener implements Listener {
     public void onTryToDuelWield(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
 
-        if (isInArena(player))
-            e.setCancelled(e.getRawSlot() == 45 && stopAction(player, "You are not allowed to duel wield!"));
+        if (e.getRawSlot() == 45) {
+            if (stopAction(player, Messages.ARENA_NO_DUEL_WIELD.getString()))
+                e.setCancelled(true);
+        }
     }
 }

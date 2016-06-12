@@ -117,6 +117,12 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
     public void leave() {
         arena.removePlayer(this, true); // removes player from all array lists
 
+        if (this instanceof SpectatorPlayer) {
+            for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
+                arenaPlayer.getPlayer().showPlayer(player);
+            }
+        }
+
         if ((this instanceof ArenaPlayer) && arena.getAllArenaPlayers().size() <= 1) {
             arena.forceLeaveArena();
         }

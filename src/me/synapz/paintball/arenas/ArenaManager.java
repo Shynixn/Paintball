@@ -22,7 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 
 import static me.synapz.paintball.storage.Settings.PLAYERDATA;
-import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.*;
 
 public class ArenaManager {
@@ -104,7 +103,7 @@ public class ArenaManager {
 
 
         Messenger.info(player, new MessageBuilder(Messages.ARENA_LIST_COMMAND).replace(Tag.ARENA, out).build(),
-                GREEN + "█-" + GRAY + Messages.WAITING.getString() + RED + " █-" + GRAY + Messages.IN_PROGRESS.getString() + GRAY + " █-" + GRAY + Messages.DISABLED.getString());
+                GREEN + "█-" + GRAY + Messages.WAITING.getString() + RED + " █-" + GRAY + Messages.PLAYING.getString() + GRAY + " █-" + GRAY + Messages.DISABLED.getString());
     }
 
     public Arena getBestArena() {
@@ -158,7 +157,13 @@ public class ArenaManager {
                             return;
                         }
 
-                        Map<String, String> playerAndStat = PLAYERDATA.getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+                        Map<String, String> playerAndStat;
+
+                        try {
+                            playerAndStat = PLAYERDATA.getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+                        } catch (NumberFormatException exc) {
+                            continue;
+                        }
 
                         sign.setLine(1, playerAndStat.keySet().toArray()[0] + "");
                         sign.setLine(3, playerAndStat.values().toArray()[0] + "");

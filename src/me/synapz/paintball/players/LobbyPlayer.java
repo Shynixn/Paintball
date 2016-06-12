@@ -67,6 +67,7 @@ public class LobbyPlayer extends PaintballPlayer {
                 .addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName())
                 .addLine(ScoreboardLine.STATUS, arena.getStateAsString())
                 .addLine(ScoreboardLine.MODE, arena.getArenaType().getShortName().toUpperCase())
+                .addLine(ScoreboardLine.PLAYERS, arena.getLobbyPlayers().size())
                 .build();
     }
 
@@ -80,7 +81,8 @@ public class LobbyPlayer extends PaintballPlayer {
 
         int size = arena.getArenaTeamList().size()-1;
         pbSb.reloadTeams(true)
-                .reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+2);
+                .reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+2)
+                .reloadLine(ScoreboardLine.PLAYERS, arena.getLobbyPlayers().size() + "", size+5);
 
         if (arena.GIVE_TEAM_SWITCHER)
             giveItems();

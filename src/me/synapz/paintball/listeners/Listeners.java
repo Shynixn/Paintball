@@ -345,8 +345,10 @@ public class Listeners extends BaseListener implements Listener {
     public void onTryToDuelWield(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
 
-        if (isInArena(player))
-            e.setCancelled(e.getRawSlot() == 45 && stopAction(player, Messages.ARENA_NO_DUEL_WIELD.getString()));
+        if (isInArena(player) && e.getRawSlot() == 45) {
+            if (stopAction(player, Messages.ARENA_NO_DUEL_WIELD.getString()))
+                e.setCancelled(true);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

@@ -1,3 +1,17 @@
+v4.6.7
+- Added "You Died" title when a player dies so they know they died
+    - These messages have been added to messages.yml don't worry
+- Fixed arena not stopping even though there was no one on the other teams
+- Made it so game players cannot see a spectator player's nametag
+- Renamed AK-47 verb to "mowed down"
+- Added verb to Duel Wield and Rapid Fire
+- Made it so money that is over 1 million is turned to 1M (and thousand is 1k) so it is easier to see and doesn't reach 16 character limit on scoreboard
+- Fixed players from being able to move items in servers that are 1.9
+
+v4.6.2
+- Finished Player leaderboard implementation for Lobby Scoreboards
+    - Looks very nice!
+
 v4.6.1
 - Fixed some errors inside scoreboard formatting
 - Made it so scoreboard value is colored to secondary-color instead of &7 in messages.yml

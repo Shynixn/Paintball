@@ -19,7 +19,8 @@ public enum ScoreboardLine {
     STATUS(Messages.SCOREBOARD_STATUS),
     HEALTH(Messages.SCOREBOARD_HEALTH),
     LIVES(Messages.SCOREBOARD_LIVES),
-    MODE(Messages.SCOREBOARD_MODE);
+    MODE(Messages.SCOREBOARD_MODE),
+    PLAYERS(Messages.SCOREBOARD_PLAYERS);
 
     private Messages message;
     private String name;
