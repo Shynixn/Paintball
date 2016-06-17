@@ -29,7 +29,6 @@ import java.util.Map;
 public class Settings {
 
     public static String WEBSITE;
-    public static String PREFIX;
     public static String VERSION;
     public static String THEME;
     public static String AUTHOR;

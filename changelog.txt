@@ -1,3 +1,15 @@
+v4.7.1
+- Added better WorldGuard support
+
+v4.7.0
+- Made it so arenas are no longer case sensitive
+- Fixed major bug that made it so default item would not be given on start
+- Fixed %ARENA% tag not being replaced in chat message
+- Fixed messages.yml loading swapped protection messages
+
+v4.6.9
+- Added default item to be editable inside items.yml
+
 v4.6.7
 - Added "You Died" title when a player dies so they know they died
     - These messages have been added to messages.yml don't worry

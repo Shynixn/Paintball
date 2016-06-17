@@ -39,7 +39,18 @@ public class ArenaManager {
 
     // Gets an arena from a name
     public Arena getArena(String name) {
-        return arenas.get(name);
+        Arena arena = arenas.get(name);
+
+        if (arena == null) {
+            for (String rawName : arenas.keySet()) {
+                if (name.equalsIgnoreCase(rawName)) {
+                    return arenas.get(rawName);
+                }
+            }
+            return null;
+        } else {
+            return arena;
+        }
     }
 
     // Gets an arena from a player inside it

@@ -214,8 +214,8 @@ public enum Messages {
     TOP_LEADERBOARD_LAYOUT(Tag.THEME + "#" + Tag.RANK + " " + Tag.SECONDARY + Tag.STAT + " » " + Tag.THEME + Tag.SENDER + " " + Tag.SECONDARY + "- " + Tag.AMOUNT),
     PER_LEADERBOARD_LAYOUT(Tag.THEME + "#" + Tag.RANK + "" + Tag.SECONDARY + " » " + Tag.THEME + Tag.SENDER + " " + Tag.SECONDARY + "- "  + Tag.AMOUNT),
 
-    YOU_ARE_PROTECTED("That player is protected. Protection: " + Tag.TIME + " seconds"),
-    THEY_ARE_PROTECTED("You are still protected. Protection: " + Tag.TIME + " seconds"),
+    YOU_ARE_PROTECTED("You are still protected. Protection: " + Tag.TIME + " seconds"),
+    THEY_ARE_PROTECTED("That player is protected. Protection: " + Tag.TIME + " seconds"),
 
     HIT_PLAYER("Hit player! " + Tag.AMOUNT + "/" + Tag.MAX),
     TEAM_FULL("&rTeam " + Tag.TEAM + " is full!"),

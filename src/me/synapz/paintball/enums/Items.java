@@ -8,6 +8,7 @@ import org.bukkit.Sound;
 
 public enum Items {
 
+    DEFAULT("Gun", Material.GOLD_BARDING, false, 1, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Sounds.WOOD_CLICK.bukkitSound(), 1),
     TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Sounds.WOOD_CLICK.bukkitSound(), 0),
     SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Sounds.BURP.bukkitSound(), 0),
     COWBOY("Cowboy", Material.LEASH, true, 1, "Puts you onto a horse to ride", 0, 3, 0, "", "", Sounds.FALL_BIG.bukkitSound(), 0),

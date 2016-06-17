@@ -231,7 +231,7 @@ public class ArenaPlayer extends PaintballPlayer {
         PlayerInventory inv = player.getInventory();
 
         inv.setArmorContents(Utils.colorLeatherItems(team, new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_HELMET)));
-        CoinItems.getCoinItems().getMainItem().giveItemToPlayer(this);
+        CoinItems.getCoinItems().getDefaultItem().giveItemToPlayer(this);
 
         if (arena.COIN_SHOP)
             inv.setItem(8, Utils.makeItem(arena.COIN_SHOP_TYPE, Messages.ARENA_SHOP_NAME.getString(), 1));

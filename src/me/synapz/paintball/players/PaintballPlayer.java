@@ -107,6 +107,8 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         chat = chat.replace("%MSG%", message);
         chat = chat.replace("%PREFIX%", Messages.PREFIX.getString());
         chat = chat.replace("%PLAYER%", player.getName());
+        chat = chat.replace("%ARENA%", this.getArena().getName());
+
         for (PaintballPlayer player : arena.getAllPlayers().values()) {
             if (!perTeamChat || perTeamChat && player.getTeam() == team)
                 player.getPlayer().sendMessage(chat);

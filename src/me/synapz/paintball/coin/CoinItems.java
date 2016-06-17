@@ -25,6 +25,8 @@ public class CoinItems implements Listener {
 
     private static CoinItems instance = null;
 
+    private CoinItem defaultItem;
+
     public static CoinItems getCoinItems() {
         if (instance == null) {
             new CoinItems().loadItems();
@@ -216,19 +218,27 @@ public class CoinItems implements Listener {
                 Utils.shootSnowball(player, event.getArena(), 0.1);
             }
         };
+
+        makeDefaultItem();
     }
 
-    public CoinItem getMainItem() {
-        CoinItem item = new CoinItem(Material.GOLD_BARDING, "Gun", 1, false, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Sounds.WOOD_CLICK.bukkitSound(), 1) {
-            @Override
-            public void onClickItem(ArenaClickItemEvent event) {
-                Player player = event.getArenaPlayer().getPlayer();
-                Arena arena = event.getArena();
+    public CoinItem getDefaultItem() {
+        makeDefaultItem();
+        return defaultItem;
+    }
 
-                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-                    Utils.shootSnowball(player, event.getArena(), arena.ACCURACY ? 0 : 0.1);
-            }
-        };
-        return item;
+    private void makeDefaultItem() {
+        if (defaultItem == null) {
+            defaultItem = new CoinItem(Items.DEFAULT) {
+                @Override
+                public void onClickItem(ArenaClickItemEvent event) {
+                    Player player = event.getArenaPlayer().getPlayer();
+                    Arena arena = event.getArena();
+
+                    if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                        Utils.shootSnowball(player, event.getArena(), arena.ACCURACY ? 0 : 0.1);
+                }
+            };
+        }
     }
 }
