@@ -35,6 +35,7 @@ public class BungeeManager implements PluginMessageListener {
             String serverIDString = Integer.toString(randomId);
             String serverID = Base64.getEncoder().encodeToString(serverIDString.getBytes());
             Settings.DATABASE_FILE.setValue("Bungee.serverID", serverID);
+            Settings.DATABASE_FILE.saveFile();
         }
     }
 
@@ -83,7 +84,7 @@ public class BungeeManager implements PluginMessageListener {
             String arenaName = in.readUTF();
             Arena a = ArenaManager.getArenaManager().getArena(arenaName);
             // TODO: find a better way of checking if an arena is joinable
-            if (a.getMax() < a.getAllPlayers().size()) {
+            if (a.getMax() > a.getAllPlayers().size()) {
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("Paintball");
                 out.writeUTF("Response");
