@@ -3,6 +3,7 @@ package me.synapz.paintball.utils;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.countdowns.PaintballCountdown;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import org.bukkit.*;
 import org.bukkit.block.Banner;
@@ -305,6 +306,11 @@ public class Utils {
      */
     public static boolean canJoin(Player player, Arena arena) {
         Arena.ArenaState state = arena.getState();
+
+        if (!player.hasPermission("paintball.join." + arena.getName()) && !player.hasPermission("paintball.join.*")) {
+            Messenger.error(player, Messages.ARENA_JOIN_PERMISSION.getString());
+            return false;
+        }
 
         for (Arena a : ArenaManager.getArenaManager().getArenas().values()) {
             if (a.containsPlayer(player)) {

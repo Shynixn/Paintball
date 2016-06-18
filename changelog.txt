@@ -1,3 +1,12 @@
+v4.7.4
+- Added per arena permissions so now you can control which player/groups can join what arenas
+    - Just to clarify everything...
+    - paintball.join is used for access command to /pb join
+    - paintball.join.* is used for access to actually join every arenas
+    - paintball.join.<arenaname> is used for access to a specific arena
+    - By DEFAULT, players have access to join all enabled/setup arenas!
+- Added these messages to messages.yml
+
 v4.7.1
 - Added better WorldGuard support
 

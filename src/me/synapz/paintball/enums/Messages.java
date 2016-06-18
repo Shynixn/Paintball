@@ -209,6 +209,7 @@ public enum Messages {
     FLAGS_DROPPED("Flags Dropped"),
     TIME_PLAYED("Time Played"),
 
+    ARENA_JOIN_PERMISSION("You do not have permission to join that arena!"),
     TOP_LEADERBOARD_TITLE(Tag.SECONDARY + "&m          " + Tag.THEME + " Paintball Top " + Tag.SECONDARY + Tag.PAGE + Tag.THEME + " Leaderboard " + Tag.SECONDARY + "&m          "),
     PER_LEADERBOARD_TITLE(Tag.SECONDARY + "&m          " + Tag.THEME + " Paintball " + Tag.STAT + " Leaderboard &7" + Tag.PAGE + Tag.THEME + "/&7" + Tag.MAX + " " + Tag.SECONDARY + "&m          "),
     TOP_LEADERBOARD_LAYOUT(Tag.THEME + "#" + Tag.RANK + " " + Tag.SECONDARY + Tag.STAT + " » " + Tag.THEME + Tag.SENDER + " " + Tag.SECONDARY + "- " + Tag.AMOUNT),
