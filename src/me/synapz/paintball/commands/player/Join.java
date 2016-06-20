@@ -10,7 +10,6 @@ import me.synapz.paintball.utils.Messenger;
 public class Join extends TeamCommand {
 
     public void onCommand() {
-        // If the player types in /pb join
         if (args.length == 1) {
             Arena arena = ArenaManager.getArenaManager().getBestArena();
             if (arena == null) {

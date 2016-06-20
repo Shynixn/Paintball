@@ -21,12 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CoinItem extends ItemStack {
-    // Display name
-    // Description
-    // Cost
-    // Coins
-    // Expiration Time
-    // Permission
 
     private String nameWithSpaces;
     private final String name;
@@ -39,9 +33,11 @@ public class CoinItem extends ItemStack {
     private final boolean showItem;
     private final Sound sound;
     private final int damage;
+    private final int usesPerGame;
+    private final int usesPerPlayer;
     private Items coinEnumItem;
 
-    public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, String action, Sound sound, int damage) {
+    public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, String action, Sound sound, int usesPerPlayer, int usesPerGame, int damage) {
         super(material, amount);
         this.name = name;
         this.nameWithSpaces = name;
@@ -54,6 +50,8 @@ public class CoinItem extends ItemStack {
         this.sound = sound;
         this.action = action;
         this.damage = damage;
+        this.usesPerGame = usesPerGame;
+        this.usesPerPlayer = usesPerPlayer;
         this.coinEnumItem = null;
 
         CoinItemHandler.getHandler().addItem(this);
@@ -72,6 +70,8 @@ public class CoinItem extends ItemStack {
                 item.getPermission(),
                 item.getAction(),
                 item.getSound(),
+                item.getUsesPerPlayer(),
+                item.getUsesPerGame(),
                 item.getDamage());
 
         this.coinEnumItem = item;
@@ -89,6 +89,8 @@ public class CoinItem extends ItemStack {
         this.showItem = item.showItem();
         this.sound = item.getSound();
         this.action = item.getAction();
+        this.usesPerPlayer = item.getUsesPerPlayer();
+        this.usesPerGame = item.getUsesPerGame();
         this.damage = item.getDamage();
         this.coinEnumItem = item.getCoinEnumItem();
     }
@@ -131,6 +133,14 @@ public class CoinItem extends ItemStack {
     // Gets the item's kill action
     public String getAction() {
         return action;
+    }
+
+    public int getUsesPerGame() {
+        return usesPerGame;
+    }
+
+    public int getUsesPerPlayer() {
+        return usesPerPlayer;
     }
 
     public int getDamage() {
@@ -184,11 +194,20 @@ public class CoinItem extends ItemStack {
         if (this.hasPermission() && !player.getPlayer().hasPermission(permission)) {
             builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_1).build());
         } else {
+            Integer usesPerGame = player.getArena().getCoinUsesPerGame().get(this);
+            Integer usesPerPlayer = player.getUsesPerPlayer().get(this);
+
             if (this.requiresCoins() && player.getCoins() < this.getCoins())
                 builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_2).build());
 
             if (this.requiresMoney() && Settings.VAULT && Settings.ECONOMY.getBalance(player.getPlayer()) < getMoney())
                 builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_3).build());
+
+            if (usesPerGame != null && usesPerGame == this.getUsesPerGame())
+                builder.add(ChatColor.RED + "Item has reached it's max amount of uses per game.");
+
+            if (usesPerPlayer != null && usesPerPlayer == this.getUsesPerPlayer())
+                builder.add(ChatColor.RED + "Item has reached it's max amount of uses per player.");
         }
 
         if (!builder.isEmpty()) {
@@ -200,6 +219,9 @@ public class CoinItem extends ItemStack {
 
     // Adds a copy of the CoinItem to the player's inventory
     public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
+        playerToGetItem.incrementCoinUsePerPlayer(this);
+        playerToGetItem.getArena().incrementCoinUse(this);
+
         playerToGetItem.addItem(new CoinItem(this));
     }
 

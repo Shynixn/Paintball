@@ -8,21 +8,21 @@ import org.bukkit.Sound;
 
 public enum Items {
 
-    DEFAULT("Gun", Material.GOLD_BARDING, false, 1, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Sounds.WOOD_CLICK.bukkitSound(), 1),
-    TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Sounds.WOOD_CLICK.bukkitSound(), 0),
-    SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Sounds.BURP.bukkitSound(), 0),
-    COWBOY("Cowboy", Material.LEASH, true, 1, "Puts you onto a horse to ride", 0, 3, 0, "", "", Sounds.FALL_BIG.bukkitSound(), 0),
-    DUEL_WIELD("Duel Wield", Material.IRON_HOE, true, 1, "Lets you shoot from both hands", 0, 4, 120, "", "dueled", Sounds.ARROW_HIT.bukkitSound(), 1),
-    RAPID_FIRE("Rapid Fire", Material.DIAMOND_HOE, true, 1, "Allows you to left or right click\nto shoot", 0, 4, 0, "pieced", "", Sounds.ARROW_HIT.bukkitSound(), 1),
-    AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", "mowed down",  Utils.DEFAULT_SOUND, 1),
-    FLY("Fly", Material.FLINT, false, 1, "Activates fly on click", 0, 6, 0, "", "", Sounds.ZOMBIE_PIG_HURT.bukkitSound(), 0),
-    ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted",  Sounds.BLAZE_HIT.bukkitSound(), 3),
-    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Sounds.WOOD_CLICK.bukkitSound(), 3),
-    DOUBLE("2x Coins", Material.GOLD_INGOT, true, 1, "Earn 2x Coins for the rest of the game", 0, 9, 0, "", "", Sounds.BURP.bukkitSound(), 0),
-    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed",  Sounds.CHICKEN_EGG_POP.bukkitSound(), 3),
-    CYCLONE("Cyclone", Material.HOPPER, true, 1, "Turns you into a Paintball shooting Cyclone", 0, 11, 0, "", "winded", Sounds.ANVIL_LAND.bukkitSound(), 3),
-    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended",  Sounds.BAT_TAKEOFF.bukkitSound(), 3),
-    NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Sounds.ENDERDRAGON_GROWL.bukkitSound(), 0);
+    DEFAULT("Gun", Material.GOLD_BARDING, false, 1, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Sounds.WOOD_CLICK.bukkitSound(), -1, -1, 1),
+    TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Sounds.WOOD_CLICK.bukkitSound(), -1, -1, 0),
+    SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Sounds.BURP.bukkitSound(), -1, -1, 0),
+    COWBOY("Cowboy", Material.LEASH, true, 1, "Puts you onto a horse to ride", 0, 3, 0, "", "", Sounds.FALL_BIG.bukkitSound(), -1, -1, 0),
+    DUEL_WIELD("Duel Wield", Material.IRON_HOE, true, 1, "Lets you shoot from both hands", 0, 4, 120, "", "dueled", Sounds.ARROW_HIT.bukkitSound(), -1, -1, 1),
+    RAPID_FIRE("Rapid Fire", Material.DIAMOND_HOE, true, 1, "Allows you to left or right click\nto shoot", 0, 4, 0, "pieced", "", Sounds.ARROW_HIT.bukkitSound(), -1, -1, 1),
+    AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", "mowed down",  Utils.DEFAULT_SOUND, -1, -1, 1),
+    FLY("Fly", Material.FLINT, false, 1, "Activates fly on click", 0, 6, 0, "", "", Sounds.ZOMBIE_PIG_HURT.bukkitSound(), -1, -1, 0),
+    ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted",  Sounds.BLAZE_HIT.bukkitSound(), -1, -1, 3),
+    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Sounds.WOOD_CLICK.bukkitSound(), -1, -1, 3),
+    DOUBLE("2x Coins", Material.GOLD_INGOT, true, 1, "Earn 2x Coins for the rest of the game", 0, 9, 0, "", "", Sounds.BURP.bukkitSound(), -1, -1, 0),
+    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed",  Sounds.CHICKEN_EGG_POP.bukkitSound(), -1, -1, 3),
+    CYCLONE("Cyclone", Material.HOPPER, true, 1, "Turns you into a Paintball shooting Cyclone", 0, 11, 0, "", "winded", Sounds.ANVIL_LAND.bukkitSound(), -1, -1, 3),
+    PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended", Sounds.BAT_TAKEOFF.bukkitSound(), -1, -1, 3),
+    NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Sounds.ENDERDRAGON_GROWL.bukkitSound(), 1, -1, 0);
 
     @Override
     public String toString() {
@@ -41,8 +41,10 @@ public enum Items {
     private final String action;
     private final Sound sound;
     private final int damage;
+    private final int usesPerGame;
+    private final int usesPerPlayer;
 
-    Items(String n, Material mat, boolean s, int a, String desc, double m, int c, int t, String p, String ac, Sound sound, int dmg) {
+    Items(String n, Material mat, boolean s, int a, String desc, double m, int c, int t, String p, String ac, Sound sound, int usesPerPlayer, int usesPerGame, int dmg) {
         this.name = n;
         this.material = mat;
         this.amount = a;
@@ -55,6 +57,8 @@ public enum Items {
         this.action = ac;
         this.sound = sound;
         this.damage = dmg;
+        this.usesPerGame = usesPerGame;
+        this.usesPerPlayer = usesPerPlayer;
     }
 
     public String getName() {
@@ -99,6 +103,14 @@ public enum Items {
 
     public Sound getSound() {
         return Settings.ITEMS.getSound(this);
+    }
+
+    public int getUsesPerPlayer() {
+        return Settings.ITEMS.getUsesPerPlayer(this);
+    }
+
+    public int getUsesPerGame() {
+        return Settings.ITEMS.getUsesPerGame(this);
     }
 
     public int getDamage() {
@@ -147,6 +159,14 @@ public enum Items {
 
     public Sound getDefaultSound() {
         return sound;
+    }
+
+    public int getDefaultUsesPerGame() {
+        return usesPerGame;
+    }
+
+    public int getDefaultUsesPerPlayer() {
+        return usesPerPlayer;
     }
 
     public int getDefaultDamage() {

@@ -34,6 +34,7 @@ import static me.synapz.paintball.storage.Settings.*;
 
 public class ArenaPlayer extends PaintballPlayer {
 
+    private Map<CoinItem, Integer> usesPerPlayer = new HashMap<>();
     private Map<String, CoinItem> coinItems = new HashMap<>();
 
     private Horse horse;
@@ -63,6 +64,12 @@ public class ArenaPlayer extends PaintballPlayer {
 
     public ArenaPlayer(SpectatorPlayer sp, Team team) {
         super(sp.getArena(), team, sp.getPlayer(), true);
+
+        for (CoinItem coinItem : CoinItemHandler.getHandler().getAllItems().values()) {
+            if (coinItem.getUsesPerPlayer() <= -1) {
+                usesPerPlayer.put(coinItem, 0);
+            }
+        }
     }
 
     /**
@@ -85,6 +92,12 @@ public class ArenaPlayer extends PaintballPlayer {
 
         player.setHealthScale(arena.HITS_TO_KILL*2); // times two because one health is a half heart, we want full hearts
         player.setHealth(player.getMaxHealth());
+
+        for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
+            Player player = arenaPlayer.getPlayer();
+
+            this.player.showPlayer(player);
+        }
     }
 
     @Override
@@ -238,7 +251,6 @@ public class ArenaPlayer extends PaintballPlayer {
 
         if (arena.ARENA_WOOL_HELMET)
             giveWoolHelmet();
-
         player.updateInventory();
     }
 
@@ -266,6 +278,20 @@ public class ArenaPlayer extends PaintballPlayer {
         }
     }
 
+    public Map<CoinItem, Integer> getUsesPerPlayer() {
+        return usesPerPlayer;
+    }
+
+    public void incrementCoinUsePerPlayer(CoinItem coinItem) {
+        if (usesPerPlayer.containsKey(coinItem)) {
+            int pastUses = usesPerPlayer.get(coinItem);
+            int newUses = pastUses++;
+
+            usesPerPlayer.remove(coinItem, pastUses);
+            usesPerPlayer.put(coinItem, newUses);
+        }
+    }
+
     /**
      * When this ArenaPlayer kills another ArenaPlayer.
      * @param arenaPlayer ArenaPlayer who was killed
@@ -287,7 +313,7 @@ public class ArenaPlayer extends PaintballPlayer {
         depositCoin(arena.COIN_PER_KILL);
 
         arena.incrementTeamScore(team, true);
-        arena.broadcastMessage(THEME + player.getName() + SECONDARY + " " + action + " " + THEME + arenaPlayer.getPlayer().getName());
+        sendShotMessage(action, arenaPlayer);
 
         arena.updateAllScoreboard();
 
@@ -295,6 +321,18 @@ public class ArenaPlayer extends PaintballPlayer {
         if (reachedGoal()) {
             arena.win(Arrays.asList(team));
         }
+    }
+
+    public void sendShotMessage(String action, ArenaPlayer died) {
+        if (action == null) {
+            action = "shot";
+        }
+
+        if (action.isEmpty()) {
+            action = "shot";
+        }
+
+        arena.broadcastMessage(team.getChatColor() + player.getName() + SECONDARY + " " + action + " " + died.getTeam().getChatColor() + died.getPlayer().getName());
     }
 
     /**

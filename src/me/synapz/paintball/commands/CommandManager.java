@@ -55,6 +55,7 @@ public class CommandManager implements CommandExecutor{
                 if (command.getName().equalsIgnoreCase("admin") || command.getName().equalsIgnoreCase("arena")) {
                     if (args.length == 1) {
                         dispatchCommand(command, player, args);
+                        return true;
                     } else {
                         PaintballCommand command1 = COMMANDS.get(args[1].toLowerCase());
 

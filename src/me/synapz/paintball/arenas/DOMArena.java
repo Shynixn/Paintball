@@ -69,8 +69,8 @@ public class DOMArena extends FlagArena {
         for (Team team : getArenaTeamList()) {
             Location center = getFlagLocation(team).subtract(0, 1, 0);
 
-            List<Location> secLoc = makePlatform(center.clone(), Material.STAINED_GLASS, team.getDyeColor().getData(), 2, Material.STAINED_CLAY);
-            makePlatform(center.clone().subtract(0, 1, 0), Material.STAINED_CLAY, team.getDyeColor().getData(), 2, null);
+            List<Location> secLoc = makePlatform(center.clone(), Material.STAINED_GLASS, team.getDyeColor().getData(), GENERATE_SIZE, Material.STAINED_CLAY);
+            makePlatform(center.clone().subtract(0, 1, 0), Material.STAINED_CLAY, team.getDyeColor().getData(), GENERATE_SIZE, null);
             removeAbove(center.clone());
 
             // Makes iron under beacon to turn it on
@@ -104,8 +104,8 @@ public class DOMArena extends FlagArena {
         Location center = centerLoc.get(loc);
         Team pastTeam = secureLocations.get(loc);
 
-        List<Location> secLoc = makePlatform(center.clone(), Material.STAINED_GLASS, team.getDyeColor().getData(), 2, Material.STAINED_CLAY);
-        makePlatform(center.clone().subtract(0, 1, 0), Material.STAINED_CLAY, team.getDyeColor().getData(), 2, null);
+        List<Location> secLoc = makePlatform(center.clone(), Material.STAINED_GLASS, team.getDyeColor().getData(), GENERATE_SIZE, Material.STAINED_CLAY);
+        makePlatform(center.clone().subtract(0, 1, 0), Material.STAINED_CLAY, team.getDyeColor().getData(), GENERATE_SIZE, null);
         removeAbove(center.clone());
 
         // Makes iron under beacon to turn it on

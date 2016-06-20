@@ -46,7 +46,13 @@ public class CoinItemListener implements Listener {
         }
         if (coinItem.hasError(arenaPlayer)) {
             Messenger.error(player, new String[]{(String) coinItem.getError(arenaPlayer).get(0)});
+            return;
+        }
+        if (coinItem.getUsesPerGame() != -1 && coinItem.getUsesPerGame() != -1) {
+            Messenger.error(player, "This item has been used to many times this game!");
+            return;
         } else {
+
             coinItem.giveItemToPlayer(arenaPlayer);
             if ((coinItem.requiresMoney()) || (coinItem.requiresCoins())) {
                 arena.updateAllScoreboard();

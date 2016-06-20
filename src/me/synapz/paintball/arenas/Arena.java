@@ -2,6 +2,9 @@ package me.synapz.paintball.arenas;
 
 
 import com.google.common.base.Joiner;
+import me.synapz.paintball.coin.CoinItem;
+import me.synapz.paintball.coin.CoinItemHandler;
+import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
@@ -96,6 +99,7 @@ public class Arena {
     private Map<Team, Integer> teams = new HashMap<>();
 
     private Map<Location, SignLocation> signLocations = new HashMap<>();
+    private Map<CoinItem, Integer> coinUsesPerGame = new HashMap<>();
 
     private ArenaState state;
     private boolean toReload;
@@ -141,6 +145,12 @@ public class Arena {
         }
 
         loadConfigValues();
+
+        for (CoinItem coinItem : CoinItemHandler.getHandler().getAllItems().values()) {
+            if (coinItem.getUsesPerGame() <= -1) {
+                coinUsesPerGame.put(coinItem, 0);
+            }
+        }
     }
 
     public ArenaType getArenaType() {
@@ -306,6 +316,20 @@ public class Arena {
         advSave();
     }
 
+    public Map<CoinItem, Integer> getCoinUsesPerGame() {
+        return coinUsesPerGame;
+    }
+
+    public void incrementCoinUse(CoinItem coinItem) {
+        if (coinUsesPerGame.containsKey(coinItem)) {
+            int pastUses = coinUsesPerGame.get(coinItem);
+            int newUses = pastUses++;
+
+            coinUsesPerGame.remove(coinItem, pastUses);
+            coinUsesPerGame.put(coinItem, newUses);
+        }
+    }
+
     // Checks weather this arena is setup or not. In order to be setup max, min, spectator and all spawns must be set
     public boolean isSetup() {
         boolean spawnsSet = true;
@@ -467,6 +491,8 @@ public class Arena {
         setState(ArenaState.WAITING);
         this.forceLeaveArena();
     }
+
+
 
     public void forceLeaveArena() {
         List<PaintballPlayer> copiedList = new ArrayList<>(allPlayers.values());

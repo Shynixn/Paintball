@@ -1,3 +1,22 @@
+v4.7.7
+- Fully implemented 'uses-per-game' and 'uses-per-player' inside items.yml
+- Nuke's default is 1 use per player to avoid abuse
+
+v4.7.6
+- "Fixed" vanish bug -- players will no longer be in vanish if they are playing the game
+- Made Nuke default 1 use per player so it is not abused (feature not hooked into shop)
+- Game messages now have wider colors to make information pop. Like which team shot which is a lot easier to see
+- Started making logs.yml file
+- Fixed really annoying double messages: /pb join ("No arenas currently opened!") and many messages being sent twice, like, I get it plugin...
+- Enhanced lobby scoreboard to show "Players >> 2/16" instead of "Players >> 2"
+- Fixed "Waiting" title from being so abrasive... Now it nicely fades in instead of just flashing in your face like an obnoxious siren
+- Fixed 'Sugar Overdose' so it now appends on the current time instead of overriding it with 2 minutes
+
+v4.7.5
+- Fixed domination generation size changes not taking effect
+- Started implementation of uses-per-game and uses-per-arena inside items.yml
+    - All your items will update with these new fields in items.yml to -1, but changing them will not effect gameplay yet
+
 v4.7.4
 - Added per arena permissions so now you can control which player/groups can join what arenas
     - Just to clarify everything...
@@ -16,7 +35,7 @@ v4.7.0
 - Fixed %ARENA% tag not being replaced in chat message
 - Fixed messages.yml loading swapped protection messages
 
-v4.6.9
+v4.6.9A
 - Added default item to be editable inside items.yml
 
 v4.6.7

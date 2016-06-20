@@ -9,6 +9,7 @@ import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
+import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
@@ -67,7 +68,7 @@ public class LobbyPlayer extends PaintballPlayer {
                 .addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName())
                 .addLine(ScoreboardLine.STATUS, arena.getStateAsString())
                 .addLine(ScoreboardLine.MODE, arena.getArenaType().getShortName().toUpperCase())
-                .addLine(ScoreboardLine.PLAYERS, arena.getLobbyPlayers().size())
+                .addLine(ScoreboardLine.PLAYERS, arena.getLobbyPlayers().size() + Settings.SECONDARY + "/" + Settings.THEME + arena.getMax())
                 .build();
     }
 
@@ -82,7 +83,7 @@ public class LobbyPlayer extends PaintballPlayer {
         int size = arena.getArenaTeamList().size()-1;
         pbSb.reloadTeams(true)
                 .reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+2)
-                .reloadLine(ScoreboardLine.PLAYERS, arena.getLobbyPlayers().size() + "", size+5);
+                .reloadLine(ScoreboardLine.PLAYERS, arena.getLobbyPlayers().size() + Settings.SECONDARY + "/" + Settings.THEME + arena.getMax(), size+5);
 
         if (arena.GIVE_TEAM_SWITCHER)
             giveItems();

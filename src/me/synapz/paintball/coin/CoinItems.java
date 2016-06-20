@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -71,7 +72,15 @@ public class CoinItems implements Listener {
                 Player player = event.getArenaPlayer().getPlayer();
                 ItemStack itemInHand = player.getItemInHand();
 
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 1200, 2));
+                // default duration
+                int duration = 1200;
+
+                for (PotionEffect effect : player.getActivePotionEffects()) {
+                    if (effect.getType() == PotionEffectType.SPEED) {
+                        duration += effect.getDuration();
+                    }
+                }
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration, 2));
                 player.getInventory().remove(itemInHand);
             }
         };

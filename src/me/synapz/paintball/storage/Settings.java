@@ -45,6 +45,7 @@ public class Settings {
     public static MessagesFile MESSAGES;
     public static FileConfiguration ARENA_FILE;
     public static ItemFile ITEMS;
+    public static LogsFile LOGS;
     public static Database DATABASE;
     public static DatabaseFile DATABASE_FILE;
 
@@ -82,6 +83,7 @@ public class Settings {
         PLAYERDATA = new PlayerDataFile(pb);
         DATABASE_FILE = new DatabaseFile(pb);
         ITEMS = new ItemFile(pb);
+        CoinItems.getCoinItems().loadItems();
         ARENA = new ArenaFile(pb);
         ARENA_FILE = ARENA.getFileConfig();
         ScoreboardLine.loadScoreboardLines();
@@ -110,8 +112,6 @@ public class Settings {
                 DATABASE_FILE.saveFile();
             }
         }
-
-        CoinItems.getCoinItems().loadItems();
     }
 
     // Called on server start, reload, and pb admin reload

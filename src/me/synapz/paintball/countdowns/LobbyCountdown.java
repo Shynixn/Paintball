@@ -26,7 +26,15 @@ public class LobbyCountdown extends PaintballCountdown {
         String suffix = new MessageBuilder(Messages.ARENA_LOBBY_COUNTDOWN_FOOTER).replace(Tag.TIME, ((int) counter) + "").build();
 
         arena.broadcastMessage(prefix + " " + suffix);
-        arena.broadcastTitle(prefix, suffix, 0, 30, 20);
+
+        int fadeIn = 0;
+
+        // If the counter is not in the no interval (...5.4..3...2..1) then we can fade in nicely because there will be no flicker
+        if (!(counter <= arena.LOBBY_NO_INTERVAL)) {
+            fadeIn = 20;
+        }
+
+        arena.broadcastTitle(prefix, suffix, fadeIn, 30, 20);
     }
 
     public boolean stop() {
