@@ -5,19 +5,13 @@ import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
 import me.synapz.paintball.coin.CoinItems;
 import me.synapz.paintball.countdowns.*;
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.enums.ScoreboardLine;
-import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.enums.*;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.ChatColor;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
@@ -34,7 +28,7 @@ import static me.synapz.paintball.storage.Settings.*;
 
 public class ArenaPlayer extends PaintballPlayer {
 
-    private Map<CoinItem, Integer> usesPerPlayer = new HashMap<>();
+    private Map<Items, Integer> usesPerPlayer = new HashMap<>();
     private Map<String, CoinItem> coinItems = new HashMap<>();
 
     private Horse horse;
@@ -60,16 +54,16 @@ public class ArenaPlayer extends PaintballPlayer {
 
     public ArenaPlayer(LobbyPlayer lobbyPlayer) {
         super(lobbyPlayer.getArena(), lobbyPlayer.getTeam(), lobbyPlayer.getPlayer());
+
+        for (Items item : Items.values()) {
+            if (item.getUsesPerPlayer() > -1) {
+                usesPerPlayer.put(item, 0);
+            }
+        }
     }
 
     public ArenaPlayer(SpectatorPlayer sp, Team team) {
         super(sp.getArena(), team, sp.getPlayer(), true);
-
-        for (CoinItem coinItem : CoinItemHandler.getHandler().getAllItems().values()) {
-            if (coinItem.getUsesPerPlayer() <= -1) {
-                usesPerPlayer.put(coinItem, 0);
-            }
-        }
     }
 
     /**
@@ -278,17 +272,19 @@ public class ArenaPlayer extends PaintballPlayer {
         }
     }
 
-    public Map<CoinItem, Integer> getUsesPerPlayer() {
+    public Map<Items, Integer> getUsesPerPlayer() {
         return usesPerPlayer;
     }
 
     public void incrementCoinUsePerPlayer(CoinItem coinItem) {
-        if (usesPerPlayer.containsKey(coinItem)) {
-            int pastUses = usesPerPlayer.get(coinItem);
-            int newUses = pastUses++;
+        if (usesPerPlayer.containsKey(coinItem.getCoinEnumItem())) {
+            Items items = coinItem.getCoinEnumItem();
 
-            usesPerPlayer.remove(coinItem, pastUses);
-            usesPerPlayer.put(coinItem, newUses);
+            int pastUses = usesPerPlayer.get(items);
+            int newUses = ++pastUses;
+
+            usesPerPlayer.remove(items, pastUses);
+            usesPerPlayer.put(items, newUses);
         }
     }
 

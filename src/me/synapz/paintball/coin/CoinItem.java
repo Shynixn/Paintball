@@ -194,8 +194,9 @@ public class CoinItem extends ItemStack {
         if (this.hasPermission() && !player.getPlayer().hasPermission(permission)) {
             builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_1).build());
         } else {
-            Integer usesPerGame = player.getArena().getCoinUsesPerGame().get(this);
-            Integer usesPerPlayer = player.getUsesPerPlayer().get(this);
+
+            Integer usesPerGame = player.getArena().getCoinUsesPerGame().get(this.getCoinEnumItem());
+            Integer usesPerPlayer = player.getUsesPerPlayer().get(this.getCoinEnumItem());
 
             if (this.requiresCoins() && player.getCoins() < this.getCoins())
                 builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_2).build());
@@ -204,10 +205,10 @@ public class CoinItem extends ItemStack {
                 builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_3).build());
 
             if (usesPerGame != null && usesPerGame == this.getUsesPerGame())
-                builder.add(ChatColor.RED + "Item has reached it's max amount of uses per game.");
+                builder.add(ChatColor.RED + "Item has reached its max amount of uses per game.");
 
             if (usesPerPlayer != null && usesPerPlayer == this.getUsesPerPlayer())
-                builder.add(ChatColor.RED + "Item has reached it's max amount of uses per player.");
+                builder.add(ChatColor.RED + "Item has reached its max amount of uses per player.");
         }
 
         if (!builder.isEmpty()) {

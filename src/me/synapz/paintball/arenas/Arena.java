@@ -8,10 +8,7 @@ import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
-import me.synapz.paintball.enums.ArenaType;
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.enums.Tag;
-import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.enums.*;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
@@ -99,7 +96,7 @@ public class Arena {
     private Map<Team, Integer> teams = new HashMap<>();
 
     private Map<Location, SignLocation> signLocations = new HashMap<>();
-    private Map<CoinItem, Integer> coinUsesPerGame = new HashMap<>();
+    private Map<Items, Integer> coinUsesPerGame = new HashMap<>();
 
     private ArenaState state;
     private boolean toReload;
@@ -146,9 +143,9 @@ public class Arena {
 
         loadConfigValues();
 
-        for (CoinItem coinItem : CoinItemHandler.getHandler().getAllItems().values()) {
-            if (coinItem.getUsesPerGame() <= -1) {
-                coinUsesPerGame.put(coinItem, 0);
+        for (Items item : Items.values()) {
+            if (item.getUsesPerGame() > -1) {
+                coinUsesPerGame.put(item, 0);
             }
         }
     }
@@ -316,17 +313,19 @@ public class Arena {
         advSave();
     }
 
-    public Map<CoinItem, Integer> getCoinUsesPerGame() {
+    public Map<Items, Integer> getCoinUsesPerGame() {
         return coinUsesPerGame;
     }
 
     public void incrementCoinUse(CoinItem coinItem) {
-        if (coinUsesPerGame.containsKey(coinItem)) {
-            int pastUses = coinUsesPerGame.get(coinItem);
-            int newUses = pastUses++;
+        if (coinUsesPerGame.containsKey(coinItem.getCoinEnumItem())) {
+            Items items = coinItem.getCoinEnumItem();
 
-            coinUsesPerGame.remove(coinItem, pastUses);
-            coinUsesPerGame.put(coinItem, newUses);
+            int pastUses = coinUsesPerGame.get(items);
+            int newUses = ++pastUses;
+
+            coinUsesPerGame.remove(items, pastUses);
+            coinUsesPerGame.put(items, newUses);
         }
     }
 
