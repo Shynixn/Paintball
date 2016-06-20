@@ -1,3 +1,6 @@
+v4.7.8
+- Made protection countdown not stop on default when a player hits
+
 v4.7.7
 - Fully implemented 'uses-per-game' and 'uses-per-player' inside items.yml
 - Nuke's default is 1 use per player to avoid abuse
