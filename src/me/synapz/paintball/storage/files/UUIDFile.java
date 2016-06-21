@@ -158,11 +158,9 @@ public class UUIDFile extends PaintballFile {
     }
 
     // Resets a specific stat
-    public void resetStats(StatType type, OfflinePlayer player) {
-        UUID id = player.getUniqueId();
-
+    public void resetStats(StatType type) {
         if (!type.isCalculated()) {
-            getFileConfig().set(type.getPath(id), 0);
+            getFileConfig().set(type.getPath(uuid), 0);
             if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
         }
     }
@@ -187,7 +185,7 @@ public class UUIDFile extends PaintballFile {
 
     // Saves player information to PlayerData file
     // Called when the player enters an arena
-    public void savePlayerInformation(Player player) {
+    public void savePlayerInformation() {
         /*
         ExperienceManager exp = new ExperienceManager(player);
         String id = player.getName();
@@ -214,7 +212,7 @@ public class UUIDFile extends PaintballFile {
     }
 
     // Restores all of the player's settings, then sets the info to null
-    public void restorePlayerInformation(Player player) {
+    public void restorePlayerInformation() {
         /*
         String id = player.getName();
 

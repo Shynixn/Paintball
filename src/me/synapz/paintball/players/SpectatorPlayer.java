@@ -5,6 +5,7 @@ import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
@@ -18,23 +19,26 @@ import static org.bukkit.ChatColor.*;
 
 public class SpectatorPlayer extends PaintballPlayer {
 
+    private UUIDFile uuidFile;
     public static final String TELEPORTER = RED + "" + Settings.THEME + String.valueOf(BOLD) + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleporter";
 
     public SpectatorPlayer(Arena a, Player p) {
         super(a, new Team(a), p);
 
+        uuidFile = new UUIDFile(player.getUniqueId());
         player.teleport(arena.getSpectatorLocation());
     }
 
     public SpectatorPlayer(ArenaPlayer arenaPlayer) {
         super(arenaPlayer.getArena(), new Team(arenaPlayer.getArena()), arenaPlayer.getPlayer());
 
+        uuidFile = new UUIDFile(player.getUniqueId());
         player.teleport(player.getLocation().add(0, 0.5, 0));
     }
 
     @Override
     protected void initPlayer() {
-        Settings.PLAYERDATA.savePlayerInformation(player);
+        uuidFile.savePlayerInformation();
         player.setAllowFlight(true);
         player.setFlying(true);
 

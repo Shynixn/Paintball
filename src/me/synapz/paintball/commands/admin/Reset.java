@@ -5,6 +5,7 @@ import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,12 +15,13 @@ public class Reset extends StatCommand {
 
     public void onCommand() {
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
+        UUIDFile uuidFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(target.getUniqueId());
 
         if (type == null) {
             for (StatType type : StatType.values())
-                Settings.PLAYERDATA.resetStats(type, target);
+                uuidFile.resetStats(type);
         } else {
-            Settings.PLAYERDATA.resetStats(type, target);
+            uuidFile.resetStats(type);
         }
 
         String strType = type == null ? "stats" : type.getName() + " stat";

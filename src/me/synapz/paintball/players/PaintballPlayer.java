@@ -4,6 +4,7 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
+import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

@@ -81,8 +81,8 @@ public abstract class FlagArenaPlayer extends ArenaPlayer {
     public void leave() {
         super.leave();
 
-        Settings.PLAYERDATA.addToStat(StatType.FLAGS_CAPTURED, this, captured);
-        Settings.PLAYERDATA.addToStat(StatType.FLAGS_DROPPED, this, dropped);
+        uuidFile.addToStat(StatType.FLAGS_CAPTURED, this, captured);
+        uuidFile.addToStat(StatType.FLAGS_DROPPED, this, dropped);
     }
 
     protected void removeFlag() {

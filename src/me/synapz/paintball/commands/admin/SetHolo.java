@@ -12,6 +12,7 @@ public class SetHolo extends StatCommand {
     @Override
     public void onCommand() {
         int page = 1;
+        int max = Settings.getSettings().getPlayerDataFolder().getMaxPage();
 
         if (!Settings.HOLOGRAPHIC_DISPLAYS) {
             Messenger.error(player, "Please download plugin HolographicDisplays to use this feature.", "http://dev.bukkit.org/bukkit-plugins/holographic-displays/");
@@ -30,8 +31,8 @@ public class SetHolo extends StatCommand {
         if (page <= 0) {
             Messenger.error(player, "The page cannot be lower than 0");
             return;
-        } else if (page > Settings.PLAYERDATA.getMaxPage()) {
-            Messenger.error(player, "Page " + ChatColor.GRAY + page + ChatColor.RED + "/" + ChatColor.GRAY + Settings.PLAYERDATA.getMaxPage() + ChatColor.RED + " cannot be found.");
+        } else if (page > max) {
+            Messenger.error(player, "Page " + ChatColor.GRAY + page + ChatColor.RED + "/" + ChatColor.GRAY + max + ChatColor.RED + " cannot be found.");
             return;
         }
 
