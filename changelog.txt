@@ -1,3 +1,7 @@
+v4.8.0
+- Fixed /pb top not working after playerdata changes
+- Fixed Leaderboard holograms showing errors in console & not updating if they have a space in their name
+
 v4.7.9
 - CTF change so now you can walk over flag to reset/pickup flag instead of clicking
 - Major playerdata change: Instead of one large file stats and player states will be stored in many files

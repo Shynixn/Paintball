@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
 import java.util.*;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
@@ -25,6 +26,18 @@ public class PlayerDataFolder extends PaintballFile {
         super(plugin, "playerdata");
     }
 
+    public static void loadPlayerDataFiles() {
+        for (File file : Settings.getSettings().getPlayerDataFolder().listFiles()) {
+            UUID uuid = null;
+            try {
+                uuid = UUID.fromString(file.getName().replace(".yml", "").replace("/playerdata/", ""));
+            } catch (IllegalArgumentException exc) {
+                continue;
+            }
+            new UUIDFile(uuid);
+        }
+    }
+
     public UUIDFile getPlayerFile(UUID uuid) {
         return files.get(uuid);
     }
@@ -34,6 +47,10 @@ public class PlayerDataFolder extends PaintballFile {
     }
 
     public void addPlayerFile(UUIDFile file) {
+        while (files.containsValue(file.getUUID())) {
+            files.remove(file.getUUID(), file);
+        }
+
         files.put(file.getUUID(), file);
     }
 
@@ -45,7 +62,7 @@ public class PlayerDataFolder extends PaintballFile {
         int start = end-10;
 
         // Adds the title
-        String title = statType == null ? new MessageBuilder(Messages.TOP_LEADERBOARD_TITLE).replace(Tag.PAGE, page + "").build() : new MessageBuilder(Messages.PER_LEADERBOARD_TITLE).replace(Tag.STAT, statType.getName()).replace(Tag.MAX, getMaxPage() + "").replace(Tag.PAGE, page + "").build();
+        String title = statType == null ? new MessageBuilder(Messages.TOP_LEADERBOARD_TITLE).replace(Tag.PAGE, page + "").build() : new MessageBuilder(Messages.PER_LEADERBOARD_TITLE).replace(Tag.STAT, statType.getName().replace(" ", "")).replace(Tag.MAX, getMaxPage() + "").replace(Tag.PAGE, page + "").build();
         stats.add(title);
 
         // Starts adding the values to the stats list
@@ -93,7 +110,7 @@ public class PlayerDataFolder extends PaintballFile {
         Map<String, String> uuidList = new HashMap<String, String>();
 
         for (UUIDFile uuidFile : Settings.getSettings().getPlayerDataFolder().getPlayerDataList()) {
-            String uuid = uuidFile.getFileConfig().getName().replace(".yml", "");
+            String uuid = uuidFile.getUUID().toString();
             uuidList.put(uuid, uuidFile.getPlayerStats().get(type));
         }
 
@@ -113,7 +130,7 @@ public class PlayerDataFolder extends PaintballFile {
             if (statValues.get(rank - 1) == value) {
                 UUIDFile uuidFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(UUID.fromString(uuid));
 
-                result.clear(); // remove all entries so we know there will only be 1 set of things returning
+                result.clear(); // remove all entries so we know there will only be 1 se// t of things returning
                 if (Bukkit.getServer().getPlayer(UUID.fromString(uuid)) == null) {
                     String name = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
                     String score = uuidFile.getPlayerStats().get(type);
