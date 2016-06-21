@@ -11,16 +11,23 @@ import java.io.IOException;
 
 public class PaintballFile extends File {
 
+    protected Plugin plugin;
     protected FileConfiguration fileConfig;
 
     protected PaintballFile(Plugin pb, String name) {
         super(pb.getDataFolder(), name);
 
         this.fileConfig = YamlConfiguration.loadConfiguration(this); // give settings a file to look into if it is the database file
+        this.plugin = pb;
 
         if (!this.exists()) {
             try {
-                createNewFile();
+                if (this.getName().equals("playerdata.yml")) {
+                    mkdir();
+                } else {
+                    onFirstCreate();
+                    createNewFile();
+                }
             } catch (IOException e) {
                 Messenger.error(Bukkit.getConsoleSender(), "Could not create " + name + ". Stack trace: ");
                 e.printStackTrace();
@@ -45,5 +52,9 @@ public class PaintballFile extends File {
 
     public void setFileConfig(FileConfiguration fileConfig) {
         this.fileConfig = fileConfig;
+    }
+
+    public void onFirstCreate() {
+
     }
 }

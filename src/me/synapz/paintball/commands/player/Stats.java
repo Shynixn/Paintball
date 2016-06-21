@@ -3,16 +3,15 @@ package me.synapz.paintball.commands.player;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.storage.Settings;
 import org.bukkit.entity.Player;
-
-import static me.synapz.paintball.storage.Settings.PLAYERDATA;
 
 public class Stats extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         String targetName = args.length == 1 ? player.getName() : args[1];
 
-        PLAYERDATA.getStats(player, targetName);
+        Settings.getSettings().getPlayerDataFolder().getStats(player, targetName);
     }
 
     public String getName() {

@@ -40,12 +40,11 @@ public class Settings {
 
     public static Economy ECONOMY = null;
 
+    private static PlayerDataFolder playerDataFolder;
     public static ArenaFile ARENA;
-    public static PlayerDataFile PLAYERDATA;
     public static MessagesFile MESSAGES;
     public static FileConfiguration ARENA_FILE;
     public static ItemFile ITEMS;
-    public static LogsFile LOGS;
     public static Database DATABASE;
     public static DatabaseFile DATABASE_FILE;
 
@@ -78,9 +77,9 @@ public class Settings {
     }
 
     private void loadEverything() {
+        playerDataFolder = new PlayerDataFolder(pb);
         loadSettings(); // loads everything in config.yml into constants
         MESSAGES = new MessagesFile(pb);
-        PLAYERDATA = new PlayerDataFile(pb);
         DATABASE_FILE = new DatabaseFile(pb);
         ITEMS = new ItemFile(pb);
         CoinItems.getCoinItems().loadItems();
@@ -96,7 +95,9 @@ public class Settings {
             DATABASE.openConnection();
             DATABASE.init();
             if (Databases.SQL_ENABLED.getBoolean()) {
-                if (PLAYERDATA.exists() && DATABASE.doesTableExist()) {
+                // TODO: Frig: Maybe put pass in playerDataFolder, then they can loop through the playerDataFolder.getPlayerFiles() and THEN loop inside of its configuration sections
+                /*
+                if (DATABASE.doesTableExist()) {
                     DATABASE.addStats(PLAYERDATA.getFileConfig());
                 }
                 else {
@@ -104,6 +105,7 @@ public class Settings {
                 }
                 PLAYERDATA.setFileConfig(DATABASE.buildConfig());
                 PLAYERDATA.delete();
+                */
             }
         } catch (SQLException e) {
             if (Databases.SQL_ENABLED.getBoolean()) {
@@ -125,6 +127,10 @@ public class Settings {
         SECONDARY = ChatColor.translateAlternateColorCodes('&', loadString("secondary-color"));
         UPDATE_CHECK = loadBoolean("update-check");
         HOLOGRAPHIC_DISPLAYS = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
+    }
+
+    public PlayerDataFolder getPlayerDataFolder() {
+        return playerDataFolder;
     }
 
     public void reloadConfig() {
@@ -167,10 +173,6 @@ public class Settings {
 
         oldConfig.renameTo(new File(pb.getDataFolder(), name + "_backup" + suffix + ".yml"));
         init(JavaPlugin.getProvidingPlugin(Paintball.class));
-    }
-
-    public PlayerDataFile getPlayerData() {
-        return PLAYERDATA;
     }
 
     private int loadInt(String path) {

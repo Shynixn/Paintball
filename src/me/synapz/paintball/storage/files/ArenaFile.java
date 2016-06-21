@@ -22,8 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.*;
 
-import static me.synapz.paintball.storage.Settings.PLAYERDATA;
-
 public class ArenaFile extends PaintballFile {
 
     private Map<Location, SignLocation> leaderboardAndJoinSigns = new HashMap<>();
@@ -88,7 +86,7 @@ public class ArenaFile extends PaintballFile {
 
         Hologram hologram = HologramsAPI.createHologram(JavaPlugin.getProvidingPlugin(Paintball.class), loc);
 
-        for (String statLine : PLAYERDATA.getPage(statType, page)) {
+        for (String statLine : Settings.getSettings().getPlayerDataFolder().getPage(statType, page)) {
             hologram.appendTextLine(statLine);
         }
 

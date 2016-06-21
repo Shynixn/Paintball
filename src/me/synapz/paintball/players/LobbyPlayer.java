@@ -10,6 +10,7 @@ import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
@@ -20,10 +21,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static me.synapz.paintball.storage.Settings.PLAYERDATA;
-import static org.bukkit.ChatColor.GRAY;
-import static org.bukkit.ChatColor.GREEN;
 
 public class LobbyPlayer extends PaintballPlayer {
 
@@ -45,7 +42,8 @@ public class LobbyPlayer extends PaintballPlayer {
      */
     @Override
     protected void initPlayer() {
-        PLAYERDATA.savePlayerInformation(player);
+        UUIDFile uuidFile = new UUIDFile(player.getUniqueId());
+        uuidFile.savePlayerInformation(player);
 
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
         team.playerJoinTeam();

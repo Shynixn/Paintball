@@ -11,7 +11,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
 
-import static me.synapz.paintball.storage.Settings.PLAYERDATA;
 
 public class SkullLocation extends SignLocation {
 
@@ -48,7 +47,7 @@ public class SkullLocation extends SignLocation {
 
         skull.setRotation(face);
         skull.setSkullType(SkullType.PLAYER);
-        skull.setOwner((String) PLAYERDATA.getPlayerAtRank(rank, statType).keySet().toArray()[0]);
+        skull.setOwner((String) Settings.getSettings().getPlayerDataFolder().getPlayerAtRank(rank, statType).keySet().toArray()[0]);
         skull.update();
     }
 

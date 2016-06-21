@@ -21,7 +21,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-import static me.synapz.paintball.storage.Settings.PLAYERDATA;
 import static org.bukkit.ChatColor.*;
 
 public class ArenaManager {
@@ -171,7 +170,7 @@ public class ArenaManager {
                         Map<String, String> playerAndStat;
 
                         try {
-                            playerAndStat = PLAYERDATA.getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+                            playerAndStat = Settings.getSettings().getPlayerDataFolder().getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
                         } catch (NumberFormatException exc) {
                             continue;
                         }
@@ -210,7 +209,7 @@ public class ArenaManager {
                 }
                 holo.clearLines();
 
-                for (String statLine : PLAYERDATA.getPage(type, page)) {
+                for (String statLine : Settings.getSettings().getPlayerDataFolder().getPage(type, page)) {
                     holo.appendTextLine(statLine);
                 }
             }
