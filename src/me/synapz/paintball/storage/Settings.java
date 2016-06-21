@@ -77,10 +77,11 @@ public class Settings {
     }
 
     private void loadEverything() {
-        playerDataFolder = new PlayerDataFolder(pb);
         loadSettings(); // loads everything in config.yml into constants
         MESSAGES = new MessagesFile(pb);
         DATABASE_FILE = new DatabaseFile(pb);
+
+        playerDataFolder = new PlayerDataFolder(pb);
         ITEMS = new ItemFile(pb);
         CoinItems.getCoinItems().loadItems();
         ARENA = new ArenaFile(pb);

@@ -43,7 +43,7 @@ public class LobbyPlayer extends PaintballPlayer {
     @Override
     protected void initPlayer() {
         UUIDFile uuidFile = new UUIDFile(player.getUniqueId());
-        uuidFile.savePlayerInformation(player);
+        uuidFile.savePlayerInformation();
 
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
         team.playerJoinTeam();

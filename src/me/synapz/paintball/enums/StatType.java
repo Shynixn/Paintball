@@ -5,6 +5,7 @@ import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
 import static me.synapz.paintball.storage.Settings.THEME;

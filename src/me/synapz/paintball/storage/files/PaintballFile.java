@@ -14,7 +14,7 @@ public class PaintballFile extends File {
     protected Plugin plugin;
     protected FileConfiguration fileConfig;
 
-    protected PaintballFile(Plugin pb, String name) {
+    public PaintballFile(Plugin pb, String name) {
         super(pb.getDataFolder(), name);
 
         this.fileConfig = YamlConfiguration.loadConfiguration(this); // give settings a file to look into if it is the database file
@@ -22,7 +22,7 @@ public class PaintballFile extends File {
 
         if (!this.exists()) {
             try {
-                if (this.getName().equals("playerdata.yml")) {
+                if (this.getName().equals("playerdata")) {
                     mkdir();
                 } else {
                     onFirstCreate();
@@ -34,7 +34,8 @@ public class PaintballFile extends File {
             }
         }
 
-        this.saveFile();
+        if (!this.getName().equals("playerdata"))
+            this.saveFile();
     }
 
     public void saveFile() {

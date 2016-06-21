@@ -9,28 +9,20 @@ import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.IllegalPluginAccessException;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class UUIDFile extends PaintballFile {
 
     private final UUID uuid;
 
     public UUIDFile(UUID uuid) {
-        super(JavaPlugin.getProvidingPlugin(Paintball.class), uuid.toString() + ".yml");
-
-        this.uuid = uuid;
-        Settings.getSettings().getPlayerDataFolder().addPlayerFile(this);
-    }
-
-    public UUIDFile(Plugin plugin, UUID uuid) {
-        super(plugin, uuid.toString() + ".yml");
+        super(JavaPlugin.getProvidingPlugin(Paintball.class), "/playerdata/" + uuid + ".yml");
 
         this.uuid = uuid;
         Settings.getSettings().getPlayerDataFolder().addPlayerFile(this);
@@ -38,6 +30,8 @@ public class UUIDFile extends PaintballFile {
 
     @Override
     public void onFirstCreate() {
+        UUID uuid = UUID.fromString(this.getName().replace(".yml", "").replace("/playerdata/", ""));
+
         if (getFileConfig().getConfigurationSection("Player-Data." + uuid) == null) {
             getFileConfig().set("Player-Data." + uuid + ".Username", Bukkit.getOfflinePlayer(uuid).getName());
             // set the values to 0
@@ -97,7 +91,7 @@ public class UUIDFile extends PaintballFile {
     // Returns a player's stats in a Map with StatType holding the type connected to a String with it's value
     // Usedful for leaderboards and /pb stats
     public Map<StatType, String> getPlayerStats() {
-        Map<StatType, String> stats = new HashMap<StatType, String>();
+        Map<StatType, String> stats = new HashMap<>();
         boolean uuidNotFound = getFileConfig().getConfigurationSection("Player-Data." + uuid) == null;
 
         for (StatType type : StatType.values()) {
