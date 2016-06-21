@@ -12,6 +12,8 @@ import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.storage.files.PlayerDataFolder;
+import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -70,6 +72,12 @@ public class Listeners extends BaseListener implements Listener {
 
         if (player.hasPermission("paintball.update") && result != UpdateResult.DISABLED && !result.getMessage().isEmpty())
             Messenger.success(player, result.getMessage().replace("%new%", Update.getUpdater().getNewVersion()));
+
+        UUIDFile uuidFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId());
+
+        if (uuidFile != null && uuidFile.getFileConfig().getConfigurationSection("Player-Data") != null) {
+            uuidFile.restorePlayerInformation(false);
+        }
     }
 
     // When ever a player leaves the game, make them leave the arena so they get their stuff
@@ -78,7 +86,7 @@ public class Listeners extends BaseListener implements Listener {
         Player player = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(player);
         if (isInArena(player)) {
-            a.getAllPlayers().get(player).leave();
+            a.getAllPlayers().get(player).leaveDontSave();
         }
     }
 

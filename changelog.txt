@@ -2,6 +2,10 @@ v4.7.9
 - CTF change so now you can walk over flag to reset/pickup flag instead of clicking
 - Major playerdata change: Instead of one large file stats and player states will be stored in many files
     - Your current playerdata.yml file will automatically turn into a folder with each file a seperate uuid
+- Fixed major issues for saving/loading:
+    - Food level, location, INVENTORY, ARMOUR, EXP, fly stats, health, health scale, gamemode and potions
+    - Everything saves in files safely so nothing is lost anymore
+
 
 v4.7.8
 - Made protection countdown not stop on default when a player hits

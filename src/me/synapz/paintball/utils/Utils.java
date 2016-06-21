@@ -360,6 +360,7 @@ public class Utils {
         player.setFlying(false);
         player.setAllowFlight(false);
         player.setFoodLevel(20);
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         player.setHealth(player.getMaxHealth());
         player.setFireTicks(0);
         exp.setExp(0);

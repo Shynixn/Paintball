@@ -684,7 +684,7 @@ public class Arena {
 
     public void removePlayer(PaintballPlayer pbPlayer, boolean restoreData) {
         if (restoreData)
-            Settings.getSettings().getPlayerDataFolder().getPlayerFile(pbPlayer.getPlayer().getUniqueId()).restorePlayerInformation();
+            Settings.getSettings().getPlayerDataFolder().getPlayerFile(pbPlayer.getPlayer().getUniqueId()).restorePlayerInformation(true);
         allPlayers.remove(pbPlayer.getPlayer(), pbPlayer);
         lobby.remove(pbPlayer);
         inGame.remove(pbPlayer);

@@ -3,19 +3,26 @@ package me.synapz.paintball.storage.files;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.enums.StatType;
+import me.synapz.paintball.locations.PaintballLocation;
+import me.synapz.paintball.locations.PlayerLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
+import me.synapz.paintball.utils.ExperienceManager;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
+import java.sql.Array;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class UUIDFile extends PaintballFile {
 
@@ -180,77 +187,74 @@ public class UUIDFile extends PaintballFile {
     // Saves player information to PlayerData file
     // Called when the player enters an arena
     public void savePlayerInformation() {
-        /*
+        String path = "Player-State." + uuid + ".";
+        Player player = Bukkit.getPlayer(uuid);
         ExperienceManager exp = new ExperienceManager(player);
-        String id = player.getName();
 
-        if (locations.containsKey(id))
-            return;
+        new PlayerLocation(this, player.getLocation());
+        fileConfig.set(path + "Gamemode", player.getGameMode().toString());
+        fileConfig.set(path + "Food", player.getFoodLevel());
+        fileConfig.set(path + "Health", player.getHealth());
+        fileConfig.set(path +"Health-Scale", player.getHealthScale());
+        fileConfig.set(path + "Exp", exp.getCurrentExp());
+        fileConfig.set(path + "Allow-Flight", player.getAllowFlight());
+        fileConfig.set(path + "Flying", player.isFlying());
+        fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getStorageContents()));
+        fileConfig.set(path + "Armour", Arrays.asList(player.getInventory().getArmorContents()));
 
-        locations.put(id, player.getLocation());
-        gamemodes.put(id, player.getGameMode());
-        foodLevels.put(id, player.getFoodLevel());
-        health.put(id, player.getHealth());
-        inventories.put(id, player.getInventory().getContents());
-        armour.put(id, player.getInventory().getArmorContents());
-        expLevels.put(id, exp.getCurrentExp());
-        scoreboards.put(id, player.getScoreboard() == null ? Bukkit.getScoreboardManager().getNewScoreboard() : player.getScoreboard());
-        healthScale.put(id, player.getHealthScale());
-        allowFly.put(id,  player.getAllowFlight());
-        flying.put(id, player.isFlying());
-        potions.put(id, player.getActivePotionEffects());
-
-        addStatsIfNotYetAdded(player.getUniqueId());
+        this.saveFile();
         Utils.stripValues(player);
-        */
     }
 
     // Restores all of the player's settings, then sets the info to null
-    public void restorePlayerInformation() {
-        /*
-        String id = player.getName();
-
-        if (!locations.containsKey(id))
-            return;
-
-        Utils.stripValues(player);
+    public void restorePlayerInformation(boolean stripValues) {
+        String path = "Player-State." + uuid + ".";
+        Player player = Bukkit.getPlayer(uuid);
         ExperienceManager exp = new ExperienceManager(player);
 
-        player.teleport(locations.get(id));
-        player.getInventory().setContents(inventories.get(id));
-        player.getInventory().setArmorContents(armour.get(id));
-        player.setFoodLevel(foodLevels.get(id));
-        player.setGameMode(gamemodes.get(id));
-        player.setScoreboard(scoreboards.get(id));
-        player.setAllowFlight(allowFly.get(id));
-        player.setFlying(flying.get(id));
-        exp.setExp(expLevels.get(id));
-        player.addPotionEffects(potions.get(id));
+        if (stripValues)
+            Utils.stripValues(player);
 
-        if (health.get(id) > 20d || health.get(id) < 0) {
+        player.teleport(new PlayerLocation(this).getLocation());
+        player.setFoodLevel(fileConfig.getInt(path + "Food"));
+        player.setGameMode(GameMode.valueOf(fileConfig.getString(path + "Gamemode")));
+        player.setAllowFlight(fileConfig.getBoolean(path + "Allow-Flight"));
+        player.setFlying(fileConfig.getBoolean(path + "Flying"));
+        exp.setExp(fileConfig.getInt(path + "Exp"));
+        double health = fileConfig.getDouble(path + "Health");
+        double scale = fileConfig.getDouble(path + "Health-Scale");
+        if (health > 20d || health < 0) {
             player.setHealth(20);
         } else {
-            player.setHealth(health.get(id));
+            player.setHealth(health);
         }
 
-        player.setHealthScale(healthScale.get(id));
+        player.setHealthScale(scale);
 
-        locations.remove(id);
-        gamemodes.remove(id);
-        foodLevels.remove(id);
-        health.remove(id);
-        inventories.remove(id);
-        expLevels.remove(id);
-        scoreboards.remove(id);
-        flying.remove(id);
+        player.getInventory().setContents(getLastInventoryContents(path + "Inventory"));
+        player.getInventory().setArmorContents(getLastInventoryContents(path + "Armour"));
+
         player.updateInventory();
-        */
+        fileConfig.set("Player-State", null);
+        this.saveFile();
     }
 
     // Increments the set path by one
     private void addOneToPath(String path) {
         getFileConfig().set(path, getFileConfig().getInt(path) + 1);
         if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
+    }
+
+    private ItemStack[] getLastInventoryContents(String path) {
+        ItemStack[] items = new ItemStack[fileConfig.getList(path).size()];
+        int count = 0;
+        for (Object item : fileConfig.getList(path).toArray()) {
+            if (item instanceof ItemStack) {
+                items[count] = new ItemStack((ItemStack)item);
+                count++;
+            }
+        }
+        return items;
     }
 
     private void setValue(String path, Object object) {

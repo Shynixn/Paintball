@@ -135,6 +135,24 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         }
     }
 
+    public void leaveDontSave() {
+        arena.removePlayer(this, false); // removes player from all array lists
+
+        if (this instanceof SpectatorPlayer) {
+            for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
+                arenaPlayer.getPlayer().showPlayer(player);
+            }
+        }
+
+        if ((this instanceof ArenaPlayer) && arena.getAllArenaPlayers().size() <= 1) {
+            arena.forceLeaveArena();
+        }
+
+        if ((this instanceof LobbyPlayer) && arena.getLobbyPlayers().size() <= 0) {
+            arena.forceLeaveArena();
+        }
+    }
+
     private void loadScoreboard() {
         sb = Bukkit.getScoreboardManager().getNewScoreboard();
         pbSb = createScoreboard();
