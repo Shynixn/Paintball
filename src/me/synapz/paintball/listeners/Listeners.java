@@ -433,7 +433,8 @@ public class Listeners extends BaseListener implements Listener {
         }
 
         if (ProtectionCountdown.godPlayers.keySet().contains(hitPlayerName)) {
-            Messenger.error(arenaPlayer.getPlayer(), new MessageBuilder(Messages.THEY_ARE_PROTECTED).replace(Tag.TIME, (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + "").build());
+            Messenger.error(arenaPlayer.getPlayer(), new MessageBuilder(Messages.THEY_ARE_PROTECTED)
+                    .replace(Tag.TIME, (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + "").build());
             event.setCancelled(true);
             return;
         } else if (ProtectionCountdown.godPlayers.keySet().contains(shooterPlayerName)) {
@@ -442,7 +443,8 @@ public class Listeners extends BaseListener implements Listener {
                 ActionBar.sendActionBar(arenaPlayer.getPlayer(), Messenger.createPrefix("Protection") + "Cancelled");
                 ProtectionCountdown.godPlayers.get(shooterPlayerName).cancel();
             } else {
-                Messenger.error(arenaPlayer.getPlayer(), new MessageBuilder(Messages.YOU_ARE_PROTECTED).replace(Tag.TIME, (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + "").build());
+                Messenger.error(arenaPlayer.getPlayer(), new MessageBuilder(Messages.YOU_ARE_PROTECTED)
+                        .replace(Tag.TIME, (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + "").build());
                 event.setCancelled(true);
                 return;
             }
@@ -450,7 +452,8 @@ public class Listeners extends BaseListener implements Listener {
 
         CoinItem clickedItem = null;
 
-        if (arenaPlayer.getPlayer().getItemInHand() != null && arenaPlayer.getPlayer().getItemInHand().hasItemMeta() && arenaPlayer.getPlayer().getItemInHand().getItemMeta().hasDisplayName())
+        if (arenaPlayer.getPlayer().getItemInHand() != null && arenaPlayer.getPlayer().getItemInHand().hasItemMeta()
+                && arenaPlayer.getPlayer().getItemInHand().getItemMeta().hasDisplayName())
             clickedItem = arenaPlayer.getItemWithName(arenaPlayer.getPlayer().getItemInHand().getItemMeta().getDisplayName());
 
         if (clickedItem == null)
@@ -465,78 +468,76 @@ public class Listeners extends BaseListener implements Listener {
             arenaPlayer.kill(hitPlayer, action);
         } else {
             arenaPlayer.incrementHits();
-            Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + new MessageBuilder(Messages.HIT_PLAYER).replace(Tag.AMOUNT, hitPlayer.getHealth() + "").replace(Tag.MAX, arenaPlayer.getArena().HITS_TO_KILL + "").build());
+            Messenger.error(arenaPlayer.getPlayer(), Settings.THEME + new MessageBuilder(Messages.HIT_PLAYER)
+                    .replace(Tag.AMOUNT, hitPlayer.getHealth() + "")
+                    .replace(Tag.MAX, arenaPlayer.getArena().HITS_TO_KILL + "").build());
         }
 
 
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onClickBannerInArena(PlayerInteractEvent e) {
+    public void onPlayerPickupFlag(PlayerMoveEvent e) {
         Player player = e.getPlayer();
+        Arena arena = getArena(player);
+        Location playerLocation = player.getLocation();
+        Location loc = new Location(player.getWorld(),
+                playerLocation.getBlockX(),
+                playerLocation.getBlockY(),
+                playerLocation.getBlockZ());
 
         if (!isInArena(player))
             return;
-
-        Arena arena = getArena(player);
 
         if (arena == null)
             return;
 
         PaintballPlayer gamePlayer = arena.getPaintballPlayer(player);
-        Block clicked = e.getClickedBlock();
-
-        if (clicked == null)
-            return;
-
-        Location clickedLoc = new Location(clicked.getWorld(), clicked.getX(), clicked.getY(), clicked.getZ());
+        Team gamePlayerTeam = gamePlayer.getTeam();
 
         switch (arena.getArenaType()) {
             case CTF:
                 if (gamePlayer instanceof CTFArenaPlayer) {
                     CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) gamePlayer;
 
-                    boolean inFile = ((CTFArena) arena).getDropedFlagLocations().containsKey(clickedLoc);
-                    Team clickedFlag = null;
+                    boolean inFile = ((CTFArena) arena).getDropedFlagLocations().containsKey(loc);
+                    Team teamFlagPickedUp = null;
 
                     // If it is inside the dropFlagLocation, just get it out
                     if (inFile) {
-                        clickedFlag = ((CTFArena) arena).getDropedFlagLocations().get(clickedLoc);
+                        teamFlagPickedUp = ((CTFArena) arena).getDropedFlagLocations().get(loc);
                     } else {
                         // Otherwise check if the banner is in one of the set flag locations
                         for (Team team : ((CTFArena) arena).getStartFlagLocations().keySet()) {
                             Location flagLoc = ((CTFArena) arena).getStartFlagLocations().get(team);
 
-                            if (flagLoc.getBlockX() == clickedLoc.getBlockX()
-                                    && flagLoc.getBlockY() == clickedLoc.getBlockY()
-                                    && flagLoc.getBlockZ() == clickedLoc.getBlockZ()) {
+                            if (flagLoc.getBlockX() == loc.getBlockX()
+                                    && flagLoc.getBlockY() == loc.getBlockY()
+                                    && flagLoc.getBlockZ() == loc.getBlockZ()) {
                                 inFile = true;
-                                clickedFlag = team;
+                                teamFlagPickedUp = team;
                             }
                         }
                     }
 
                     if (inFile) {
-                        if (clickedFlag == ctfPlayer.getTeam()) {
-                            if (((CTFArena) arena).getDropedFlagLocations().containsKey(clickedLoc)) {
-                                clickedLoc.getBlock().setType(Material.AIR);
+                        if (teamFlagPickedUp == ctfPlayer.getTeam()) {
+                            if (((CTFArena) arena).getDropedFlagLocations().containsKey(loc)) {
+                                loc.getBlock().setType(Material.AIR);
 
-                                Location resetLoc = new FlagLocation((CTFArena) ctfPlayer.getArena(), clickedFlag).getLocation();
+                                Location resetLoc = new FlagLocation((CTFArena) ctfPlayer.getArena(), teamFlagPickedUp).getLocation();
 
                                 Utils.createFlag(ctfPlayer.getTeam(), resetLoc);
 
-                                arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + ctfPlayer.getPlayer().getName() + " has reset " + ctfPlayer.getTeam().getTitleName() + "'s flag!");
+                                arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + ctfPlayer.getPlayer().getName()
+                                        + " has reset " + ctfPlayer.getTeam().getTitleName() + "'s flag!");
 
-                                ((CTFArena) arena).remFlagLocation(clickedLoc);
-                            } else {
-                                Messenger.error(player, Messages.ARENA_CANNOT_PICKUP_FLAG.getString());
+                                ((CTFArena) arena).remFlagLocation(loc);
                             }
                             return;
                         } else {
-                            if (ctfPlayer.isFlagHolder())
-                                ctfPlayer.dropFlag();
-
-                            ctfPlayer.pickupFlag(clickedLoc, clickedFlag);
+                            if (!ctfPlayer.isFlagHolder())
+                                ctfPlayer.pickupFlag(loc, teamFlagPickedUp);
                         }
                     }
                 }
@@ -549,8 +550,8 @@ public class Listeners extends BaseListener implements Listener {
                     Location currentLocation = rtfArena.getCurrentFlagLocation();
 
                     // The location clicked was the neutral banner
-                    if (Utils.locEquals(Utils.simplifyLocation(currentLocation), (Utils.simplifyLocation(clickedLoc)))) {
-                        rtfPlayer.pickupFlag(Utils.simplifyLocation(clickedLoc), null);
+                    if (Utils.locEquals(Utils.simplifyLocation(currentLocation), (Utils.simplifyLocation(loc)))) {
+                        rtfPlayer.pickupFlag(Utils.simplifyLocation(loc), null);
                     }
                 }
 
@@ -558,8 +559,6 @@ public class Listeners extends BaseListener implements Listener {
             default:
                 return;
         }
-
-        e.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -603,9 +602,11 @@ public class Listeners extends BaseListener implements Listener {
 
         if (loc.getBlockY() <= -1) {
             if (gamePlayer instanceof LobbyPlayer) {
-                player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
+                player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team,
+                        Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
             } else if (gamePlayer instanceof ArenaPlayer) {
-                player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
+                player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team,
+                        Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
             } else if (gamePlayer instanceof SpectatorPlayer) {
                 player.teleport(arena.getSpectatorLocation());
             }
@@ -615,14 +616,17 @@ public class Listeners extends BaseListener implements Listener {
                 if (arena instanceof CTFArena && gamePlayer instanceof CTFArenaPlayer) {
                     CTFArenaPlayer ctfPlayer = (CTFArenaPlayer) arena.getPaintballPlayer(player);
 
-                    if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getStartFlagLocations().get(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2) {
+                    if (ctfPlayer.isFlagHolder() && ((CTFArena) arena).getStartFlagLocations()
+                            .get(ctfPlayer.getTeam()).distance(player.getLocation()) <= 2) {
                         boolean flagIsHeld = false;
-                        boolean flagIsDropped = ((CTFArena) arena).getDropedFlagLocations().values().contains(ctfPlayer.getTeam());
+                        boolean flagIsDropped = ((CTFArena) arena).getDropedFlagLocations()
+                                .values().contains(ctfPlayer.getTeam());
 
                         for (ArenaPlayer player1 : arena.getAllArenaPlayers()) {
                             CTFArenaPlayer ctfArenaPlayer = (CTFArenaPlayer) player1;
 
-                            if (ctfArenaPlayer.isFlagHolder() && ctfArenaPlayer.getHeldFlag() != null && ctfArenaPlayer.getHeldFlag() == ctfPlayer.getTeam()) {
+                            if (ctfArenaPlayer.isFlagHolder() && ctfArenaPlayer.getHeldFlag() != null
+                                    && ctfArenaPlayer.getHeldFlag() == ctfPlayer.getTeam()) {
                                 flagIsHeld = true;
                                 break;
                             }
@@ -630,14 +634,17 @@ public class Listeners extends BaseListener implements Listener {
 
                         // Checks to make sure the dropped flag location is contains the players team
                         if (flagIsDropped || flagIsHeld)
-                            ActionBar.sendActionBar(ctfPlayer.getPlayer(), ChatColor.DARK_RED + "" + ChatColor.BOLD + "Error" + Messenger.SUFFIX + ChatColor.RED + "You are missing your team's flag!");
+                            ActionBar.sendActionBar(ctfPlayer.getPlayer(), ChatColor.DARK_RED + ""
+                                    + ChatColor.BOLD + "Error" + Messenger.SUFFIX + ChatColor.RED
+                                    + "You are missing your team's flag!");
                         else
                             ctfPlayer.scoreFlag();
                     }
                 } else if (arena instanceof RTFArena && gamePlayer instanceof RTFArenaPlayer) {
                     RTFArenaPlayer rtfPlayer = (RTFArenaPlayer) arena.getPaintballPlayer(player);
 
-                    if (rtfPlayer.isFlagHolder() && rtfPlayer.getPlayer().getLocation().distance(((RTFArena) arena).getFlagLocation(team)) <= 2) {
+                    if (rtfPlayer.isFlagHolder() && rtfPlayer.getPlayer().getLocation().distance(
+                            ((RTFArena) arena).getFlagLocation(team)) <= 2) {
                         rtfPlayer.scoreFlag();
                     }
                 } else if (arena instanceof DOMArena && gamePlayer instanceof DOMArenaPlayer) {
@@ -648,7 +655,8 @@ public class Listeners extends BaseListener implements Listener {
                     if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
                         return;
 
-                    if (domArena.getSecureLocations().containsKey(xloc) && domArena.getSecureLocations().get(xloc) != domPlayer.getTeam())
+                    if (domArena.getSecureLocations().containsKey(xloc)
+                            && domArena.getSecureLocations().get(xloc) != domPlayer.getTeam())
                         domPlayer.setSecuring(true, domArena.getSecureLocations().get(xloc));
                     else
                         domPlayer.setSecuring(false, domArena.getSecureLocations().get(xloc));

@@ -110,7 +110,6 @@ public enum Messages {
     ARENA_JOINED("&aJoined arena"),
     ARENA_SIZE("&7" + Tag.AMOUNT + "/" + Tag.MAX),
     ARENA_TEAM_CHANGE("&aYou are now on the " + Tag.TEAM_COLOR + "" + Tag.TEAM + " Team!"),
-    ARENA_CANNOT_PICKUP_FLAG("You cannot pickup your own team's flag!"),
     ARENA_CANNOT_BREAK_BLOCKS("You are not allowed to break blocks while in the arena!"),
     ARENA_COMMAND_DISABLED("That command is disabled while in the arena."),
     ARENA_DIE_HEADER("&4&lYou died!"),
