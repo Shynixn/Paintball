@@ -232,7 +232,6 @@ public class UUIDFile extends PaintballFile {
         player.getInventory().setContents(getLastInventoryContents(path + "Inventory"));
         player.getInventory().setArmorContents(getLastInventoryContents(path + "Armour"));
 
-        player.updateInventory();
         fileConfig.set("Player-State", null);
         this.saveFile();
     }

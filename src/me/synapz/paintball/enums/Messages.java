@@ -31,6 +31,7 @@ public enum Messages {
     COMMAND_SETMIN_INFO("Set min amount of players"),
     COMMAND_SETTEAMS_INFO("Set teams via ChatColors seperated by commas ex. &1,&b,&c", false),
     COMMAND_STEPS_INFO("List steps of an Arena"),
+    COMMAND_WAGER_INFO("Wager money for an Arena."),
 
 
     COMMAND_CONVERT_INFO("Convert an Arena to a different type"),

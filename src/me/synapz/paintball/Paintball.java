@@ -15,6 +15,7 @@ import me.synapz.paintball.storage.files.PaintballFile;
 import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.Update;
 import me.synapz.paintball.utils.Utils;
+import me.synapz.paintball.wager.WagerManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -37,6 +38,7 @@ public class Paintball extends JavaPlugin implements Listener {
     public static boolean IS_1_9;
     private static Paintball instance;
     private BungeeManager bungeeManager;
+    private WagerManager wagerManager;
 
     @Override
     public void onEnable() {
@@ -45,7 +47,8 @@ public class Paintball extends JavaPlugin implements Listener {
         this.IS_1_9 = is1_9();
 
         new Settings(this);
-        bungeeManager = new BungeeManager(this);
+        this.bungeeManager = new BungeeManager(this);
+        this.wagerManager = new WagerManager(this);
         this.setupEconomy();
 
         CommandManager commandManager = new CommandManager();
@@ -58,6 +61,7 @@ public class Paintball extends JavaPlugin implements Listener {
         pm.registerEvents(new ChatSystem(), this);
         pm.registerEvents(new LeaderboardSigns(), this);
         pm.registerEvents(new CoinItemListener(), this);
+        pm.registerEvents(new WagerListener(), this);
         pm.registerEvents(this, this);
 
         if (IS_1_9)
@@ -151,6 +155,10 @@ public class Paintball extends JavaPlugin implements Listener {
 
     public BungeeManager getBungeeManager() {
         return bungeeManager;
+    }
+
+    public WagerManager getWagerManager() {
+        return wagerManager;
     }
 
     private boolean is1_9() {

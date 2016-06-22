@@ -65,28 +65,15 @@ public class Listeners extends BaseListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerJoinCheck(PlayerJoinEvent e) {
-        Player player = e.getPlayer();
-        UpdateResult result = Update.getUpdater().getResult();
-
-        if (player.hasPermission("paintball.update") && result != UpdateResult.DISABLED && !result.getMessage().isEmpty())
-            Messenger.success(player, result.getMessage().replace("%new%", Update.getUpdater().getNewVersion()));
-
-        UUIDFile uuidFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId());
-
-        if (uuidFile != null && uuidFile.getFileConfig().getConfigurationSection("Player-Data") != null) {
-            uuidFile.restorePlayerInformation(false);
-        }
-    }
-
     // When ever a player leaves the game, make them leave the arena so they get their stuff
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onArenaQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(player);
         if (isInArena(player)) {
+            // Don't know why, but this does the trick!
             a.getAllPlayers().get(player).leaveDontSave();
+            Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId()).restorePlayerInformation(true);
         }
     }
 

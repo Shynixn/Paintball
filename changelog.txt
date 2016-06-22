@@ -1,3 +1,7 @@
+v4.8.2
+- Started wager system.
+- Inventories fixed.
+
 v4.8.1
 - Made new playerdata work with MySQL.
 - Made UUID in playerdata its own configuration section.

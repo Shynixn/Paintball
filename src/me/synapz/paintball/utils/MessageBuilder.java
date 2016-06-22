@@ -14,6 +14,7 @@ public class MessageBuilder {
     }
 
     public MessageBuilder replace(Tag tag, String replacement) {
+        if (replacement == null || tag == null) return this;
         builtMessage = builtMessage.replace(tag.toString(), replacement);
         return this;
     }
