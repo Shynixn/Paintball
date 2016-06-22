@@ -4,7 +4,7 @@ description: Paintball 16 teams, 9 Game modes, SQL, Stats, Coin Shop, Unlimited 
 authors: [Synapz_, Refrigerbater]
 main: me.synapz.paintball.Paintball
 website: http://bit.ly/23QqV4S
-softdepend: [HolographicDisplays, Vault]
+softdepend: [HolographicDisplays, Vault, NoCheatPlus]
 
 commands:
    paintball:

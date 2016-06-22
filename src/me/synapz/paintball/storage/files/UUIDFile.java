@@ -207,6 +207,7 @@ public class UUIDFile extends PaintballFile {
     // Restores all of the player's settings, then sets the info to null
     public void restorePlayerInformation(boolean stripValues) {
         String path = "Player-State.";
+        if (!fileConfig.contains("Player-State")) return;
         Player player = Bukkit.getPlayer(uuid);
         ExperienceManager exp = new ExperienceManager(player);
 
