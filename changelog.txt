@@ -6,6 +6,7 @@ v4.8.2
 - Fixed inventory bug (again :P)
 - Fixed locations saving to the wrong path
 - Fixed stats not saving on arena finish until the next game
+- Fixed Spectator null pointer stopping players from being able to spectate
 
 v4.8.1
 - Made new playerdata work with MySQL.
