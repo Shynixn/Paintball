@@ -1,3 +1,6 @@
+v4.8.3
+- Fixed Coin amount from going into negatives
+
 v4.8.2
 - Started wager system
     - Paintball wager command is /pb wager and permission is paintball.wager given to players by default
