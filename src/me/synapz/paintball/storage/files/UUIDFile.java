@@ -216,7 +216,7 @@ public class UUIDFile extends PaintballFile {
 
         player.teleport(new PlayerLocation(this).getLocation());
         player.setFoodLevel(fileConfig.getInt(path + "Food"));
-        player.setGameMode(GameMode.valueOf(fileConfig.getString(path + "Gamemode")));
+        player.setGameMode(fileConfig.getString(path + "Gamemode") == null ? GameMode.SURVIVAL : GameMode.valueOf(fileConfig.getString(path + "Gamemode")));
         player.setAllowFlight(fileConfig.getBoolean(path + "Allow-Flight"));
         player.setFlying(fileConfig.getBoolean(path + "Flying"));
         exp.setExp(fileConfig.getInt(path + "Exp"));

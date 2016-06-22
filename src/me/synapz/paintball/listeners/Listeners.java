@@ -53,7 +53,22 @@ public class Listeners extends BaseListener implements Listener {
         }
     }
 
-    //When a player joins, check if they are from a bungee server and send them to the arena if they are
+    @EventHandler
+    public void onPlayerJoinCheck(PlayerJoinEvent e) {
+        Player player = e.getPlayer();
+        UpdateResult result = Update.getUpdater().getResult();
+
+        if (player.hasPermission("paintball.update") && result != UpdateResult.DISABLED && !result.getMessage().isEmpty())
+            Messenger.success(player, result.getMessage().replace("%new%", Update.getUpdater().getNewVersion()));
+
+        UUIDFile uuidFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId());
+
+        if (uuidFile != null && uuidFile.getFileConfig().getConfigurationSection("Player-Data") != null) {
+            uuidFile.restorePlayerInformation(false);
+        }
+    }
+
+    //When a player joins, check if they are from a bungee server and send them to the arena if they ar
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
@@ -71,9 +86,7 @@ public class Listeners extends BaseListener implements Listener {
         Player player = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(player);
         if (isInArena(player)) {
-            // Don't know why, but this does the trick!
             a.getAllPlayers().get(player).leaveDontSave();
-            // Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId()).restorePlayerInformation(true);
         }
     }
 

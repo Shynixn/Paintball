@@ -25,6 +25,11 @@ public class Wager extends PaintballCommand {
         String wagerString = args[1];
         int wager;
 
+        if (!Settings.VAULT) {
+            Messenger.error(player, "Vault must be enabled for this feature.");
+            return;
+        }
+
         if (arena == null) {
             Messenger.error(player, "You must be in an arena to wager!");
             return;

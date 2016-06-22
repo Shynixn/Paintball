@@ -1,10 +1,8 @@
-v4.8.3
-- Fix error on arena stopping.
-- Attempt NCP hook
-
 v4.8.2
 - Started wager system.
-- Inventories fixed.
+- Fix error on arena stopping.
+- Attempt NCP hook
+-
 
 v4.8.1
 - Made new playerdata work with MySQL.
