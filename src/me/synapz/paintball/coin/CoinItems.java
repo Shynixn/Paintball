@@ -42,8 +42,10 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
-                Projectile snowball = player.launchProjectile(Snowball.class);
-                snowball.setVelocity(snowball.getVelocity().multiply(event.getArena().SPEED));
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    Projectile snowball = player.launchProjectile(Snowball.class);
+                    snowball.setVelocity(snowball.getVelocity().multiply(event.getArena().SPEED));
+                }
             }
         };
 
@@ -125,6 +127,7 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 ArenaPlayer arenaPlayer = event.getArenaPlayer();
 
+                Messenger.msg(arenaPlayer.getPlayer(), "Double coins activated for the rest of the game.");
                 arenaPlayer.setMultiplier(2);
 
                 arenaPlayer.getPlayer().getInventory().remove(arenaPlayer.getPlayer().getItemInHand());

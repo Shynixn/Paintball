@@ -81,7 +81,7 @@ public class Listeners extends BaseListener implements Listener {
     }
 
     // When ever a player leaves the game, make them leave the arena so they get their stuff
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onArenaQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         Arena a = ArenaManager.getArenaManager().getArena(player);
@@ -544,6 +544,20 @@ public class Listeners extends BaseListener implements Listener {
                             }
                             return;
                         } else {
+                            // Loops through all arena players
+                            for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
+                                // If the player moving is equal to one of the looping player's team...
+                                if (arenaPlayer.getTeam() == ctfPlayer.getTeam()) {
+                                    // Check if they have a flag
+                                    if (((CTFArenaPlayer) arenaPlayer).getHeldFlag() != null) {
+                                        ActionBar.sendActionBar(ctfPlayer.getPlayer(), ChatColor.DARK_RED + ""
+                                                + ChatColor.BOLD + "Error" + Messenger.SUFFIX + ChatColor.RED
+                                                + "Flag is already stolen!");
+                                        return;
+                                    }
+                                }
+                            }
+
                             if (!ctfPlayer.isFlagHolder())
                                 ctfPlayer.pickupFlag(loc, teamFlagPickedUp);
                         }

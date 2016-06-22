@@ -12,6 +12,8 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public abstract class PaintballPlayer implements ScoreboardPlayer {
 
+    private boolean restoreInfo = true;
+
     /*
     -----
     Variables that will be created and set for all PaintballPlayer types
@@ -118,7 +120,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
 
     // Leaves an arena (removes their color names, restores information, removes from lists, and checks to see if to force stop (1 player left)
     public void leave() {
-        arena.removePlayer(this, true); // removes player from all array lists
+        arena.removePlayer(this, restoreInfo); // removes player from all array lists
 
         if (this instanceof SpectatorPlayer) {
             for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
@@ -136,21 +138,8 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
     }
 
     public void leaveDontSave() {
-        arena.removePlayer(this, false); // removes player from all array lists
-
-        if (this instanceof SpectatorPlayer) {
-            for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
-                arenaPlayer.getPlayer().showPlayer(player);
-            }
-        }
-
-        if ((this instanceof ArenaPlayer) && arena.getAllArenaPlayers().size() <= 1) {
-            arena.forceLeaveArena();
-        }
-
-        if ((this instanceof LobbyPlayer) && arena.getLobbyPlayers().size() <= 0) {
-            arena.forceLeaveArena();
-        }
+        restoreInfo = false;
+        leave();
     }
 
     private void loadScoreboard() {

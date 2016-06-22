@@ -1,5 +1,9 @@
 v4.8.3
 - Fixed Coin amount from going into negatives
+- Fixed Ak-47 being able to left & right click
+- Fixed bug which did not reset game player count, ruining team balancing
+- Fixed double messages on /pb join
+- Fixed being able to pickup flag even if it is not there
 
 v4.8.2
 - Started wager system
@@ -18,7 +22,7 @@ v4.8.1
 v4.8.0
 - Fixed /pb top not working after playerdata changes
 - Fixed Leaderboard holograms showing errors in console & not updating if they have a space in their name
-- Updated to 1.10
+- Updated to 1.10well th
 
 v4.7.9
 - CTF change so now you can walk over flag to reset/pickup flag instead of clicking
@@ -26,8 +30,7 @@ v4.7.9
     - Your current playerdata.yml file will automatically turn into a folder with each file a seperate uuid
 - Fixed major issues for saving/loading:
     - Food level, location, INVENTORY, ARMOUR, EXP, fly stats, health, health scale, gamemode and potions
-    - Everything saves in files safely so nothing is lost anymore
-
+    - Everything saves in files safely so nothing is lost anymore/
 
 v4.7.8
 - Made protection countdown not stop on default when a player hits

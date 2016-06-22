@@ -2,6 +2,7 @@ package me.synapz.paintball.commands;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.commands.player.Join;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
@@ -24,6 +25,9 @@ public abstract class ArenaCommand extends PaintballCommand {
         try {
             this.rawArenaName = args[getArenaArg()];
         } catch (ArrayIndexOutOfBoundsException exc) {
+            if (this instanceof Join)
+                return;
+
             onCommand();
             return;
         }
