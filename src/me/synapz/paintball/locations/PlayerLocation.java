@@ -13,17 +13,17 @@ public class PlayerLocation extends PaintballLocation {
         super(null, location);
 
         this.uuidFile = uuidFile;
-        this.path = "Player-Data.Location";
+        this.path = "Player-State.Location";
 
         setLocation();
     }
 
     // Creates a new TeamLocation by looking inside of arenas.yml and grabbing it out
     public PlayerLocation(UUIDFile uuidFile) {
-        super(null, uuidFile.getFileConfig().getString("Player-Data.Location"));
+        super(null, uuidFile.getFileConfig().getString("Player-State.Location"));
 
         this.uuidFile = uuidFile;
-        this.path = "Player-Data.Location";
+        this.path = "Player-State.Location";
     }
 
     protected void setLocation() {

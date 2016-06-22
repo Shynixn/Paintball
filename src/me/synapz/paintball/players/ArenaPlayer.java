@@ -202,6 +202,8 @@ public class ArenaPlayer extends PaintballPlayer {
 
         if (stopGame())
             arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
+
+        uuidFile.saveFile();
     }
 
     public void incrementHits() {

@@ -1,8 +1,11 @@
 v4.8.2
-- Started wager system.
+- Started wager system
+    - Paintball wager command is /pb wager and permission is paintball.wager given to players by default
 - Fix error on arena stopping.
 - Attempt NCP hook
--
+- Fixed inventory bug (again :P)
+- Fixed locations saving to the wrong path
+- Fixed stats not saving on arena finish until the next game
 
 v4.8.1
 - Made new playerdata work with MySQL.
