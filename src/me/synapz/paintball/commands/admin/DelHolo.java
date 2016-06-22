@@ -51,7 +51,7 @@ public class DelHolo extends PaintballCommand {
                 continue;
             }
 
-            for (Hologram hologram : HologramsAPI.getHolograms(JavaPlugin.getProvidingPlugin(Paintball.class))) {
+            for (Hologram hologram : HologramsAPI.getHolograms(Paintball.getInstance())) {
                 Location hLoc = hologram.getLocation();
 
                 int hx = hLoc.getBlockX();

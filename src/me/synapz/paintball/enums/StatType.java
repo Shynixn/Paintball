@@ -49,6 +49,9 @@ public enum StatType {
         this.suffix = suffix;
     }
 
+    public String getRawPath() {
+        return this.path;
+    }
     public String getPath() {
         return "Player-Data." + this.path;
     }

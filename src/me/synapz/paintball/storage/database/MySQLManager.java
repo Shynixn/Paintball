@@ -1,6 +1,7 @@
 package me.synapz.paintball.storage.database;
 
 import me.synapz.paintball.Paintball;
+import me.synapz.paintball.storage.files.UUIDFile;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by Jeremy(Refrigerbater) on 4/28/2016.
@@ -67,63 +69,65 @@ public class MySQLManager extends Database{
     }
 
     @Override
-    public FileConfiguration buildConfig() throws SQLException {
+    public FileConfiguration buildConfig(String uuid) throws SQLException {
         openConnection();
         FileConfiguration config = new YamlConfiguration();
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + statsTable + ";");
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + statsTable
+                + " WHERE (uuid = '" + uuid + "';");
         ResultSet set = statement.executeQuery();
-        while (set.next()) {
-            String uuid = set.getString("uuid");
-            String username = set.getString("username");
-            int kills = set.getInt("kills");
-            int deaths = set.getInt("deaths");
-            int shots = set.getInt("shots");
-            int hits = set.getInt("hits");
-            int streak = set.getInt("highest_kill_streak");
-            int games = set.getInt("games_played");
-            int wins = set.getInt("wins");
-            int defeats = set.getInt("defeats");
-            int ties = set.getInt("ties");
-            int flag_cap = set.getInt("flags_captured");
-            int flag_drop = set.getInt("flags_dropped");
-            int time_played = set.getInt("time_played");
+        if (!set.next()) return config;
+        String username = set.getString("username");
+        int kills = set.getInt("kills");
+        int deaths = set.getInt("deaths");
+        int shots = set.getInt("shots");
+        int hits = set.getInt("hits");
+        int streak = set.getInt("highest_kill_streak");
+        int games = set.getInt("games_played");
+        int wins = set.getInt("wins");
+        int defeats = set.getInt("defeats");
+        int ties = set.getInt("ties");
+        int flag_cap = set.getInt("flags_captured");
+        int flag_drop = set.getInt("flags_dropped");
+        int time_played = set.getInt("time_played");
 
-            config.set("Player-Data.UUID", uuid);
-            config.set("Player-Data.Username", username);
-            config.set("Player-Data.Kills", kills);
-            config.set("Player-Data.Deaths", deaths);
-            config.set("Player-Data.Shots", shots);
-            config.set("Player-Data.Hits", hits);
-            config.set("Player-Data.Highest-Kill-Streak", streak);
-            config.set("Player-Data.Games-Played", games);
-            config.set("Player-Data.Wins", wins);
-            config.set("Player-Data.Defeats", defeats);
-            config.set("Player-Data.Ties", ties);
-            config.set("Player-Data.Flags-Captured", flag_cap);
-            config.set("Player-Data.Flags-Dropped", flag_drop);
-            config.set("Player-Data.Time-Played", time_played);
-        }
+        config.set("Player-Data.UUID", uuid);
+        config.set("Player-Data.Username", username);
+        config.set("Player-Data.Kills", kills);
+        config.set("Player-Data.Deaths", deaths);
+        config.set("Player-Data.Shots", shots);
+        config.set("Player-Data.Hits", hits);
+        config.set("Player-Data.Highest-Kill-Streak", streak);
+        config.set("Player-Data.Games-Played", games);
+        config.set("Player-Data.Wins", wins);
+        config.set("Player-Data.Defeats", defeats);
+        config.set("Player-Data.Ties", ties);
+        config.set("Player-Data.Flags-Captured", flag_cap);
+        config.set("Player-Data.Flags-Dropped", flag_drop);
+        config.set("Player-Data.Time-Played", time_played);
         return config;
     }
 
+    /**
+     * This will save each file's data at once.
+     * @param config
+     * @throws SQLException
+     */
     @Override
     public void addStats(FileConfiguration config) throws SQLException {
         openConnection();
         if (!config.contains("Player-Data")) return;
-        Set<String> keys = config.getConfigurationSection("Player-Data").getKeys(false);
-        for (String uuid : keys) {
-            ConfigurationSection section = config.getConfigurationSection("Player-Data." + uuid);
-            PreparedStatement statement = connection.prepareStatement("UPDATE " + statsTable + " SET kills = kills + " +
-                    section.getInt("Kills") + ",deaths = deaths + " + section.getInt("Deaths") +
-                    ",shots = shots + " + section.getInt("Shots") + ",hits = hits + " + section.getInt("Hits") +
-                    ",highest_kill_streak = highest_kill_streak + " + section.getInt("Highest-Kill-Streak") +
-                    ",games_played = games_played + " + section.getInt("Games-Played") + ",wins = wins + " +
-                    section.getInt("Wins") + ",defeats = defeats + " + section.getInt("Defeats") + ",ties = ties + " +
-                    section.getInt("Ties") + ",flags_captured = flags_captured + " + section.getInt("Flags-Captured") +
-                    ",flags_dropped = flags_dropped + " + section.getInt("Flags-Dropped") + ",time_played = time_played + " +
-                    section.getInt("Time-Played") + " WHERE (uuid = '" + uuid + "');");
-            statement.executeUpdate();
-        }
+
+        ConfigurationSection section = config.getConfigurationSection("Player-Data");
+        PreparedStatement statement = connection.prepareStatement("UPDATE " + statsTable + " SET kills = kills + " +
+                section.getInt("Kills") + ",deaths = deaths + " + section.getInt("Deaths") +
+                ",shots = shots + " + section.getInt("Shots") + ",hits = hits + " + section.getInt("Hits") +
+                ",highest_kill_streak = highest_kill_streak + " + section.getInt("Highest-Kill-Streak") +
+                ",games_played = games_played + " + section.getInt("Games-Played") + ",wins = wins + " +
+                section.getInt("Wins") + ",defeats = defeats + " + section.getInt("Defeats") + ",ties = ties + " +
+                section.getInt("Ties") + ",flags_captured = flags_captured + " + section.getInt("Flags-Captured") +
+                ",flags_dropped = flags_dropped + " + section.getInt("Flags-Dropped") + ",time_played = time_played + " +
+                section.getInt("Time-Played") + " WHERE (uuid = '" + section.getString("UUID") + "');");
+        statement.executeUpdate();
     }
 
     @Override
@@ -159,19 +163,13 @@ public class MySQLManager extends Database{
         ResultSet set = statement.executeQuery();
         if (!set.next()) return;
 
-        FileConfiguration config = buildConfig();
-        File playerData = new File(Paintball.getInstance().getDataFolder(), "playerdata.yml");
-        try {
-            if (!playerData.exists()) {
-                playerData.createNewFile();
-                config.save(playerData);
-            }
-
-            PreparedStatement drop = connection.prepareStatement("DROP TABLE " + statsTable);
-            drop.executeUpdate();
-        } catch (IOException e) {
-            System.out.println("[Paintball] Failed to load data from MySQL database!");
-            e.printStackTrace();
+        statement = connection.prepareStatement("SELECT uuid FROM " + statsTable + ";");
+        set = statement.executeQuery();
+        while (set.next()) {
+            FileConfiguration config = buildConfig(set.getString("uuid"));
+            UUIDFile uuidFile = new UUIDFile(UUID.fromString(set.getString("uuid")));
         }
+        PreparedStatement drop = connection.prepareStatement("DROP TABLE " + statsTable);
+        drop.executeUpdate();
     }
 }

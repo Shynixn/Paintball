@@ -27,7 +27,7 @@ public abstract class PaintballCountdown extends BukkitRunnable {
     public PaintballCountdown(double counter) {
         this.counter = counter;
 
-        this.runTaskTimer(JavaPlugin.getProvidingPlugin(Paintball.class), 0, 20);
+        this.runTaskTimer(Paintball.getInstance(), 0, 20);
     }
 
     @Override

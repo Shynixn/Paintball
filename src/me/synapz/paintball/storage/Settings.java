@@ -26,6 +26,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Settings {
 
@@ -98,17 +99,16 @@ public class Settings {
             DATABASE.openConnection();
             DATABASE.init();
             if (Databases.SQL_ENABLED.getBoolean()) {
-                // TODO: Frig: Maybe put pass in playerDataFolder, then they can loop through the playerDataFolder.getPlayerFiles() and THEN loop inside of its configuration sections
-                /*
                 if (DATABASE.doesTableExist()) {
-                    DATABASE.addStats(PLAYERDATA.getFileConfig());
+                    for (UUIDFile uuidFile : playerDataFolder.getPlayerDataList()) {
+                        DATABASE.addStats(uuidFile.getFileConfig());
+                    }
                 }
                 else {
-                    DATABASE.updateTable(PLAYERDATA.getFileConfig());
+                    for (UUIDFile uuidFile : playerDataFolder.getPlayerDataList()) {
+                        DATABASE.updateTable(uuidFile.getFileConfig());
+                    }
                 }
-                PLAYERDATA.setFileConfig(DATABASE.buildConfig());
-                PLAYERDATA.delete();
-                */
             }
         } catch (SQLException e) {
             if (Databases.SQL_ENABLED.getBoolean()) {

@@ -84,7 +84,7 @@ public class ArenaFile extends PaintballFile {
         if (!Settings.HOLOGRAPHIC_DISPLAYS)
             return;
 
-        Hologram hologram = HologramsAPI.createHologram(JavaPlugin.getProvidingPlugin(Paintball.class), loc);
+        Hologram hologram = HologramsAPI.createHologram(Paintball.getInstance(), loc);
 
         for (String statLine : Settings.getSettings().getPlayerDataFolder().getPage(statType, page)) {
             hologram.appendTextLine(statLine);
@@ -94,7 +94,7 @@ public class ArenaFile extends PaintballFile {
     }
 
     public void deleteLeaderboards() {
-        for (Hologram hologram : HologramsAPI.getHolograms(JavaPlugin.getProvidingPlugin(Paintball.class))) {
+        for (Hologram hologram : HologramsAPI.getHolograms(Paintball.getInstance())) {
             hologram.delete();
         }
     }
@@ -191,7 +191,7 @@ public class ArenaFile extends PaintballFile {
 
     private Object loadValue(String item, Arena arena, boolean asStringList) {
         Map<String, File> allFiles = new HashMap<String, File>(){{
-            for (File file : JavaPlugin.getProvidingPlugin(Paintball.class).getDataFolder().listFiles())
+            for (File file : Paintball.getInstance().getDataFolder().listFiles())
                 put(file.getName(), file);
         }};
 

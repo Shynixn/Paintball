@@ -194,7 +194,7 @@ public class ArenaManager {
         }
 
         if (Settings.HOLOGRAPHIC_DISPLAYS) {
-            Collection<Hologram> holograms = HologramsAPI.getHolograms(JavaPlugin.getProvidingPlugin(Paintball.class));
+            Collection<Hologram> holograms = HologramsAPI.getHolograms(Paintball.getInstance());
 
             for (Hologram holo : holograms) {
                 String line = ChatColor.stripColor(holo.getLine(0).toString());

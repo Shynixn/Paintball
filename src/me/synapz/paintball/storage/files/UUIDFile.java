@@ -29,7 +29,7 @@ public class UUIDFile extends PaintballFile {
     private final UUID uuid;
 
     public UUIDFile(UUID uuid) {
-        super(JavaPlugin.getProvidingPlugin(Paintball.class), "/playerdata/" + uuid + ".yml");
+        super(Paintball.getInstance(), "/playerdata/" + uuid + ".yml");
 
         this.uuid = uuid;
         Settings.getSettings().getPlayerDataFolder().addPlayerFile(this);
@@ -83,15 +83,12 @@ public class UUIDFile extends PaintballFile {
     }
 
     public void saveAsynchronously() {
-        Bukkit.getScheduler().runTaskAsynchronously(JavaPlugin.getProvidingPlugin(Paintball.class), new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Settings.DATABASE.updateTable(fileConfig);
-                } catch (SQLException e)  {
-                    Messenger.error(Bukkit.getConsoleSender(), "Could not save " + getName() + " database.", "", "Stack trace");
-                    e.printStackTrace();
-                }
+        Bukkit.getScheduler().runTaskAsynchronously(Paintball.getInstance(), () -> {
+            try {
+                Settings.DATABASE.updateTable(fileConfig);
+            } catch (SQLException e)  {
+                Messenger.error(Bukkit.getConsoleSender(), "Could not save " + getName() + " database.", "", "Stack trace");
+                e.printStackTrace();
             }
         });
     }
