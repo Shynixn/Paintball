@@ -197,7 +197,7 @@ public class ArenaPlayer extends PaintballPlayer {
         uuidFile.addToStat(StatType.DEATHS, this, deaths);
 
         // killstreak is less than past killstreak, return
-        if (uuidFile.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath(player.getUniqueId())) < heightKillStreak)
+        if (uuidFile.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath()) < heightKillStreak)
             uuidFile.setStat(StatType.HIGEST_KILL_STREAK, this, heightKillStreak);
 
         if (stopGame())

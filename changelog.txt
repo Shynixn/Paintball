@@ -1,3 +1,7 @@
+v4.8.1
+- Made new playerdata work with MySQL.
+- Made UUID in playerdata its own configuration section.
+
 v4.8.0
 - Fixed /pb top not working after playerdata changes
 - Fixed Leaderboard holograms showing errors in console & not updating if they have a space in their name
