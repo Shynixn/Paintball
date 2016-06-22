@@ -491,7 +491,8 @@ public class ArenaPlayer extends PaintballPlayer {
     }
 
     public void withdrawCoin(double amount) {
-        coins -= amount;
+        if (coins - amount >= 0)
+            coins -= amount;
     }
 
     public void setMultiplier(int multiplier) {
