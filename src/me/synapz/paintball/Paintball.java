@@ -1,10 +1,13 @@
 package me.synapz.paintball;
 
 import com.sun.media.jfxmedia.logging.Logger;
+import fr.neatmonster.nocheatplus.checks.CheckType;
+import fr.neatmonster.nocheatplus.hooks.NCPHookManager;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.bungee.BungeeManager;
 import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.commands.CommandManager;
+import me.synapz.paintball.compat.NoCheatPlusCompat;
 import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.StatType;
@@ -81,6 +84,9 @@ public class Paintball extends JavaPlugin implements Listener {
         new Update(this);
 
         removeOldPlayerDatsFile();
+
+        if (getServer().getPluginManager().getPlugin("NoCheatPlus") != null) NCPHookManager.addHook(
+                new CheckType[]{ CheckType.FIGHT_SPEED, CheckType.MOVING_SURVIVALFLY }, new NoCheatPlusCompat());
     }
 
     @Override

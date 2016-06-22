@@ -25,19 +25,18 @@ public class SpectatorPlayer extends PaintballPlayer {
     public SpectatorPlayer(Arena a, Player p) {
         super(a, new Team(a), p);
 
-        uuidFile = new UUIDFile(player.getUniqueId());
         player.teleport(arena.getSpectatorLocation());
     }
 
     public SpectatorPlayer(ArenaPlayer arenaPlayer) {
         super(arenaPlayer.getArena(), new Team(arenaPlayer.getArena()), arenaPlayer.getPlayer());
 
-        uuidFile = new UUIDFile(player.getUniqueId());
         player.teleport(player.getLocation().add(0, 0.5, 0));
     }
 
     @Override
     protected void initPlayer() {
+        uuidFile = new UUIDFile(player.getUniqueId());
         uuidFile.savePlayerInformation();
         player.setAllowFlight(true);
         player.setFlying(true);
