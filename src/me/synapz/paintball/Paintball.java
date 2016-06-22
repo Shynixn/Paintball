@@ -133,9 +133,9 @@ public class Paintball extends JavaPlugin implements Listener {
             UUIDFile uuidFile = new UUIDFile(UUID.fromString(uuid));
 
             for (StatType type : StatType.values()) {
-                String path = type.getPath(UUID.fromString(uuid));
-
-                uuidFile.getFileConfig().set(path, playerdata.getInt(path));
+                String path = type.getPath();
+                if (!path.equals("Player-Data.none")) uuidFile.getFileConfig().set(path,
+                        playerdata.getInt("Player-Data." + uuid + type.getRawPath()));
             }
 
             uuidFile.saveFile();

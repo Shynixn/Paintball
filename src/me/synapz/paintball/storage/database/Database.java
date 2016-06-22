@@ -32,7 +32,7 @@ public abstract class Database {
 
     public abstract void updateTable(FileConfiguration config) throws SQLException;
 
-    public abstract FileConfiguration buildConfig() throws  SQLException;
+    public abstract FileConfiguration buildConfig(String uuid) throws  SQLException;
 
     public abstract void addStats(FileConfiguration config) throws SQLException;
 

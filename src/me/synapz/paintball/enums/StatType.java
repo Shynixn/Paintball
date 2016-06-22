@@ -49,8 +49,11 @@ public enum StatType {
         this.suffix = suffix;
     }
 
-    public String getPath(UUID id) {
-        return "Player-Data." + id + this.path;
+    public String getRawPath() {
+        return this.path;
+    }
+    public String getPath() {
+        return "Player-Data." + this.path;
     }
 
     public String getName() {
