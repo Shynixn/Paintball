@@ -73,7 +73,7 @@ public class Listeners extends BaseListener implements Listener {
         if (isInArena(player)) {
             // Don't know why, but this does the trick!
             a.getAllPlayers().get(player).leaveDontSave();
-            Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId()).restorePlayerInformation(true);
+            // Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId()).restorePlayerInformation(true);
         }
     }
 

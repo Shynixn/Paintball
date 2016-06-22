@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by Jeremy Lugo on 6/21/2016.
  */
-public class NoCheatPlusCompat implements NCPHook{
+public class NoCheatPlusCompat implements NCPHook {
 
     @Override
     public String getHookName() {

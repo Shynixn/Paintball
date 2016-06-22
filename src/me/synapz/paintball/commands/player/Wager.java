@@ -1,23 +1,18 @@
 package me.synapz.paintball.commands.player;
 
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
-import me.synapz.paintball.arenas.FFAArena;
 import me.synapz.paintball.commands.PaintballCommand;
-import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.events.WagerEvent;
-import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.wager.WagerManager;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
 
 /**
  * Created by Jeremy Lugo on 6/21/2016.
@@ -47,23 +42,15 @@ public class Wager extends PaintballCommand {
             return;
         }
 
-        java.util.List<ArenaPlayer> arenaPlayerList = arena.getAllArenaPlayers();
+        PaintballPlayer paintballPlayer = arena.getPaintballPlayer(player);
 
-        ArenaPlayer arenaPlayer = null;
-        for (ArenaPlayer arenaP : arenaPlayerList) {
-            if (arenaP.getPlayer().getName().equals(player.getName())) {
-                arenaPlayer = arenaP;
-                break;
-            }
-        }
-
-        if (arenaPlayer == null) {
+        if (paintballPlayer == null) {
             Messenger.error(player, "You must be in an arena to wager!");
             return;
         }
 
         EconomyResponse response = Settings.ECONOMY.withdrawPlayer(player.getName(), wager);
-        WagerEvent event = new WagerEvent(arenaPlayer, arena, wager, response.transactionSuccess()
+        WagerEvent event = new WagerEvent(paintballPlayer, arena, wager, response.transactionSuccess()
                 ? WagerEvent.WagerResult.SUCCESS : WagerEvent.WagerResult.FAILURE);
         Bukkit.getPluginManager().callEvent(event);
     }
