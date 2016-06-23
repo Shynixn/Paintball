@@ -1,3 +1,22 @@
+v4.8.5
+- Fixed NullPointerException on WagerManager which was breaking everything
+- Made it so scoreboards are cached in case you have a scoreboard before you joined
+- Fixed "An internal error has occured: %error%" now it shows the error
+- Fixed scoreboards not updating Wager amount
+- Fixed wager always showing on scoreboard even if vault is disabled
+
+v4.8.4
+- Added spectate signs
+    - paintball.spectate.create to create (super permission is paintball.admin)
+    - paintball.spectate.remove to remove (super permission is paintball.admin)
+    - paintball.spectate.use to use it (super permission is paintball.default-- given by default)
+- Moved wager total amount to scoreboards
+- Fixed for 1.8 and 1.10 compatibility
+- Made it so spectators actually see score instead of the amount of players
+- Added Wager count to all scoreboards
+- Made spectator menu heads cached so they do not have to load every time and is fast
+- Fixed /pb join sometimes not running the command
+
 v4.8.3
 - Fixed Coin amount from going into negatives
 - Fixed Ak-47 being able to left & right click

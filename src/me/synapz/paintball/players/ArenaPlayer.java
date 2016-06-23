@@ -1,5 +1,6 @@
 package me.synapz.paintball.players;
 
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
@@ -125,6 +126,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 .addLine(ScoreboardLine.HEALTH, Utils.makeHealth(arena.HITS_TO_KILL));
         if (arena.LIVES > 0)
             sb.addLine(ScoreboardLine.LIVES, Utils.makeHealth(arena.LIVES));
+        sb.addLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), Settings.VAULT);
         return sb.build();
     }
 
@@ -153,7 +155,9 @@ public class ArenaPlayer extends PaintballPlayer {
         pbSb.reloadLine(ScoreboardLine.KILL_STREAK, String.valueOf(getKillStreak()), size+5)
                 .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6)
                 .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8)
-                .reloadLine(ScoreboardLine.LIVES, Utils.makeHealth(lives), size+9, arena.LIVES > 0);
+                .reloadLine(ScoreboardLine.LIVES, Utils.makeHealth(lives), size+9, arena.LIVES > 0)
+                .reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), size+10);
+
     }
 
     @Override

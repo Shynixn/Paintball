@@ -11,30 +11,32 @@ import java.util.Map;
  */
 public class WagerManager {
 
-    private Paintball plugin;
-    private Map<Arena, Double> wagerAmounts;
+    private double wagerAmount = 0d;
+    private Arena arena;
 
-    public WagerManager(Paintball plugin) {
-        this.plugin = plugin;
-        this.wagerAmounts = new HashMap<>();
+    public WagerManager(Arena arena) {
+        this.arena = arena;
     }
 
-    public void addWager(Arena arena, double amount) {
-        double currentAmount = wagerAmounts.getOrDefault(arena, 0.0);
-        currentAmount += amount;
-        wagerAmounts.put(arena, currentAmount);
+    public Arena getArena() {
+        return arena;
     }
 
-    public boolean hasWager(Arena arena) {
-        return wagerAmounts.containsKey(arena)
-                && wagerAmounts.get(arena) > 0.0;
+    public void addWager(double amount) {
+        wagerAmount += amount;
     }
 
-    public double getAndResetWager(Arena arena) {
-        return wagerAmounts.remove(arena);
+    public boolean hasWager() {
+        return wagerAmount > 0.0;
     }
 
-    public double getWager(Arena arena) {
-        return wagerAmounts.getOrDefault(arena, 0.0);
+    public double getAndResetWager() {
+        double savedWager = wagerAmount;
+        wagerAmount = 0;
+        return savedWager;
+    }
+
+    public double getWager() {
+        return wagerAmount;
     }
 }

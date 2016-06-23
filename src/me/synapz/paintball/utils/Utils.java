@@ -4,6 +4,7 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.countdowns.PaintballCountdown;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import org.bukkit.*;
 import org.bukkit.block.Banner;
@@ -331,6 +332,29 @@ public class Utils {
             Messenger.error(player, arena.toString(RED) + " is " + state.toString().toLowerCase() + ".");
             return false;
         }
+    }
+
+    public static boolean canJoinSpectate(Arena arena, Player player) {
+        switch (arena.getState()) {
+            case NOT_SETUP:
+                Messenger.error(player, new MessageBuilder(Messages.ARENA_NOT_SETUP).replace(Tag.ARENA, arena.toString(ChatColor.RED)).build());
+                return false;
+            case DISABLED:
+                Messenger.error(player, new MessageBuilder(Messages.ARENA_DISABLED).replace(Tag.ARENA, arena.toString(ChatColor.RED)).build());
+                return false;
+            case WAITING:
+                Messenger.error(player, new MessageBuilder(Messages.ARENA_NOT_IN_PROGRESS).replace(Tag.ARENA, arena.toString(ChatColor.RED)).build());
+                return false;
+            default:
+                break;
+        }
+
+        if (arena.getAllPlayers().keySet().contains(player)) {
+            Messenger.error(player, Messages.IN_ARENA);
+            return false;
+        }
+
+        return true;
     }
 
     public static int getCurrentCounter(Arena arena) {

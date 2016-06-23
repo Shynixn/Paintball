@@ -27,7 +27,7 @@ public class WagerListener implements Listener{
     public void onWager(WagerEvent event) {
         Arena arena = event.getArena();
         PaintballPlayer paintballPlayer = event.getPaintballPlayer();
-        WagerManager wagerManager = Paintball.getInstance().getWagerManager();
+        WagerManager wagerManager = arena.getWagerManager();
 
         double amount = event.getAmount();
         DecimalFormat formatter = new DecimalFormat("#.##");
@@ -38,17 +38,19 @@ public class WagerListener implements Listener{
 
         switch (result) {
             case SUCCESS:
-                wagerManager.addWager(arena, amount);
+                wagerManager.addWager(amount);
                 for (PaintballPlayer paintballPlayer1 : arena.getAllPlayers().values()) {
                     Messenger.info(paintballPlayer1.getPlayer(), Messages.PLAYER_WAGERED.getString()
                             .replace(Tag.PLAYER.toString(), paintballPlayer.getPlayer().getName())
                             .replace(Tag.WAGER_AMOUNT.toString(), stringAmount)
-                            .replace(Tag.WAGER_TOTAL.toString(), formatter.format(wagerManager.getWager(arena)))
-                            .replace(Tag.CURRENCY.toString(), "$"));
+                            .replace(Tag.WAGER_TOTAL.toString(), formatter.format(wagerManager.getWager()))
+                            .replace(Tag.CURRENCY.toString(), arena.CURRENCY));
                 }
+                // Updates the current wager amount to scoreboards
+                arena.updateAllScoreboard();
                 break;
             case FAILURE:
-                Messenger.error(paintballPlayer.getPlayer(), "You do not have that much money!");
+                Messenger.error(paintballPlayer.getPlayer(), "You do not have enough money!");
                 break;
         }
     }

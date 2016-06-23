@@ -3,6 +3,7 @@ package me.synapz.paintball.commands;
 import me.synapz.paintball.arenas.RTFArena;
 import me.synapz.paintball.commands.arena.DelLocation;
 import me.synapz.paintball.commands.arena.SetLocation;
+import me.synapz.paintball.commands.player.Join;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
@@ -20,14 +21,11 @@ public abstract class TeamCommand extends ArenaCommand {
     public void onCommand(Player player, String[] args) {
         super.onCommand(player, args);
 
-        if (arena == null)
-            return;
-
         // This means it is an optional argument since it wasn't specified
         try {
             this.rawTeamName = args[getTeamArg()];
         } catch (ArrayIndexOutOfBoundsException exc) {
-            if (arena != null)
+            if (arena != null || (this instanceof Join && args.length == 1))
                 onCommand();
             return;
         }

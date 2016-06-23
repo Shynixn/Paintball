@@ -20,7 +20,8 @@ public enum ScoreboardLine {
     HEALTH(Messages.SCOREBOARD_HEALTH),
     LIVES(Messages.SCOREBOARD_LIVES),
     MODE(Messages.SCOREBOARD_MODE),
-    PLAYERS(Messages.SCOREBOARD_PLAYERS);
+    PLAYERS(Messages.SCOREBOARD_PLAYERS),
+    WAGER(Messages.SCOREBOARD_WAGER);
 
     private Messages message;
     private String name;

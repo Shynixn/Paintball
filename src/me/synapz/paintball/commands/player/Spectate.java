@@ -6,31 +6,14 @@ import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 
 public class Spectate extends ArenaCommand {
 
     public void onCommand() {
-        switch (arena.getState()) {
-            case NOT_SETUP:
-                Messenger.error(player, new MessageBuilder(Messages.ARENA_NOT_SETUP).replace(Tag.ARENA, arena.toString(ChatColor.RED)).build());
-                return;
-            case DISABLED:
-                Messenger.error(player, new MessageBuilder(Messages.ARENA_DISABLED).replace(Tag.ARENA, arena.toString(ChatColor.RED)).build());
-                return;
-            case WAITING:
-                Messenger.error(player, new MessageBuilder(Messages.ARENA_NOT_IN_PROGRESS).replace(Tag.ARENA, arena.toString(ChatColor.RED)).build());
-                return;
-            default:
-                break;
-        }
-
-        if (arena.getAllPlayers().keySet().contains(player)) {
-            Messenger.error(player, Messages.IN_ARENA);
-            return;
-        }
-
-        arena.joinSpectate(player);
+        if (Utils.canJoinSpectate(arena, player))
+            arena.joinSpectate(player);
     }
 
     public String getName() {

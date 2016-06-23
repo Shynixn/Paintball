@@ -84,6 +84,13 @@ public class PaintballScoreboard {
         return this;
     }
 
+    public PaintballScoreboard addLine(ScoreboardLine scoreboardLine, boolean toAdd) {
+        if (toAdd) {
+            addLine(scoreboardLine);
+        }
+        return this;
+    }
+
     public PaintballScoreboard addLine(ScoreboardLine sbLine, int startValue) {
         addLine(THEME + new MessageBuilder(sbLine.getMessage()).replace(Tag.AMOUNT, "" + startValue).build());
         return this;

@@ -1,5 +1,6 @@
 package me.synapz.paintball.players;
 
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.countdowns.ChangeTeamCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
@@ -14,6 +15,7 @@ import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
+import me.synapz.paintball.wager.WagerManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -63,6 +65,7 @@ public class LobbyPlayer extends PaintballPlayer {
         return new PaintballScoreboard(this, arena.LOBBY_COUNTDOWN, "Lobby:")
                 .addTeams(true)
                 .addLine(ScoreboardLine.LINE)
+                .addLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), Settings.VAULT)
                 .addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName())
                 .addLine(ScoreboardLine.STATUS, arena.getStateAsString())
                 .addLine(ScoreboardLine.MODE, arena.getArenaType().getShortName().toUpperCase())
@@ -79,9 +82,16 @@ public class LobbyPlayer extends PaintballPlayer {
             return;
 
         int size = arena.getArenaTeamList().size()-1;
-        pbSb.reloadTeams(true)
-                .reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+2)
-                .reloadLine(ScoreboardLine.PLAYERS, arena.getLobbyPlayers().size() + Settings.SECONDARY + "/" + Settings.THEME + arena.getMax(), size+5);
+        pbSb.reloadTeams(true);
+
+        if (Settings.VAULT)
+            pbSb.reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), size+2);
+        else
+            size--;
+
+        pbSb
+                .reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+3)
+                .reloadLine(ScoreboardLine.PLAYERS, arena.getLobbyPlayers().size() + Settings.SECONDARY + "/" + Settings.THEME + arena.getMax(), size+6);
 
         if (arena.GIVE_TEAM_SWITCHER)
             giveItems();

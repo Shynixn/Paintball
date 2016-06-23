@@ -36,7 +36,7 @@ public class PaintballSigns implements Listener {
             return;
 
         if (!e.getLine(1).equalsIgnoreCase("autojoin") && !e.getLine(1).equalsIgnoreCase("join")
-                && !e.getLine(1).equalsIgnoreCase("leave") && !e.getLine(2).equalsIgnoreCase("spectate")) {
+                && !e.getLine(1).equalsIgnoreCase("leave") && !e.getLine(1).equalsIgnoreCase("spectate")) {
             Messenger.error(e.getPlayer(), Messages.SIGN_WRONG_SYNTAX);
             e.getBlock().breakNaturally();
             return;
@@ -86,21 +86,20 @@ public class PaintballSigns implements Listener {
         }
 
         // For spectating a specific arena
-        if (e.getLine(2).equalsIgnoreCase("spectate")) {
+        if (e.getLine(1).equalsIgnoreCase("spectate")) {
             if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.spectate.create"))
                 return;
 
-            Arena a = ArenaManager.getArenaManager().getArena(e.getLine(1));
-            if (Utils.nullCheck(e.getLine(1), a, e.getPlayer())) {
-
+            Arena a = ArenaManager.getArenaManager().getArena(e.getLine(2));
+            if (Utils.nullCheck(e.getLine(2), a, e.getPlayer())) {
+                e.setLine(0, prefix);
+                e.setLine(1, a.getName());
+                e.setLine(2, Messages.SIGN_SPECTATE.getString());
+                Messenger.success(e.getPlayer(), Messages.SIGN_SPECTATE_CREATED);
             } else {
                 e.getBlock().breakNaturally();
                 return;
             }
-            e.setLine(0, prefix);
-            e.setLine(1, a.getName());
-            e.setLine(2, Messages.SIGN_SPECTATE.getString());
-            Messenger.success(e.getPlayer(), Messages.SIGN_SPECTATE_CREATED);
         }
     }
 
@@ -150,8 +149,7 @@ public class PaintballSigns implements Listener {
 
             arenaToJoin.joinLobby(player, null);
             return;
-        } else if (sign.getLine(2).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',
-                Messages.SIGN_SPECTATE.getString()))) {
+        } else if (sign.getLine(2).equalsIgnoreCase(Messages.SIGN_SPECTATE.getString())) {
             return;
         }
 
@@ -190,8 +188,7 @@ public class PaintballSigns implements Listener {
         Player player = e.getPlayer();
         if (!sign.getLine(0).contains(Messages.SIGN_TITLE.getString()) || sign.getLine(1) == null) return;
 
-        if (!sign.getLine(2).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',
-                Messages.SIGN_SPECTATE.getString())))
+        if (!sign.getLine(2).equalsIgnoreCase(Messages.SIGN_SPECTATE.getString()))
             return;
 
         if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.spectate.use"))
@@ -206,9 +203,10 @@ public class PaintballSigns implements Listener {
         Arena arenaToSpectate = ArenaManager.getArenaManager().getArenas().get(sign.getLine(1));
 
         if (arenaToSpectate != null) {
+            if (Utils.canJoinSpectate(arenaToSpectate, player))
                 arenaToSpectate.joinSpectate(player);
-            } else {
-                Messenger.error(player, Messages.CANNOT_SPECTATE);
+        } else {
+            Messenger.error(player, Messages.CANNOT_SPECTATE);
         }
     }
 

@@ -113,7 +113,8 @@ public class CommandManager implements CommandExecutor{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Messenger.error(player, new MessageBuilder(Messages.INTERNAL_ERROR).replace(Tag.ERROR, e.getMessage()).build());
+            Messenger.error(player, new MessageBuilder(Messages.INTERNAL_ERROR).replace(Tag.ERROR, "").build());
+            Messenger.error(player, e.getMessage());
         }
     }
 

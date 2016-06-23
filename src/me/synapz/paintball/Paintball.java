@@ -34,7 +34,6 @@ public class Paintball extends JavaPlugin implements Listener {
     public static boolean IS_1_9;
     private static Paintball instance;
     private BungeeManager bungeeManager;
-    private WagerManager wagerManager;
 
     @Override
     public void onEnable() {
@@ -44,7 +43,6 @@ public class Paintball extends JavaPlugin implements Listener {
 
         new Settings(this);
         this.bungeeManager = new BungeeManager(this);
-        this.wagerManager = new WagerManager(this);
         this.setupEconomy();
 
         CommandManager commandManager = new CommandManager();
@@ -154,10 +152,6 @@ public class Paintball extends JavaPlugin implements Listener {
 
     public BungeeManager getBungeeManager() {
         return bungeeManager;
-    }
-
-    public WagerManager getWagerManager() {
-        return wagerManager;
     }
 
     private boolean is1_9() {

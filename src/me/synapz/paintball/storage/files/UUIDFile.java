@@ -19,6 +19,7 @@ import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.sql.Array;
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ import java.util.*;
 public class UUIDFile extends PaintballFile {
 
     private final UUID uuid;
+    private Scoreboard cachedScoreboard;
 
     public UUIDFile(UUID uuid) {
         super(Paintball.getInstance(), "/playerdata/" + uuid + ".yml");
@@ -183,6 +185,10 @@ public class UUIDFile extends PaintballFile {
         ExperienceManager exp = new ExperienceManager(player);
 
         new PlayerLocation(this, player.getLocation());
+
+        if (player.getScoreboard() != null)
+            cachedScoreboard = player.getScoreboard();
+
         fileConfig.set(path + "Gamemode", player.getGameMode().toString());
         fileConfig.set(path + "Food", player.getFoodLevel());
         fileConfig.set(path + "Health", player.getHealth());
@@ -190,7 +196,13 @@ public class UUIDFile extends PaintballFile {
         fileConfig.set(path + "Exp", exp.getCurrentExp());
         fileConfig.set(path + "Allow-Flight", player.getAllowFlight());
         fileConfig.set(path + "Flying", player.isFlying());
-        fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getContents()));
+
+        if (Paintball.IS_1_9) {
+            fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getStorageContents()));
+        } else {
+            fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getContents()));
+        }
+
         fileConfig.set(path + "Armour", Arrays.asList(player.getInventory().getArmorContents()));
 
         this.saveFile();
@@ -206,6 +218,9 @@ public class UUIDFile extends PaintballFile {
 
         if (stripValues)
             Utils.stripValues(player);
+
+        if (cachedScoreboard != null)
+            player.setScoreboard(cachedScoreboard);
 
         player.teleport(new PlayerLocation(this).getLocation());
         player.setFoodLevel(fileConfig.getInt(path + "Food"));

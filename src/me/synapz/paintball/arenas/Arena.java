@@ -23,9 +23,11 @@ import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.wager.WagerManager;
 import org.bukkit.*;
 import org.bukkit.block.Sign;
+import org.bukkit.block.Skull;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.*;
@@ -101,8 +103,12 @@ public class Arena {
     private Map<Location, SignLocation> signLocations = new HashMap<>();
     private Map<Items, Integer> coinUsesPerGame = new HashMap<>();
 
+    private Map<UUID, ItemStack> cachedHeads = new HashMap<>();
+
     private ArenaState state;
     private boolean toReload;
+
+    WagerManager wagerManager = new WagerManager(this);
 
     public enum ArenaState {
         NOT_SETUP(Messages.NOT_SETUP),
@@ -455,6 +461,13 @@ public class Arena {
             new LobbyPlayer(this, team == null ? getTeamWithLessPlayers() : team, player);
     }
 
+    public WagerManager getWagerManager() {
+        if (wagerManager == null)
+            wagerManager = new WagerManager(this);
+
+        return wagerManager;
+    }
+
     // Starts the game, turns all LobbyPlayers into ArenaPlayers
     public void startGame() {
         HashMap<Player, Location> startLocs = new HashMap<>();
@@ -483,6 +496,8 @@ public class Arena {
                 player = new ArenaPlayer(p);
 
             startLocs.put(player.getPlayer(), player.getPlayer().getLocation());
+
+            cachedHeads.put(player.getPlayer().getUniqueId(), Utils.getSkull(player.getPlayer(), Settings.THEME + BOLD + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleport to " + ITALIC + player.getPlayer().getName()));
         }
         lobby.removeAll(lobby);
         new ArenaStartCountdown(ARENA_COUNTDOWN, this, startLocs);
@@ -494,9 +509,12 @@ public class Arena {
         this.forceLeaveArena();
     }
 
-
+    public Map<UUID, ItemStack> getCachedHeads() {
+        return cachedHeads;
+    }
 
     public void forceLeaveArena() {
+        wagerManager = new WagerManager(this);
         List<PaintballPlayer> copiedList = new ArrayList<>(allPlayers.values());
 
         for (ArenaPlayer arenaPlayer : this.getAllArenaPlayers()) {
@@ -516,6 +534,8 @@ public class Arena {
         lobby = new ArrayList<>();
         spectators = new ArrayList<>();
         inGame = new ArrayList<>();
+        cachedHeads = new HashMap<>();
+
         setState(ArenaState.WAITING);
         this.resetTeamScores();
 
@@ -592,9 +612,8 @@ public class Arena {
         }
 
         if (forPayout.size() > 0) {
-            WagerManager wagerManager = Paintball.getInstance().getWagerManager();
-            if (wagerManager.hasWager(this)) {
-                WagerPayoutEvent event = new WagerPayoutEvent(forPayout, wagerManager.getAndResetWager(this));
+            if (wagerManager.hasWager()) {
+                WagerPayoutEvent event = new WagerPayoutEvent(forPayout, wagerManager.getAndResetWager());
                 Bukkit.getPluginManager().callEvent(event);
             }
         }
@@ -710,6 +729,7 @@ public class Arena {
         lobby.remove(pbPlayer);
         inGame.remove(pbPlayer);
         spectators.remove(pbPlayer);
+        cachedHeads.remove(pbPlayer.getPlayer().getUniqueId());
         updateSigns();
     }
 

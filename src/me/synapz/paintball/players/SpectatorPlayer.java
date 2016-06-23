@@ -1,7 +1,9 @@
 package me.synapz.paintball.players;
 
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
@@ -62,7 +64,9 @@ public class SpectatorPlayer extends PaintballPlayer {
     @Override
     public PaintballScoreboard createScoreboard() {
         PaintballScoreboard scoreboard = new PaintballScoreboard(this, 1, "Spectator:")
-                .addTeams(true)
+                .addTeams(false)
+                .addLine(ScoreboardLine.LINE, Settings.VAULT)
+                .addLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), Settings.VAULT)
                 .build();
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
         arena.updateAllScoreboard();
@@ -71,8 +75,13 @@ public class SpectatorPlayer extends PaintballPlayer {
 
     @Override
     public void updateScoreboard() {
+        int size = arena.getArenaTeamList().size()-1;
+
         if (pbSb != null)
-            pbSb.reloadTeams(true);
+            pbSb.reloadTeams(false);
+
+        if (Settings.VAULT && pbSb != null)
+            pbSb.reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), size+2);
     }
 
     @Override
@@ -91,8 +100,7 @@ public class SpectatorPlayer extends PaintballPlayer {
         Inventory inv = Bukkit.createInventory(null, factor, Settings.THEME + "Teleporter");
 
         for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
-            Player player = arenaPlayer.getPlayer();
-            inv.addItem(Utils.getSkull(player, Settings.THEME + BOLD + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleport to " + ITALIC + player.getName()));
+            inv.addItem(arena.getCachedHeads().get(arenaPlayer.getPlayer().getUniqueId()));
         }
 
         player.openInventory(inv);

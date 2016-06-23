@@ -130,6 +130,7 @@ public enum Messages {
     SCOREBOARD_HEALTH("Health " + Tag.SECONDARY + "» " + Tag.AMOUNT),
     SCOREBOARD_PLAYERS("Players " + Tag.SECONDARY + "» " + Tag.AMOUNT),
     SCOREBOARD_TEAM("Team " + Tag.SECONDARY + "» " + Tag.AMOUNT),
+    SCOREBOARD_WAGER("Wager " + Tag.SECONDARY + "» " + Tag.AMOUNT),
 
     ITEM_LEAVE_ARENA("&c&lClick" + Tag.SECONDARY + " » &4Leave Arena"),
     SIGN_WRONG_SYNTAX("Wrong syntax for creating Paintball sign."),
