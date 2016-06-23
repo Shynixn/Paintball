@@ -54,6 +54,11 @@ public class Wager extends PaintballCommand {
             return;
         }
 
+        if (arena.getState() == Arena.ArenaState.STOPPING) {
+            Messenger.error(player, "Arena is already finished!");
+            return;
+        }
+
         EconomyResponse response = Settings.ECONOMY.withdrawPlayer(player.getName(), wager);
         WagerEvent event = new WagerEvent(paintballPlayer, arena, wager, response.transactionSuccess()
                 ? WagerEvent.WagerResult.SUCCESS : WagerEvent.WagerResult.FAILURE);

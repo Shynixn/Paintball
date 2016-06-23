@@ -1,9 +1,17 @@
+v4.8.6
+- Fixed inventory not being cached for skulls for spectator player menus
+- Added delay for all items (will start when I get home so when you are in nocturnal mode you can just hook it all up)
+
 v4.8.5
+- Added percent changes to Win/Loose/Tie commands @guy
+    - exmaple
 - Fixed NullPointerException on WagerManager which was breaking everything
 - Made it so scoreboards are cached in case you have a scoreboard before you joined
 - Fixed "An internal error has occured: %error%" now it shows the error
 - Fixed scoreboards not updating Wager amount
 - Fixed wager always showing on scoreboard even if vault is disabled
+- Moved win/tie/lose commands to after the game finish countdown is finished
+- Fixed ArenaPlayer scoreboards not updating
 
 v4.8.4
 - Added spectate signs

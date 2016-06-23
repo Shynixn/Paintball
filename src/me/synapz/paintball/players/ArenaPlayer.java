@@ -156,7 +156,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6)
                 .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8)
                 .reloadLine(ScoreboardLine.LIVES, Utils.makeHealth(lives), size+9, arena.LIVES > 0)
-                .reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), size+10);
+                .reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), arena.LIVES > 0 ? size+10 : size+9);
 
     }
 

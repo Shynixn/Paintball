@@ -4,13 +4,23 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.players.ArenaPlayer;
 import org.bukkit.Bukkit;
 
+import java.util.List;
+
 public class GameFinishCountdown extends PaintballCountdown {
 
-    public GameFinishCountdown(int counter, Arena arena) {
+    private final List<ArenaPlayer> winners;
+    private final List<ArenaPlayer> losers;
+    private final List<ArenaPlayer> tiers;
+
+    public GameFinishCountdown(int counter, Arena arena, List<ArenaPlayer> winners, List<ArenaPlayer> losers, List<ArenaPlayer> tiers) {
         super(arena, counter);
 
         arena.setState(Arena.ArenaState.STOPPING);
         tasks.put(arena, this);
+
+        this.winners = winners;
+        this.losers = losers;
+        this.tiers = tiers;
     }
 
     public void onFinish() {
@@ -19,6 +29,18 @@ public class GameFinishCountdown extends PaintballCountdown {
 
         for (ArenaPlayer player : arena.getAllArenaPlayers()) {
             player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        }
+
+        for (ArenaPlayer winner : winners) {
+            arena.sendCommands(winner.getPlayer(), arena.WIN_COMMANDS);
+        }
+
+        for (ArenaPlayer loser : losers) {
+            arena.sendCommands(loser.getPlayer(), arena.LOOSE_COMMANDS);
+        }
+
+        for (ArenaPlayer tier : tiers) {
+            arena.sendCommands(tier.getPlayer(), arena.TIE_COMMANDS);
         }
     }
 

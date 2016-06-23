@@ -82,8 +82,12 @@ Per-Arena-Settings:
     # To add commands, just add another - "" under the shown commands. By default these commands are disabled, remove the # to enable them
     # By default the list is empty, if you add stuff don't forget to remove the [] in their name
     # List of commands that will be sent by the Console when a player wins
+
+    # You can also give a percent for typing the command in, like here there is a 30% chance of getting a diamond sword
+    # To make your own chance use a number from 1-99 and format it like this... "number:command"
     Win-Commands: []
     #- "say %player% has won on %arena%! :)"
+    #- "30:give %player% DIAMOND_SWORD"
 
     # List of commands that will be sent by the Console when a player looses
     Lose-Commands: []

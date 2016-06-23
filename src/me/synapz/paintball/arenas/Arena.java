@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
+import java.text.NumberFormat;
 import java.util.*;
 
 import static me.synapz.paintball.locations.TeamLocation.TeamLocations;
@@ -551,19 +552,24 @@ public class Arena {
 
     // Called when a team wins
     public void win(List<Team> teams) {
+        List<ArenaPlayer> winners = new ArrayList<>();
+        List<ArenaPlayer> losers = new ArrayList<>();
+        List<ArenaPlayer> tiers = new ArrayList<>();
+
         List<PaintballPlayer> forPayout = new ArrayList<>();
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
             Player player = arenaPlayer.getPlayer();
             if (teams.contains(arenaPlayer.getTeam())) {
                 if (teams.size() != 1) {
                     arenaPlayer.setTie();
-
-                    sendCommands(player, TIE_COMMANDS);
+                    // TODO: @Frig.. so if no one really won they tied. Instead of money being lost should it be given to everyone who tied since both won?
+                    forPayout.add(arenaPlayer);
+                    tiers.add(arenaPlayer);
                 } else {
                     arenaPlayer.setWon();
                     forPayout.add(arenaPlayer);
 
-                    sendCommands(player, WIN_COMMANDS);
+                    winners.add(arenaPlayer);
                 }
 
                 final Firework firework = player.getWorld().spawn(player.getLocation().add(0, 4, 0), Firework.class);
@@ -574,7 +580,7 @@ public class Arena {
             }
 
             if (!arenaPlayer.isTie() && !arenaPlayer.isWinner()) {
-                sendCommands(player, LOOSE_COMMANDS);
+                losers.add(arenaPlayer);
             }
 
             String spaces = Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(20);
@@ -618,7 +624,7 @@ public class Arena {
             }
         }
 
-        new GameFinishCountdown(WIN_WAIT_TIME, this);
+        new GameFinishCountdown(WIN_WAIT_TIME, this, winners, losers, tiers);
     }
 
     // Broadcasts a message to the whole arena
@@ -835,9 +841,36 @@ public class Arena {
     }
 
     public void sendCommands(Player player, List<String> commands) {
-        for (String command : commands) {
+        for (String raw : commands) {
+            String command = raw;
             command = command.replace(Tag.PLAYER.toString(), player.getName()).replace(Tag.ARENA.toString(), this.getName());
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            int percent = 100;
+
+            // If the 3rd letter is a : then the percent thing is on
+            if (command.toCharArray()[2] == ':') {
+                String[] seperated = raw.split(":");
+
+                try {
+                    percent = Integer.parseInt(seperated[0]);
+                    command = "";
+                    for (int i = 1; i < seperated.length; i++) {
+                        command += seperated[i];
+                    }
+                    command = command.replace(Tag.PLAYER.toString(), player.getName()).replace(Tag.ARENA.toString(), this.getName());
+                } catch (NumberFormatException exc) {
+                    Messenger.error(player, "Error parsing command.");
+                    return;
+                }
+            }
+
+            if (percent != 100) {
+                double random = Utils.randomNumber(100);
+
+                if (random <= (double) percent)
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            } else {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            }
         }
     }
 
