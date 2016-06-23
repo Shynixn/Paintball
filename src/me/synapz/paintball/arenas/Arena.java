@@ -561,7 +561,6 @@ public class Arena {
             String title = THEME + " Games Stats ";
             Messenger.msg(player, spaces + title + spaces,
                     Settings.THEME + "Money: " + Settings.SECONDARY + (arenaPlayer.getMoney() < 0 ? "-" : "+") + "$" + Math.abs(arenaPlayer.getMoney()),
-                    Settings.THEME + "Wager money: " + Settings.SECONDARY +
                     Settings.THEME + "Kills: " + Settings.SECONDARY + arenaPlayer.getKills(),
                     Settings.THEME + "Deaths: " + Settings.SECONDARY + arenaPlayer.getDeaths(),
                     Settings.THEME + "Killstreak: " + Settings.SECONDARY + arenaPlayer.getKillStreak(),
