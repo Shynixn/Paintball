@@ -1,15 +1,11 @@
 package me.synapz.paintball.storage.database;
 
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.storage.files.UUIDFile;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.*;
-import java.util.Set;
 import java.util.UUID;
 
 /**

@@ -3,11 +3,7 @@ package me.synapz.paintball.commands.player;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.enums.Tag;
-import me.synapz.paintball.utils.MessageBuilder;
-import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.ChatColor;
 
 public class Spectate extends ArenaCommand {
 

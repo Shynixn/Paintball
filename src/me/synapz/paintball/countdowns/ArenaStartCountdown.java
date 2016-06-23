@@ -17,9 +17,6 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.bukkit.ChatColor.GRAY;
-import static org.bukkit.ChatColor.GREEN;
-
 public class ArenaStartCountdown extends PaintballCountdown {
 
     private Map<Player, Location> startLocations = new HashMap<>();

@@ -2,9 +2,6 @@ package me.synapz.paintball.arenas;
 
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.Team;
-import me.synapz.paintball.players.ArenaPlayer;
-
-import static me.synapz.paintball.storage.Settings.SECONDARY;
 
 public class FFAArena extends Arena {
 

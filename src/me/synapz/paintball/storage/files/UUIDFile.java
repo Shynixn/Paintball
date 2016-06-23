@@ -3,7 +3,6 @@ package me.synapz.paintball.storage.files;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.locations.PaintballLocation;
 import me.synapz.paintball.locations.PlayerLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
@@ -12,18 +11,16 @@ import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.IllegalPluginAccessException;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.sql.Array;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class UUIDFile extends PaintballFile {
 

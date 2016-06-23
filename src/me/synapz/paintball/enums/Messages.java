@@ -1,14 +1,6 @@
 package me.synapz.paintball.enums;
 
-import me.synapz.paintball.countdowns.ProtectionCountdown;
-import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
-
-import static me.synapz.paintball.storage.Settings.SECONDARY;
-import static me.synapz.paintball.storage.Settings.THEME;
-import static org.bukkit.ChatColor.*;
 
 public enum Messages {
 

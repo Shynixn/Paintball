@@ -5,12 +5,10 @@ import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.locations.SignLocation;
-import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -24,8 +22,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import static me.synapz.paintball.storage.Settings.THEME;
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GREEN;
 
 public class PaintballSigns implements Listener {
 

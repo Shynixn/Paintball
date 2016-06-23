@@ -11,7 +11,6 @@ import me.synapz.paintball.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 public class RTFArenaPlayer extends FlagArenaPlayer {
 

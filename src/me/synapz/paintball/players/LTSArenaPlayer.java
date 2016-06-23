@@ -1,12 +1,9 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.ScoreboardLine;
-import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.entity.Player;
 
 public class LTSArenaPlayer extends ArenaPlayer {
 

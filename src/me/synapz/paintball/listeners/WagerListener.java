@@ -1,12 +1,10 @@
 package me.synapz.paintball.listeners;
 
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.events.WagerEvent;
 import me.synapz.paintball.events.WagerPayoutEvent;
-import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
@@ -14,7 +12,6 @@ import me.synapz.paintball.wager.WagerManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.List;
 

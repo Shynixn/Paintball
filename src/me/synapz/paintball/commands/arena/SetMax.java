@@ -1,7 +1,6 @@
 package me.synapz.paintball.commands.arena;
 
 import me.synapz.paintball.arenas.FFAArena;
-import me.synapz.paintball.arenas.RTFArena;
 import me.synapz.paintball.commands.ArenaCommand;
 import me.synapz.paintball.enums.ArenaType;
 import me.synapz.paintball.enums.CommandType;

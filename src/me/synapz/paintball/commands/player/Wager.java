@@ -36,7 +36,7 @@ public class Wager extends PaintballCommand {
         }
 
         try {
-            wager = Integer.parseInt(wagerString);
+            wager = Double.parseDouble(wagerString);
         } catch (NumberFormatException e) {
             Messenger.error(player, wagerString + " is not a valid number!");
             return;

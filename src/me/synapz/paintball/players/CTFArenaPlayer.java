@@ -5,7 +5,6 @@ import me.synapz.paintball.arenas.CTFArena;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 public class CTFArenaPlayer extends FlagArenaPlayer {
 

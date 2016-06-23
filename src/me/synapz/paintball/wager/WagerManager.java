@@ -1,11 +1,5 @@
 package me.synapz.paintball.wager;
 
-import me.synapz.paintball.Paintball;
-import me.synapz.paintball.arenas.Arena;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by Jeremy Lugo on 6/21/2016.
  */
