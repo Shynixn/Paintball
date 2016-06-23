@@ -39,10 +39,12 @@ permissions:
        paintball.leave.create: true
        paintball.join.create: true
        paintball.autojoin.create: true
+       paintball.spectate.create: true
        paintball.leave.remove: true
        paintball.join.remove: true
        paintball.autojoin.remove: true
        paintball.leaderboard.remove: true
+       paintball.spectate.remove: true
        paintball.update: true
    paintball.arena:
      description: Gives access to arena setup command subsection
@@ -75,5 +77,6 @@ permissions:
        paintball.join.use: true
        paintball.autojoin.use: true
        paintball.leave.use: true
+       paintball.spectate.use: true
        paintball.wager: true
        paintball.join.*: true

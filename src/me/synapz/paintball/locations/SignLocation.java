@@ -13,7 +13,8 @@ public class SignLocation extends PaintballLocation {
         LEADERBOARD,
         JOIN,
         SKULL,
-        AUTOJOIN;
+        AUTOJOIN,
+        SPECTATE;
 
         @Override
         public String toString() {

@@ -10,6 +10,7 @@ import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -26,7 +27,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.*;
 
-public class JoinSigns implements Listener {
+public class PaintballSigns implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSignCreate(SignChangeEvent e) {
@@ -34,7 +35,8 @@ public class JoinSigns implements Listener {
         if (e.getLines().length == 0 || !e.getLine(0).equalsIgnoreCase("pb") || e.getLine(1).contains("lb"))
             return;
 
-        if (!e.getLine(1).equalsIgnoreCase("autojoin") && !e.getLine(1).equalsIgnoreCase("join") && !e.getLine(1).equalsIgnoreCase("leave")) {
+        if (!e.getLine(1).equalsIgnoreCase("autojoin") && !e.getLine(1).equalsIgnoreCase("join")
+                && !e.getLine(1).equalsIgnoreCase("leave") && !e.getLine(2).equalsIgnoreCase("spectate")) {
             Messenger.error(e.getPlayer(), Messages.SIGN_WRONG_SYNTAX);
             e.getBlock().breakNaturally();
             return;
@@ -73,6 +75,7 @@ public class JoinSigns implements Listener {
             }
         }
 
+        // For leaving
         if (e.getLine(1).equalsIgnoreCase("leave")) {
             if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.leave.create"))
                 return;
@@ -81,11 +84,31 @@ public class JoinSigns implements Listener {
             e.setLine(1, Messages.SIGN_LEAVE.getString());
             Messenger.success(e.getPlayer(), Messages.SIGN_LEAVE_CREATED);
         }
+
+        // For spectating a specific arena
+        if (e.getLine(2).equalsIgnoreCase("spectate")) {
+            if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.spectate.create"))
+                return;
+
+            Arena a = ArenaManager.getArenaManager().getArena(e.getLine(1));
+            if (Utils.nullCheck(e.getLine(1), a, e.getPlayer())) {
+
+            } else {
+                e.getBlock().breakNaturally();
+                return;
+            }
+            e.setLine(0, prefix);
+            e.setLine(1, a.getName());
+            e.setLine(2, Messages.SIGN_SPECTATE.getString());
+            Messenger.success(e.getPlayer(), Messages.SIGN_SPECTATE_CREATED);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onArenaTryToJoinOnClick(PlayerInteractEvent e) {
-        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN && e.getClickedBlock().getType() != Material.SIGN_POST && e.getClickedBlock().getType() != Material.WALL_SIGN)
+        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN
+                && e.getClickedBlock().getType() != Material.SIGN_POST
+                && e.getClickedBlock().getType() != Material.WALL_SIGN)
             return;
         if (!(e.getClickedBlock().getState() instanceof Sign)) return;
         Sign sign = (Sign) e.getClickedBlock().getState();
@@ -127,13 +150,17 @@ public class JoinSigns implements Listener {
 
             arenaToJoin.joinLobby(player, null);
             return;
+        } else if (sign.getLine(2).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',
+                Messages.SIGN_SPECTATE.getString()))) {
+            return;
         }
 
         if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.join.use"))
             return;
 
         if (ArenaManager.getArenaManager().getArena(sign.getLine(1)) == null) {
-            Messenger.error(player, new MessageBuilder(Messages.ARENA_NOT_FOUND).replace(Tag.ARENA, sign.getLine(1)).build());
+            Messenger.error(player, new MessageBuilder(Messages.ARENA_NOT_FOUND)
+                    .replace(Tag.ARENA, sign.getLine(1)).build());
             return;
         }
 
@@ -149,6 +176,39 @@ public class JoinSigns implements Listener {
             arenaToJoin.joinLobby(player, null);
         } else {
             Messenger.error(player, Messages.CANNOT_JOIN);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onArenaTryToSpectateClick(PlayerInteractEvent e) {
+        if (!(e.getAction() == Action.RIGHT_CLICK_BLOCK) || e.getClickedBlock().getType() != Material.SIGN
+                && e.getClickedBlock().getType() != Material.SIGN_POST
+                && e.getClickedBlock().getType() != Material.WALL_SIGN)
+            return;
+        if (!(e.getClickedBlock().getState() instanceof Sign)) return;
+        Sign sign = (Sign) e.getClickedBlock().getState();
+        Player player = e.getPlayer();
+        if (!sign.getLine(0).contains(Messages.SIGN_TITLE.getString()) || sign.getLine(1) == null) return;
+
+        if (!sign.getLine(2).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',
+                Messages.SIGN_SPECTATE.getString())))
+            return;
+
+        if (!Messenger.signPermissionValidator(e.getPlayer(), "paintball.spectate.use"))
+        return;
+
+        if (ArenaManager.getArenaManager().getArena(sign.getLine(1)) == null) {
+            Messenger.error(player, new MessageBuilder(Messages.ARENA_NOT_FOUND)
+                    .replace(Tag.ARENA, sign.getLine(1)).build());
+            return;
+        }
+
+        Arena arenaToSpectate = ArenaManager.getArenaManager().getArenas().get(sign.getLine(1));
+
+        if (arenaToSpectate != null) {
+                arenaToSpectate.joinSpectate(player);
+            } else {
+                Messenger.error(player, Messages.CANNOT_SPECTATE);
         }
     }
 
@@ -177,9 +237,14 @@ public class JoinSigns implements Listener {
             } else {
                 Arena a = ArenaManager.getArenaManager().getArena(sign.getLine(1));
                 if (a != null) {
-                    if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.join.remove")) {
+                    if (sign.getLine(2).equals(Messages.SIGN_SPECTATE.getString())) {
+                        if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.spectate.remove"))
+                            Messenger.success(e.getPlayer(), new MessageBuilder(Messages.SIGN_SPECTATE_REMOVED)
+                                    .replace(Tag.ARENA, a.getName()).build());
+                    } else if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.join.remove")) {
                         a.getSignLocations().get(sign.getLocation()).removeSign();
-                        Messenger.success(e.getPlayer(), new MessageBuilder(Messages.SIGN_JOIN_REMOVED).replace(Tag.ARENA, a.getName()).build());
+                        Messenger.success(e.getPlayer(), new MessageBuilder(Messages.SIGN_JOIN_REMOVED)
+                                .replace(Tag.ARENA, a.getName()).build());
                     }
                 } else if (sign.getLine(1).equals(Messages.SIGN_LEAVE.getString())) {
                     if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.leave.remove"))

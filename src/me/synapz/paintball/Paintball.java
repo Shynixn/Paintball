@@ -1,6 +1,5 @@
 package me.synapz.paintball;
 
-import fr.neatmonster.nocheatplus.checks.CheckType;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.bungee.BungeeManager;
 import me.synapz.paintball.coin.CoinItemListener;
@@ -13,7 +12,6 @@ import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.PaintballFile;
 import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.Update;
-import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.wager.WagerManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -26,7 +24,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -56,7 +53,7 @@ public class Paintball extends JavaPlugin implements Listener {
         PluginManager pm = Bukkit.getServer().getPluginManager();
 
         pm.registerEvents(new Listeners(), this);
-        pm.registerEvents(new JoinSigns(), this);
+        pm.registerEvents(new PaintballSigns(), this);
         pm.registerEvents(new ChatSystem(), this);
         pm.registerEvents(new LeaderboardSigns(), this);
         pm.registerEvents(new CoinItemListener(), this);
