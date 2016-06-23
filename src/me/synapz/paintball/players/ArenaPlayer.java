@@ -187,18 +187,18 @@ public class ArenaPlayer extends PaintballPlayer {
         }
 
         if (countdown != null && timePlayed != 0) {
-            uuidFile.addToStat(StatType.TIME_PLAYED, this, timePlayed);
+            uuidFile.addToStat(StatType.TIME_PLAYED, timePlayed);
         }
 
         uuidFile.incrementStat(StatType.GAMES_PLAYED, this);
-        uuidFile.addToStat(StatType.HITS, this, hits);
-        uuidFile.addToStat(StatType.SHOTS, this, shots);
-        uuidFile.addToStat(StatType.KILLS, this, kills);
-        uuidFile.addToStat(StatType.DEATHS, this, deaths);
+        uuidFile.addToStat(StatType.HITS, hits);
+        uuidFile.addToStat(StatType.SHOTS, shots);
+        uuidFile.addToStat(StatType.KILLS, kills);
+        uuidFile.addToStat(StatType.DEATHS, deaths);
 
         // killstreak is less than past killstreak, return
         if (uuidFile.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath()) < heightKillStreak)
-            uuidFile.setStat(StatType.HIGEST_KILL_STREAK, this, heightKillStreak);
+            uuidFile.setStat(StatType.HIGEST_KILL_STREAK, heightKillStreak);
 
         if (stopGame())
             arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));

@@ -103,7 +103,7 @@ public class UUIDFile extends PaintballFile {
             if (uuidNotFound) // their uuid wasn't in file so they have no stats, so add 0 for everything
                 stats.put(type, 0 + "");
             else
-                stats.put(type, type == StatType.KD ? getKD(uuid) : type == StatType.ACCURACY ? getAccuracy(uuid) : getFileConfig().getString(type.getPath()));
+                stats.put(type, type == StatType.KD ? getKD() : type == StatType.ACCURACY ? getAccuracy() : getFileConfig().getString(type.getPath()));
         }
         return stats;
     }
@@ -115,8 +115,6 @@ public class UUIDFile extends PaintballFile {
     // Adds one to a player's stat
     // ex: if a player gets 1 kill, add one the stat in config
     public void incrementStat(StatType type, ArenaPlayer player) {
-        UUID id = ((OfflinePlayer) player.getPlayer()).getUniqueId();
-
         switch (type) {
             // KD and ACCURACY are automatically determined by dividing
             case KD:
@@ -141,17 +139,12 @@ public class UUIDFile extends PaintballFile {
         if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
     }
 
-    public void addToStat(StatType type, ArenaPlayer arenaPlayer, int toAdd) {
-
-        UUID id = ((OfflinePlayer) arenaPlayer.getPlayer()).getUniqueId();
-
+    public void addToStat(StatType type, int toAdd) {
         getFileConfig().set(type.getPath(), getFileConfig().getInt(type.getPath()) + toAdd);
         if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
     }
 
-    public void setStat(StatType type, ArenaPlayer arenaPlayer, int toSet) {
-        UUID id = ((OfflinePlayer) arenaPlayer.getPlayer()).getUniqueId();
-
+    public void setStat(StatType type, int toSet) {
         getFileConfig().set(type.getPath(), toSet);
         if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
     }
@@ -169,14 +162,14 @@ public class UUIDFile extends PaintballFile {
     }
 
     // Returns a player's KD by dividing kills and deaths
-    public String getKD(UUID id) {
+    public String getKD() {
         int kills = getFileConfig().getInt(StatType.KILLS.getPath());
         int deaths = getFileConfig().getInt(StatType.DEATHS.getPath());
         return String.format("%.2f", Utils.divide(kills, deaths));
     }
 
     // Returns a player's accuracy by dividing shots and hits
-    public String getAccuracy(UUID id) {
+    public String getAccuracy() {
         int shots = getFileConfig().getInt(StatType.SHOTS.getPath());
         int hits = getFileConfig().getInt(StatType.HITS.getPath());
         return String.format("%d%s", (int) Math.round(Utils.divide(hits, shots)*100), "%");
@@ -197,7 +190,7 @@ public class UUIDFile extends PaintballFile {
         fileConfig.set(path + "Exp", exp.getCurrentExp());
         fileConfig.set(path + "Allow-Flight", player.getAllowFlight());
         fileConfig.set(path + "Flying", player.isFlying());
-        fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getContents()));
+        fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getStorageContents()));
         fileConfig.set(path + "Armour", Arrays.asList(player.getInventory().getArmorContents()));
 
         this.saveFile();
@@ -254,9 +247,5 @@ public class UUIDFile extends PaintballFile {
             }
         }
         return items;
-    }
-
-    private void setValue(String path, Object object) {
-        fileConfig.set(path, object);
     }
 }

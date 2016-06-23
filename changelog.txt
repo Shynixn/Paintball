@@ -4,6 +4,10 @@ v4.8.3
 - Fixed bug which did not reset game player count, ruining team balancing
 - Fixed double messages on /pb join
 - Fixed being able to pickup flag even if it is not there
+- Fixed amour contents doubling on 1.10 <3 @tri
+- FINALLY fixed vanish bug (thanks for the help @tri <3)
+- Fixed NullPointerException on player who never joined the server on /pb admin reset <player>
+- Reformated some code
 
 v4.8.2
 - Started wager system

@@ -495,8 +495,16 @@ public class Arena {
 
     public void forceLeaveArena() {
         List<PaintballPlayer> copiedList = new ArrayList<>(allPlayers.values());
-        for (PaintballPlayer player : copiedList)
+
+        for (ArenaPlayer arenaPlayer : this.getAllArenaPlayers()) {
+            for (SpectatorPlayer spectatorPlayer : this.getSpectators()) {
+                arenaPlayer.getPlayer().showPlayer(spectatorPlayer.getPlayer());
+            }
+        }
+
+        for (PaintballPlayer player : copiedList) {
             player.leave();
+        }
 
         // Update the save stats
         ArenaManager.getArenaManager().updateAllSignsOnServer();

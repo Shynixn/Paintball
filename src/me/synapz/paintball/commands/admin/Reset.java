@@ -17,6 +17,11 @@ public class Reset extends StatCommand {
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[2]);
         UUIDFile uuidFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(target.getUniqueId());
 
+        if (uuidFile == null) {
+            Messenger.msg(player, "Player " + target.getName() + " has never played Paintball and has no stats.");
+            return;
+        }
+
         if (type == null) {
             for (StatType type : StatType.values())
                 uuidFile.resetStats(type);
