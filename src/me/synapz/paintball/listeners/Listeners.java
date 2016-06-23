@@ -101,7 +101,7 @@ public class Listeners extends BaseListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommandSendInArena(PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
-        String baseCommand = e.getMessage().split(" ")[0];
+        String baseCommand = e.getMessage().split(" ")[0].toLowerCase();
 
         if (!e.getMessage().contains("/") || baseCommand == null)
             return;
@@ -451,6 +451,7 @@ public class Listeners extends BaseListener implements Listener {
                 ActionBar.sendActionBar(arenaPlayer.getPlayer(), Messenger.createPrefix("Protection") + "Cancelled");
                 ProtectionCountdown.godPlayers.get(shooterPlayerName).cancel();
             } else {
+                if (!ProtectionCountdown.godPlayers.containsKey(hitPlayerName)) return;
                 Messenger.error(arenaPlayer.getPlayer(), new MessageBuilder(Messages.YOU_ARE_PROTECTED)
                         .replace(Tag.TIME, (int) ProtectionCountdown.godPlayers.get(hitPlayerName).getCounter() + "").build());
                 event.setCancelled(true);
