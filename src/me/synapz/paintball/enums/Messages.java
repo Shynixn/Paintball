@@ -227,8 +227,10 @@ public enum Messages {
     STARTING("Starting"),
     STOPPING("Stopping"),
     PLAYING("Playing"),
-    REMOVED("Remoaced");
-    ;
+    REMOVED("Remoaced"),
+
+    // Wager
+    PLAYER_WAGERED(Tag.PLAYER + " has wagered " + Tag.CURRENCY + Tag.WAGER_AMOUNT + " (" + Tag.CURRENCY + Tag.WAGER_TOTAL + ")");
 
     private final String defaultString;
     private String string;

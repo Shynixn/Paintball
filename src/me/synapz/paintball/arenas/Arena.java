@@ -2,6 +2,7 @@ package me.synapz.paintball.arenas;
 
 
 import com.google.common.base.Joiner;
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
 import me.synapz.paintball.coin.CoinItemListener;
@@ -9,6 +10,7 @@ import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
 import me.synapz.paintball.enums.*;
+import me.synapz.paintball.events.WagerPayoutEvent;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
@@ -18,6 +20,7 @@ import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
+import me.synapz.paintball.wager.WagerManager;
 import org.bukkit.*;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -528,6 +531,7 @@ public class Arena {
 
     // Called when a team wins
     public void win(List<Team> teams) {
+        List<PaintballPlayer> forPayout = new ArrayList<>();
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
             Player player = arenaPlayer.getPlayer();
             if (teams.contains(arenaPlayer.getTeam())) {
@@ -537,6 +541,7 @@ public class Arena {
                     sendCommands(player, TIE_COMMANDS);
                 } else {
                     arenaPlayer.setWon();
+                    forPayout.add(arenaPlayer);
 
                     sendCommands(player, WIN_COMMANDS);
                 }
@@ -556,11 +561,12 @@ public class Arena {
             String title = THEME + " Games Stats ";
             Messenger.msg(player, spaces + title + spaces,
                     Settings.THEME + "Money: " + Settings.SECONDARY + (arenaPlayer.getMoney() < 0 ? "-" : "+") + "$" + Math.abs(arenaPlayer.getMoney()),
+                    Settings.THEME + "Wager money: " + Settings.SECONDARY +
                     Settings.THEME + "Kills: " + Settings.SECONDARY + arenaPlayer.getKills(),
                     Settings.THEME + "Deaths: " + Settings.SECONDARY + arenaPlayer.getDeaths(),
                     Settings.THEME + "Killstreak: " + Settings.SECONDARY + arenaPlayer.getKillStreak(),
                     Settings.THEME + "KD: " + Settings.SECONDARY + arenaPlayer.getKd(),
-                    "Your team " + (teams.size() >= 2 ? "tied" : (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost")),
+                    Settings.THEME + "Your team " + Settings.SECONDARY + (teams.size() >= 2 ? "tied" : (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost")),
                     spaces + Utils.makeSpaces(title +  "123") + spaces);
 
             if (arenaPlayer.isWinner()) {
@@ -585,6 +591,15 @@ public class Arena {
             Title title = new Title(THEME + (teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list), 20, 40, 20);
             title.send(player.getPlayer());
         }
+
+        if (forPayout.size() > 0) {
+            WagerManager wagerManager = Paintball.getInstance().getWagerManager();
+            if (wagerManager.hasWager(this)) {
+                WagerPayoutEvent event = new WagerPayoutEvent(forPayout, wagerManager.getAndResetWager(this));
+                Bukkit.getPluginManager().callEvent(event);
+            }
+        }
+
         new GameFinishCountdown(WIN_WAIT_TIME, this);
     }
 
@@ -612,7 +627,6 @@ public class Arena {
             title.send(player);
         }
     }
-
 
     // Returns the team with less players for when someone joins
     protected Team getTeamWithLessPlayers() {

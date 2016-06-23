@@ -33,4 +33,8 @@ public class WagerManager {
     public double getAndResetWager(Arena arena) {
         return wagerAmounts.remove(arena);
     }
+
+    public double getWager(Arena arena) {
+        return wagerAmounts.getOrDefault(arena, 0.0);
+    }
 }

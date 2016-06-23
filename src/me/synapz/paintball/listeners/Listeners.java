@@ -550,9 +550,6 @@ public class Listeners extends BaseListener implements Listener {
                                 if (arenaPlayer.getTeam() == ctfPlayer.getTeam()) {
                                     // Check if they have a flag
                                     if (((CTFArenaPlayer) arenaPlayer).getHeldFlag() != null) {
-                                        ActionBar.sendActionBar(ctfPlayer.getPlayer(), ChatColor.DARK_RED + ""
-                                                + ChatColor.BOLD + "Error" + Messenger.SUFFIX + ChatColor.RED
-                                                + "Flag is already stolen!");
                                         return;
                                     }
                                 }

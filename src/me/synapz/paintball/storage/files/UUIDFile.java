@@ -190,7 +190,7 @@ public class UUIDFile extends PaintballFile {
         fileConfig.set(path + "Exp", exp.getCurrentExp());
         fileConfig.set(path + "Allow-Flight", player.getAllowFlight());
         fileConfig.set(path + "Flying", player.isFlying());
-        fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getStorageContents()));
+        fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getContents()));
         fileConfig.set(path + "Armour", Arrays.asList(player.getInventory().getArmorContents()));
 
         this.saveFile();

@@ -28,7 +28,8 @@ public enum Tag {
     TEAM_COLOR,
     RANK,
     PAGE,
-    WAGER;
+    WAGER_AMOUNT,
+    WAGER_TOTAL;
 
     @Override
     public String toString() {

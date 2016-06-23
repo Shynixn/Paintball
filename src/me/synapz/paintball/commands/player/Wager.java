@@ -23,7 +23,7 @@ public class Wager extends PaintballCommand {
     public void onCommand(Player player, String[] args) {
         Arena arena = getArena(player);
         String wagerString = args[1];
-        int wager;
+        double wager;
 
         if (!Settings.VAULT) {
             Messenger.error(player, "Vault must be enabled for this feature.");
