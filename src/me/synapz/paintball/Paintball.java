@@ -12,7 +12,6 @@ import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.PaintballFile;
 import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.Update;
-import me.synapz.paintball.wager.WagerManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;

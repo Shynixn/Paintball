@@ -12,15 +12,6 @@ import java.util.Map;
 public class WagerManager {
 
     private double wagerAmount = 0d;
-    private Arena arena;
-
-    public WagerManager(Arena arena) {
-        this.arena = arena;
-    }
-
-    public Arena getArena() {
-        return arena;
-    }
 
     public void addWager(double amount) {
         wagerAmount += amount;

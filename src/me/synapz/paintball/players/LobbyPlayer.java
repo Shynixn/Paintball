@@ -15,7 +15,6 @@ import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
-import me.synapz.paintball.wager.WagerManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

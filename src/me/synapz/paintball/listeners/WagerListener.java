@@ -72,6 +72,5 @@ public class WagerListener implements Listener{
             Messenger.msg(paintballPlayer.getPlayer(), Settings.THEME + "Total money gained from wager: " +
                     Settings.SECONDARY + "$" + amountToPay);
         }
-
     }
 }
