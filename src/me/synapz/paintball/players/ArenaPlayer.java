@@ -165,6 +165,8 @@ public class ArenaPlayer extends PaintballPlayer {
         super.leave();
         team.playerLeaveTeam();
 
+        arena.remakeSpectatorInventory();
+
         if (horse != null) {
             horse.getInventory().clear();
             horse.setHealth(0);

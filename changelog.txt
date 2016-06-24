@@ -1,6 +1,7 @@
 v4.8.6
 - Fixed inventory not being cached for skulls for spectator player menus
-- Added delay for all items (will start when I get home so when you are in nocturnal mode you can just hook it all up)
+- Started background of adding a delay for CoinItems to prevent autoclickers... delay time is in ms added inside items.yml
+- (@Frig everything is ready for you, you just have to do your thang)
 
 v4.8.5
 - Added percent changes to Win/Loose/Tie commands @guy

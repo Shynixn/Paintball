@@ -274,6 +274,11 @@ public class Listeners extends BaseListener implements Listener {
                     String targetName = ChatColor.stripColor(name.split(" ")[4]);
                     ArenaPlayer target = (ArenaPlayer) a.getPaintballPlayer(Bukkit.getPlayer(targetName));
 
+                    if (target == null) {
+                        Messenger.error(player, "Could not find target.");
+                        return;
+                    }
+
                     ((SpectatorPlayer) gamePlayer).spectate(target);
                 } else {
                     Messenger.error(player, Messages.ARENA_MOVE_ERROR);

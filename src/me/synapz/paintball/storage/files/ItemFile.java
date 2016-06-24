@@ -60,6 +60,10 @@ public class ItemFile extends PaintballFile {
         return loadInt(item, "uses-per-player", item.getDefaultUsesPerPlayer());
     }
 
+    public int getDelay(Items item) {
+        return loadInt(item, "delay-ms", item.getDefaultDelay());
+    }
+
     public Sound getSound(Items item) {
         return Utils.strToSound(loadString(item, "sound", item.getDefaultSound().toString()));
     }
@@ -107,4 +111,5 @@ public class ItemFile extends PaintballFile {
     private String getPath(Items item, String section) {
         return item.toString() + "." + section;
     }
+
 }

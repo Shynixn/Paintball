@@ -94,6 +94,10 @@ public class CoinItemListener implements Listener {
             player.playSound(player.getLocation(), clickedItem.getSound(), 1.0F, 1.0F);
         }
 
+        int delay = clickedItem.getDelay();
+
+        // maybe add delay to SYstem.getmiliseconds or whatever and put that inside a hashmap with the plauer's uuid. everytime they click make sure
+        // the current miliseconds are bigger than the stored one, if it is time is up run this stuff and add it again otherwise cancel it and dont shoot
         ArenaClickItemEvent event = new ArenaClickItemEvent(arenaPlayer, clickedItem, e.getAction());
         Bukkit.getServer().getPluginManager().callEvent(event);
         CoinItemHandler.getHandler().getAllItems().get(ChatColor.RESET + clickedItem.getItemName(false).replace(ChatColor.RESET + "", "")).onClickItem(event);

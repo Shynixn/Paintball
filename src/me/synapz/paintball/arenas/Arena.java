@@ -27,6 +27,7 @@ import org.bukkit.block.Skull;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
@@ -38,6 +39,8 @@ import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.*;
 
 public class Arena {
+
+    private Inventory inventory;
 
     public int MAX_SCORE;
     public int TIME;
@@ -500,10 +503,30 @@ public class Arena {
 
             cachedHeads.put(player.getPlayer().getUniqueId(), Utils.getSkull(player.getPlayer(), Settings.THEME + BOLD + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleport to " + ITALIC + player.getPlayer().getName()));
         }
+
+        remakeSpectatorInventory();
+
         lobby.removeAll(lobby);
         new ArenaStartCountdown(ARENA_COUNTDOWN, this, startLocs);
     }
-    
+
+    public void remakeSpectatorInventory() {
+        int size = this.getAllArenaPlayers().size();
+        int factor = 9;
+
+        for ( ; factor < size; factor += 9);
+
+        inventory = Bukkit.createInventory(null, factor, Settings.THEME + "Teleporter");
+
+        for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
+            inventory.addItem(cachedHeads.get(arenaPlayer.getPlayer().getUniqueId()));
+        }
+    }
+
+    public Inventory getSpectatorInventory() {
+        return inventory;
+    }
+
     // Used for server reload and arena force stops, so no messages will be sent
     public void stopGame() {
         setState(ArenaState.WAITING);

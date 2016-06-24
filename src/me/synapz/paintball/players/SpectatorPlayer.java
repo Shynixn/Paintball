@@ -91,19 +91,7 @@ public class SpectatorPlayer extends PaintballPlayer {
     }
 
     public void openMenu() {
-        // TODO: add next page item for if there is more than 54 people
-        int size = arena.getAllArenaPlayers().size();
-        int factor = 9;
-
-        for ( ; factor < size; factor += 9);
-
-        Inventory inv = Bukkit.createInventory(null, factor, Settings.THEME + "Teleporter");
-
-        for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
-            inv.addItem(arena.getCachedHeads().get(arenaPlayer.getPlayer().getUniqueId()));
-        }
-
-        player.openInventory(inv);
+        player.openInventory(arena.getSpectatorInventory());
     }
 
     public void spectate(ArenaPlayer arenaPlayer) {

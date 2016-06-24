@@ -35,9 +35,11 @@ public class CoinItem extends ItemStack {
     private final int damage;
     private final int usesPerGame;
     private final int usesPerPlayer;
+    private final int delay;
+
     private Items coinEnumItem;
 
-    public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, String action, Sound sound, int usesPerPlayer, int usesPerGame, int damage) {
+    public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, String action, Sound sound, int usesPerPlayer, int usesPerGame, int damage, int delay) {
         super(material, amount);
         this.name = name;
         this.nameWithSpaces = name;
@@ -53,6 +55,7 @@ public class CoinItem extends ItemStack {
         this.usesPerGame = usesPerGame;
         this.usesPerPlayer = usesPerPlayer;
         this.coinEnumItem = null;
+        this.delay = delay;
 
         CoinItemHandler.getHandler().addItem(this);
     }
@@ -72,7 +75,8 @@ public class CoinItem extends ItemStack {
                 item.getSound(),
                 item.getUsesPerPlayer(),
                 item.getUsesPerGame(),
-                item.getDamage());
+                item.getDamage(),
+                item.getDelay());
 
         this.coinEnumItem = item;
     }
@@ -92,6 +96,7 @@ public class CoinItem extends ItemStack {
         this.usesPerPlayer = item.getUsesPerPlayer();
         this.usesPerGame = item.getUsesPerGame();
         this.damage = item.getDamage();
+        this.delay = item.getDelay();
         this.coinEnumItem = item.getCoinEnumItem();
     }
 
@@ -145,6 +150,10 @@ public class CoinItem extends ItemStack {
 
     public int getDamage() {
         return damage;
+    }
+
+    public int getDelay() {
+        return delay;
     }
 
     // Sets the values specific to the arena player, then returns the item to be placed in coinshop
