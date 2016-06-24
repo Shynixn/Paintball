@@ -3,6 +3,7 @@ package me.synapz.paintball.bungee;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.enums.Databases;
@@ -27,6 +28,8 @@ public class BungeeManager implements PluginMessageListener {
         if (Databases.BUNGEE_ENABLED.getBoolean() && !Bukkit.getServer().getMessenger().getIncomingChannels().contains("BungeeCord")) {
             Bukkit.getServer().getMessenger().registerIncomingPluginChannel(pb, "BungeeCord", this);
             Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "BungeeCord");
+
+            Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "Parkour-Party");
         }
 
         if (Databases.SERVER_ID.getString().equalsIgnoreCase("Generating")) {
@@ -110,6 +113,13 @@ public class BungeeManager implements PluginMessageListener {
             }
             updateBungeeSigns();
         }
+    }
+
+    // Need to edit the channel name in Party, but this will do for now.
+    public void updatePartyScoreboard(String player) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF(player);
+        Bukkit.getServer().sendPluginMessage(pb, "Parkour-Party", out.toByteArray());
     }
 
     public HashMap<UUID, Arena> getBungeePlayers() {
