@@ -37,7 +37,7 @@ public class CTFArenaPlayer extends FlagArenaPlayer {
         if (arena.getState() != Arena.ArenaState.IN_PROGRESS)
             return;
 
-        Location droppedLocation = Utils.createFlag(heldFlag, getLastLocation());
+        Location droppedLocation = Utils.createFlag(heldFlag, getLastLocation(), ctfArena.getBlockManager());
         ctfArena.addFlagLocation(droppedLocation, heldFlag);
 
         player.getWorld().playSound(player.getLocation(), ctfArena.FLAG_DROP, 5, 5);
@@ -53,7 +53,7 @@ public class CTFArenaPlayer extends FlagArenaPlayer {
             return;
 
         Location toReset = ctfArena.getFlagLocation(heldFlag);
-        Utils.createFlag(heldFlag, toReset);
+        Utils.createFlag(heldFlag, toReset, null);
 
         player.getWorld().playSound(player.getLocation(), ctfArena.FLAG_SCORE, 5, 5);
 

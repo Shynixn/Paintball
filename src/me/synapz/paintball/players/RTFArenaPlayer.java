@@ -1,6 +1,7 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.arenas.BlockManager;
 import me.synapz.paintball.arenas.RTFArena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
@@ -14,7 +15,7 @@ import org.bukkit.Location;
 
 public class RTFArenaPlayer extends FlagArenaPlayer {
 
-    RTFArena rtfArena = (RTFArena) arena;
+    private RTFArena rtfArena = (RTFArena) arena;
 
     public RTFArenaPlayer(LobbyPlayer lobbyPlayer) {
         super(lobbyPlayer);
@@ -47,7 +48,9 @@ public class RTFArenaPlayer extends FlagArenaPlayer {
 
         Location toReset = rtfArena.getNuetralFlagLocation();
 
-        rtfArena.setCurrentFlagLocation(Utils.createFlag(null, toReset));
+        rtfArena.setCurrentFlagLocation(Utils.createFlag(null, toReset, null));
+
+        rtfArena.getBlockManager().restore(toReset);
     }
 
 
@@ -61,7 +64,7 @@ public class RTFArenaPlayer extends FlagArenaPlayer {
         player.getWorld().playSound(player.getLocation(), rtfArena.FLAG_DROP, 5, 5);
 
         if (rtfArena.getHolder() != null) {
-            rtfArena.setCurrentFlagLocation(Utils.createFlag(null, getLastLocation()));
+            rtfArena.setCurrentFlagLocation(Utils.createFlag(null, getLastLocation(), rtfArena.getBlockManager()));
         }
 
         rtfArena.setHolder(null);

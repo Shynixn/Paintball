@@ -18,6 +18,8 @@ import static org.bukkit.ChatColor.*;
 
 public class RTFArena extends FlagArena {
 
+    private final BlockManager blockManager = new BlockManager();
+
     public Sound FLAG_PICKUP;
     public Sound FLAG_DROP;
     public Sound FLAG_SCORE;
@@ -71,7 +73,7 @@ public class RTFArena extends FlagArena {
             block.setData(team.getDyeColor().getData());
         }
 
-        neutralFlagLocation = Utils.createFlag(null, getNuetralFlagLocation());
+        neutralFlagLocation = Utils.createFlag(null, getNuetralFlagLocation(), null);
     }
 
     // Resets everything set in loadFlags()
@@ -84,7 +86,7 @@ public class RTFArena extends FlagArena {
         }
 
         if (neutralFlagLocation != null)
-            neutralFlagLocation.getBlock().setType(Material.AIR);
+            blockManager.restore(neutralFlagLocation);
     }
 
     @Override
@@ -102,6 +104,10 @@ public class RTFArena extends FlagArena {
 
     public void setCurrentFlagLocation(Location loc) {
         neutralFlagLocation = loc;
+    }
+
+    public BlockManager getBlockManager() {
+        return blockManager;
     }
 
     public Location getNuetralFlagLocation() {

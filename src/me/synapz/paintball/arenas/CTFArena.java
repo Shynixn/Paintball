@@ -15,6 +15,8 @@ import static me.synapz.paintball.storage.Settings.ARENA;
 
 public class CTFArena extends FlagArena {
 
+    private final BlockManager blockManager = new BlockManager();
+
     public Sound FLAG_PICKUP;
     public Sound FLAG_DROP;
     public Sound FLAG_SCORE;
@@ -36,7 +38,7 @@ public class CTFArena extends FlagArena {
         for (Team team : this.getArenaTeamList()) {
             Location loc = new FlagLocation(this, team).getLocation();
 
-            startFlagLocations.put(team, Utils.createFlag(team, loc));
+            startFlagLocations.put(team, Utils.createFlag(team, loc, null));
         }
     }
 
@@ -48,7 +50,7 @@ public class CTFArena extends FlagArena {
 
         // Turns all pickedup flag locations to air
         for (Location loc : getDropedFlagLocations().keySet())
-            loc.getBlock().setType(Material.AIR);
+            blockManager.restore(loc);
 
         startFlagLocations = new HashMap<>();
         dropedFlagLocations = new HashMap<>();
@@ -71,6 +73,10 @@ public class CTFArena extends FlagArena {
         return startFlagLocations;
     }
 
+    public BlockManager getBlockManager() {
+        return blockManager;
+    }
+
     public void addFlagLocation(Location loc, Team team) {
         loc = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         dropedFlagLocations.put(loc, team);
@@ -80,6 +86,7 @@ public class CTFArena extends FlagArena {
         Team team = dropedFlagLocations.get(loc);
 
         loc = new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        blockManager.restore(loc);
         dropedFlagLocations.remove(loc, team);
     }
 }

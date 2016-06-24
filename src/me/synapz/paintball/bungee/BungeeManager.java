@@ -29,7 +29,8 @@ public class BungeeManager implements PluginMessageListener {
             Bukkit.getServer().getMessenger().registerIncomingPluginChannel(pb, "BungeeCord", this);
             Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "BungeeCord");
 
-            Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "Parkour-Party");
+            if (Bukkit.getServer().getMessenger().isOutgoingChannelRegistered(pb, "Parkour-Party"))
+                Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "Parkour-Party");
         }
 
         if (Databases.SERVER_ID.getString().equalsIgnoreCase("Generating")) {
@@ -117,8 +118,12 @@ public class BungeeManager implements PluginMessageListener {
 
     // Need to edit the channel name in Party, but this will do for now.
     public void updatePartyScoreboard(String player) {
+        if (!Bukkit.getServer().getMessenger().isOutgoingChannelRegistered(pb, "Parkour-Party"))
+            return;
+
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(player);
+
         Bukkit.getServer().sendPluginMessage(pb, "Parkour-Party", out.toByteArray());
     }
 

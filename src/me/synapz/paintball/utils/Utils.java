@@ -2,6 +2,7 @@ package me.synapz.paintball.utils;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.arenas.BlockManager;
 import me.synapz.paintball.countdowns.PaintballCountdown;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
@@ -165,7 +166,7 @@ public class Utils {
         }
     }
 
-    public static Location createFlag(Team team, Location location) {
+    public static Location createFlag(Team team, Location location, BlockManager blockManager) {
         DyeColor color = team == null ? DyeColor.WHITE : team.getDyeColor();
 
         // Makes sure the bottom block is not air, because barriers cannot be palced over air
@@ -174,9 +175,14 @@ public class Utils {
 
         // Makes sure the block is not a stair or a slab, those are half blocks and the plugin will break those blocks
         String name = location.clone().getBlock().getType().toString();
+
         if (name.contains("STAIRS") || name.contains("SLAB") || name.contains("STEP"))
             location.add(0, 1, 0);
-        
+
+        if (blockManager != null) {
+            blockManager.addBock(location.getBlock().getState());
+        }
+
         // Sets the location to a banner then updates the banner to the team color
         location.getBlock().setType(Material.STANDING_BANNER);
         Banner banner = (Banner) location.getBlock().getState();

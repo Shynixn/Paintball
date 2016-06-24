@@ -1,7 +1,11 @@
+v4.8.7
+- Finished ms delay for all coin items, very helpful to block autoclickers/hackers/modders
+- Fixed Party channel making errors if plugin not installed
+- Fixed CTF/RTF pickup and dropping flags to correctly save/load broken blocks for that flag
+
 v4.8.6
 - Fixed inventory not being cached for skulls for spectator player menus
 - Started background of adding a delay for CoinItems to prevent autoclickers... delay time is in ms added inside items.yml
-- (@Frig everything is ready for you, you just have to do your thang)
 
 v4.8.5
 - Added percent changes to Win/Loose/Tie commands @guy

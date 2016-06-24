@@ -539,7 +539,7 @@ public class Listeners extends BaseListener implements Listener {
 
                                 Location resetLoc = new FlagLocation((CTFArena) ctfPlayer.getArena(), teamFlagPickedUp).getLocation();
 
-                                Utils.createFlag(ctfPlayer.getTeam(), resetLoc);
+                                Utils.createFlag(ctfPlayer.getTeam(), resetLoc, ((CTFArena) arena).getBlockManager());
 
                                 arena.broadcastMessage(Settings.THEME + ChatColor.BOLD + ctfPlayer.getPlayer().getName()
                                         + " has reset " + ctfPlayer.getTeam().getTitleName() + "'s flag!");
