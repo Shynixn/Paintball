@@ -1,5 +1,6 @@
 package me.synapz.paintball.players;
 
+import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
@@ -119,6 +120,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
 
     // Leaves an arena (removes their color names, restores information, removes from lists, and checks to see if to force stop (1 player left)
     public void leave() {
+        Paintball.getInstance().getBungeeManager().updatePartyScoreboard(player.getName());
         arena.removePlayer(this, restoreInfo); // removes player from all array lists
 
         for (SpectatorPlayer spectatorPlayer : arena.getSpectators()) {
