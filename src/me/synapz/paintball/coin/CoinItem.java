@@ -34,11 +34,11 @@ public class CoinItem extends ItemStack {
     private final int damage;
     private final int usesPerGame;
     private final int usesPerPlayer;
-    private final int delay;
+    private final long delay;
 
     private Items coinEnumItem;
 
-    public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, String action, Sound sound, int usesPerPlayer, int usesPerGame, int damage, int delay) {
+    public CoinItem(Material material, String name, int amount, boolean showItem, String description, double money, int coins, int expirationTime, String permission, String action, Sound sound, int usesPerPlayer, int usesPerGame, int damage, long delay) {
         super(material, amount);
         this.name = name;
         this.nameWithSpaces = name;
@@ -151,7 +151,7 @@ public class CoinItem extends ItemStack {
         return damage;
     }
 
-    public int getDelay() {
+    public long getDelay() {
         return delay;
     }
 

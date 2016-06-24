@@ -16,8 +16,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class CoinItemListener implements Listener {
+
+    private Map<String, Long> timeSinceLastShot;
+
+    public CoinItemListener() {
+        timeSinceLastShot = new HashMap<>();
+    }
 
     @EventHandler
     public void onClicKItemWhileInGame(InventoryClickEvent e) {
@@ -90,20 +99,21 @@ public class CoinItemListener implements Listener {
             return;
         }
 
+        long delay = clickedItem.getDelay();
+
+        if (System.currentTimeMillis() - timeSinceLastShot.getOrDefault(player.getName(), delay) < delay) return;
+        timeSinceLastShot.put(player.getName(), System.currentTimeMillis());
+
         if (clickedItem.hasSound()) {
             player.playSound(player.getLocation(), clickedItem.getSound(), 1.0F, 1.0F);
         }
 
-        int delay = clickedItem.getDelay();
+        e.setCancelled(true);
 
-        // maybe add delay to SYstem.getmiliseconds or whatever and put that inside a hashmap with the plauer's uuid. everytime they click make sure
-        // the current miliseconds are bigger than the stored one, if it is time is up run this stuff and add it again otherwise cancel it and dont shoot
         ArenaClickItemEvent event = new ArenaClickItemEvent(arenaPlayer, clickedItem, e.getAction());
         Bukkit.getServer().getPluginManager().callEvent(event);
         CoinItemHandler.getHandler().getAllItems().get(ChatColor.RESET + clickedItem.getItemName(false).replace(ChatColor.RESET + "", "")).onClickItem(event);
 
         arenaPlayer.setLastClickedItem(clickedItem);
-
-        e.setCancelled(true);
     }
 }

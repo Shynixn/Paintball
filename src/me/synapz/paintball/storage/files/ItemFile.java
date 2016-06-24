@@ -60,8 +60,8 @@ public class ItemFile extends PaintballFile {
         return loadInt(item, "uses-per-player", item.getDefaultUsesPerPlayer());
     }
 
-    public int getDelay(Items item) {
-        return loadInt(item, "delay-ms", item.getDefaultDelay());
+    public long getDelay(Items item) {
+        return loadLong(item, "delay-ms", item.getDefaultDelay());
     }
 
     public Sound getSound(Items item) {
@@ -97,6 +97,15 @@ public class ItemFile extends PaintballFile {
         }
 
         return fileConfig.getInt(getPath(item, section));
+    }
+
+    private long loadLong(Items item, String section, long value) {
+        if (fileConfig.get(item.toString()) == null || fileConfig.get(getPath(item, section)) == null) {
+            fileConfig.set(item.toString() + "." + section, value);
+            this.saveFile();
+        }
+
+        return fileConfig.getLong(getPath(item, section));
     }
 
     private double loadDouble(Items item, String section, double value) {
