@@ -8,10 +8,8 @@ import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class FlagArenaPlayer extends ArenaPlayer {

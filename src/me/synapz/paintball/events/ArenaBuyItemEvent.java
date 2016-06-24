@@ -1,10 +1,7 @@
 package me.synapz.paintball.events;
 
-import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.players.ArenaPlayer;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 public class ArenaBuyItemEvent extends ArenaEvent {
 

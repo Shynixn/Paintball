@@ -7,7 +7,8 @@ import me.synapz.paintball.storage.Settings;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static me.synapz.paintball.storage.Settings.*;
+import static me.synapz.paintball.storage.Settings.SECONDARY;
+import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.*;
 
 public class Messenger {

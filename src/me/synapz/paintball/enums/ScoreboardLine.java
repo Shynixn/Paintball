@@ -1,9 +1,5 @@
 package me.synapz.paintball.enums;
 
-import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.utils.Utils;
-import org.bukkit.ChatColor;
-
 import static me.synapz.paintball.storage.Settings.SECONDARY;
 import static me.synapz.paintball.storage.Settings.THEME;
 

@@ -1,9 +1,6 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.storage.Settings;
-import org.bukkit.entity.Player;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
 

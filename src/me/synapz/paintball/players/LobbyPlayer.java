@@ -1,6 +1,5 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.countdowns.ChangeTeamCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
@@ -15,7 +14,6 @@ import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
-import me.synapz.paintball.wager.WagerManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

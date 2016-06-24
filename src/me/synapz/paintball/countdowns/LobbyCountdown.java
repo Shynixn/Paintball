@@ -5,9 +5,6 @@ import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.utils.MessageBuilder;
 
-import static org.bukkit.ChatColor.GRAY;
-import static org.bukkit.ChatColor.GREEN;
-
 public class LobbyCountdown extends PaintballCountdown {
 
     public LobbyCountdown(int counter, Arena a) {

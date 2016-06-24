@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static me.synapz.paintball.storage.Settings.ARENA;
 import static org.bukkit.ChatColor.RED;
 
 public class Utils {

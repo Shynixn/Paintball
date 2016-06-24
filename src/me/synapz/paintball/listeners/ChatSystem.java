@@ -5,15 +5,11 @@ import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
-import me.synapz.paintball.players.SpectatorPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ChatSystem implements Listener {
 

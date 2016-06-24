@@ -2,10 +2,7 @@ package me.synapz.paintball.arenas;
 
 
 import com.google.common.base.Joiner;
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.coin.CoinItem;
-import me.synapz.paintball.coin.CoinItemHandler;
-import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.countdowns.ArenaStartCountdown;
 import me.synapz.paintball.countdowns.GameFinishCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
@@ -23,7 +20,6 @@ import me.synapz.paintball.utils.Utils;
 import me.synapz.paintball.wager.WagerManager;
 import org.bukkit.*;
 import org.bukkit.block.Sign;
-import org.bukkit.block.Skull;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -112,7 +108,7 @@ public class Arena {
     private ArenaState state;
     private boolean toReload;
 
-    WagerManager wagerManager = new WagerManager(this);
+    WagerManager wagerManager = new WagerManager();
 
     public enum ArenaState {
         NOT_SETUP(Messages.NOT_SETUP),
@@ -467,7 +463,7 @@ public class Arena {
 
     public WagerManager getWagerManager() {
         if (wagerManager == null)
-            wagerManager = new WagerManager(this);
+            wagerManager = new WagerManager();
 
         return wagerManager;
     }
@@ -538,7 +534,7 @@ public class Arena {
     }
 
     public void forceLeaveArena() {
-        wagerManager = new WagerManager(this);
+        wagerManager = new WagerManager();
         List<PaintballPlayer> copiedList = new ArrayList<>(allPlayers.values());
 
         for (ArenaPlayer arenaPlayer : this.getAllArenaPlayers()) {

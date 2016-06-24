@@ -3,7 +3,6 @@ package me.synapz.paintball.storage.files;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.utils.MessageBuilder;
 import org.bukkit.plugin.Plugin;
 
 public class MessagesFile extends PaintballFile {

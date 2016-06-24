@@ -1,26 +1,11 @@
 package me.synapz.paintball.wager;
 
-import me.synapz.paintball.Paintball;
-import me.synapz.paintball.arenas.Arena;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by Jeremy Lugo on 6/21/2016.
  */
 public class WagerManager {
 
     private double wagerAmount = 0d;
-    private Arena arena;
-
-    public WagerManager(Arena arena) {
-        this.arena = arena;
-    }
-
-    public Arena getArena() {
-        return arena;
-    }
 
     public void addWager(double amount) {
         wagerAmount += amount;

@@ -1,9 +1,6 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.DTCArena;
-import me.synapz.paintball.enums.Team;
-import org.bukkit.entity.Player;
 
 public class DTCArenaPlayer extends ArenaPlayer {
 

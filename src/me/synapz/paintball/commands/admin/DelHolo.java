@@ -13,7 +13,6 @@ import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class DelHolo extends PaintballCommand {
 

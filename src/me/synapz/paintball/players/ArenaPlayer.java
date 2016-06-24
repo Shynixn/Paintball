@@ -1,6 +1,5 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
@@ -13,7 +12,9 @@ import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.*;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
@@ -22,11 +23,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.synapz.paintball.storage.Settings.*;
+import static me.synapz.paintball.storage.Settings.SECONDARY;
+import static me.synapz.paintball.storage.Settings.VAULT;
 
 public class ArenaPlayer extends PaintballPlayer {
 
@@ -107,6 +110,10 @@ public class ArenaPlayer extends PaintballPlayer {
 
     @Override
     public PaintballScoreboard createScoreboard() {
+        // Having a money amount being #.# is ugly, i like #.## better.
+        DecimalFormat formatter = new DecimalFormat("#.##");
+        formatter.setMinimumFractionDigits(2);
+
         double bal;
 
         if (Settings.VAULT)
@@ -126,7 +133,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 .addLine(ScoreboardLine.HEALTH, Utils.makeHealth(arena.HITS_TO_KILL));
         if (arena.LIVES > 0)
             sb.addLine(ScoreboardLine.LIVES, Utils.makeHealth(arena.LIVES));
-        sb.addLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), Settings.VAULT);
+        sb.addLine(ScoreboardLine.WAGER, arena.CURRENCY + formatter.format(arena.getWagerManager().getWager()), Settings.VAULT);
         return sb.build();
     }
 

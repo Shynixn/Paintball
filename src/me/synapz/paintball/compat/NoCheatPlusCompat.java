@@ -6,8 +6,6 @@ import fr.neatmonster.nocheatplus.hooks.NCPHook;
 import fr.neatmonster.nocheatplus.hooks.NCPHookManager;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
-import me.synapz.paintball.coin.CoinItem;
-import me.synapz.paintball.coin.CoinItemHandler;
 import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.entity.Player;
