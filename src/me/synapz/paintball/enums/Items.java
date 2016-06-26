@@ -11,7 +11,7 @@ public enum Items {
     DEFAULT("Gun", Material.GOLD_BARDING, false, 1, "Paintball Shooter", 0.0D, 0, 0, "", "shot", Sounds.WOOD_CLICK.bukkitSound(), -1, -1, 1, 150),
     TIME_WARP("Time Warp", Material.GHAST_TEAR, true, 1, "Teleports you to your\nlast death location", 0, 2, 0, "", "", Sounds.WOOD_CLICK.bukkitSound(), -1, -1, 0, 0),
     SUGAR_OVERDOSE("Sugar Overdose", Material.SUGAR, true, 1, "Speeds up movement by 2x", 0, 3, 0, "", "", Sounds.BURP.bukkitSound(), -1, -1, 0, 0),
-    COWBOY("Cowboy", Material.LEASH, true, 1, "Puts you onto a horse to ride", 0, 3, 0, "", "", Sounds.FALL_BIG.bukkitSound(), -1, -1, 0, 0),
+    COWBOY("Cowboy", Material.LEATHER, true, 1, "Puts you onto a horse to ride", 0, 3, 0, "", "", Sounds.FALL_BIG.bukkitSound(), -1, -1, 0, 1000),
     DUEL_WIELD("Duel Wield", Material.IRON_HOE, true, 1, "Lets you shoot from both hands", 0, 4, 120, "", "dueled", Sounds.ARROW_HIT.bukkitSound(), -1, -1, 1, 0),
     RAPID_FIRE("Rapid Fire", Material.DIAMOND_HOE, true, 1, "Allows you to left or right click\nto shoot", 0, 4, 0, "pieced", "", Sounds.ARROW_HIT.bukkitSound(), -1, -1, 1, 150),
     AK_47("AK-47", Material.GOLD_BARDING, true, 1, "Shoot with 100% accuracy\nout of an AK-47", 0, 5, 120, "", "mowed down",  Utils.DEFAULT_SOUND, -1, -1, 1, 150),

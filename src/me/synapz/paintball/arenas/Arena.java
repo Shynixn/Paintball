@@ -38,6 +38,8 @@ public class Arena {
 
     private Inventory inventory;
 
+    public double ACCURACY;
+
     public int MAX_SCORE;
     public int TIME;
     public int WIN_WAIT_TIME;
@@ -67,7 +69,6 @@ public class Arena {
     public boolean COINS;
     public boolean FIREWORK_ON_DEATH;
     public boolean STOP_PROT_ON_HIT;
-    public boolean ACCURACY;
     public boolean BROADCAST_WINNER;
     public boolean PER_TEAM_CHAT_LOBBY;
     public boolean PER_TEAM_CHAT_ARENA;
@@ -457,8 +458,33 @@ public class Arena {
     }
 
     public void joinLobby(Player player, Team team) {
-        if (Utils.canJoin(player, this))
+        if (Utils.canJoin(player, this)) {
+            boolean playerFound = false;
+            // Inside this block it will only run if the player has the permission to bypass a full queue
+
+            // If it is full, kick someone else out
+            if (this.lobby.size() >= this.getMax()) {
+                for (LobbyPlayer toKick : this.lobby) {
+                    Player toKickPlayer = toKick.getPlayer();
+
+                    // Only click the player if they do not have access to the bypass permissons
+                    if (!player.hasPermission("paintball.join." + getName() + ".bypass") &&!player.hasPermission("paintball.join.*.bypass")) {
+                        Messenger.error(toKickPlayer, "Sorry, your space has been filled by other player.");
+                        toKick.leave();
+                        playerFound = true;
+                        break;
+                    }
+                }
+
+                // If for some reason all players have he bypass permission, that means no one was kicked so do not let them join
+                if (playerFound == false) {
+                    Messenger.error(player, "Sorry, no places could not be found in this arena.");
+                    return;
+                }
+            }
+
             new LobbyPlayer(this, team == null ? getTeamWithLessPlayers() : team, player);
+        }
     }
 
     public WagerManager getWagerManager() {
@@ -923,7 +949,6 @@ public class Arena {
         COINS                      = ARENA.loadBoolean("coins", this);
         FIREWORK_ON_DEATH          = ARENA.loadBoolean("firework-on-death", this);
         STOP_PROT_ON_HIT           = ARENA.loadBoolean("cancel-prot-on-hit", this);
-        ACCURACY                   = ARENA.loadBoolean("accuracy", this);
         PER_TEAM_CHAT_LOBBY        = ARENA.loadBoolean("Join-Lobby.per-team-chat", this);
         PER_TEAM_CHAT_ARENA        = ARENA.loadBoolean("Join-Arena.per-team-chat", this);
         COIN_SHOP                  = ARENA.loadBoolean("coin-shop", this);
@@ -940,6 +965,8 @@ public class Arena {
 
         ARENA_CHAT                 = ARENA.loadString("Chat.arena-chat", this);
         SPEC_CHAT                  = ARENA.loadString("Chat.spectator-chat", this);
+
+        ACCURACY                   = ARENA.loadDouble("paintball-accuracy", this);
 
         BLOCKED_COMMANDS           = config.getStringList("Commands.Blocked");
         ALLOWED_COMMANDS           = config.getStringList("Commands.Allowed");

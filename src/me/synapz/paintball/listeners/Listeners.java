@@ -290,7 +290,6 @@ public class Listeners extends BaseListener implements Listener {
 
                     if (!player.getOpenInventory().getTitle().contains(Messages.ARENA_SHOP_NAME.getString()))
                         Messenger.error(player, Messages.ARENA_MOVE_ERROR);
-                    player.closeInventory();
                 }
             }
         }

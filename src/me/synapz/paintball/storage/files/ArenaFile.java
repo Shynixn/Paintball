@@ -184,6 +184,10 @@ public class ArenaFile extends PaintballFile {
         return coloredList;
     }
 
+    public double loadDouble(String item, Arena arena) {
+        return (double) loadValue(item, arena, false);
+    }
+
     public boolean loadBoolean(String item, Arena arena) {
         return (boolean) loadValue(item, arena, false);
     }

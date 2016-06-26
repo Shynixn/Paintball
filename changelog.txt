@@ -1,3 +1,16 @@
+v4.9.0
+- Fixed Cowboy default delay to be higher to prevent weird flying glitch
+- Fixed Cowboy item duplicating & withdrawing money on deaths
+- Changed Cowboy item to leather to prevent item falling and hooking on to entities
+
+v4.8.9
+- Made it so blocks store the base and upper part of a block on drop. This way on doors both blocks are put back in CTF/RTF (@TE -- tested, works great)
+- Added paintball.join.<arena name>.bypass to bypass a full lobby queue by kicking someone else out
+- Added paintball.join.*.bypass to bypass all lobby queues by kicking someone else out of that arena
+
+v4.8.8
+- Made it so when you click shop and buy an item it does not close every time
+
 v4.8.7
 - Finished ms delay for all coin items, very helpful to block autoclickers/hackers/modders
 - Fixed Party channel making errors if plugin not installed
@@ -21,7 +34,7 @@ v4.8.5
 v4.8.4
 - Added spectate signs
     - paintball.spectate.create to create (super permission is paintball.admin)
-    - paintball.spectate.remove to remove (super permission is paintball.admin)
+    - paintball.spectate.remove to remove (super permission is paintball.admin)N
     - paintball.spectate.use to use it (super permission is paintball.default-- given by default)
 - Moved wager total amount to scoreboards
 - Fixed for 1.8 and 1.10 compatibility

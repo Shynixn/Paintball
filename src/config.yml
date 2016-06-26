@@ -30,8 +30,8 @@ Per-Arena-Settings:
     firework-on-death: true
     # True - When a protected player attacks another player their protection cencels. False - Protection only ends after timer ends
     cancel-prot-on-hit: false
-    # True - Paintballs will have 100% accuracy (If you make this true, make ak-47 shown false). False - Paintballs will not be accuracy
-    accuracy: false
+    # True - How accurate default item's paintballs will shoot. 0 for full accuracy. default is 0.091
+    paintball-accuracy: 0.091
     # How fast snowballs will shoot
     speed: 3
     # The currency for money

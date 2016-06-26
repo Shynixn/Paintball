@@ -245,7 +245,7 @@ public class CoinItems implements Listener {
                     Arena arena = event.getArena();
 
                     if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-                        Utils.shootSnowball(player, event.getArena(), arena.ACCURACY ? 0 : 0.1);
+                        Utils.shootSnowball(player, event.getArena(), arena.ACCURACY);
                 }
             };
         }

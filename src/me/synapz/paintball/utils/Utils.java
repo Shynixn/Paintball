@@ -327,8 +327,13 @@ public class Utils {
 
         // Checks to see if the arena is full
         if (arena.getLobbyPlayers().size() == arena.getMax() && arena.getMax() > 0) {
-            Messenger.error(player, arena.toString(RED) + " is full!");
-            return false;
+
+            if (player.hasPermission("paintball.join." + arena.getName() + ".bypass") || player.hasPermission("paintball.join.*.bypass")) {
+                return true;
+            } else {
+                Messenger.error(player, arena.toString(RED) + " is full!");
+                return false;
+            }
         }
 
         if (state == Arena.ArenaState.WAITING) {

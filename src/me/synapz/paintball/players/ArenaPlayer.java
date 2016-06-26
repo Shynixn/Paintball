@@ -246,7 +246,11 @@ public class ArenaPlayer extends PaintballPlayer {
             horse.setHealth(0);
 
             horseItem.remove(this);
-            addItem(horseItem);
+
+            CoinItem newHorseItem = new CoinItem(horseItem);
+            horseItem = newHorseItem;
+            this.getPlayer().getInventory().addItem(horseItem.getItemStack(this, false));
+            player.updateInventory();
         }
     }
 
