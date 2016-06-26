@@ -18,9 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -607,6 +605,21 @@ public class Listeners extends BaseListener implements Listener {
             // If the player is a LobbyPlayer or Spectator player, cancel all damage.
             if (arena.getLobbyPlayers().contains(pbPlayer) || arena.getSpectators().contains(pbPlayer))
                 e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageByPlayer(EntityDamageByEntityEvent e) {
+        Entity entity = e.getEntity();
+        Entity damager = e.getDamager();
+
+        if (!(damager instanceof Player)) return;
+
+        Player player = (Player) damager;
+        if (!isInArena(player)) return;
+
+        if (entity instanceof ItemFrame || entity instanceof Painting) {
+            e.setCancelled(true);
         }
     }
 
