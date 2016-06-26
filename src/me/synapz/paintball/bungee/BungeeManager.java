@@ -29,8 +29,7 @@ public class BungeeManager implements PluginMessageListener {
             Bukkit.getServer().getMessenger().registerIncomingPluginChannel(pb, "BungeeCord", this);
             Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "BungeeCord");
 
-            if (Bukkit.getServer().getMessenger().isOutgoingChannelRegistered(pb, "Parkour-Party"))
-                Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "Parkour-Party");
+            Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(pb, "Parkour-Party");
         }
 
         if (Databases.SERVER_ID.getString().equalsIgnoreCase("Generating")) {
