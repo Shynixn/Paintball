@@ -5,6 +5,7 @@ import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.events.WagerEvent;
 import me.synapz.paintball.events.WagerPayoutEvent;
+import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
@@ -54,20 +55,16 @@ public class WagerListener implements Listener{
 
     @EventHandler
     public void onWagerPayout(WagerPayoutEvent event) {
-        List<PaintballPlayer> paintballPlayers = event.getPaintballPlayers();
+        DecimalFormat formatter = new DecimalFormat("#.##");
+        formatter.setMinimumFractionDigits(2);
+        List<ArenaPlayer> arenaPlayers = event.getArenaPlayers();
         double amount = event.getAmount();
-        double amountToPay = amount / (double) paintballPlayers.size();
-        String payString = String.valueOf(amountToPay);
+        double amountToPay = amount / (double) arenaPlayers.size();
 
-        if (payString.substring(payString.indexOf(".")).length() > 2) {
-            payString = payString.substring(0, payString.indexOf("." + 3));
-            amountToPay = Double.valueOf(payString);
-        }
-
-        for (PaintballPlayer paintballPlayer : paintballPlayers) {
-            Settings.ECONOMY.depositPlayer(paintballPlayer.getPlayer().getName(), amountToPay);
-            Messenger.msg(paintballPlayer.getPlayer(), Settings.THEME + "Total money gained from wager: " +
-                    Settings.SECONDARY + "$" + amountToPay);
+        for (ArenaPlayer arenaPlayer : arenaPlayers) {
+            Settings.ECONOMY.depositPlayer(arenaPlayer.getPlayer().getName(), amountToPay);
+            Messenger.msg(arenaPlayer.getPlayer(), Settings.THEME + "Total money gained from wager: " +
+                    Settings.SECONDARY + "$" + formatter.format(amountToPay));
         }
     }
 }

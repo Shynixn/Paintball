@@ -33,7 +33,7 @@ public class LobbyPlayer extends PaintballPlayer {
      * @param player The player the LobbyPlayer is
      */
     public LobbyPlayer(Arena arena, Team team, Player player) {
-        super(arena, team, player);
+        super(arena, team, player, true);
     }
 
     /**
@@ -41,7 +41,7 @@ public class LobbyPlayer extends PaintballPlayer {
      * Teleports them to a random lobby location, increments the team count, and checks to start the timer
      */
     @Override
-    protected void initPlayer() {
+    protected void initPlayer(boolean storeData) {
         UUIDFile uuidFile = new UUIDFile(player.getUniqueId());
         uuidFile.savePlayerInformation();
 
