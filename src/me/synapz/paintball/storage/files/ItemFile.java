@@ -64,6 +64,10 @@ public class ItemFile extends PaintballFile {
         return loadLong(item, "delay-ms", item.getDefaultDelay());
     }
 
+    public float getSpeed(Items item) {
+        return loadFloat(item, "walking-speed", item.getDefaultSpeed());
+    }
+
     public Sound getSound(Items item) {
         return Utils.strToSound(loadString(item, "sound", item.getDefaultSound().toString()));
     }
@@ -115,6 +119,15 @@ public class ItemFile extends PaintballFile {
         }
 
         return fileConfig.getDouble(getPath(item, section));
+    }
+
+    private float loadFloat(Items item, String section, float value) {
+        if (fileConfig.get(item.toString()) == null || fileConfig.get(getPath(item, section)) == null) {
+            fileConfig.set(item.toString() + "." + section, value);
+            this.saveFile();
+        }
+
+        return (float) fileConfig.getDouble(getPath(item, section));
     }
 
     private String getPath(Items item, String section) {

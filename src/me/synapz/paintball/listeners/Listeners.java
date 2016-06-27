@@ -4,16 +4,14 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.enums.Tag;
-import me.synapz.paintball.enums.Team;
-import me.synapz.paintball.enums.UpdateResult;
+import me.synapz.paintball.enums.*;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.*;
+import net.minecraft.server.v1_9_R2.EntityLiving;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -740,5 +738,26 @@ public class Listeners extends BaseListener implements Listener {
             // WorldGuard from blocking the teleportation events like some people have reported to me
             e.setCancelled(false);
         }
+    }
+
+    @EventHandler
+    public void onSlotChange(PlayerItemHeldEvent event) {
+        Player player = event.getPlayer();
+        ItemStack stack = player.getInventory().getItem(event.getNewSlot());
+
+        if (stack == null || stack.getType().equals(Material.AIR)) {
+            player.setWalkSpeed(0.1f);
+            return;
+        }
+
+        for (Items item : Items.values()) {
+            if (stack.getItemMeta().getDisplayName().equals(item.getName())) {
+                player.setWalkSpeed(item.getSpeed());
+                return;
+            }
+        }
+
+        // If the item is anything else
+        player.setWalkSpeed(0.1f);
     }
 }
