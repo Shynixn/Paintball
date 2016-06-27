@@ -9,10 +9,8 @@ import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 

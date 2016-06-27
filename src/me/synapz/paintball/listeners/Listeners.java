@@ -11,7 +11,6 @@ import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.*;
-import net.minecraft.server.v1_9_R2.EntityLiving;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

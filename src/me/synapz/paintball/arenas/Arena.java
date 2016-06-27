@@ -27,7 +27,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
-import java.text.NumberFormat;
 import java.util.*;
 
 import static me.synapz.paintball.locations.TeamLocation.TeamLocations;

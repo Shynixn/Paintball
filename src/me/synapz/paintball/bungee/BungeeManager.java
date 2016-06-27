@@ -3,7 +3,6 @@ package me.synapz.paintball.bungee;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.enums.Databases;
