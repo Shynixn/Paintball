@@ -495,6 +495,7 @@ public class Arena {
 
     // Starts the game, turns all LobbyPlayers into ArenaPlayers
     public void startGame() {
+        balanceTeams();
         HashMap<Player, Location> startLocs = new HashMap<>();
         setState(ArenaState.STARTING);
         for (LobbyPlayer p : lobby) {
@@ -702,6 +703,34 @@ public class Arena {
     public void resetTeamScores() {
         for (Team team : getArenaTeamList()) {
             teams.replace(team, teams.get(team), 0);
+        }
+    }
+
+    public void balanceTeams() {
+        for (LobbyPlayer lobbyPlayer : lobby) {
+            Title title = new Title(Settings.THEME + "Balancing Teams");
+            title.send(lobbyPlayer.getPlayer());
+        }
+
+        Random random = new Random();
+        List<Team> hasPlayers = new ArrayList<>();
+        int choice = 0;
+        for (Team team : getArenaTeamList()) {
+            if (team.getSize() == 0) continue;
+            hasPlayers.add(team);
+        }
+
+        for (Team team : hasPlayers) {
+            Team least = getTeamWithLessPlayers();
+            if (team.getSize() - least.getSize() > 1) {
+                choice = random.nextInt(lobby.size());
+                // Why can't i get a player based on their team? (team.getPlayers() ?)
+                while (!lobby.get(choice).getTeam().equals(team)) {
+                    choice = random.nextInt(lobby.size());
+                }
+                LobbyPlayer lobbyPlayer = lobby.get(choice);
+                lobbyPlayer.setTeam(least);
+            }
         }
     }
 
