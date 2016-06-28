@@ -747,7 +747,7 @@ public class Listeners extends BaseListener implements Listener {
         ItemStack stack = player.getInventory().getItem(event.getNewSlot());
 
         if (stack == null || stack.getType().equals(Material.AIR)
-                || !stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName() ) {
+                || !stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {
             player.setWalkSpeed(0.2f);
             return;
         }
