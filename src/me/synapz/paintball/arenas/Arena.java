@@ -265,6 +265,8 @@ public class Arena {
 
     // Gets the max number of players
     public int getMax() {
+        if (this instanceof FFAArena && teams.keySet().size() == 16) return 16;
+
         return ARENA_FILE.getInt(getPath() + "Max");
     }
 
@@ -550,6 +552,8 @@ public class Arena {
 
         lobby.removeAll(lobby);
 
+        updateAllScoreboard();
+
         new ArenaStartCountdown(ARENA_COUNTDOWN, this, startLocs);
     }
 
@@ -593,6 +597,7 @@ public class Arena {
 
         // Update the save stats
         ArenaManager.getArenaManager().updateAllSignsOnServer();
+        this.resetTeamScores();
 
         allPlayers = new HashMap<>();
         lobby = new ArrayList<>();
@@ -602,7 +607,6 @@ public class Arena {
         activeTeams = new ArrayList<>();
 
         setState(ArenaState.WAITING);
-        this.resetTeamScores();
 
         if (toReload) {
             this.toReload = false;

@@ -87,9 +87,8 @@ public class LobbyPlayer extends PaintballPlayer {
         else
             size--;
 
-        pbSb
-                .reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+3)
-                .reloadLine(ScoreboardLine.PLAYERS, arena.getLobbyPlayers().size() + Settings.SECONDARY + "/" + Settings.THEME + arena.getMax(), size+6);
+        pbSb.reloadLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName(), size+3)
+            .reloadLine(ScoreboardLine.PLAYERS, arena.getLobbyPlayers().size() + Settings.SECONDARY + "/" + Settings.THEME + arena.getMax(), size+6);
 
         if (arena.GIVE_TEAM_SWITCHER)
             giveItems();
