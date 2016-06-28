@@ -79,7 +79,7 @@ public class LobbyPlayer extends PaintballPlayer {
         if (pbSb == null)
             return;
 
-        int size = arena.getArenaTeamList().size()-1;
+        int size = arena.getActiveArenaTeamList().size()-1;
         pbSb.reloadTeams(true);
 
         if (Settings.VAULT)
@@ -128,7 +128,7 @@ public class LobbyPlayer extends PaintballPlayer {
             return;
 
         // For if the amount of teams are larger than 9 slots (how would they click the 10th or 11th? The -1 is because the player is on 1 team, we don't show that team
-        if (arena.getArenaTeamList().size()-1 > 8) {
+        if (arena.getActiveArenaTeamList().size()-1 > 8) {
             // Just creates a wool item, which when you click will open a change menu
             player.getInventory().setItem(0, Utils.makeWool(team.getChatColor() + "" + ChatColor.BOLD + "Click" + Messenger.SUFFIX + ChatColor.RESET + team.getChatColor() + "Change Team", team.getDyeColor()));
             return;
@@ -136,7 +136,7 @@ public class LobbyPlayer extends PaintballPlayer {
 
 
         List<ItemStack> items = new ArrayList<ItemStack>() {{
-            for (Team t : arena.getArenaTeamList()) {
+            for (Team t : arena.getActiveArenaTeamList()) {
                 // quick check to make sure we don't give them wool for their own team
                 if (!team.getTitleName().equals(t.getTitleName())) {
                     add(Utils.makeWool(t.getChatColor() + "" + ChatColor.BOLD + "Click" + Messenger.SUFFIX + ChatColor.RESET + t.getChatColor() + "Join " + t.getTitleName(), t.getDyeColor(), t));

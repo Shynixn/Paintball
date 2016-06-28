@@ -103,6 +103,10 @@ public class ArenaPlayer extends PaintballPlayer {
         }
     }
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
     @Override
     protected void showMessages() {
 
@@ -144,7 +148,7 @@ public class ArenaPlayer extends PaintballPlayer {
 
         double bal = Settings.VAULT ? Settings.ECONOMY.getBalance(player) : 0;
 
-        int size = arena.getArenaTeamList().size()-1;
+        int size = arena.getActiveArenaTeamList().size()-1;
 
         pbSb.reloadTeams(false);
 
@@ -323,7 +327,7 @@ public class ArenaPlayer extends PaintballPlayer {
         kills++;
         killStreak++;
 
-        arena.sendCommands(this.getPlayer(), arena.KILL_COMMANDS);
+        arena.sendCommands(this.getPlayer(), arenaPlayer.getPlayer(), arena.KILL_COMMANDS);
         if (killStreak > heightKillStreak)
             heightKillStreak = killStreak;
 
@@ -564,7 +568,7 @@ public class ArenaPlayer extends PaintballPlayer {
     private boolean stopGame() {
         int left = 0;
         // There must be at least one team
-        for (Team team : arena.getArenaTeamList()) {
+        for (Team team : arena.getActiveArenaTeamList()) {
             if (team.getSize() >= 1) {
                 left++;
             }

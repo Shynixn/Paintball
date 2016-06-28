@@ -60,7 +60,7 @@ public class DOMArena extends FlagArena {
 
     @Override
     public void loadFlags() {
-        for (Team team : getArenaTeamList()) {
+        for (Team team : getActiveArenaTeamList()) {
             Location center = getFlagLocation(team).subtract(0, 1, 0);
 
             List<Location> secLoc = makePlatform(center.clone(), Material.STAINED_GLASS, team.getDyeColor().getData(), GENERATE_SIZE, Material.STAINED_CLAY);

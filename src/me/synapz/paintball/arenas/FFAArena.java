@@ -14,7 +14,7 @@ public class FFAArena extends Arena {
     */
     @Override
     public int getMax() {
-        return getArenaTeamList().size();
+        return getActiveArenaTeamList().size();
     }
 
     /*
@@ -22,7 +22,7 @@ public class FFAArena extends Arena {
      */
     @Override
     protected Team getTeamWithLessPlayers() {
-        for (Team t : getArenaTeamList()) {
+        for (Team t : getActiveArenaTeamList()) {
             if (t.getSize() == 0)
                 return t;
         }

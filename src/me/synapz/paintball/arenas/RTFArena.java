@@ -64,7 +64,7 @@ public class RTFArena extends FlagArena {
     // Turns neutral flag into a white flag and team flags into wool block as their base
     @Override
     public void loadFlags() {
-        for (Team team : getArenaTeamList()) {
+        for (Team team : getActiveArenaTeamList()) {
             Location loc = getFlagLocation(team).subtract(0, 1, 0);
 
             loc.getBlock().setType(Material.WOOL);
@@ -79,7 +79,7 @@ public class RTFArena extends FlagArena {
     // Resets everything set in loadFlags()
     @Override
     public void resetFlags() {
-        for (Team team : getArenaTeamList()) {
+        for (Team team : getActiveArenaTeamList()) {
             Location loc = getFlagLocation(team).subtract(0, 1, 0);
 
             loc.getBlock().setType(Material.AIR);

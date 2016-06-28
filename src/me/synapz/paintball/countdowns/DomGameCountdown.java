@@ -32,7 +32,7 @@ public class DomGameCountdown extends GameCountdown {
         if (counter % ((DOMArena) arena).UPDATE_INTERVAL == 0) {
             List<Team> winningTeams = new ArrayList<>();
 
-            for (Team team : arena.getArenaTeamList()) {
+            for (Team team : arena.getActiveArenaTeamList()) {
 
                 if (arena instanceof DOMArena) {
                     int score = ((DOMArena) arena).getRunningScores().get(team);

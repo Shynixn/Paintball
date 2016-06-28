@@ -22,7 +22,7 @@ public class SetLocation extends TeamCommand {
         }
 
         if (args[4].equalsIgnoreCase("all")) {
-            for (Team t : arena.getArenaTeamList()) {
+            for (Team t : arena.getActiveArenaTeamList()) {
                 arena.setLocation(type, spawn, t);
             }
             Messenger.success(player, "Set all " + arena.getName() + "'s " + (type.toString().toLowerCase().equals("spawn") ? "arena" : "lobby") + " spawns to your location." + Settings.SECONDARY, arena.getSteps());

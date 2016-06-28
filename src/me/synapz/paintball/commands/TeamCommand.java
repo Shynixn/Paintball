@@ -30,7 +30,7 @@ public abstract class TeamCommand extends ArenaCommand {
             return;
         }
 
-        if (arena.getArenaTeamList().isEmpty()) {
+        if (arena.getActiveArenaTeamList().isEmpty()) {
             Messenger.error(player, new MessageBuilder(Messages.NO_TEAMS_SET).replace(Tag.ARENA, arena.toString(ChatColor.RED)).build());
             return;
         }
@@ -74,11 +74,11 @@ public abstract class TeamCommand extends ArenaCommand {
         String teamString = args[getTeamArg()];
         StringBuilder validTeams = new StringBuilder(" ");
         String finalValidTeams = "";
-        if (arena.getArenaTeamList().isEmpty()) {
+        if (arena.getActiveArenaTeamList().isEmpty()) {
             return false;
         }
 
-        for (Team team : arena.getArenaTeamList()) {
+        for (Team team : arena.getActiveArenaTeamList()) {
             validTeams.append(ChatColor.stripColor(team.getTitleName().toLowerCase().replace(" ", ""))).append(" ");
         }
 
@@ -94,7 +94,7 @@ public abstract class TeamCommand extends ArenaCommand {
 
     // Turns a string like 'red' in to a team
     private Team stringToTeam() {
-        for (Team t : arena.getArenaTeamList()) {
+        for (Team t : arena.getActiveArenaTeamList()) {
             if (t.getTitleName().replace(" ", "").equalsIgnoreCase(args[getTeamArg()])) {
                 return t;
             }

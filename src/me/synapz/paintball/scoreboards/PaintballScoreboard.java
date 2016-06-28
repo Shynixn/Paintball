@@ -42,7 +42,7 @@ public class PaintballScoreboard {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         id++;
 
-        for (Team team : pbPlayer.getArena().getArenaTeamList()) {
+        for (Team team : pbPlayer.getArena().getActiveArenaTeamList()) {
             if (sb.getTeam(team.getTitleName()) == null)
                 sb.registerNewTeam(team.getTitleName());
         }
@@ -102,7 +102,7 @@ public class PaintballScoreboard {
     }
 
     public PaintballScoreboard addTeams(boolean teamSize) {
-        for (Team team : pbPlayer.getArena().getArenaTeamList()) {
+        for (Team team : pbPlayer.getArena().getActiveArenaTeamList()) {
             String name = team.getChatColor() + team.getTitleName() + ": " + SECONDARY + (!teamSize ? (pbPlayer.getArena().MAX_SCORE - pbPlayer.getArena().getTeamScore(team)) : team.getSize());
             Score score = objective.getScore(name);
             score.setScore(index);
@@ -114,7 +114,7 @@ public class PaintballScoreboard {
 
     public PaintballScoreboard reloadTeams(boolean teamSize) {
         int size = 0;
-        for (Team team : pbPlayer.getArena().getArenaTeamList()) {
+        for (Team team : pbPlayer.getArena().getActiveArenaTeamList()) {
             String oldValue = lines.get(size);
             String newValue = team.getChatColor() + team.getTitleName() + ": " + SECONDARY + (!teamSize ? (pbPlayer.getArena().MAX_SCORE - pbPlayer.getArena().getTeamScore(team)) : team.getSize());
 
@@ -130,7 +130,7 @@ public class PaintballScoreboard {
 
     public PaintballScoreboard reloadTeams(boolean teamSize, int timeSecuring, Team beingSecured) {
         int size = 0;
-        for (Team team : pbPlayer.getArena().getArenaTeamList()) {
+        for (Team team : pbPlayer.getArena().getActiveArenaTeamList()) {
             String oldValue = lines.get(size);
             String newValue = team.getChatColor() + ((timeSecuring != 0 && timeSecuring % 2 == 0 && team == beingSecured) ? ChatColor.WHITE + "" : "") + team.getTitleName() + ": " + SECONDARY + (!teamSize ? (pbPlayer.getArena().MAX_SCORE - pbPlayer.getArena().getTeamScore(team)) : team.getSize());
 

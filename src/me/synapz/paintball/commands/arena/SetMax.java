@@ -38,8 +38,8 @@ public class SetMax extends ArenaCommand {
             return;
         }
 
-        if (max > arena.getArenaTeamList().size() && arena.getAllArenaPlayers().size() != 0) {
-            Messenger.error(player, "Max (" + GRAY + max + RED + ") must be greater than the number of teams (" + GRAY + arena.getArenaTeamList().size() + RED + ")!");
+        if (max > arena.getActiveArenaTeamList().size() && arena.getAllArenaPlayers().size() != 0) {
+            Messenger.error(player, "Max (" + GRAY + max + RED + ") must be greater than the number of teams (" + GRAY + arena.getActiveArenaTeamList().size() + RED + ")!");
             return;
         }
         Messenger.success(player, "Max players for " + arena.toString(GREEN) + " set to " + GRAY + max, arena.getSteps());

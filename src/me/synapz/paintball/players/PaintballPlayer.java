@@ -123,6 +123,8 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         Paintball.getInstance().getBungeeManager().updatePartyScoreboard(player.getName());
         arena.removePlayer(this, restoreInfo); // removes player from all array lists
 
+        arena.sendCommands(player, arena.LEAVE_COMMANDS);
+
         for (SpectatorPlayer spectatorPlayer : arena.getSpectators()) {
             player.showPlayer(spectatorPlayer.getPlayer());
         }

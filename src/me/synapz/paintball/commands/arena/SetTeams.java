@@ -53,7 +53,7 @@ public class SetTeams extends ArenaCommand {
         arena.setArenaTeamList(teamsToAdd);
         // generate the message to be send back to the sender
         String out = "";
-        for (Team t : arena.getArenaTeamList()) {
+        for (Team t : arena.getActiveArenaTeamList()) {
             out += t.getTitleName() + ", ";
         }
         out = out.substring(0, out.lastIndexOf(","));

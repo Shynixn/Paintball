@@ -72,6 +72,7 @@
             <artifactId>spigot-api</artifactId>
             <version>1.10-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>

@@ -27,7 +27,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
-import java.text.NumberFormat;
 import java.util.*;
 
 import static me.synapz.paintball.locations.TeamLocation.TeamLocations;
@@ -88,6 +87,10 @@ public class Arena {
     public List<String> LOOSE_COMMANDS;
     public List<String> TIE_COMMANDS;
     public List<String> KILL_COMMANDS;
+    public List<String> START_COMMANDS;
+    public List<String> LEAVE_COMMANDS;
+    public List<String> JOIN_COMMANDS;
+    public List<String> FINISH_COMMANDS;
 
     // All the players in the arena (Lobby, Spec, InGame) linked to the player which is linked to the PaintballPLayer
     private Map<Player, PaintballPlayer> allPlayers = new HashMap<>();
@@ -100,6 +103,8 @@ public class Arena {
     private String defaultName, currentName;
     // Team with their size
     private Map<Team, Integer> teams = new HashMap<>();
+    // Teams which are active in the arena. They will be unactive if no one is on that team
+    private List<Team> activeTeams = new ArrayList<>();
 
     private Map<Location, SignLocation> signLocations = new HashMap<>();
     private Map<Items, Integer> coinUsesPerGame = new HashMap<>();
@@ -269,8 +274,11 @@ public class Arena {
     }
 
     // Gets all of the teams on this arena
-    public Set<Team> getArenaTeamList() {
-        return teams.keySet();
+    public List<Team> getActiveArenaTeamList() {
+        if (activeTeams == null || activeTeams.isEmpty()) {
+            return new ArrayList<>(teams.keySet());
+        }
+        return activeTeams;
     }
 
     // Sets the teams of this arena
@@ -296,13 +304,13 @@ public class Arena {
         String prefix = BLUE + "Steps: ";
         
         steps = Utils.addItemsToArray(steps, isMaxSet() ? done + "max"+end : "max", isMinSet() ? done + "min"+end : "min");
-        for (Team t : getArenaTeamList()) {
+        for (Team t : getActiveArenaTeamList()) {
             String lobbyName = t.getTitleName().toLowerCase().replace(" ", "") + " (lobby)";
             String spawnName = t.getTitleName().toLowerCase().replace(" ", "") + " (spawn)";
             steps.add(ARENA_FILE.getString(t.getPath(TeamLocations.LOBBY, 1)) != null ? done + lobbyName + end : lobbyName);
             steps.add(ARENA_FILE.getString(t.getPath(TeamLocations.SPAWN, 1)) != null ? done + spawnName + end : spawnName);
         }
-        Utils.addItemsToArray(steps, (ARENA_FILE.getString(this.getPath() + "Spectator.1") != null ? done + "setspec" + end : "setspec"), isEnabled() ? done + "enable" + end : "enable", getArenaTeamList().isEmpty() ? "setteams" : "");
+        Utils.addItemsToArray(steps, (ARENA_FILE.getString(this.getPath() + "Spectator.1") != null ? done + "setspec" + end : "setspec"), isEnabled() ? done + "enable" + end : "enable", getActiveArenaTeamList().isEmpty() ? "setteams" : "");
         finalString = GRAY + Joiner.on(", ").join(steps);
 
         return isSetup() && isEnabled() ? prefix + GRAY + "Complete. Arena is open!" : prefix + finalString;
@@ -343,10 +351,10 @@ public class Arena {
     public boolean isSetup() {
         boolean spawnsSet = true;
         boolean isSpectateSet = (ARENA_FILE.getString(this.getPath() + "Spectator.1") != null);
-        if (getArenaTeamList().isEmpty()) {
+        if (getActiveArenaTeamList().isEmpty()) {
             spawnsSet = false;
         }
-        for (Team t : getArenaTeamList()) {
+        for (Team t : getActiveArenaTeamList()) {
             if (ARENA_FILE.getString(t.getPath(TeamLocations.SPAWN, 1)) == null) {
                 spawnsSet = false;
             }
@@ -483,6 +491,8 @@ public class Arena {
                 }
             }
 
+            sendCommands(player, JOIN_COMMANDS);
+
             new LobbyPlayer(this, team == null ? getTeamWithLessPlayers() : team, player);
         }
     }
@@ -498,7 +508,15 @@ public class Arena {
     public void startGame() {
         HashMap<Player, Location> startLocs = new HashMap<>();
         setState(ArenaState.STARTING);
+
+        for (Team team : getActiveArenaTeamList()) {
+            if (team.getSize() > 0) {
+                activeTeams.add(team);
+            }
+        }
+
         for (LobbyPlayer p : lobby) {
+
             allPlayers.remove(p.getPlayer(), p);
             ArenaPlayer player;
 
@@ -523,12 +541,14 @@ public class Arena {
 
             startLocs.put(player.getPlayer(), player.getPlayer().getLocation());
 
+            sendCommands(p.getPlayer(), START_COMMANDS);
             cachedHeads.put(player.getPlayer().getUniqueId(), Utils.getSkull(player.getPlayer(), Settings.THEME + BOLD + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleport to " + ITALIC + player.getPlayer().getName()));
         }
 
         remakeSpectatorInventory();
 
         lobby.removeAll(lobby);
+
         new ArenaStartCountdown(ARENA_COUNTDOWN, this, startLocs);
     }
 
@@ -555,10 +575,6 @@ public class Arena {
         this.forceLeaveArena();
     }
 
-    public Map<UUID, ItemStack> getCachedHeads() {
-        return cachedHeads;
-    }
-
     public void forceLeaveArena() {
         wagerManager = new WagerManager();
         List<PaintballPlayer> copiedList = new ArrayList<>(allPlayers.values());
@@ -571,6 +587,7 @@ public class Arena {
 
         for (PaintballPlayer player : copiedList) {
             player.leave();
+            sendCommands(player.getPlayer(), FINISH_COMMANDS);
         }
 
         // Update the save stats
@@ -581,6 +598,7 @@ public class Arena {
         spectators = new ArrayList<>();
         inGame = new ArrayList<>();
         cachedHeads = new HashMap<>();
+        activeTeams = new ArrayList<>();
 
         setState(ArenaState.WAITING);
         this.resetTeamScores();
@@ -709,7 +727,7 @@ public class Arena {
     }
 
     public void resetTeamScores() {
-        for (Team team : getArenaTeamList()) {
+        for (Team team : getActiveArenaTeamList()) {
             teams.replace(team, teams.get(team), 0);
         }
     }
@@ -834,22 +852,22 @@ public class Arena {
 
     public int getTeamMax(Team team) {
         // 8 % 3 = 3
-        int extra = (int) Math.round((double) this.getMax()%this.getArenaTeamList().size());
+        int extra = (int) Math.round((double) this.getMax()%this.getActiveArenaTeamList().size());
         // 8 / 3 = 2
-        int maxPer = (int) Math.round((double) this.getMax()/this.getArenaTeamList().size());
+        int maxPer = (int) Math.round((double) this.getMax()/this.getActiveArenaTeamList().size());
 
-        if (getArenaTeamList().size() % 2 != 2 && extra != 0)
-            extra = (int) (double) this.getMax()%this.getArenaTeamList().size()-1;
+        if (getActiveArenaTeamList().size() % 2 != 2 && extra != 0)
+            extra = (int) (double) this.getMax()%this.getActiveArenaTeamList().size()-1;
 
         // Put each one in
         Map<Team, Integer> perMax = new HashMap<Team, Integer>() {{
-            for (Team t : getArenaTeamList()) {
+            for (Team t : getActiveArenaTeamList()) {
                 put(t, maxPer);
             }
         }};
 
         while (extra != 0) {
-            for (Team t : getArenaTeamList()) {
+            for (Team t : getActiveArenaTeamList()) {
                 if (extra == 0) {
                     break;
                 } else {
@@ -888,7 +906,12 @@ public class Arena {
     public void sendCommands(Player player, List<String> commands) {
         for (String raw : commands) {
             String command = raw;
-            command = command.replace(Tag.PLAYER.toString(), player.getName()).replace(Tag.ARENA.toString(), this.getName());
+            command = command.replace(Tag.ARENA.toString(), this.getName());
+
+            if (player != null) {
+                command = command.replace(Tag.PLAYER.toString(), player.getName());
+            }
+
             int percent = 100;
 
             // If the 3rd letter is a : then the percent thing is on
@@ -901,12 +924,74 @@ public class Arena {
                     for (int i = 1; i < seperated.length; i++) {
                         command += seperated[i];
                     }
-                    command = command.replace(Tag.PLAYER.toString(), player.getName()).replace(Tag.ARENA.toString(), this.getName());
+                    command = command.replace(Tag.ARENA.toString(), this.getName());
+
+                    if (player != null) {
+                        command = command.replace(Tag.PLAYER.toString(), player.getName());
+                    }
                 } catch (NumberFormatException exc) {
                     Messenger.error(player, "Error parsing command.");
                     return;
                 }
             }
+
+            if (command.contains(Tag.PLAYER.toString()))
+                return;
+
+            if (percent != 100) {
+                double random = Utils.randomNumber(100);
+
+                if (random <= (double) percent)
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            } else {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            }
+        }
+    }
+
+    // this is terrible i know
+    public void sendCommands(Player player, Player target, List<String> commands) {
+        for (String raw : commands) {
+            String command = raw;
+            command = command.replace(Tag.ARENA.toString(), this.getName());
+
+            if (player != null) {
+                command = command.replace(Tag.PLAYER.toString(), player.getName());
+            }
+
+            if (target != null) {
+                command = command.replace(Tag.DIED.toString(), target.getName());
+            }
+
+            int percent = 100;
+
+            // If the 3rd letter is a : then the percent thing is on
+            if (command.toCharArray()[2] == ':') {
+                String[] seperated = raw.split(":");
+
+                try {
+                    percent = Integer.parseInt(seperated[0]);
+                    command = "";
+                    for (int i = 1; i < seperated.length; i++) {
+                        command += seperated[i];
+                    }
+                    command = command.replace(Tag.ARENA.toString(), this.getName());
+
+                    if (player != null) {
+                        command = command.replace(Tag.PLAYER.toString(), player.getName());
+                    }
+
+                    if (target != null) {
+                        command = command.replace(Tag.DIED.toString(), target.getName());
+                    }
+                } catch (NumberFormatException exc) {
+                    Messenger.error(player, "Error parsing command.");
+                    return;
+                }
+            }
+
+            if (command.contains(Tag.PLAYER.toString()) || command.contains(Tag.DIED.toString()))
+                return;
 
             if (percent != 100) {
                 double random = Utils.randomNumber(100);
@@ -974,6 +1059,10 @@ public class Arena {
         LOOSE_COMMANDS             = ARENA.loadStringList("Lose-Commands", this);
         TIE_COMMANDS               = ARENA.loadStringList("Tie-Commands", this);
         KILL_COMMANDS              = ARENA.loadStringList("Kill-Commands", this);
+        START_COMMANDS             = ARENA.loadStringList("Start-Commands", this);
+        LEAVE_COMMANDS             = ARENA.loadStringList("Leave-Commands", this);
+        JOIN_COMMANDS              = ARENA.loadStringList("Join-Commands", this);
+        FINISH_COMMANDS            = ARENA.loadStringList("Finish-Commands", this);
 
         COIN_SHOP_TYPE             = Utils.loadMaterial(ARENA.loadString("coin-shop-type", this), Material.MAGMA_CREAM);
     }

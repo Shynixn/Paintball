@@ -24,9 +24,9 @@ public class GameCountdown extends PaintballCountdown {
     public void onFinish() {
         arena.updateSigns();
         List<Team> teamsWhoWon = new ArrayList<>();
-        Team winningTeam = (Team) arena.getArenaTeamList().toArray()[0]; // just gets the first name as a starting point
+        Team winningTeam = (Team) arena.getActiveArenaTeamList().toArray()[0]; // just gets the first name as a starting point
         int score = arena.getTeamScore(winningTeam);
-        for (Team t : arena.getArenaTeamList()) {
+        for (Team t : arena.getActiveArenaTeamList()) {
             if (score < arena.getTeamScore(t)) {
                 winningTeam = t;
                 score = arena.getTeamScore(winningTeam);
@@ -34,7 +34,7 @@ public class GameCountdown extends PaintballCountdown {
         }
 
         // Checks for ties
-        for (Team t : arena.getArenaTeamList()) {
+        for (Team t : arena.getActiveArenaTeamList()) {
             if (arena.getTeamScore(t) == arena.getTeamScore(winningTeam)) {
                 teamsWhoWon.add(t);
             }

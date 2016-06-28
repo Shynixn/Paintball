@@ -99,7 +99,24 @@ Per-Arena-Settings:
 
     # List of commands that will be sent by the Console when a player kills another player
     Kill-Commands: []
-      #- "say %player% has killed someone on %arena%! :O"
+    #- "say %player% has killed %died% on %arena%! :O"
+
+    # List of commands that will be sent by the Console when the arena is started
+    Start-Commands: []
+    #- "20:speed %player% 3" this would give a 20% chance of getting speed 3 in the game
+    #- "speed %player% 2" this would give everyone a speed boost of 2
+
+    # List of commands that will be sent by the Console when a player does /pb join or clicks a join/autojoin sign
+    Join-Commands: []
+    #- "say %player% joined %arena%, so if you message them, they might not answer!"
+
+    # List of commands that will be sent by the Console when someone does /pb leave, clicks a leave item or exists the game
+    Leave-Commands: []
+    #- "say %player% raged quit"
+
+    # %player% tag is not avaiable here. For  %player% tag use Win/Lose/Win commands
+    Finish-Commands: []
+    #- "say Okay, the game is finished. Everyone join for next round!"
 
     # Specific extra settings for CTF arenas
     CTF:

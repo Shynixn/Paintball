@@ -74,7 +74,7 @@ public class SpectatorPlayer extends PaintballPlayer {
 
     @Override
     public void updateScoreboard() {
-        int size = arena.getArenaTeamList().size()-1;
+        int size = arena.getActiveArenaTeamList().size()-1;
 
         if (pbSb != null)
             pbSb.reloadTeams(false);

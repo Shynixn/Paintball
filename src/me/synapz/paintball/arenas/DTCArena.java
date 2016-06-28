@@ -20,7 +20,7 @@ public class DTCArena extends FlagArena implements Listener {
 
     @Override
     public void loadFlags() {
-        for (Team team : getArenaTeamList()) {
+        for (Team team : getActiveArenaTeamList()) {
             Location flagLoc = Utils.simplifyLocation(getFlagLocation(team));
 
             coreLocations.put(flagLoc, team);

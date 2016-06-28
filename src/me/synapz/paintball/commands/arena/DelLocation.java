@@ -19,7 +19,7 @@ public class DelLocation extends TeamCommand {
         }
 
         if (args[4].equalsIgnoreCase("all")) {
-            for (Team t : arena.getArenaTeamList()) {
+            for (Team t : arena.getActiveArenaTeamList()) {
                 int size = t.getSpawnPointsSize(type);
                 if (size != 0) {
                     while (size > 0) {

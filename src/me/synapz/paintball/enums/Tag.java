@@ -29,7 +29,8 @@ public enum Tag {
     RANK,
     PAGE,
     WAGER_AMOUNT,
-    WAGER_TOTAL;
+    WAGER_TOTAL,
+    DIED;
 
     @Override
     public String toString() {

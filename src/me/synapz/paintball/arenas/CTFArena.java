@@ -35,7 +35,7 @@ public class CTFArena extends FlagArena {
 
     @Override
     public void loadFlags() {
-        for (Team team : this.getArenaTeamList()) {
+        for (Team team : this.getActiveArenaTeamList()) {
             Location loc = new FlagLocation(this, team).getLocation();
 
             startFlagLocations.put(team, Utils.createFlag(team, loc, null));

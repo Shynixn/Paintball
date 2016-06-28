@@ -46,6 +46,31 @@ public class CoinItems implements Listener {
             }
         };
 
+        new CoinItem(Items.SNIPER) {
+            public void onClickItem(ArenaClickItemEvent event) {
+                Player player = event.getArenaPlayer().getPlayer();
+
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    Projectile snowball = player.launchProjectile(Snowball.class);
+                    double speed = event.getArena().SPEED;
+                    snowball.setVelocity(snowball.getVelocity().multiply(speed));
+                }
+            }
+        };
+
+        new CoinItem(Items.PAINT_KILLER) {
+            public void onClickItem(ArenaClickItemEvent event) {
+                ArenaPlayer player = event.getArenaPlayer();
+                Arena arena = player.getArena();
+
+                player.setHealth(arena.HITS_TO_KILL);
+                player.getPlayer().setHealth(player.getPlayer().getMaxHealth());
+                player.updateScoreboard();
+                player.getPlayer().getInventory().remove(player.getPlayer().getItemInHand());
+                Messenger.success(player.getPlayer(), "Paintkillers have taken effect!");
+            }
+        };
+
         new CoinItem(Items.SPRAY_N_PRAY) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();

@@ -152,7 +152,7 @@ public class Listeners extends BaseListener implements Listener {
             LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (name.contains("Join")) { // check to make sure it is a team changing object
-                    for (Team t : a.getArenaTeamList()) {
+                    for (Team t : a.getActiveArenaTeamList()) {
                         if (name.contains(t.getTitleName())) {
                             if (!t.isFull()) {
                                 boolean teamsBalanced = (t.getSize() == 0);
@@ -161,7 +161,7 @@ public class Listeners extends BaseListener implements Listener {
                                 // If there is at least one team (other than the one they are switching to) that has more than 1 player
                                 // then the game is playable because it is not a 2v0.
                                 // Also, if the team they are switching to is already empty, they will not need to worry about this at all
-                                for (Team team : a.getArenaTeamList()) {
+                                for (Team team : a.getActiveArenaTeamList()) {
                                     if ((team == lobbyPlayer.getTeam() ? team.getSize()-1 : team.getSize()) > 0 && team != t && !teamsBalanced) {
                                         teamsBalanced = true;
                                     }
@@ -180,7 +180,7 @@ public class Listeners extends BaseListener implements Listener {
                     player.closeInventory();
                 } else if (name.contains("Change Team")) {
                     Inventory inv = Bukkit.createInventory(null, 18, "Team Switcher");
-                    for (Team t : a.getArenaTeamList()) {
+                    for (Team t : a.getActiveArenaTeamList()) {
                         // Make a new inventory and place all teams (except the one they are on) into it
                         if (t != lobbyPlayer.getTeam()) {
                             inv.addItem(Utils.makeWool(t.getChatColor() + t.getTitleName(), t.getDyeColor(), t));
@@ -235,7 +235,7 @@ public class Listeners extends BaseListener implements Listener {
             if (gamePlayer instanceof LobbyPlayer) {
                 LobbyPlayer lobbyPlayer = (LobbyPlayer) gamePlayer;
                 if (e.getInventory().getName().contains("Team Switcher")) {
-                    for (Team t : a.getArenaTeamList()) {
+                    for (Team t : a.getActiveArenaTeamList()) {
                         if (name.contains(t.getTitleName())) {
                             if (!t.isFull()) {
                                 boolean teamsBalanced = (t.getSize() == 0);
@@ -244,7 +244,7 @@ public class Listeners extends BaseListener implements Listener {
                                 // If there is at least one team (other than the one they are switching to) that has more than 1 player
                                 // then the game is playable because it is not a 2v0.
                                 // Also, if the team they are switching to is already empty, they will not need to worry about this at all
-                                for (Team team : a.getArenaTeamList()) {
+                                for (Team team : a.getActiveArenaTeamList()) {
                                     if ((team == lobbyPlayer.getTeam() ? team.getSize()-1 : team.getSize()) > 0 && team != t && !teamsBalanced) {
                                         teamsBalanced = true;
                                     }

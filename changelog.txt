@@ -1,3 +1,21 @@
+v5.0.5
+- Fixed %player% not being replaced for finish arenas
+- Fixed error replacements to not run commands & prevent further errors
+
+v5.0.4
+- Added %died% to kill commands
+- Fixed NullPointerException on Finish-Commands
+
+v5.0.3
+- Removed teams which are unfilled from the arena on start @frig
+- Added 'Join-Commands', 'Leave-Commands', 'Start-Commands', and 'Finish-Commands' to config.yml @him
+- Added 'Sniper' to Coin Shop. 100% accuracy, 1 shot 1 kill, delays with super fast
+- Added 'Paintkillers' to Coin Shop. They are Painkillers and give you full health
+
+v5.0.1
+- Added more values to messages.yml
+- Edited some chat messages for in game
+
 v4.9.0
 - Fixed Cowboy default delay to be higher to prevent weird flying glitch
 - Fixed Cowboy item duplicating & withdrawing money on deaths

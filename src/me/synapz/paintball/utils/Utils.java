@@ -8,13 +8,13 @@ import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import org.bukkit.*;
-import org.bukkit.block.Banner;
+import org.bukkit.block.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -228,7 +228,7 @@ public class Utils {
     // Gets the team with the least amount of players
     public static Team max(Arena a) {
         List<Integer> intList = new ArrayList<Integer>() {{
-            for (Team team : a.getArenaTeamList())
+            for (Team team : a.getActiveArenaTeamList())
                 add(team.getSize());
         }};
 
@@ -236,7 +236,7 @@ public class Utils {
 
         int maxSize = intList.get(0);
 
-        for (Team team : a.getArenaTeamList()) {
+        for (Team team : a.getActiveArenaTeamList()) {
             if (team.getSize() == maxSize)
                 return team;
         }

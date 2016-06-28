@@ -21,7 +21,7 @@ public class Info extends ArenaCommand {
     public void onCommand() {
         final String LINE = SECONDARY + STRIKETHROUGH + Utils.makeSpaces(20) + RESET + " " + THEME + arena.getName() + " " + SECONDARY + STRIKETHROUGH + Utils.makeSpaces(20);
         final int specSize = ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator") != null ? ARENA_FILE.getConfigurationSection(arena.getPath() + "Spectator").getValues(false).size() : 0;
-        final List<String> teams = readableList(arena.getArenaTeamList());
+        final List<String> teams = readableList(arena.getActiveArenaTeamList());
 
         Messenger.msg(player,
                 LINE,
@@ -71,7 +71,7 @@ public class Info extends ArenaCommand {
         return 2;
     }
 
-    private List<String> readableList(Set<Team> teams) {
+    private List<String> readableList(List<Team> teams) {
         return new ArrayList<String>(){{
             for (Team team : teams) {
                 add("  - " + team.getTitleName());

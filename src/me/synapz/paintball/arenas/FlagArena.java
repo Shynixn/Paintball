@@ -40,7 +40,7 @@ public abstract class FlagArena extends Arena {
         if (isSetup() && isEnabled())
             return steps.toString();
 
-        for (Team t : getArenaTeamList()) {
+        for (Team t : getActiveArenaTeamList()) {
             String lobbyName = t.getTitleName().toLowerCase().replace(" ", "") + " (flag)";
 
             steps.append(", ");
@@ -55,7 +55,7 @@ public abstract class FlagArena extends Arena {
     public boolean isSetup() {
         boolean flagsSet = true;
 
-        for (Team t : getArenaTeamList()) {
+        for (Team t : getActiveArenaTeamList()) {
             if (ARENA_FILE.getString(t.getPath()) == null)
                 flagsSet = false;
         }
