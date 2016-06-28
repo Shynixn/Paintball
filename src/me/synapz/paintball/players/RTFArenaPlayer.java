@@ -1,7 +1,6 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.arenas.BlockManager;
 import me.synapz.paintball.arenas.RTFArena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;

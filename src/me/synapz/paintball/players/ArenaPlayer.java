@@ -60,7 +60,7 @@ public class ArenaPlayer extends PaintballPlayer {
     private boolean isTie;
 
     public ArenaPlayer(LobbyPlayer lobbyPlayer) {
-        super(lobbyPlayer.getArena(), lobbyPlayer.getTeam(), lobbyPlayer.getPlayer());
+        super(lobbyPlayer.getArena(), lobbyPlayer.getTeam(), lobbyPlayer.getPlayer(), true);
 
         for (Items item : Items.values()) {
             if (item.getUsesPerPlayer() > -1) {
@@ -80,7 +80,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * Gives the player a wool helmet
      */
     @Override
-    protected void initPlayer() {
+    protected void initPlayer(boolean storeData) {
         player.getInventory().clear();
         player.updateInventory();
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));

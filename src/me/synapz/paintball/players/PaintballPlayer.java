@@ -31,7 +31,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
     Constructor that all the PaintballPlayer call when they are created (super();), each will perform this on create
     -----
      */
-    public PaintballPlayer(Arena a, Team t, Player p) {
+    public PaintballPlayer(Arena a, Team t, Player p, boolean storeData) {
         this.arena = a;
         this.team = t;
         this.player = p;
@@ -40,14 +40,14 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
             return;
 
         arena.addPlayer(this);
-        initPlayer();
+        initPlayer(storeData);
         if (giveItems)
             giveItems();
         showMessages();
         loadScoreboard();
     }
 
-    public PaintballPlayer(Arena a, Team t, Player p, boolean giveItems) {
+    public PaintballPlayer(Arena a, Team t, Player p, boolean storeData, boolean giveItems) {
         this.arena = a;
         this.team = t;
         this.player = p;
@@ -56,7 +56,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
             return;
 
         arena.addPlayer(this);
-        initPlayer();
+        initPlayer(storeData);
         if (giveItems)
             giveItems();
         showMessages();
@@ -68,7 +68,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
     Methods all PaintballPlayer objects must implement, each object type will perform different tasks in these methods
     -----
      */
-    protected abstract void initPlayer();
+    protected abstract void initPlayer(boolean storeInfo);
 
     protected abstract void giveItems();
 

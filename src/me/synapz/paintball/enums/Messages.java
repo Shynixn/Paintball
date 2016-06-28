@@ -37,6 +37,7 @@ public enum Messages {
     COMMAND_ADMIN_INFO("Display all Paintball Admin commands"),
     COMMAND_SETHOLO_INFO("Creates a leaderboard hologram"),
     COMMAND_HOLO_INFO("Remove holograms around you"),
+    COMMAND_KICK_INFO("Kick a player from Paintball"),
 
     COMMAND_JOIN_INFO("Join an Arena"),
     COMMAND_LEAVE_INFO("Leave an Arena"),

@@ -45,7 +45,7 @@ public class ActionBar {
             if (chatSerializerPacket == null) chatSerializerPacket = ReflectionUtil.getNMSClass("ChatComponentText");
             if (packet == null) packet = ReflectionUtil.getNMSClass("Packet");
         } catch (ClassNotFoundException e) {
-            Messenger.error(Bukkit.getConsoleSender(), "Error loading nms classes for title util.");
+            Messenger.error(Bukkit.getConsoleSender(), "Error loading nms classes for action bar util.");
         }
     }
 }

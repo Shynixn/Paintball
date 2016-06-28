@@ -506,6 +506,7 @@ public class Arena {
 
     // Starts the game, turns all LobbyPlayers into ArenaPlayers
     public void startGame() {
+        // balanceTeams();
         HashMap<Player, Location> startLocs = new HashMap<>();
         setState(ArenaState.STARTING);
 
@@ -619,21 +620,19 @@ public class Arena {
         List<ArenaPlayer> losers = new ArrayList<>();
         List<ArenaPlayer> tiers = new ArrayList<>();
 
-        List<PaintballPlayer> forPayout = new ArrayList<>();
+        List<ArenaPlayer> forPayout = new ArrayList<>();
         for (ArenaPlayer arenaPlayer : getAllArenaPlayers()) {
             Player player = arenaPlayer.getPlayer();
             if (teams.contains(arenaPlayer.getTeam())) {
                 if (teams.size() != 1) {
                     arenaPlayer.setTie();
-                    // TODO: @Frig.. so if no one really won they tied. Instead of money being lost should it be given to everyone who tied since both won?
-                    forPayout.add(arenaPlayer);
                     tiers.add(arenaPlayer);
                 } else {
                     arenaPlayer.setWon();
-                    forPayout.add(arenaPlayer);
-
                     winners.add(arenaPlayer);
                 }
+
+                forPayout.add(arenaPlayer);
 
                 final Firework firework = player.getWorld().spawn(player.getLocation().add(0, 4, 0), Firework.class);
                 FireworkMeta meta = firework.getFireworkMeta();
@@ -656,10 +655,6 @@ public class Arena {
                     Settings.THEME + "KD: " + Settings.SECONDARY + arenaPlayer.getKd(),
                     Settings.THEME + "Your team " + Settings.SECONDARY + (teams.size() >= 2 ? "tied" : (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost")),
                     spaces + Utils.makeSpaces(title +  "123") + spaces);
-
-            if (arenaPlayer.isWinner()) {
-
-            }
         }
 
         StringBuilder formattedWinnerList = new StringBuilder();
@@ -680,11 +675,9 @@ public class Arena {
             title.send(player.getPlayer());
         }
 
-        if (forPayout.size() > 0) {
-            if (wagerManager.hasWager()) {
-                WagerPayoutEvent event = new WagerPayoutEvent(forPayout, wagerManager.getAndResetWager());
-                Bukkit.getPluginManager().callEvent(event);
-            }
+        if (wagerManager.hasWager()) {
+            WagerPayoutEvent event = new WagerPayoutEvent(forPayout, wagerManager.getAndResetWager());
+            Bukkit.getPluginManager().callEvent(event);
         }
 
         new GameFinishCountdown(WIN_WAIT_TIME, this, winners, losers, tiers);
@@ -729,6 +722,34 @@ public class Arena {
     public void resetTeamScores() {
         for (Team team : getActiveArenaTeamList()) {
             teams.replace(team, teams.get(team), 0);
+        }
+    }
+
+    public void balanceTeams() {
+        for (LobbyPlayer lobbyPlayer : lobby) {
+            Title title = new Title(Settings.THEME + "Balancing Teams");
+            title.send(lobbyPlayer.getPlayer());
+        }
+
+        Random random = new Random();
+        List<Team> hasPlayers = new ArrayList<>();
+        int choice = 0;
+        for (Team team : getActiveArenaTeamList()) {
+            if (team.getSize() == 0) continue;
+            hasPlayers.add(team);
+        }
+
+        for (Team team : hasPlayers) {
+            Team least = getTeamWithLessPlayers();
+            if (team.getSize() - least.getSize() > 1) {
+                choice = random.nextInt(lobby.size());
+                // Why can't i get a player based on their team? (team.getPlayers() ?)
+                while (!lobby.get(choice).getTeam().equals(team)) {
+                    choice = random.nextInt(lobby.size());
+                }
+                LobbyPlayer lobbyPlayer = lobby.get(choice);
+                lobbyPlayer.setTeam(least);
+            }
         }
     }
 
@@ -840,7 +861,7 @@ public class Arena {
     public void updateAllScoreboard() {
         for (PaintballPlayer player : getAllPlayers().values()) {
             if (player instanceof ScoreboardPlayer)
-                ((ScoreboardPlayer) player).updateScoreboard();
+                player.updateScoreboard();
         }
     }
 

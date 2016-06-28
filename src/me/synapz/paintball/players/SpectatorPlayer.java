@@ -9,10 +9,8 @@ import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -24,21 +22,22 @@ public class SpectatorPlayer extends PaintballPlayer {
     public static final String TELEPORTER = RED + "" + Settings.THEME + String.valueOf(BOLD) + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleporter";
 
     public SpectatorPlayer(Arena a, Player p) {
-        super(a, new Team(a), p);
-
+        super(a, new Team(a), p, true);
         player.teleport(arena.getSpectatorLocation());
     }
 
     public SpectatorPlayer(ArenaPlayer arenaPlayer) {
-        super(arenaPlayer.getArena(), new Team(arenaPlayer.getArena()), arenaPlayer.getPlayer());
-
+        super(arenaPlayer.getArena(), new Team(arenaPlayer.getArena()), arenaPlayer.getPlayer(), false);
         player.teleport(player.getLocation().add(0, 0.5, 0));
     }
 
     @Override
-    protected void initPlayer() {
-        uuidFile = new UUIDFile(player.getUniqueId());
-        uuidFile.savePlayerInformation();
+    protected void initPlayer(boolean storeData) {
+        if (storeData) {
+            uuidFile = new UUIDFile(player.getUniqueId());
+            uuidFile.savePlayerInformation();
+        }
+
         player.setAllowFlight(true);
         player.setFlying(true);
 

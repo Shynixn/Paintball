@@ -1,6 +1,10 @@
 v5.0.5
-- Fixed %player% not being replaced for finish arenas
+- Fixed %player% not being replaced for finish arena commands
 - Fixed error replacements to not run commands & prevent further errors
+- Added /paintball admin kick <player> - paintball.admin.kick
+- Added check to prevent item frames / paintings from being destroyed by players from snowballs
+- Fixed storing data on different player types so they would not be overwritten
+- Added config to edit speed a player has when holding a gun (items.yml). gives more realistic effects, rocket launcher is slow because heavy etc.
 
 v5.0.4
 - Added %died% to kill commands

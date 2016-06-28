@@ -35,6 +35,7 @@ permissions:
        paintball.admin.delholo: true
        paintball.admin.reset: true
        paintball.admin.convert: true
+       paintball.admin.kick: true
        paintball.leaderboard.create: true
        paintball.leave.create: true
        paintball.join.create: true

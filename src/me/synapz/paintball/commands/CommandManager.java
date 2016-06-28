@@ -28,7 +28,7 @@ public class CommandManager implements CommandExecutor{
                 new Create(), new Remove(), new SetLocation(), new DelLocation(), new SetSpectate(), new DelSpectate(),
                 new SetFlag(), new DelFlag(), new SetMin(), new SetMax(), new SetTeams(), new Start(), new Stop(),
                 new Rename(), new Convert(), new Enable(), new Disable(), new SetHolo(), new DelHolo(), new Steps(),
-                new Info(), new Reload(), new Reset(), new Top(), new Wager(), new Admin(CommandType.ADMIN),
+                new Info(), new Reload(), new Reset(), new Top(), new Wager(), new Kick(), new Admin(CommandType.ADMIN),
                 new Arena(CommandType.ARENA));
     }
 
