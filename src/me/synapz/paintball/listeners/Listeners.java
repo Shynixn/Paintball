@@ -741,22 +741,25 @@ public class Listeners extends BaseListener implements Listener {
 
     @EventHandler
     public void onSlotChange(PlayerItemHeldEvent event) {
-        /*
         Player player = event.getPlayer();
+        if (!isInArena(player)) return;
+
         ItemStack stack = player.getInventory().getItem(event.getNewSlot());
 
-        if (!isInArena(player))
+        if (stack == null || stack.getType().equals(Material.AIR)
+                || !stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName() ) {
+            player.setWalkSpeed(0.2f);
             return;
-
-        if (stack == null || stack.getType().equals(Material.AIR))
-            return;
+        }
 
         for (Items item : Items.values()) {
-            if (item != null && item.getName() != null && stack != null && stack.hasItemMeta() && stack.getItemMeta().hasDisplayName() && stack.getItemMeta().getDisplayName().equals(item.getName())) {
+            if (stack.getItemMeta().getDisplayName().equals(item.getName())) {
                 player.setWalkSpeed(item.getSpeed());
                 return;
             }
         }
-        */
+
+        // If the item is anything else
+        player.setWalkSpeed(0.2f);
     }
 }

@@ -506,7 +506,7 @@ public class Arena {
 
     // Starts the game, turns all LobbyPlayers into ArenaPlayers
     public void startGame() {
-        // balanceTeams();
+        balanceTeams();
         HashMap<Player, Location> startLocs = new HashMap<>();
         setState(ArenaState.STARTING);
 
@@ -732,14 +732,9 @@ public class Arena {
         }
 
         Random random = new Random();
-        List<Team> hasPlayers = new ArrayList<>();
         int choice = 0;
-        for (Team team : getActiveArenaTeamList()) {
-            if (team.getSize() == 0) continue;
-            hasPlayers.add(team);
-        }
 
-        for (Team team : hasPlayers) {
+        for (Team team : getActiveArenaTeamList()) {
             Team least = getTeamWithLessPlayers();
             if (team.getSize() - least.getSize() > 1) {
                 choice = random.nextInt(lobby.size());
