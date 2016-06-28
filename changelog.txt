@@ -1,3 +1,6 @@
+v5.0,6
+- Fixed new speed option slowing down entire server's walk speed
+
 v5.0.5
 - Fixed %player% not being replaced for finish arena commands
 - Fixed error replacements to not run commands & prevent further errors
