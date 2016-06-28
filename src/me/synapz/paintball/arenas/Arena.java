@@ -265,8 +265,6 @@ public class Arena {
 
     // Gets the max number of players
     public int getMax() {
-        if (this instanceof FFAArena && teams.keySet().size() == 16) return 16;
-
         return ARENA_FILE.getInt(getPath() + "Max");
     }
 
@@ -281,6 +279,10 @@ public class Arena {
             return new ArrayList<>(teams.keySet());
         }
         return activeTeams;
+    }
+
+    public Set<Team> getFullTeamList() {
+        return teams.keySet();
     }
 
     // Sets the teams of this arena

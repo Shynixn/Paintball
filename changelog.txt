@@ -1,5 +1,6 @@
 v5.0,6
 - Fixed new speed option slowing down entire server's walk speed
+- Fixed FFA showing full even when it isnt full
 
 v5.0.5
 - Fixed %player% not being replaced for finish arena commands

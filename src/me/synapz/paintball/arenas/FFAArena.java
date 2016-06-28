@@ -14,7 +14,7 @@ public class FFAArena extends Arena {
     */
     @Override
     public int getMax() {
-        return getActiveArenaTeamList().size();
+        return getFullTeamList().size();
     }
 
     /*
