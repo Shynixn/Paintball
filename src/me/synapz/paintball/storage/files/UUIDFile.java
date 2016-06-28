@@ -193,6 +193,7 @@ public class UUIDFile extends PaintballFile {
         fileConfig.set(path + "Exp", exp.getCurrentExp());
         fileConfig.set(path + "Allow-Flight", player.getAllowFlight());
         fileConfig.set(path + "Flying", player.isFlying());
+        fileConfig.set(path + "Speed", player.getWalkSpeed());
 
         if (Paintball.IS_1_9) {
             fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getStorageContents()));
@@ -224,6 +225,7 @@ public class UUIDFile extends PaintballFile {
         player.setGameMode(fileConfig.getString(path + "Gamemode") == null ? GameMode.SURVIVAL : GameMode.valueOf(fileConfig.getString(path + "Gamemode")));
         player.setAllowFlight(fileConfig.getBoolean(path + "Allow-Flight"));
         player.setFlying(fileConfig.getBoolean(path + "Flying"));
+        player.setWalkSpeed((float) fileConfig.getDouble(path + "Speed"));
         exp.setExp(fileConfig.getInt(path + "Exp"));
         double health = fileConfig.getDouble(path + "Health");
         double scale = fileConfig.getDouble(path + "Health-Scale");

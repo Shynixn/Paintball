@@ -753,7 +753,7 @@ public class Listeners extends BaseListener implements Listener {
         }
 
         for (Items item : Items.values()) {
-            if (stack.getItemMeta().getDisplayName().equals(item.getName())) {
+            if (ChatColor.stripColor(stack.getItemMeta().getDisplayName()).equalsIgnoreCase(item.getName())) {
                 player.setWalkSpeed(item.getSpeed());
                 return;
             }

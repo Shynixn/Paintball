@@ -84,6 +84,7 @@ public class ExpirationCountdown extends PaintballCountdown {
 
         item.remove(arenaPlayer);
         times.remove(item.getItemName(true), this);
+        player.setWalkSpeed(0.2f);
         super.cancel();
     }
 
