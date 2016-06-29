@@ -143,6 +143,8 @@ public class Settings {
             else
                 a.setReload();
         }
+        Settings.ARENA.deleteLeaderboards();
+        Settings.ARENA.loadLeaderboards();
     }
 
     public FileConfiguration getConfig() {

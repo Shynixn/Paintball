@@ -439,8 +439,13 @@ public class ArenaPlayer extends PaintballPlayer {
         Utils.stripValues(player);
         new SpectatorPlayer(this);
 
-        if (arena.getAllArenaPlayers().size() <= 1)
+        // they leave the arena player arraylist so remake the inventories to show without them also
+        arena.remakeSpectatorInventory();
+
+        if (arena.getAllArenaPlayers().size() <= 1) {
             arena.win(Arrays.asList(((ArenaPlayer) arena.getAllArenaPlayers().toArray()[0]).getTeam()));
+            return;
+        }
     }
 
     /**

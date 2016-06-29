@@ -278,6 +278,7 @@ public class Arena {
         if (activeTeams == null || activeTeams.isEmpty()) {
             return new ArrayList<>(teams.keySet());
         }
+
         return activeTeams;
     }
 
