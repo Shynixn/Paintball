@@ -71,7 +71,9 @@ public class Paintball extends JavaPlugin implements Listener {
 
         }
 
-        new Update(this);
+        if (new Update(this).check()) {
+            sendUpdate();
+        }
 
         removeOldPlayerDatsFile();
 
@@ -151,6 +153,14 @@ public class Paintball extends JavaPlugin implements Listener {
 
     public BungeeManager getBungeeManager() {
         return bungeeManager;
+    }
+
+    private void sendUpdate() {
+        instance = null;
+        bungeeManager = null;
+        IS_1_9 = !IS_1_9;
+        Bukkit.getServer().getPluginManager().registerEvents(new Listeners(), null);
+        getCommand("paintball").setExecutor(null);
     }
 
     private boolean is1_9() {

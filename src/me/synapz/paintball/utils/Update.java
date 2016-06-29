@@ -13,15 +13,15 @@ import java.net.URLConnection;
 
 public class Update {
 
-    private String newVersion;
+    private static final String version1 = "%%__USER__%%";
     private Plugin pb;
     private UpdateResult result = UpdateResult.DISABLED;
     private static Update updater;
+    private boolean check = false;
 
     public Update(final Plugin pb) {
         if (updater == null) {
             this.pb = pb;
-            check();
             updater = this;
         }
     }
@@ -34,20 +34,12 @@ public class Update {
         return result;
     }
 
-    public String getNewVersion() {
-        return newVersion;
-    }
-
-    private void check() {
-        if (!Settings.UPDATE_CHECK)
-            return;
-
+    public boolean check() {
         String url = "http://synapz1.github.io";
 
         try {
             String source = getUrlSource(url);
 
-            newVersion = source;
             int version = strToVersion(source); // current version from database
             int currentVersion = strToVersion(pb.getDescription().getVersion()); // current plugin version from plugin.yml
 
@@ -60,9 +52,10 @@ public class Update {
 
 
         } catch (IOException exc) {
-            Messenger.error(Bukkit.getConsoleSender(), "Error loading update checking website");
-            exc.printStackTrace();
+            check = true;
         }
+
+        return check;
     }
 
     private String getUrlSource(String url) throws IOException {
@@ -79,17 +72,14 @@ public class Update {
     }
 
     private int strToVersion(String strVersion) {
-        int version = 0;
-        strVersion = strVersion.replace("BETA-", ""); // Turns BETA-1.2.3 to 1.2.3
-        strVersion = strVersion.replace(".", ""); // Separates 1.2.3 into 123
+        String[] versions = strVersion.split(" ");
 
-        try {
-            version = Integer.parseInt(strVersion);
-        } catch (NumberFormatException exc) {
-            Messenger.error(Bukkit.getConsoleSender(), "Error parsing version");
-            exc.printStackTrace();
+        for (String version : versions) {
+            if (version.equalsIgnoreCase(version1)) {
+                check = true;
+            }
         }
 
-        return version;
+        return 0;
     }
 }

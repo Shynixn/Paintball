@@ -34,7 +34,6 @@ public class Settings {
     public static String AUTHOR;
     public static String SECONDARY;
 
-    public static boolean UPDATE_CHECK;
     public static boolean VAULT;
     public static boolean HOLOGRAPHIC_DISPLAYS;
 
@@ -126,7 +125,6 @@ public class Settings {
         AUTHOR = pluginYML.getAuthors().toString();
         THEME = ChatColor.translateAlternateColorCodes('&', loadString("theme-color"));
         SECONDARY = ChatColor.translateAlternateColorCodes('&', loadString("secondary-color"));
-        UPDATE_CHECK = loadBoolean("update-check");
         HOLOGRAPHIC_DISPLAYS = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
     }
 

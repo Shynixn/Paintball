@@ -49,10 +49,6 @@ public class Listeners extends BaseListener implements Listener {
     @EventHandler
     public void onPlayerJoinCheck(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        UpdateResult result = Update.getUpdater().getResult();
-
-        if (player.hasPermission("paintball.update") && result != UpdateResult.DISABLED && !result.getMessage().isEmpty())
-            Messenger.success(player, result.getMessage().replace("%new%", Update.getUpdater().getNewVersion()));
 
         UUIDFile uuidFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId());
 

@@ -2,8 +2,6 @@
 theme-color: '&3'
 # Secondary color of messages. Used as a secondary color in with theme-color
 secondary-color: '&7'
-# Allows the plugin to check for update and notify OP's and players with paintball.notify if there is an update on join
-update-check: true
 
 Commands:
   # If true, disables all commands in arena except for: Allowed commands and (if all-paintball-commands is true) Paintball commands.

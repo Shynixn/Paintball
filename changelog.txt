@@ -1,7 +1,9 @@
+v5.0.9
+- Fix
+
 v5.0.8
 - Made it so /pb admin reload also reloads all holograms also
 - Fixed Spectator's inventory not updating when a player loses lives and turning to spectator
-- Made it so if a team has been eliminated (everyone left) it will be removed from scoreboard
 
 v5.0,6
 - Fixed new speed option slowing down entire server's walk speed
