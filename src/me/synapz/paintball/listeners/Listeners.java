@@ -307,7 +307,7 @@ public class Listeners extends BaseListener implements Listener {
 
                 if (pbPlayer instanceof ArenaPlayer && hitTeam != null && arena.getState() == Arena.ArenaState.IN_PROGRESS) {
                     if (hitTeam == pbPlayer.getTeam()) {
-                        Messenger.error(player, "You cannot attack your own Core!");
+                        Messenger.error(player, Messages.CANNOT_ATTACK_OWN_CORE);
                     } else {
                         arena.incrementTeamScore(hitTeam, false);
                         int score = arena.getTeamScore(hitTeam);

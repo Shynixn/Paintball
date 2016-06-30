@@ -5,7 +5,9 @@ import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.players.PaintballPlayer;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,14 +21,14 @@ public class Kick extends PaintballCommand{
         String playerName = args[2];
         Player toKick = Bukkit.getPlayer(playerName);
         if (toKick == null || ArenaManager.getArenaManager().getArena(toKick) == null) {
-            Messenger.error(player, playerName + " is not in an arena.");
+            Messenger.error(player, new MessageBuilder(Messages.PLAYER_NOT_IN_ARENA).replace(Tag.PLAYER, playerName).build());
         }
 
         Arena arena = ArenaManager.getArenaManager().getArena(toKick);
         PaintballPlayer paintballPlayer = arena.getPaintballPlayer(toKick);
         paintballPlayer.leave();
 
-        Messenger.success(player, playerName + " has been kicked from " + arena.getName());
+        Messenger.success(player, new MessageBuilder(Messages.KICK_PLAYER).replace(Tag.PLAYER, playerName).replace(Tag.ARENA, arena.getName()).build());
     }
 
     @Override

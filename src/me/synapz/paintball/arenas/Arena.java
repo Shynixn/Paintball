@@ -482,7 +482,7 @@ public class Arena {
 
                     // Only click the player if they do not have access to the bypass permissons
                     if (!player.hasPermission("paintball.join." + getName() + ".bypass") &&!player.hasPermission("paintball.join.*.bypass")) {
-                        Messenger.error(toKickPlayer, "Sorry, your space has been filled by other player.");
+                        Messenger.error(toKickPlayer, Messages.SPACE_FILLED);
                         toKick.leave();
                         playerFound = true;
                         break;
@@ -491,7 +491,7 @@ public class Arena {
 
                 // If for some reason all players have he bypass permission, that means no one was kicked so do not let them join
                 if (playerFound == false) {
-                    Messenger.error(player, "Sorry, no places could not be found in this arena.");
+                    Messenger.error(player, Messages.PLACES_NOT_FOUND);
                     return;
                 }
             }
@@ -734,7 +734,7 @@ public class Arena {
 
     public void balanceTeams() {
         for (LobbyPlayer lobbyPlayer : lobby) {
-            Title title = new Title(Settings.THEME + "Balancing Teams");
+            Title title = new Title(Messages.BALENCING_TEAMS.getString());
             title.send(lobbyPlayer.getPlayer());
         }
 
@@ -953,7 +953,7 @@ public class Arena {
                         command = command.replace(Tag.PLAYER.toString(), player.getName());
                     }
                 } catch (NumberFormatException exc) {
-                    Messenger.error(player, "Error parsing command.");
+                    Messenger.error(player, Messages.ERROR_PARSING);
                     return;
                 }
             }
@@ -1008,7 +1008,7 @@ public class Arena {
                         command = command.replace(Tag.DIED.toString(), target.getName());
                     }
                 } catch (NumberFormatException exc) {
-                    Messenger.error(player, "Error parsing command.");
+                    Messenger.error(player, Messages.ERROR_PARSING);
                     return;
                 }
             }
