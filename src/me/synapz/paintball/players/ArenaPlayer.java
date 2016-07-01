@@ -251,9 +251,12 @@ public class ArenaPlayer extends PaintballPlayer {
 
             horseItem.remove(this);
 
+            // Reassign old horse item to a new copy of the old one
             CoinItem newHorseItem = new CoinItem(horseItem);
             horseItem = newHorseItem;
+            // The old horse item is gone, so put a new one into their inventory
             this.getPlayer().getInventory().addItem(horseItem.getItemStack(this, false));
+            coinItems.put(newHorseItem.getItemName(true), newHorseItem);
             player.updateInventory();
         }
     }
@@ -383,8 +386,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 put(item.getItemName(true), item);
             }};
 
-        if (!coinItems.containsValue(coinItems))
-            coinItems.put(item.getItemName(true), item);
+        coinItems.put(item.getItemName(true), item);
     }
 
     /**

@@ -15,7 +15,7 @@ public class SetHolo extends StatCommand {
         int max = Settings.getSettings().getPlayerDataFolder().getMaxPage();
 
         if (!Settings.HOLOGRAPHIC_DISPLAYS) {
-            Messenger.error(player, "Please download plugin HolographicDisplays to use this feature.", "http://dev.bukkit.org/bukkit-plugins/holographic-displays/");
+            Messenger.error(player, Messages.DOWNLOAD_HOLO, Messages.HOLO_LINK);
             return;
         }
 
@@ -23,13 +23,13 @@ public class SetHolo extends StatCommand {
             try {
                 page = Integer.parseInt(args[3]);
             } catch (NumberFormatException exc) {
-                Messenger.error(player, "Please enter a valid number for the page.");
+                Messenger.error(player, Messages.PAGE_REAL_NUMBER);
                 return;
             }
         }
 
         if (page <= 0) {
-            Messenger.error(player, "The page cannot be lower than 0");
+            Messenger.error(player, Messages.PAGE_BIGGER);
             return;
         } else if (page > max) {
             Messenger.error(player, "Page " + ChatColor.GRAY + page + ChatColor.RED + "/" + ChatColor.GRAY + max + ChatColor.RED + " cannot be found.");
@@ -37,7 +37,7 @@ public class SetHolo extends StatCommand {
         }
 
         Settings.ARENA.addLeaderboard(player.getLocation().add(0, 4.5, 0), type, page, true);
-        Messenger.success(player, "Hologram leaderboard set to your location!");
+        Messenger.success(player, Messages.HOLO_SET);
     }
 
     @Override

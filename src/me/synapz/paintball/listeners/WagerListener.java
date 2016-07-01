@@ -48,7 +48,7 @@ public class WagerListener implements Listener{
                 arena.updateAllScoreboard();
                 break;
             case FAILURE:
-                Messenger.error(paintballPlayer.getPlayer(), "You do not have enough money!");
+                Messenger.error(paintballPlayer.getPlayer(), Messages.VAULT_NOT_ENOUGH_MONEY);
                 break;
         }
     }

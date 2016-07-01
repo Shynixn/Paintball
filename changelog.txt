@@ -1,3 +1,7 @@
+v5.1.2
+- Fixed Cowboy item not working
+- Many more messages in messages.yml
+
 v5.1.1
 - Even more messages to messages.yml
 

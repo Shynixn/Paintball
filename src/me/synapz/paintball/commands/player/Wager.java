@@ -26,12 +26,12 @@ public class Wager extends PaintballCommand {
         double wager;
 
         if (!Settings.VAULT) {
-            Messenger.error(player, "Vault must be enabled for this feature.");
+            Messenger.error(player, Messages.ENABLE_VAULT);
             return;
         }
 
         if (arena == null) {
-            Messenger.error(player, "You must be in an arena to wager!");
+            Messenger.error(player, Messages.WAGER_IN_ARENA);
             return;
         }
 
@@ -43,19 +43,19 @@ public class Wager extends PaintballCommand {
         }
 
         if (wager <= 0) {
-            Messenger.error(player, "Wager must be greater than zero!");
+            Messenger.error(player, Messages.WAGER_GREATER_THAN_0);
             return;
         }
 
         PaintballPlayer paintballPlayer = arena.getPaintballPlayer(player);
 
         if (paintballPlayer == null) {
-            Messenger.error(player, "You must be in an arena to wager!");
+            Messenger.error(player, Messages.IN_ARENA_TO_WAGER);
             return;
         }
 
         if (arena.getState() == Arena.ArenaState.STOPPING) {
-            Messenger.error(player, "Arena is already finished!");
+            Messenger.error(player, Messages.ARENA_IS_FINISHED);
             return;
         }
 

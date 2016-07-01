@@ -3,6 +3,7 @@ package me.synapz.paintball.coin;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Items;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.locations.TeamLocation;
@@ -67,7 +68,7 @@ public class CoinItems implements Listener {
                 player.getPlayer().setHealth(player.getPlayer().getMaxHealth());
                 player.updateScoreboard();
                 player.getPlayer().getInventory().remove(player.getPlayer().getItemInHand());
-                Messenger.success(player.getPlayer(), "Paintkillers have taken effect!");
+                Messenger.success(player.getPlayer(), Messages.PAINTKILLERS_ON);
             }
         };
 
@@ -203,9 +204,9 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 ArenaPlayer player = event.getArenaPlayer();
                 if (player.getLastLocation() == null) {
-                    Messenger.error(player.getPlayer(), "You do not have a last location.");
+                    Messenger.error(player.getPlayer(), Messages.INVALID_LAST_LOCATION);
                 } else {
-                    Messenger.success(player.getPlayer(), "Teleporting to last location...");
+                    Messenger.success(player.getPlayer(), Messages.TELEPORTING_TO_LAST_LOCATION);
                     event.getCoinItem().remove(player);
 
                     player.getPlayer().teleport(player.getLastLocation());
@@ -235,9 +236,9 @@ public class CoinItems implements Listener {
                 boolean toFly = !player.getAllowFlight();
 
                 if (toFly)
-                    Messenger.success(player, "Flying has been enabled");
+                    Messenger.success(player, Messages.FLYING_ENABLED);
                 else
-                    Messenger.success(player, "Flying has been disabled");
+                    Messenger.success(player, Messages.FLYING_DISABLED);
 
                 player.setAllowFlight(toFly);
                 player.setFlying(toFly);

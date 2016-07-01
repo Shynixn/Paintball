@@ -95,7 +95,7 @@ public class CoinItemListener implements Listener {
         }
 
         if (player.isInsideVehicle()) {
-            Messenger.error(player, "You cannot use an item while riding something.");
+            Messenger.error(player, Messages.CANNOT_USE_WHILE_RIDING);
             return;
         }
 
