@@ -12,7 +12,7 @@ public class Reload extends PaintballCommand {
 
     public void onCommand(Player player, String[] args) {
         Settings.getSettings().reloadConfig();
-        Messenger.success(player, "Successfully reloaded configuration files.");
+        Messenger.success(player, Messages.CONFIG_RELOADED);
     }
 
     public String getName() {

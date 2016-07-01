@@ -3,6 +3,9 @@ package me.synapz.paintball.enums;
 import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
 
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+
 public enum Messages {
 
     SIGN_TITLE("&8[" + Tag.THEME + "Paintball&8]"),
@@ -117,6 +120,12 @@ public enum Messages {
     ERROR_PARSING("Error parsing command"),
     SPACE_FILLED("Sorry, your space has been filled by other player."),
     PLACES_NOT_FOUND("Sorry, no places could not be found in this arena."),
+    SKULL_CREATED("Leaderboard skull successfully created!"),
+    VAlID_4_NUMBER("Line 4 must be a valid number."),
+    CHOOSE_RANK_NUMBER("Choose a rank number, for example: 3"),
+    NOW_SPECTATING("Now spectating &7" + Tag.PLAYER + "&a!"),
+    YOU_ARE_NOW_SPECTATING("&aYou are now spectating!"),
+    CONFIG_RELOADED("Successfully reloaded configuration files."),
 
     SCOREBOARD_TITLE(Tag.THEME + "&l  Paintball &f" + Tag.SECONDARY + "%time%  "),
     SCOREBOARD_COINS("Coins " + Tag.SECONDARY + "» " + Tag.AMOUNT),

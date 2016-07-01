@@ -947,6 +947,7 @@ public class Arena {
                     for (int i = 1; i < seperated.length; i++) {
                         command += seperated[i];
                     }
+
                     command = command.replace(Tag.ARENA.toString(), this.getName());
 
                     if (player != null) {

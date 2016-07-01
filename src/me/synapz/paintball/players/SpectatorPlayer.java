@@ -3,10 +3,12 @@ package me.synapz.paintball.players;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.ScoreboardLine;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.UUIDFile;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Material;
@@ -56,7 +58,7 @@ public class SpectatorPlayer extends PaintballPlayer {
 
     @Override
     protected void showMessages() {
-        Messenger.titleMsg(player, true, GREEN + "You are now spectating!");
+        Messenger.titleMsg(player, true, Messages.YOU_ARE_NOW_SPECTATING.getString());
     }
 
     @Override
@@ -95,7 +97,7 @@ public class SpectatorPlayer extends PaintballPlayer {
     public void spectate(ArenaPlayer arenaPlayer) {
         Player target = arenaPlayer.getPlayer();
         player.teleport(target);
-        Messenger.success(player, "Now spectating " + GRAY + target.getName() + GREEN + "!");
+        Messenger.success(player, new MessageBuilder(Messages.NOW_SPECTATING).replace(Tag.PLAYER, target.getName()).build());
     }
 
     @Override

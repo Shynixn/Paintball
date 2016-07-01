@@ -1,5 +1,6 @@
 package me.synapz.paintball.listeners;
 
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.SignLocation;
 import me.synapz.paintball.locations.SkullLocation;
@@ -36,7 +37,7 @@ public class LeaderboardSigns implements Listener {
             return;
 
         if (e.getLine(3).isEmpty()) {
-            Messenger.error(e.getPlayer(), "Line 4 cannot be blank.", "Choose a rank number, for example: 3");
+            Messenger.error(e.getPlayer(), Messages.VAlID_4_NUMBER, Messages.CHOOSE_RANK_NUMBER);
             e.getBlock().breakNaturally();
             return;
         }
@@ -45,7 +46,7 @@ public class LeaderboardSigns implements Listener {
         try {
             i = Integer.parseInt(e.getLine(3));
         } catch (NumberFormatException ex) {
-            Messenger.error(e.getPlayer(), "Line 4 must be a valid number.");
+            Messenger.error(e.getPlayer(), Messages.VAlID_4_NUMBER);
             e.getBlock().breakNaturally();
             return;
         }
@@ -55,7 +56,7 @@ public class LeaderboardSigns implements Listener {
         String value = (String) playerAndStat.values().toArray()[0];
 
         if (e.getLine(1).contains("skull")) {
-            Messenger.success(e.getPlayer(), "Leaderboard skull successfully created!");
+            Messenger.success(e.getPlayer(), Messages.SKULL_CREATED);
 
             Sign sign = (Sign) e.getBlock().getState();
             BlockFace directionFacing = ((org.bukkit.material.Sign) sign.getData()).getFacing();
@@ -64,7 +65,7 @@ public class LeaderboardSigns implements Listener {
 
             new SkullLocation(e.getBlock().getLocation(), type, i).makeSkullBlock(directionFacing);
         } else {
-            Messenger.success(e.getPlayer(), "Leaderboard sign successfully created!");
+            Messenger.success(e.getPlayer(), Messages.SKULL_CREATED);
 
             e.setLine(0, "#" + i);
             e.setLine(1, player);
