@@ -1,3 +1,6 @@
+v5.1.3
+- Fixed NullPointerException on /pb stats <player> when a player is not found which broke gameplay
+
 v5.1.2
 - Fixed Cowboy item not working
 - Many more messages in messages.yml
