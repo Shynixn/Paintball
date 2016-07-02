@@ -1,4 +1,7 @@
 v5.1.3
+- Forgot to sync other fixes with the recent .jar files >.> the last change is now fixed sorry.
+
+v5.1.3
 - Fixed NullPointerException on /pb stats <player> when a player is not found which broke gameplay
 
 v5.1.2

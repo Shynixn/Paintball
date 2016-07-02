@@ -150,7 +150,14 @@ public class PlayerDataFolder extends PaintballFile {
     public void getStats(Player sender, String targetName) {
         UUID target = Bukkit.getPlayer(targetName) == null ? Bukkit.getOfflinePlayer(targetName).getUniqueId() : Bukkit.getPlayer(targetName).getUniqueId();
 
-        Map<StatType, String> stats = getPlayerFile(target).getPlayerStats();
+        UUIDFile file = getPlayerFile(target);
+
+        if (file == null) {
+            Messenger.error(sender, "Could not find player's stats.");
+            return;
+        }
+
+        Map<StatType, String> stats = file.getPlayerStats();
 
         Messenger.msg(sender, SECONDARY + STRIKETHROUGH + "             " + RESET + " " + THEME + Bukkit.getOfflinePlayer(target).getName() + "'s Stats" + RESET + " " + SECONDARY + STRIKETHROUGH + "             ");
 
