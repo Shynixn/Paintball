@@ -33,8 +33,8 @@ public class BungeeManager implements PluginMessageListener {
 
         if (Databases.SERVER_ID.getString().equalsIgnoreCase("Generating")) {
             Random r = new Random(5);
-            int randomId = r.nextInt(999);
-            String serverIDString = Integer.toString(randomId);
+            int randomId = r.nextInt(16515072);
+            String serverIDString = Integer.toString(randomId + 262114);
             String serverID = Base64.getEncoder().encodeToString(serverIDString.getBytes());
             Settings.DATABASE_FILE.setValue("Bungee.serverID", serverID);
             Settings.DATABASE_FILE.saveFile();
