@@ -2,6 +2,7 @@ package me.synapz.paintball.commands;
 
 import me.synapz.paintball.arenas.RTFArena;
 import me.synapz.paintball.commands.arena.DelLocation;
+import me.synapz.paintball.commands.arena.SetFlag;
 import me.synapz.paintball.commands.arena.SetLocation;
 import me.synapz.paintball.commands.player.Join;
 import me.synapz.paintball.enums.CommandType;
@@ -35,7 +36,7 @@ public abstract class TeamCommand extends ArenaCommand {
             return;
         }
 
-        if ((this instanceof SetLocation || this instanceof DelLocation) && rawTeamName.equalsIgnoreCase("all") || arena instanceof RTFArena && rawTeamName.equalsIgnoreCase("neutral")) {
+        if (arena instanceof RTFArena && rawTeamName.equalsIgnoreCase("neutral") || (this instanceof SetLocation || this instanceof DelLocation) && rawTeamName.equalsIgnoreCase("all")) {
             onCommand();
             return;
         }
@@ -80,6 +81,10 @@ public abstract class TeamCommand extends ArenaCommand {
 
         for (Team team : arena.getActiveArenaTeamList()) {
             validTeams.append(ChatColor.stripColor(team.getTitleName().toLowerCase().replace(" ", ""))).append(" ");
+        }
+
+        if (this instanceof SetFlag && arena instanceof RTFArena) {
+            validTeams.append("neutral ");
         }
 
         if (!(validTeams.toString().contains(" " + teamString.toLowerCase() + " "))) {

@@ -562,9 +562,9 @@ public class Listeners extends BaseListener implements Listener {
                     RTFArena rtfArena = (RTFArena) arena;
                     Location currentLocation = rtfArena.getCurrentFlagLocation();
 
-                    // The location clicked was the neutral banner
-                    if (Utils.locEquals(Utils.simplifyLocation(currentLocation), (Utils.simplifyLocation(loc)))) {
-                        rtfPlayer.pickupFlag(Utils.simplifyLocation(loc), null);
+                    if (currentLocation != null && Utils.locEquals(Utils.simplifyLocation(currentLocation), (Utils.simplifyLocation(loc)))) {
+                        if (!rtfPlayer.isFlagHolder())
+                            rtfPlayer.pickupFlag(loc, null);
                     }
                 }
 

@@ -17,7 +17,7 @@ public class DelFlag extends TeamCommand {
 
         if (arena instanceof FlagArena) {
             new FlagLocation((FlagArena) arena, team, flagLoc).removeLocation();
-            Messenger.success(player, "Deleted " + arena.getName() + "'s " + team.getTitleName() + " Team flag location!", arena.getSteps());
+            Messenger.success(player, "Deleted " + arena.getName() + "'s " + (team== null ? "neutral" : team.getTitleName()) + " Team flag location!", arena.getSteps());
         } else {
             Messenger.error(player, "That arena does not need any flags!");
             return;

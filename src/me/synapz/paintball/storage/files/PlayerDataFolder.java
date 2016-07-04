@@ -88,11 +88,14 @@ public class PlayerDataFolder extends PaintballFile {
                     if (!playerName.equals("Unknown")) {
                         String value = playerAndStat.values().toArray()[0].toString();
 
-                        stats.add(new MessageBuilder(Messages.PER_LEADERBOARD_LAYOUT)
+                        String line = new MessageBuilder(Messages.PER_LEADERBOARD_LAYOUT)
                                 .replace(Tag.RANK, i + "")
                                 .replace(Tag.SENDER, playerName)
                                 .replace(Tag.AMOUNT, value)
-                                .build());
+                                .build();
+
+                        if (!stats.contains(line))
+                            stats.add(line);
                     }
                 }
             }

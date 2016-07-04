@@ -79,14 +79,16 @@ public class RTFArena extends FlagArena {
     // Resets everything set in loadFlags()
     @Override
     public void resetFlags() {
+        if (neutralFlagLocation != null) {
+            blockManager.restore(Utils.simplifyLocation(neutralFlagLocation));
+            neutralFlagLocation.getBlock().setType(Material.AIR);
+            neutralFlagLocation.getBlock().getState().update();
+        }
         for (Team team : getActiveArenaTeamList()) {
             Location loc = getFlagLocation(team).subtract(0, 1, 0);
 
             loc.getBlock().setType(Material.AIR);
         }
-
-        if (neutralFlagLocation != null)
-            blockManager.restore(neutralFlagLocation);
     }
 
     @Override

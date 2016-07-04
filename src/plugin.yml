@@ -1,5 +1,5 @@
 name: Paintball
-version: 5.1.3
+version: 5.1.5
 description: Paintball 16 teams, 9 Game modes, SQL, Stats, Coin Shop, Unlimited arenas, Simultaneous games, Scoreboards
 authors: [Synapz_, Refrigerbater]
 main: me.synapz.paintball.Paintball
@@ -36,6 +36,7 @@ permissions:
        paintball.admin.reset: true
        paintball.admin.convert: true
        paintball.admin.kick: true
+       paintball.admin.addcoin: true
        paintball.leaderboard.create: true
        paintball.leave.create: true
        paintball.join.create: true

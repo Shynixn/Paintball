@@ -12,6 +12,7 @@ import me.synapz.paintball.storage.database.MySQLManager;
 import me.synapz.paintball.storage.database.SQLiteManager;
 import me.synapz.paintball.storage.files.*;
 import me.synapz.paintball.utils.Messenger;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,6 +39,7 @@ public class Settings {
     public static boolean HOLOGRAPHIC_DISPLAYS;
 
     public static Economy ECONOMY = null;
+    public static Chat CHAT = null;
 
     private static PlayerDataFolder playerDataFolder;
     public static ArenaFile ARENA;

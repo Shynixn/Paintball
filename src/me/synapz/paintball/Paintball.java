@@ -11,7 +11,7 @@ import me.synapz.paintball.metrics.Metrics;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.PaintballFile;
 import me.synapz.paintball.storage.files.UUIDFile;
-import me.synapz.paintball.utils.Update;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -71,9 +71,9 @@ public class Paintball extends JavaPlugin implements Listener {
 
         }
 
-        if (new Update(this).check()) {
-            sendUpdate();
-        }
+        //if (new Update(this).check()) {
+        //    sendUpdate();
+        //}
 
         removeOldPlayerDatsFile();
 
@@ -96,9 +96,12 @@ public class Paintball extends JavaPlugin implements Listener {
         }
 
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        RegisteredServiceProvider<Chat> rspchat = getServer().getServicesManager().getRegistration(Chat.class);
+
         if (rsp == null) {
             Settings.VAULT = false;
         } else {
+            Settings.CHAT = rspchat.getProvider();
             Settings.ECONOMY = rsp.getProvider();
             Settings.VAULT = true;
 
