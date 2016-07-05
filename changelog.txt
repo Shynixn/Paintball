@@ -1,3 +1,13 @@
+v5.1.7
+- Fixed double chat messafes
+
+v5.1.6
+- Added %PRE% and %SUF% to be replaced with the player's group prefix and suffix
+    - Your config.yml will not auto generate with new comments so if you want this just place %PRE%/%SUF%
+    - {arena-chat: "&8-%TEAMCOLOR%%TEAMNAME%&8- %PRE% &a%PLAYER%&7: %MSG%"}
+        - output
+- Made message chat colors convert, so &{code} converts to a real color while in the arena chat
+
 v5.1.5
 - Fixed setting the neutral flag
 - Fixed NPE when deleting RTF neutral flag

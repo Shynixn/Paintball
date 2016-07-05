@@ -42,7 +42,7 @@ public class Paintball extends JavaPlugin implements Listener {
 
         new Settings(this);
         this.bungeeManager = new BungeeManager(this);
-        this.setupEconomy();
+        this.setupVault();
 
         CommandManager commandManager = new CommandManager();
         commandManager.init();
@@ -89,7 +89,7 @@ public class Paintball extends JavaPlugin implements Listener {
             Settings.ARENA.deleteLeaderboards();
     }
 
-    private void setupEconomy() {
+    private void setupVault() {
         if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
             Settings.VAULT = false;
             return;
@@ -106,6 +106,8 @@ public class Paintball extends JavaPlugin implements Listener {
             Settings.VAULT = true;
 
             if (Settings.ECONOMY == null)
+                Settings.VAULT = false;
+            if (Settings.CHAT == null)
                 Settings.VAULT = false;
         }
     }

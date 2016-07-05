@@ -178,9 +178,11 @@ Per-Arena-Settings:
       use-arena-chat: true
       # True - broadcasts winning teams to all players on the server. False - only players in arena will see who won
       broadcast-winner: false
-      # Chat format for specators. Tags: %ARENA%, %PLAYER%, %MSG%, %PREFIX%, %STATS%??
+      # Chat format for specators. Tags: %ARENA%, %PLAYER%, %MSG%, %PREFIX%.
+      # If using Vault & a chat plugin, use %PRE% or %SUF% to get that player's prefix/suffix from their group
       spectator-chat: "&7[Spectator] %PLAYER%: %MSG%"
       # Chat format for lobby players and in game players. Tags: %ARENA%, %PLAYER%, %MSG%, %TEAMCOLOR%, %TEAMNAME%, %PREFIX%
+      # If using Vault & a chat plugin, use %PREFIX% or %SUFFIX% to get that player's prefix/suffix from their group
       arena-chat: "&8-%TEAMCOLOR%%TEAMNAME%&8- &a%PLAYER%&7: %MSG%"
 
     Countdown:

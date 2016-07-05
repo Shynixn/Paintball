@@ -5,7 +5,9 @@ import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
+import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -112,9 +114,14 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         chat = chat.replace("%PLAYER%", player.getName());
         chat = chat.replace("%ARENA%", this.getArena().getName());
 
+        if (Settings.VAULT && Settings.CHAT != null) {
+            chat = chat.replace("%PRE%", Settings.CHAT.getGroupPrefix(player.getWorld(), Settings.CHAT.getPrimaryGroup(player)));
+            chat = chat.replace("%SUF%", Settings.CHAT.getGroupSuffix(player.getWorld(), Settings.CHAT.getPrimaryGroup(player)));
+        }
+
         for (PaintballPlayer player : arena.getAllPlayers().values()) {
             if (!perTeamChat || perTeamChat && player.getTeam() == team)
-                player.getPlayer().sendMessage(chat);
+                player.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', chat));
         }
     }
 

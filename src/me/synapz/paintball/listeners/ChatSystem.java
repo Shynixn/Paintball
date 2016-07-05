@@ -5,6 +5,7 @@ import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.LobbyPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,7 +23,7 @@ public class ChatSystem implements Listener {
             if (a.USE_ARENA_CHAT) {
                 PaintballPlayer pbPlayer = a.getPaintballPlayer(player);
 
-                a.getPaintballPlayer(player).chat(e.getMessage(), pbPlayer instanceof ArenaPlayer && a.PER_TEAM_CHAT_ARENA || pbPlayer instanceof LobbyPlayer && a.PER_TEAM_CHAT_LOBBY);
+                a.getPaintballPlayer(player).chat(ChatColor.translateAlternateColorCodes('&', e.getMessage()), pbPlayer instanceof ArenaPlayer && a.PER_TEAM_CHAT_ARENA || pbPlayer instanceof LobbyPlayer && a.PER_TEAM_CHAT_LOBBY);
                 e.setCancelled(true);
             }
         }
