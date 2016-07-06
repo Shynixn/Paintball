@@ -406,7 +406,8 @@ public class Arena {
         String prefix = Messages.SIGN_TITLE.getString();
         for (SignLocation signLoc : getSignLocations().values()) {
             Location loc = signLoc.getLocation();
-            if (loc != null && loc.getBlock() != null && loc.getBlock().getState() != null && !(loc.getBlock().getState() instanceof Sign)) {
+
+            if (loc == null || loc.getBlock() == null || loc.getBlock().getState() == null || !(loc.getBlock().getState() instanceof Sign)) {
                 signLoc.removeSign();
                 return;
             }

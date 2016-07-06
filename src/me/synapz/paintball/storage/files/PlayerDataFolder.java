@@ -120,6 +120,7 @@ public class PlayerDataFolder extends PaintballFile {
         List<Double> statValues = new ArrayList<Double>();
         for (String stat : uuidList.values()) {
             stat = stat.replace("%", "");
+            stat = stat.replace(",", ".");
             statValues.add(Double.parseDouble(stat));
         }
 

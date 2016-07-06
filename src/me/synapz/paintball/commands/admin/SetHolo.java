@@ -20,6 +20,11 @@ public class SetHolo extends StatCommand {
         }
 
         if (args.length == 4) {
+            if (args[3].contains(",") || args[3].contains(".")) {
+                Messenger.error(player, Messages.PAGE_REAL_NUMBER);
+                return;
+            }
+
             try {
                 page = Integer.parseInt(args[3]);
             } catch (NumberFormatException exc) {
