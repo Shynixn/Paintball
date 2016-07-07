@@ -217,7 +217,7 @@ public class CoinItem extends ItemStack {
             if (this.requiresCoins() && player.getCoins() < this.getCoins())
                 builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_2).build());
 
-            if (this.requiresMoney() && Settings.VAULT && Settings.ECONOMY.getBalance(player.getPlayer()) < getMoney())
+            if (this.requiresMoney() && Settings.USE_ECONOMY && Settings.ECONOMY.getBalance(player.getPlayer()) < getMoney())
                 builder.add(new MessageBuilder(Messages.COIN_ITEM_ERROR_3).build());
 
             if (usesPerGame != null && usesPerGame == this.getUsesPerGame())

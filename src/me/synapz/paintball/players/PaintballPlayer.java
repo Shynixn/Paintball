@@ -114,7 +114,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
         chat = chat.replace("%PLAYER%", player.getName());
         chat = chat.replace("%ARENA%", this.getArena().getName());
 
-        if (Settings.VAULT && Settings.CHAT != null) {
+        if (Settings.USE_CHAT) {
             chat = chat.replace("%PRE%", Settings.CHAT.getGroupPrefix(player.getWorld(), Settings.CHAT.getPrimaryGroup(player)));
             chat = chat.replace("%SUF%", Settings.CHAT.getGroupSuffix(player.getWorld(), Settings.CHAT.getPrimaryGroup(player)));
         }

@@ -1,3 +1,7 @@
+v5.1.9
+- Separated Economy & Chat hooks so they are independent and chat can be used without economy
+- Fixed NPE when Chat provider is null
+
 v5.1.8
 - Fixed doubles throwing errors when parsing by turning 0,00 into 0.00
 - Fixed wrong logic when making sure a sign location was not null, now if it is null it will remove the sign instead of running it

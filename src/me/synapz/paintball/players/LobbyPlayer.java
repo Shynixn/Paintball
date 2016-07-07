@@ -63,7 +63,7 @@ public class LobbyPlayer extends PaintballPlayer {
         return new PaintballScoreboard(this, arena.LOBBY_COUNTDOWN, "Lobby:")
                 .addTeams(true)
                 .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), Settings.VAULT)
+                .addLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), Settings.USE_ECONOMY)
                 .addLine(ScoreboardLine.TEAM, team.getChatColor() + team.getTitleName())
                 .addLine(ScoreboardLine.STATUS, arena.getStateAsString())
                 .addLine(ScoreboardLine.MODE, arena.getArenaType().getShortName().toUpperCase())
@@ -82,7 +82,7 @@ public class LobbyPlayer extends PaintballPlayer {
         int size = arena.getActiveArenaTeamList().size()-1;
         pbSb.reloadTeams(true);
 
-        if (Settings.VAULT)
+        if (Settings.USE_ECONOMY)
             pbSb.reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), size+2);
         else
             size--;

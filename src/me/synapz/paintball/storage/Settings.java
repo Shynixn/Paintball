@@ -35,7 +35,8 @@ public class Settings {
     public static String AUTHOR;
     public static String SECONDARY;
 
-    public static boolean VAULT;
+    public static boolean USE_CHAT;
+    public static boolean USE_ECONOMY;
     public static boolean HOLOGRAPHIC_DISPLAYS;
 
     public static Economy ECONOMY = null;

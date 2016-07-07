@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static me.synapz.paintball.storage.Settings.SECONDARY;
-import static me.synapz.paintball.storage.Settings.VAULT;
 
 public class ArenaPlayer extends PaintballPlayer {
 
@@ -120,7 +119,7 @@ public class ArenaPlayer extends PaintballPlayer {
 
         double bal;
 
-        if (Settings.VAULT)
+        if (Settings.USE_ECONOMY)
             bal = Settings.ECONOMY.getBalance(player);
         else
             bal = 0;
@@ -128,7 +127,7 @@ public class ArenaPlayer extends PaintballPlayer {
         PaintballScoreboard sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
                 .addTeams(false)
                 .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.MONEY, shortenMoney(bal), Settings.VAULT)
+                .addLine(ScoreboardLine.MONEY, shortenMoney(bal), Settings.USE_ECONOMY)
                 .addLine(ScoreboardLine.KD, "0.00")
                 .addLine(ScoreboardLine.COIN, 0, arena.COINS)
                 .addLine(ScoreboardLine.KILL_STREAK, 0)
@@ -137,7 +136,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 .addLine(ScoreboardLine.HEALTH, Utils.makeHealth(arena.HITS_TO_KILL));
         if (arena.LIVES > 0)
             sb.addLine(ScoreboardLine.LIVES, Utils.makeHealth(arena.LIVES));
-        sb.addLine(ScoreboardLine.WAGER, arena.CURRENCY + formatter.format(arena.getWagerManager().getWager()), Settings.VAULT);
+        sb.addLine(ScoreboardLine.WAGER, arena.CURRENCY + formatter.format(arena.getWagerManager().getWager()), Settings.USE_ECONOMY);
         return sb.build();
     }
 
@@ -146,14 +145,14 @@ public class ArenaPlayer extends PaintballPlayer {
         if (pbSb == null)
             return;
 
-        double bal = Settings.VAULT ? Settings.ECONOMY.getBalance(player) : 0;
+        double bal = Settings.USE_ECONOMY ? Settings.ECONOMY.getBalance(player) : 0;
 
         int size = arena.getActiveArenaTeamList().size()-1;
 
         pbSb.reloadTeams(false);
 
-        if (Settings.VAULT)
-            pbSb.reloadLine(ScoreboardLine.MONEY, shortenMoney(bal), size+2, Settings.VAULT);
+        if (Settings.USE_ECONOMY)
+            pbSb.reloadLine(ScoreboardLine.MONEY, shortenMoney(bal), size+2, Settings.USE_ECONOMY);
         else
             size--;
 
@@ -183,7 +182,7 @@ public class ArenaPlayer extends PaintballPlayer {
             horse.setHealth(0);
         }
 
-        if (Settings.VAULT) {
+        if (Settings.USE_ECONOMY) {
             if (isWinner)
                 Settings.ECONOMY.depositPlayer(player, arena.MONEY_PER_WIN);
             else
@@ -498,7 +497,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * @param amount Amount to be added to player's balance
      */
     public void deposit(double amount){
-        if (!VAULT)
+        if (!Settings.USE_ECONOMY)
             return;
 
         money += amount;
@@ -506,7 +505,7 @@ public class ArenaPlayer extends PaintballPlayer {
     }
 
     public void withdraw(double amount) {
-        if (!VAULT)
+        if (!Settings.USE_ECONOMY)
             return;
 
         money -= amount;

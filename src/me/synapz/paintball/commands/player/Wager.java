@@ -25,7 +25,7 @@ public class Wager extends PaintballCommand {
         String wagerString = args[1];
         double wager;
 
-        if (!Settings.VAULT) {
+        if (!Settings.USE_ECONOMY) {
             Messenger.error(player, Messages.ENABLE_VAULT);
             return;
         }

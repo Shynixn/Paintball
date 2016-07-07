@@ -15,7 +15,7 @@ public class LTSArenaPlayer extends ArenaPlayer {
     public PaintballScoreboard createScoreboard() {
         double bal;
 
-        if (Settings.VAULT)
+        if (Settings.USE_ECONOMY)
             bal = Settings.ECONOMY.getBalance(player);
         else
             bal = 0;
@@ -23,7 +23,7 @@ public class LTSArenaPlayer extends ArenaPlayer {
         PaintballScoreboard sb = new PaintballScoreboard(this, arena.TIME, "Arena:")
                 .addTeams(false)
                 .addLine(ScoreboardLine.LINE)
-                .addLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, Settings.VAULT)
+                .addLine(ScoreboardLine.MONEY, arena.CURRENCY + bal, Settings.USE_ECONOMY)
                 .addLine(ScoreboardLine.KD, "0.00")
                 .addLine(ScoreboardLine.COIN, 0, arena.COINS)
                 .addLine(ScoreboardLine.KILL_STREAK, 0)

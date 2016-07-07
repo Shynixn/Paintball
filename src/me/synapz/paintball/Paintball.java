@@ -91,7 +91,8 @@ public class Paintball extends JavaPlugin implements Listener {
 
     private void setupVault() {
         if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
-            Settings.VAULT = false;
+            Settings.USE_CHAT = false;
+            Settings.USE_ECONOMY = false;
             return;
         }
 
@@ -99,16 +100,20 @@ public class Paintball extends JavaPlugin implements Listener {
         RegisteredServiceProvider<Chat> rspchat = getServer().getServicesManager().getRegistration(Chat.class);
 
         if (rsp == null) {
-            Settings.VAULT = false;
+            Settings.USE_ECONOMY = false;
+        } else if (rspchat == null) {
+            Settings.USE_CHAT = false;
         } else {
             Settings.CHAT = rspchat.getProvider();
             Settings.ECONOMY = rsp.getProvider();
-            Settings.VAULT = true;
+
+            Settings.USE_CHAT = true;
+            Settings.USE_ECONOMY = true;
 
             if (Settings.ECONOMY == null)
-                Settings.VAULT = false;
+                Settings.USE_ECONOMY = false;
             if (Settings.CHAT == null)
-                Settings.VAULT = false;
+                Settings.USE_CHAT = false;
         }
     }
 

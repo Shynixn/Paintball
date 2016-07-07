@@ -65,8 +65,8 @@ public class SpectatorPlayer extends PaintballPlayer {
     public PaintballScoreboard createScoreboard() {
         PaintballScoreboard scoreboard = new PaintballScoreboard(this, 1, "Spectator:")
                 .addTeams(false)
-                .addLine(ScoreboardLine.LINE, Settings.VAULT)
-                .addLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), Settings.VAULT)
+                .addLine(ScoreboardLine.LINE, Settings.USE_ECONOMY)
+                .addLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), Settings.USE_ECONOMY)
                 .build();
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 15));
         arena.updateAllScoreboard();
@@ -80,7 +80,7 @@ public class SpectatorPlayer extends PaintballPlayer {
         if (pbSb != null)
             pbSb.reloadTeams(false);
 
-        if (Settings.VAULT && pbSb != null)
+        if (Settings.USE_ECONOMY && pbSb != null)
             pbSb.reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), size+2);
     }
 
