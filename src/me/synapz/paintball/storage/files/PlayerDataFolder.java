@@ -110,14 +110,14 @@ public class PlayerDataFolder extends PaintballFile {
             put("Unknown", "");
         }};
 
-        Map<String, String> uuidList = new HashMap<String, String>();
+        Map<String, String> uuidList = new HashMap<>();
 
         for (UUIDFile uuidFile : Settings.getSettings().getPlayerDataFolder().getPlayerDataList()) {
             String uuid = uuidFile.getUUID().toString();
             uuidList.put(uuid, uuidFile.getPlayerStats().get(type));
         }
 
-        List<Double> statValues = new ArrayList<Double>();
+        List<Double> statValues = new ArrayList<>();
         for (String stat : uuidList.values()) {
             stat = stat.replace("%", "");
             stat = stat.replace(",", ".");
@@ -130,11 +130,11 @@ public class PlayerDataFolder extends PaintballFile {
             return result;//
         }
         for (String uuid : uuidList.keySet()) {
-            double value = Double.parseDouble(uuidList.get(uuid).replace("%", ""));
+            double value = Double.parseDouble(uuidList.get(uuid).replace("%", "").replace(",", "."));
             if (statValues.get(rank - 1) == value) {
                 UUIDFile uuidFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(UUID.fromString(uuid));
 
-                result.clear(); // remove all entries so we know there will only be 1 se// t of things returning
+                result.clear(); // remove all entries so we know there will only be 1 set of things returning
                 if (Bukkit.getServer().getPlayer(UUID.fromString(uuid)) == null) {
                     String name = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
                     String score = uuidFile.getPlayerStats().get(type);

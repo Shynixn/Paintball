@@ -27,10 +27,6 @@ public class GameFinishCountdown extends PaintballCountdown {
         arena.stopGame();
         tasks.remove(arena, this);
 
-        for (ArenaPlayer player : arena.getAllArenaPlayers()) {
-            player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        }
-
         for (ArenaPlayer winner : winners) {
             arena.sendCommands(winner.getPlayer(), arena.WIN_COMMANDS);
         }

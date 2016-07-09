@@ -164,7 +164,7 @@ public class UUIDFile extends PaintballFile {
     public String getKD() {
         int kills = getFileConfig().getInt(StatType.KILLS.getPath());
         int deaths = getFileConfig().getInt(StatType.DEATHS.getPath());
-        return String.format("%.2f", Utils.divide(kills, deaths));
+        return String.format("%.2f", Utils.divide(kills, deaths)).replace(",", ".");
     }
 
     // Returns a player's accuracy by dividing shots and hits
@@ -219,6 +219,8 @@ public class UUIDFile extends PaintballFile {
 
         if (cachedScoreboard != null)
             player.setScoreboard(cachedScoreboard);
+        else
+            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
         player.teleport(new PlayerLocation(this).getLocation());
         player.setFoodLevel(fileConfig.getInt(path + "Food"));
