@@ -1,4 +1,12 @@
+v5.2.4
+- Fixed Signs not all signs updating when one throws a NullPointerException
+- Fixed Signs thowing a NullPointerException when trying to update in a world which was not loaded yet
+
 v5.2.3
+- Working on SFG mode in background
+- Fixed listener bugs which threw errors on coin item click
+
+v5.2.2
 - Fixed players not getting their scoreboard back on arena finish
 - Fixed KD returning 0,00 instead of 0.00 causing NumberFormatExceptions
 
@@ -29,7 +37,7 @@ v5.1.5
 
 v5.1.4
 - Removed Piracy protection because it is now open source
-- Added /pb admin addcoin <player> <amount> @l2
+- Added /pb admin addcoin <player> <amount>
 
 v5.1.3
 - Forgot to sync other fixes with the recent .jar files >.> the last change is now fixed sorry.
