@@ -407,7 +407,10 @@ public class Arena {
         for (SignLocation signLoc : getSignLocations().values()) {
             Location loc = signLoc.getLocation();
 
-            if (loc == null || loc.getWorld() == null || loc.getBlock() == null || loc.getBlock().getState() == null || !(loc.getBlock().getState() instanceof Sign)) {
+            if (loc.getWorld() == null)
+                continue;
+
+            if (loc == null || loc.getBlock() == null || loc.getBlock().getState() == null || !(loc.getBlock().getState() instanceof Sign)) {
                 signLoc.removeSign();
                 continue;
             }

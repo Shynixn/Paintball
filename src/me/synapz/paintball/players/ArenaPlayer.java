@@ -93,7 +93,6 @@ public class ArenaPlayer extends PaintballPlayer {
         lives = arena.LIVES;
 
         player.setHealthScale(arena.HITS_TO_KILL*2); // times two because one health is a half heart, we want full hearts
-        player.setHealth(player.getMaxHealth());
 
         for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
             Player player = arenaPlayer.getPlayer();

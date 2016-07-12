@@ -1,3 +1,6 @@
+v5.2.5
+- Fixed NPE when trying to remove a sign in a null world. It will not remove until the world is loaded
+
 v5.2.4
 - Fixed Signs not all signs updating when one throws a NullPointerException
 - Fixed Signs thowing a NullPointerException when trying to update in a world which was not loaded yet

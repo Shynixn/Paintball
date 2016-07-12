@@ -83,7 +83,6 @@ public class Settings {
         MESSAGES = new MessagesFile(pb);
         DATABASE_FILE = new DatabaseFile(pb);
 
-        playerDataFolder = new PlayerDataFolder(pb);
         PlayerDataFolder.loadPlayerDataFiles();
         ITEMS = new ItemFile(pb);
         CoinItems.getCoinItems().loadItems();
