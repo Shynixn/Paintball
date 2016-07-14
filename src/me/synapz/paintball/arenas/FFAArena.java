@@ -41,4 +41,9 @@ public class FFAArena extends Arena {
     public boolean isMaxSet() {
         return true;
     }
+
+    @Override
+    public void balanceTeams() {
+        // balancing teams does not need to be performed on FFA
+    }
 }

@@ -23,7 +23,10 @@ public class Join extends TeamCommand {
             arena.joinLobby(player, null);
         } else if (args.length == 3) {
             // If the player types in /pb join Arena Team
-            arena.joinLobby(player, team);
+            if (player.hasPermission("paintball.join.team"))
+                arena.joinLobby(player, team);
+            else
+                Messenger.error(player, Messages.NO_PERMISSION);
         }
     }
 

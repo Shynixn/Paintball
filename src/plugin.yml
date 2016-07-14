@@ -81,4 +81,5 @@ permissions:
        paintball.leave.use: true
        paintball.spectate.use: true
        paintball.wager: true
+       paintball.join.team: true
        paintball.join.*: true

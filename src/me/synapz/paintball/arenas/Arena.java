@@ -737,6 +737,7 @@ public class Arena {
     }
 
     public void balanceTeams() {
+        /*
         for (LobbyPlayer lobbyPlayer : lobby) {
             Title title = new Title(Messages.BALENCING_TEAMS.getString());
             title.send(lobbyPlayer.getPlayer());
@@ -747,16 +748,21 @@ public class Arena {
 
         for (Team team : getActiveArenaTeamList()) {
             Team least = getTeamWithLessPlayers();
+
+            if (least == null)
+                continue;
+
             if (team.getSize() - least.getSize() > 1) {
                 choice = random.nextInt(lobby.size());
                 // Why can't i get a player based on their team? (team.getPlayers() ?)
-                while (!lobby.get(choice).getTeam().equals(team)) {
+                while (!lobby.get(choice-1).getTeam().equals(team)) {
                     choice = random.nextInt(lobby.size());
                 }
-                LobbyPlayer lobbyPlayer = lobby.get(choice);
+                LobbyPlayer lobbyPlayer = lobby.get(choice-1);
                 lobbyPlayer.setTeam(least);
             }
         }
+        */
     }
 
     public int getTeamScore(Team team) {
