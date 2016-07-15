@@ -168,6 +168,9 @@ public class Team {
     }
 
     public int getSize() {
+        if (size < 0)
+            return 0;
+        
        return size;
     }
 

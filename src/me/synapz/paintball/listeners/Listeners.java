@@ -42,7 +42,7 @@ public class Listeners extends BaseListener implements Listener {
             PaintballPlayer pbPlayer = arena.getPaintballPlayer(player);
 
             if (pbPlayer instanceof ArenaPlayer)
-                ((ArenaPlayer) pbPlayer).killHorse();
+                ((ArenaPlayer) pbPlayer).killHorse(true);
         }
     }
 
@@ -258,9 +258,15 @@ public class Listeners extends BaseListener implements Listener {
                     player.closeInventory();
                 }
                 e.setCancelled(true);
-            }else if (gamePlayer instanceof SpectatorPlayer) {
+            } else if (gamePlayer instanceof SpectatorPlayer) {
                 if (clickedItem.getType() == Material.SKULL_ITEM) {
-                    String targetName = ChatColor.stripColor(name.split(" ")[4]);
+                    String[] splitName = name.split(" ");
+                    String targetName = "";
+
+                    if (splitName.length >= 5) {
+                        targetName = splitName[4];
+                    }
+
                     ArenaPlayer target = (ArenaPlayer) a.getPaintballPlayer(Bukkit.getPlayer(targetName));
 
                     if (target == null) {

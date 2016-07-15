@@ -23,6 +23,7 @@ public class Wager extends PaintballCommand {
     public void onCommand(Player player, String[] args) {
         Arena arena = getArena(player);
         String wagerString = args[1];
+
         double wager;
 
         if (!Settings.USE_ECONOMY) {
@@ -42,7 +43,11 @@ public class Wager extends PaintballCommand {
             return;
         }
 
-        if (wager <= 0) {
+        // the string truncates 0.101010 to 0.10 (2 decimal places) then resets it to the wager
+        String formattedWager = String.format("%.2f", wager);
+        wager = Double.valueOf(formattedWager);
+
+        if (wager <= 0.00) {
             Messenger.error(player, Messages.WAGER_GREATER_THAN_0);
             return;
         }

@@ -144,6 +144,9 @@ public class ArenaPlayer extends PaintballPlayer {
         if (pbSb == null)
             return;
 
+        DecimalFormat formatter = new DecimalFormat("#.##");
+        formatter.setMinimumFractionDigits(2);
+
         double bal = Settings.USE_ECONOMY ? Settings.ECONOMY.getBalance(player) : 0;
 
         int size = arena.getActiveArenaTeamList().size()-1;
@@ -165,7 +168,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6)
                 .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8)
                 .reloadLine(ScoreboardLine.LIVES, Utils.makeHealth(lives), size+9, arena.LIVES > 0)
-                .reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), arena.LIVES > 0 ? size+10 : size+9);
+                .reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + formatter.format(arena.getWagerManager().getWager()), arena.LIVES > 0 ? size+10 : size+9);
 
     }
 
@@ -176,10 +179,7 @@ public class ArenaPlayer extends PaintballPlayer {
 
         arena.remakeSpectatorInventory();
 
-        if (horse != null) {
-            horse.getInventory().clear();
-            horse.setHealth(0);
-        }
+        this.killHorse(false);
 
         if (Settings.USE_ECONOMY) {
             if (isWinner)
@@ -242,7 +242,7 @@ public class ArenaPlayer extends PaintballPlayer {
         this.horseItem = item;
     }
 
-    public void killHorse() {
+    public void killHorse(boolean giveHorseItemback) {
         if (horse != null && horseItem != null) {
             horse.getInventory().clear();
             horse.setHealth(0);
@@ -252,11 +252,21 @@ public class ArenaPlayer extends PaintballPlayer {
             // Reassign old horse item to a new copy of the old one
             CoinItem newHorseItem = new CoinItem(horseItem);
             horseItem = newHorseItem;
-            // The old horse item is gone, so put a new one into their inventory
-            this.getPlayer().getInventory().addItem(horseItem.getItemStack(this, false));
             coinItems.put(newHorseItem.getItemName(true), newHorseItem);
             player.updateInventory();
+
+            if (giveHorseItemback)
+                giveBackHorseItem();
         }
+    }
+
+    private void giveBackHorseItem() {
+        if (horseItem == null)
+            return;
+
+        // The old horse item is gone, so put a new one into their inventory
+        this.getPlayer().getInventory().addItem(horseItem.getItemStack(this, false));
+        player.updateInventory();
     }
 
     /**
@@ -322,7 +332,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * @param arenaPlayer ArenaPlayer who was killed
      */
     public void kill(ArenaPlayer arenaPlayer, String action) {
-        // The grame is already over and they won so just do not do anything
+        // The game is already over and they won so just do not do anything
         if (arena.getTeamScore(team) == arena.MAX_SCORE)
             return;
         kills++;
@@ -422,13 +432,17 @@ public class ArenaPlayer extends PaintballPlayer {
                 health = arena.HITS_TO_KILL;
                 killStreak = 0;
                 updateScoreboard();
-                killHorse();
+
+                player.getPlayer().setHealth(player.getMaxHealth());
 
                 player.teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
 
                 new Title(Messages.ARENA_DIE_HEADER.getString(), Messages.ARENA_DIE_FOOTER.getString(), 10, 21, 10).send(player);
 
                 new ProtectionCountdown(arena.SAFE_TIME, this);
+
+                killHorse(false);
+                giveBackHorseItem();
             }
         }
     }

@@ -23,7 +23,7 @@ public class FFAArena extends Arena {
     @Override
     protected Team getTeamWithLessPlayers() {
         for (Team t : getActiveArenaTeamList()) {
-            if (t.getSize() == 0)
+            if (t.getSize() <= 0) // for some reason these numbers are negative, so it checks for under 0
                 return t;
         }
         return null;

@@ -1,3 +1,11 @@
+v5.2.7
+- Fixed ArrayIndexOutOfBoundsException when using Spectator menu on an invalid Skull
+- Fixed Nuke item from not giving player full health after they were nuked
+- Fixed Horse item potentially making people invincible
+- Fixed horse item potentially blocking leave arena teleportation (trapping them in the arena)
+- Fixed FFA teams counting in the negatives sometimes, resulting in games being locked out & wrong scoreboard numbers
+- Fixed people being able to wager numbers less than 0.01 & scoreboard showing numbers after 0.00
+
 v5.2.6
 - Temp removed auto Balancing Teams (at end) so there is no infinite loop
 - Added permission to join specific team, paintball.join.team

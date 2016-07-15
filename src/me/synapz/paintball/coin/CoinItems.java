@@ -176,7 +176,6 @@ public class CoinItems implements Listener {
                     if (team != safeTeam) {
                         gamePlayer.setHealth(safeTeam, 0);
                         arenaPlayer.kill(gamePlayer, this.getAction());
-                        gamePlayer.getPlayer().teleport(arena.getLocation(TeamLocation.TeamLocations.SPAWN, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.SPAWN))));
                     }
                 }
                 arenaPlayer.getPlayer().getInventory().remove(arenaPlayer.getPlayer().getItemInHand());
