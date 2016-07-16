@@ -21,11 +21,6 @@ public class GameFinishCountdown extends PaintballCountdown {
         this.winners = winners;
         this.losers = losers;
         this.tiers = tiers;
-
-        for (ArenaPlayer arenaPlayer : arena.getAllArenaPlayers()) {
-            arenaPlayer.killHorse(true);
-            arenaPlayer.setHorse(null, null);
-        }
     }
 
     public void onFinish() {

@@ -270,7 +270,13 @@ public class Listeners extends BaseListener implements Listener {
                         targetName = ChatColor.stripColor(splitName[4]);
                     }
 
-                    ArenaPlayer target = (ArenaPlayer) a.getPaintballPlayer(Bukkit.getPlayer(targetName));
+                    if (targetName.isEmpty()) {
+                        Messenger.error(player, "Could not find target.");
+                        e.setCancelled(true);
+                        return;
+                    }
+
+                    PaintballPlayer target = a.getPaintballPlayer(Bukkit.getPlayer(targetName));
 
                     if (target == null) {
                         Messenger.error(player, "Could not find target.");
@@ -278,7 +284,15 @@ public class Listeners extends BaseListener implements Listener {
                         return;
                     }
 
-                    ((SpectatorPlayer) gamePlayer).spectate(target);
+
+                    if (target instanceof ArenaPlayer) {
+                        ArenaPlayer toTeleportTo = (ArenaPlayer) target;
+                        ((SpectatorPlayer) gamePlayer).spectate(toTeleportTo);
+                    } else {
+                        Messenger.error(player, "Could not find target.");
+                        e.setCancelled(true);
+                        return;
+                    }
                 } else {
                     Messenger.error(player, Messages.ARENA_MOVE_ERROR);
                     e.setCancelled(true);

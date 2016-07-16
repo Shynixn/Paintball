@@ -1,3 +1,7 @@
+v5.2.9
+- Fixed Spectator menu not working & throwing errors
+- Fixed lag at the end of the game
+
 v5.2.8
 - Reduced wager amounts to only integers to prevent large decimal numbers
 - Fixed arenas which are stopping from showing 0/16 instead of the true size of arena players
