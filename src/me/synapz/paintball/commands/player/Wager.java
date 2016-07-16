@@ -24,7 +24,7 @@ public class Wager extends PaintballCommand {
         Arena arena = getArena(player);
         String wagerString = args[1];
 
-        double wager;
+        int wager;
 
         if (!Settings.USE_ECONOMY) {
             Messenger.error(player, Messages.ENABLE_VAULT);
@@ -37,17 +37,13 @@ public class Wager extends PaintballCommand {
         }
 
         try {
-            wager = Double.parseDouble(wagerString);
+            wager = Integer.parseInt(wagerString);
         } catch (NumberFormatException e) {
             Messenger.error(player, wagerString + " is not a valid number!");
             return;
         }
 
-        // the string truncates 0.101010 to 0.10 (2 decimal places) then resets it to the wager
-        String formattedWager = String.format("%.2f", wager);
-        wager = Double.valueOf(formattedWager);
-
-        if (wager <= 0.00) {
+        if (wager <= 0) {
             Messenger.error(player, Messages.WAGER_GREATER_THAN_0);
             return;
         }

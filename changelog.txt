@@ -1,3 +1,11 @@
+v5.2.8
+- Reduced wager amounts to only integers to prevent large decimal numbers
+- Fixed arenas which are stopping from showing 0/16 instead of the true size of arena players
+- Made it so Horse Item & Horses are killed during game finish countdown to prevent horsey abuse!
+- Coin Items & Coin Shop can no longer be used when game is finished
+- Maybe fixed teleportation sometimes being cancelled by other plugins
+- Fixed another fix which broke something else in the Spectator menu
+
 v5.2.7
 - Fixed ArrayIndexOutOfBoundsException when using Spectator menu on an invalid Skull
 - Fixed Nuke item from not giving player full health after they were nuked
@@ -19,7 +27,7 @@ v5.2.4
 
 v5.2.3
 - Working on SFG mode in background
-- Fixed listener bugs which threw errors on coin item click
+- Fixed listener bugs which threw err/ors on coin item click
 
 v5.2.2
 - Fixed players not getting their scoreboard back on arena finish

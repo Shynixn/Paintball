@@ -5,7 +5,7 @@ package me.synapz.paintball.wager;
  */
 public class WagerManager {
 
-    private double wagerAmount = 0d;
+    private int wagerAmount = 0;
 
     public void addWager(double amount) {
         wagerAmount += amount;
@@ -21,7 +21,7 @@ public class WagerManager {
         return savedWager;
     }
 
-    public double getWager() {
+    public int getWager() {
         return wagerAmount;
     }
 }

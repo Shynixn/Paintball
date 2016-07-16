@@ -99,6 +99,11 @@ public class CoinItemListener implements Listener {
             return;
         }
 
+        if (arena.getState() != Arena.ArenaState.IN_PROGRESS) {
+            Messenger.error(player, Messages.ARENA_IS_FINISHED);
+            return;
+        }
+
         long delay = clickedItem.getDelay();
 
         if (System.currentTimeMillis() - timeSinceLastShot.getOrDefault(player.getName(), delay) < delay) return;

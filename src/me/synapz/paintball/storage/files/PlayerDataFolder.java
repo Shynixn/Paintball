@@ -34,6 +34,12 @@ public class PlayerDataFolder extends PaintballFile {
             } catch (IllegalArgumentException exc) {
                 continue;
             }
+
+            if (Settings.getSettings().getPlayerDataFolder().getPlayerFile(uuid) != null) {
+                // is already in list, continue
+                continue;
+            }
+
             new UUIDFile(uuid);
         }
     }
@@ -129,6 +135,23 @@ public class PlayerDataFolder extends PaintballFile {
         if (statValues.size() < rank) {
             return result;//
         }
+
+        Collection<String> storedList = uuidList.keySet();
+        // removes duplicated entries
+        for (String uuid : storedList) {
+            int count = 0;
+
+            for (String tocCheckUUID : uuidList.keySet()) {
+                if (tocCheckUUID.equals(uuid))
+                    count++;
+            }
+
+            // there should be only 1 left, so it starts 1
+            for (int i = 1; i < count; i++) {
+                uuidList.remove(uuid);
+            }
+        }
+
         for (String uuid : uuidList.keySet()) {
             double value = Double.parseDouble(uuidList.get(uuid).replace("%", "").replace(",", "."));
             if (statValues.get(rank - 1) == value) {

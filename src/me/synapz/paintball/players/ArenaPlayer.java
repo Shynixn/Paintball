@@ -112,10 +112,6 @@ public class ArenaPlayer extends PaintballPlayer {
 
     @Override
     public PaintballScoreboard createScoreboard() {
-        // Having a money amount being #.# is ugly, i like #.## better.
-        DecimalFormat formatter = new DecimalFormat("#.##");
-        formatter.setMinimumFractionDigits(2);
-
         double bal;
 
         if (Settings.USE_ECONOMY)
@@ -135,7 +131,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 .addLine(ScoreboardLine.HEALTH, Utils.makeHealth(arena.HITS_TO_KILL));
         if (arena.LIVES > 0)
             sb.addLine(ScoreboardLine.LIVES, Utils.makeHealth(arena.LIVES));
-        sb.addLine(ScoreboardLine.WAGER, arena.CURRENCY + formatter.format(arena.getWagerManager().getWager()), Settings.USE_ECONOMY);
+        sb.addLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), Settings.USE_ECONOMY);
         return sb.build();
     }
 
@@ -143,9 +139,6 @@ public class ArenaPlayer extends PaintballPlayer {
     public void updateScoreboard() {
         if (pbSb == null)
             return;
-
-        DecimalFormat formatter = new DecimalFormat("#.##");
-        formatter.setMinimumFractionDigits(2);
 
         double bal = Settings.USE_ECONOMY ? Settings.ECONOMY.getBalance(player) : 0;
 
@@ -168,7 +161,7 @@ public class ArenaPlayer extends PaintballPlayer {
                 .reloadLine(ScoreboardLine.KILLS, String.valueOf(getKills()), size+6)
                 .reloadLine(ScoreboardLine.HEALTH, Utils.makeHealth(health), size+8)
                 .reloadLine(ScoreboardLine.LIVES, Utils.makeHealth(lives), size+9, arena.LIVES > 0)
-                .reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + formatter.format(arena.getWagerManager().getWager()), arena.LIVES > 0 ? size+10 : size+9);
+                .reloadLine(ScoreboardLine.WAGER, arena.CURRENCY + arena.getWagerManager().getWager(), arena.LIVES > 0 ? size+10 : size+9);
 
     }
 

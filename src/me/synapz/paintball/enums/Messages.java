@@ -128,7 +128,7 @@ public enum Messages {
     CANNOT_ATTACK_OWN_CORE("You cannot attack your own Core!"),
     KICK_PLAYER(Tag.PLAYER + " has been kicked from " + Tag.ARENA),
     PLAYER_NOT_IN_ARENA(Tag.PLAYER + " is not in an arena."),
-    BALENCING_TEAMS(Tag.THEME + "Balancing Teams"),
+    BALANCING_TEAMS(Tag.THEME + "Balancing Teams"),
     ERROR_PARSING("Error parsing command"),
     SPACE_FILLED("Sorry, your space has been filled by other player."),
     PLACES_NOT_FOUND("Sorry, no places could not be found in this arena."),

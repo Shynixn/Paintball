@@ -421,7 +421,7 @@ public class Arena {
             sign.setLine(0, prefix); // in case the prefix changes
             sign.setLine(1, getName()); // in case they rename it
             sign.setLine(2, getStateAsString() + " " + (counter == -1 ? "" : counter + "s"));
-            sign.setLine(3, getMax() <= 0 ? "0/0" : getLobbyPlayers().size() == getMax() || getAllArenaPlayers().size() == getMax() ? RED + "Full" : (state == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "" : state == ArenaState.IN_PROGRESS || state == ArenaState.STARTING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
+            sign.setLine(3, getMax() <= 0 ? "0/0" : getLobbyPlayers().size() == getMax() || getAllArenaPlayers().size() == getMax() ? RED + "Full" : (state == Arena.ArenaState.WAITING ? getLobbyPlayers().size() + "" : state == ArenaState.IN_PROGRESS || state == ArenaState.STARTING || state == ArenaState.STOPPING ? getAllArenaPlayers().size() + "" : "0") + "/" + getMax());
             sign.update();
         }
     }
@@ -731,15 +731,14 @@ public class Arena {
     }
 
     public void resetTeamScores() {
-        for (Team team : getActiveArenaTeamList()) {
+        for (Team team : getFullTeamList()) {
             teams.replace(team, teams.get(team), 0);
         }
     }
 
     public void balanceTeams() {
-        /*
         for (LobbyPlayer lobbyPlayer : lobby) {
-            Title title = new Title(Messages.BALENCING_TEAMS.getString());
+            Title title = new Title(Messages.BALANCING_TEAMS.getString());
             title.send(lobbyPlayer.getPlayer());
         }
 
@@ -762,7 +761,6 @@ public class Arena {
                 lobbyPlayer.setTeam(least);
             }
         }
-        */
     }
 
     public int getTeamScore(Team team) {

@@ -27,10 +27,8 @@ public class WagerListener implements Listener{
         PaintballPlayer paintballPlayer = event.getPaintballPlayer();
         WagerManager wagerManager = arena.getWagerManager();
 
-        double amount = event.getAmount();
-        DecimalFormat formatter = new DecimalFormat("#.##");
-        formatter.setMinimumFractionDigits(2);
-        String stringAmount = formatter.format(amount);
+        int amount = event.getAmount();
+        String stringAmount = String.valueOf(amount);
 
         WagerEvent.WagerResult result = event.getResult();
 
@@ -41,7 +39,7 @@ public class WagerListener implements Listener{
                     Messenger.info(paintballPlayer1.getPlayer(), Messages.PLAYER_WAGERED.getString()
                             .replace(Tag.PLAYER.toString(), paintballPlayer.getPlayer().getName())
                             .replace(Tag.WAGER_AMOUNT.toString(), stringAmount)
-                            .replace(Tag.WAGER_TOTAL.toString(), formatter.format(wagerManager.getWager()))
+                            .replace(Tag.WAGER_TOTAL.toString(), wagerManager.getWager() + "")
                             .replace(Tag.CURRENCY.toString(), arena.CURRENCY));
                 }
                 // Updates the current wager amount to scoreboards
@@ -55,8 +53,6 @@ public class WagerListener implements Listener{
 
     @EventHandler
     public void onWagerPayout(WagerPayoutEvent event) {
-        DecimalFormat formatter = new DecimalFormat("#.##");
-        formatter.setMinimumFractionDigits(2);
         List<ArenaPlayer> arenaPlayers = event.getArenaPlayers();
         double amount = event.getAmount();
         double amountToPay = amount / (double) arenaPlayers.size();
@@ -64,7 +60,7 @@ public class WagerListener implements Listener{
         for (ArenaPlayer arenaPlayer : arenaPlayers) {
             Settings.ECONOMY.depositPlayer(arenaPlayer.getPlayer().getName(), amountToPay);
             Messenger.msg(arenaPlayer.getPlayer(), Settings.THEME + "Total money gained from wager: " +
-                    Settings.SECONDARY + "$" + formatter.format(amountToPay));
+                    Settings.SECONDARY + "$" + amountToPay);
         }
     }
 }

@@ -8,16 +8,16 @@ import me.synapz.paintball.players.PaintballPlayer;
  */
 public class WagerEvent extends ArenaEvent {
 
-    private double amount;
+    private int amount;
     private WagerResult result;
 
-    public WagerEvent(PaintballPlayer paintballPlayer, Arena arena, double amount, WagerResult result) {
+    public WagerEvent(PaintballPlayer paintballPlayer, Arena arena, int amount, WagerResult result) {
         super(paintballPlayer, arena);
         this.amount = amount;
         this.result = result;
     }
 
-    public double getAmount() {
+    public int getAmount() {
         return amount;
     }
 

@@ -188,7 +188,10 @@ public class Listeners extends BaseListener implements Listener {
 
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (name.contains(Messages.ARENA_SHOP_NAME.getString())) {
-                    arenaPlayer.giveShop();
+                    if (arenaPlayer.getArena().getState() == Arena.ArenaState.IN_PROGRESS)
+                        arenaPlayer.giveShop();
+                    else
+                        Messenger.error(player, Messages.ARENA_IS_FINISHED);
                     e.setCancelled(true);
                     return;
                 }
@@ -264,13 +267,14 @@ public class Listeners extends BaseListener implements Listener {
                     String targetName = "";
 
                     if (splitName.length >= 5) {
-                        targetName = splitName[4];
+                        targetName = ChatColor.stripColor(splitName[4]);
                     }
 
                     ArenaPlayer target = (ArenaPlayer) a.getPaintballPlayer(Bukkit.getPlayer(targetName));
 
                     if (target == null) {
                         Messenger.error(player, "Could not find target.");
+                        e.setCancelled(true);
                         return;
                     }
 
@@ -730,7 +734,7 @@ public class Listeners extends BaseListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onTeleportInArena(PlayerTeleportEvent e) {
         Player whoTeleported = e.getPlayer();
 
