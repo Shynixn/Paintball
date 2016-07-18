@@ -125,6 +125,9 @@ public class PlayerDataFolder extends PaintballFile {
 
         List<Double> statValues = new ArrayList<>();
         for (String stat : uuidList.values()) {
+            if (stat == null)
+                continue;
+
             stat = stat.replace("%", "");
             stat = stat.replace(",", ".");
             statValues.add(Double.parseDouble(stat));
@@ -134,22 +137,6 @@ public class PlayerDataFolder extends PaintballFile {
         Collections.reverse(statValues);
         if (statValues.size() < rank) {
             return result;//
-        }
-
-        Collection<String> storedList = uuidList.keySet();
-        // removes duplicated entries
-        for (String uuid : storedList) {
-            int count = 0;
-
-            for (String tocCheckUUID : uuidList.keySet()) {
-                if (tocCheckUUID.equals(uuid))
-                    count++;
-            }
-
-            // there should be only 1 left, so it starts 1
-            for (int i = 1; i < count; i++) {
-                uuidList.remove(uuid);
-            }
         }
 
         for (String uuid : uuidList.keySet()) {

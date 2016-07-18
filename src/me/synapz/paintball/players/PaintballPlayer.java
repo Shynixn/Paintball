@@ -1,6 +1,7 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.Paintball;
+import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
@@ -24,6 +25,7 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
     protected Arena arena;
     protected Player player;
     protected Team team;
+    protected PlayerData playerData;
     protected Scoreboard sb;
     protected PaintballScoreboard pbSb;
     protected boolean giveItems = true;
@@ -81,6 +83,10 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
     Methods all the PaintballPlayer objects inherit
     -----
      */
+
+    public PlayerData getPlayerData() {
+        return playerData;
+    }
 
     // Gets the team the player is on
     public Team getTeam() {

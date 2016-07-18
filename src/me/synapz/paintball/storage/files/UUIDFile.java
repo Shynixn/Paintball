@@ -1,6 +1,8 @@
 package me.synapz.paintball.storage.files;
 
 import me.synapz.paintball.Paintball;
+import me.synapz.paintball.storage.PlayerData;
+import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.locations.PlayerLocation;
@@ -209,9 +211,10 @@ public class UUIDFile extends PaintballFile {
 
     // Restores all of the player's settings, then sets the info to null
     public void restorePlayerInformation(boolean stripValues) {
-        String path = "Player-State.";
-        if (!fileConfig.contains("Player-State")) return;
         Player player = Bukkit.getPlayer(uuid);
+        PlayerData playerData = ArenaManager.getArenaManager().getArena(player) != null && ArenaManager.getArenaManager().getArena(player).getPaintballPlayer(player) != null && ArenaManager.getArenaManager().getArena(player).getPaintballPlayer(player).getPlayerData() != null ? ArenaManager.getArenaManager().getArena(player).getPaintballPlayer(player).getPlayerData() : null;
+        boolean fromRam = playerData != null;
+
         ExperienceManager exp = new ExperienceManager(player);
 
         if (stripValues)
@@ -222,26 +225,33 @@ public class UUIDFile extends PaintballFile {
         else
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
-        player.teleport(new PlayerLocation(this).getLocation());
-        player.setFoodLevel(fileConfig.getInt(path + "Food"));
-        player.setGameMode(fileConfig.getString(path + "Gamemode") == null ? GameMode.SURVIVAL : GameMode.valueOf(fileConfig.getString(path + "Gamemode")));
-        player.setAllowFlight(fileConfig.getBoolean(path + "Allow-Flight"));
-        player.setFlying(fileConfig.getBoolean(path + "Flying"));
-        player.setWalkSpeed((float) fileConfig.getDouble(path + "Speed"));
-        exp.setExp(fileConfig.getInt(path + "Exp"));
-        double health = fileConfig.getDouble(path + "Health");
-        double scale = fileConfig.getDouble(path + "Health-Scale");
-        if (health > 20d || health < 0) {
-            player.setHealth(20);
+        if (fromRam) {
+            playerData.restore();
         } else {
-            player.setHealth(health);
+            String path = "Player-State.";
+            if (!fileConfig.contains("Player-State")) return;
+
+            player.teleport(new PlayerLocation(this).getLocation());
+            player.setFoodLevel(fileConfig.getInt(path + "Food"));
+            player.setGameMode(fileConfig.getString(path + "Gamemode") == null ? GameMode.SURVIVAL : GameMode.valueOf(fileConfig.getString(path + "Gamemode")));
+            player.setAllowFlight(fileConfig.getBoolean(path + "Allow-Flight"));
+            player.setFlying(fileConfig.getBoolean(path + "Flying"));
+            player.setWalkSpeed((float) fileConfig.getDouble(path + "Speed"));
+            exp.setExp(fileConfig.getInt(path + "Exp"));
+            double health = fileConfig.getDouble(path + "Health");
+            double scale = fileConfig.getDouble(path + "Health-Scale");
+            if (health > 20d || health < 0) {
+                player.setHealth(20);
+            } else {
+                player.setHealth(health);
+            }
+
+            player.setHealthScale(scale);
+
+            player.getInventory().setContents(getLastInventoryContents(path + "Inventory"));
+            player.getInventory().setArmorContents(getLastInventoryContents(path + "Armour"));
+            player.updateInventory();
         }
-
-        player.setHealthScale(scale);
-
-        player.getInventory().setContents(getLastInventoryContents(path + "Inventory"));
-        player.getInventory().setArmorContents(getLastInventoryContents(path + "Armour"));
-        player.updateInventory();
 
         fileConfig.set("Player-State", null);
         this.saveFile();

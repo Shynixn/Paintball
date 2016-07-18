@@ -1,5 +1,6 @@
 package me.synapz.paintball.players;
 
+import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.countdowns.ChangeTeamCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
@@ -42,6 +43,7 @@ public class LobbyPlayer extends PaintballPlayer {
      */
     @Override
     protected void initPlayer(boolean storeData) {
+        playerData = new PlayerData(this);
         UUIDFile uuidFile = new UUIDFile(player.getUniqueId());
         uuidFile.savePlayerInformation();
 

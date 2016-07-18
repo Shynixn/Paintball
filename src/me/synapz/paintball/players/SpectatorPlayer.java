@@ -1,5 +1,6 @@
 package me.synapz.paintball.players;
 
+import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.ScoreboardLine;
@@ -36,6 +37,7 @@ public class SpectatorPlayer extends PaintballPlayer {
     @Override
     protected void initPlayer(boolean storeData) {
         if (storeData) {
+            playerData = new PlayerData(this);
             uuidFile = new UUIDFile(player.getUniqueId());
             uuidFile.savePlayerInformation();
         }

@@ -1,3 +1,8 @@
+v5.3.0
+- Fixed crazy lag at the end of arenas
+- Fixed NullPointerException on PlayerDataFile
+- Big change to the way data is given back. Now things are stored in ram so information sets instant
+
 v5.2.9
 - Fixed Spectator menu not working & throwing errors
 - Fixed lag at the end of the game
