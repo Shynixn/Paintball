@@ -6,7 +6,6 @@ import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.events.ArenaClickItemEvent;
-import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
@@ -101,10 +100,11 @@ public class CoinItems implements Listener {
                 int duration = 1200;
 
                 for (PotionEffect effect : player.getActivePotionEffects()) {
-                    if (effect.getType() == PotionEffectType.SPEED) {
+                    if (effect.getType().equals(PotionEffectType.SPEED)) {
                         duration += effect.getDuration();
                     }
                 }
+                player.removePotionEffect(PotionEffectType.SPEED);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration, 2));
                 player.getInventory().remove(itemInHand);
             }

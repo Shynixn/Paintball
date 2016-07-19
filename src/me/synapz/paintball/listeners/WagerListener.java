@@ -60,7 +60,7 @@ public class WagerListener implements Listener{
         for (ArenaPlayer arenaPlayer : arenaPlayers) {
             Settings.ECONOMY.depositPlayer(arenaPlayer.getPlayer().getName(), amountToPay);
             Messenger.msg(arenaPlayer.getPlayer(), Settings.THEME + "Total money gained from wager: " +
-                    Settings.SECONDARY + "$" + amountToPay);
+                    Settings.SECONDARY + "$" + (int) amountToPay);
         }
     }
 }

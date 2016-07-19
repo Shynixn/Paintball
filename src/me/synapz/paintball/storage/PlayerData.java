@@ -8,8 +8,13 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlayerData {
+
+    private static final Map<UUID, PlayerData> data = new HashMap<>();
 
     private final ExperienceManager experienceManager;
     private final Player player;
@@ -26,6 +31,10 @@ public class PlayerData {
     private final ItemStack[] inventory;
     private final ItemStack[] armmour;
 
+    /**
+     * Safety stores a player's state
+     * @param paintballPlayer Player's data to store
+     */
     public PlayerData(PaintballPlayer paintballPlayer) {
         this.player = paintballPlayer.getPlayer();
         this.experienceManager = new ExperienceManager(player);
@@ -46,8 +55,13 @@ public class PlayerData {
         }
 
         this.armmour = player.getInventory().getArmorContents();
+
+        data.put(player.getUniqueId(), this);
     }
 
+    /**
+     * Resets a player's data from all the stored values
+     */
     public void restore() {
         player.teleport(location);
         player.setFoodLevel(food);
@@ -63,8 +77,28 @@ public class PlayerData {
             player.setHealth(health);
         }
 
+        player.setHealthScale(healthScale);
+
         player.getInventory().setContents(inventory);
         player.getInventory().setArmorContents(armmour);
         player.updateInventory();
+
+        data.put(player.getUniqueId(), this);
+    }
+
+    /**
+     * Resets a player's state by getting it from the hashmap if it is there, if not don't do anything
+     * @param player Player's state to reset
+     * @return Whether the state was reset or not
+     */
+    public static boolean reset(Player player) {
+        PlayerData playerData = data.get(player.getUniqueId());
+
+        if (playerData != null)
+            playerData.restore();
+        else
+            return false;
+
+        return true;
     }
 }

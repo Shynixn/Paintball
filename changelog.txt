@@ -1,3 +1,9 @@
+v5.3.1
+- Fixed wager payout message sending long messages
+- Fixed NullPointerException when kicking non in game players
+- Fixed Sugar Overdose time not appending to current time
+- Think I fixed players stats not fully resetting
+
 v5.3.0
 - Fixed crazy lag at the end of arenas
 - Fixed NullPointerException on PlayerDataFile

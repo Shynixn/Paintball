@@ -212,8 +212,6 @@ public class UUIDFile extends PaintballFile {
     // Restores all of the player's settings, then sets the info to null
     public void restorePlayerInformation(boolean stripValues) {
         Player player = Bukkit.getPlayer(uuid);
-        PlayerData playerData = ArenaManager.getArenaManager().getArena(player) != null && ArenaManager.getArenaManager().getArena(player).getPaintballPlayer(player) != null && ArenaManager.getArenaManager().getArena(player).getPaintballPlayer(player).getPlayerData() != null ? ArenaManager.getArenaManager().getArena(player).getPaintballPlayer(player).getPlayerData() : null;
-        boolean fromRam = playerData != null;
 
         ExperienceManager exp = new ExperienceManager(player);
 
@@ -225,9 +223,7 @@ public class UUIDFile extends PaintballFile {
         else
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
-        if (fromRam) {
-            playerData.restore();
-        } else {
+        if (!PlayerData.reset(player)) {
             String path = "Player-State.";
             if (!fileConfig.contains("Player-State")) return;
 

@@ -22,6 +22,7 @@ public class Kick extends PaintballCommand{
         Player toKick = Bukkit.getPlayer(playerName);
         if (toKick == null || ArenaManager.getArenaManager().getArena(toKick) == null) {
             Messenger.error(player, new MessageBuilder(Messages.PLAYER_NOT_IN_ARENA).replace(Tag.PLAYER, playerName).build());
+            return;
         }
 
         Arena arena = ArenaManager.getArenaManager().getArena(toKick);
