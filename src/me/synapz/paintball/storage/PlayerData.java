@@ -77,8 +77,6 @@ public class PlayerData {
      * Resets a player's data from all the stored values
      */
     public void restore() {
-        // TODO: Remove
-        Bukkit.broadcastMessage("Restoring...");
         player.teleport(location);
         player.setFoodLevel(food);
         player.setGameMode(gamemode);
@@ -95,14 +93,6 @@ public class PlayerData {
 
         player.setHealthScale(healthScale);
 
-        // TODO: Remove
-        for (ItemStack toGive : inventory) {
-            if (toGive != null)
-                Bukkit.broadcastMessage(toGive.getType().toString());
-        }
-
-        Bukkit.broadcastMessage("Loc: " + location);
-
         for (ItemStack inventoryItem : inventory) {
             player.getInventory().addItem(inventoryItem);
         }
@@ -116,9 +106,6 @@ public class PlayerData {
         player.updateInventory();
 
         data.remove(player.getUniqueId());
-
-        // TODO: Remove
-        Bukkit.broadcastMessage("Finished...");
     }
 
     /**
@@ -128,9 +115,6 @@ public class PlayerData {
      */
     public static boolean reset(Player player) {
         PlayerData playerData = data.get(player.getUniqueId());
-
-        // TODO: Remove
-        Bukkit.broadcastMessage(playerData + "");
 
         if (playerData != null)
             playerData.restore();
