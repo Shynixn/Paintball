@@ -8,6 +8,7 @@ import me.synapz.paintball.enums.*;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
+import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.UUIDFile;
 import me.synapz.paintball.utils.*;
@@ -46,15 +47,15 @@ public class Listeners extends BaseListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoinCheck(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
         UUIDFile uuidFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId());
 
-        if (uuidFile != null && uuidFile.getFileConfig().getConfigurationSection("Player-Data") != null) {
-            uuidFile.restorePlayerInformation(false);
-        }
+        // remove player from stored playerdata so their information is given back from file
+        PlayerData.removePlayer(player);
+        uuidFile.restorePlayerInformation(false);
     }
 
     //When a player joins, check if they are from a bungee server and send them to the arena if they ar

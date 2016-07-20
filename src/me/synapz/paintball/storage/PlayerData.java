@@ -3,14 +3,14 @@ package me.synapz.paintball.storage;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.utils.ExperienceManager;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerData {
 
@@ -28,8 +28,11 @@ public class PlayerData {
     private final int exp;
     private final double health;
     private final double healthScale;
-    private final ItemStack[] inventory;
-    private final ItemStack[] armmour;
+    private final List<ItemStack> inventory;
+    private final ItemStack helmet;
+    private final ItemStack chestplate;
+    private final ItemStack leggings;
+    private final ItemStack boots;
 
     /**
      * Safety stores a player's state
@@ -48,13 +51,24 @@ public class PlayerData {
         this.health = player.getHealth();
         this.healthScale = player.getHealthScale();
 
-        if (Paintball.IS_1_9) {
-            this.inventory = player.getInventory().getStorageContents();
-        } else {
-            this.inventory = player.getInventory().getContents();
-        }
+        inventory = new ArrayList<ItemStack>() {{
+            if (Paintball.IS_1_9) {
+                for (ItemStack item : player.getInventory().getStorageContents()) {
+                    if (item != null)
+                        add(item);
+                }
+            } else {
+                for (ItemStack item : player.getInventory().getContents()) {
+                    if (item != null)
+                        add(item);
+                }
+            }
+        }};
 
-        this.armmour = player.getInventory().getArmorContents();
+        helmet = player.getInventory().getHelmet();
+        chestplate = player.getInventory().getChestplate();
+        leggings = player.getInventory().getLeggings();
+        boots = player.getInventory().getBoots();
 
         data.put(player.getUniqueId(), this);
     }
@@ -63,6 +77,8 @@ public class PlayerData {
      * Resets a player's data from all the stored values
      */
     public void restore() {
+        // TODO: Remove
+        Bukkit.broadcastMessage("Restoring...");
         player.teleport(location);
         player.setFoodLevel(food);
         player.setGameMode(gamemode);
@@ -79,11 +95,30 @@ public class PlayerData {
 
         player.setHealthScale(healthScale);
 
-        player.getInventory().setContents(inventory);
-        player.getInventory().setArmorContents(armmour);
+        // TODO: Remove
+        for (ItemStack toGive : inventory) {
+            if (toGive != null)
+                Bukkit.broadcastMessage(toGive.getType().toString());
+        }
+
+        Bukkit.broadcastMessage("Loc: " + location);
+
+        for (ItemStack inventoryItem : inventory) {
+            player.getInventory().addItem(inventoryItem);
+        }
+
+        player.getInventory().setHelmet(helmet);
+        player.getInventory().setChestplate(chestplate);
+        player.getInventory().setLeggings(leggings);
+        player.getInventory().setBoots(boots);
+
+
         player.updateInventory();
 
-        data.put(player.getUniqueId(), this);
+        data.remove(player.getUniqueId());
+
+        // TODO: Remove
+        Bukkit.broadcastMessage("Finished...");
     }
 
     /**
@@ -94,11 +129,22 @@ public class PlayerData {
     public static boolean reset(Player player) {
         PlayerData playerData = data.get(player.getUniqueId());
 
+        // TODO: Remove
+        Bukkit.broadcastMessage(playerData + "");
+
         if (playerData != null)
             playerData.restore();
         else
             return false;
 
         return true;
+    }
+
+    /**
+     * When a player joins back after leaving, remove them this way their information is given from file and not from memeory
+     * @param player Player to remove from playerdata
+     */
+    public static void removePlayer(Player player) {
+        data.remove(player.getUniqueId());
     }
 }

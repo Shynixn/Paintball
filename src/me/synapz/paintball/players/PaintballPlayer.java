@@ -160,6 +160,8 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
     public void leaveDontSave() {
         restoreInfo = false;
         leave();
+        // remove player from stored playerdata so their information is given back from file
+        PlayerData.removePlayer(player);
     }
 
     private void loadScoreboard() {
