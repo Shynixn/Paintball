@@ -1,3 +1,6 @@
+v5.3.2
+- Fixed Teleportation being cancelled by other plugins
+
 v5.3.1
 - Fixed wager payout message sending long messages
 - Fixed NullPointerException when kicking non in game players

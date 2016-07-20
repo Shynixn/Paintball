@@ -748,7 +748,7 @@ public class Listeners extends BaseListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onTeleportInArena(PlayerTeleportEvent e) {
         Player whoTeleported = e.getPlayer();
 
