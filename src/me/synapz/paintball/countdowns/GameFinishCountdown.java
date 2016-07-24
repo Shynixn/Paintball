@@ -2,7 +2,6 @@ package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.players.ArenaPlayer;
-import org.bukkit.Bukkit;
 
 import java.util.List;
 

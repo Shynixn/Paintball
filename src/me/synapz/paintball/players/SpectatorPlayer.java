@@ -1,14 +1,14 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
+import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.storage.files.UUIDFile;
+import me.synapz.paintball.storage.files.UUIDPlayerDataFile;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
@@ -21,7 +21,7 @@ import static org.bukkit.ChatColor.*;
 
 public class SpectatorPlayer extends PaintballPlayer {
 
-    private UUIDFile uuidFile;
+    private UUIDPlayerDataFile uuidPlayerDataFile;
     public static final String TELEPORTER = RED + "" + Settings.THEME + String.valueOf(BOLD) + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleporter";
 
     public SpectatorPlayer(Arena a, Player p) {
@@ -38,8 +38,8 @@ public class SpectatorPlayer extends PaintballPlayer {
     protected void initPlayer(boolean storeData) {
         if (storeData) {
             playerData = new PlayerData(this);
-            uuidFile = new UUIDFile(player.getUniqueId());
-            uuidFile.savePlayerInformation();
+            uuidPlayerDataFile = new UUIDPlayerDataFile(player.getUniqueId());
+            uuidPlayerDataFile.savePlayerInformation();
         }
 
         player.setAllowFlight(true);

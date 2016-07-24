@@ -9,7 +9,7 @@ import me.synapz.paintball.enums.*;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.storage.files.UUIDFile;
+import me.synapz.paintball.storage.files.UUIDStatsFile;
 import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.FireworkEffect;
@@ -31,7 +31,7 @@ import static me.synapz.paintball.storage.Settings.SECONDARY;
 
 public class ArenaPlayer extends PaintballPlayer {
 
-    protected UUIDFile uuidFile;
+    protected UUIDStatsFile uuidStatsFile;
 
     private Map<Items, Integer> usesPerPlayer = new HashMap<>();
     private Map<String, CoinItem> coinItems = new HashMap<>();
@@ -66,7 +66,7 @@ public class ArenaPlayer extends PaintballPlayer {
             }
         }
 
-        this.uuidFile = new UUIDFile(player.getUniqueId());
+        this.uuidStatsFile = new UUIDStatsFile(player.getUniqueId());
     }
 
     public ArenaPlayer(SpectatorPlayer sp, Team team) {
@@ -194,23 +194,23 @@ public class ArenaPlayer extends PaintballPlayer {
         }
 
         if (countdown != null && timePlayed != 0) {
-            uuidFile.addToStat(StatType.TIME_PLAYED, timePlayed);
+            uuidStatsFile.addToStat(StatType.TIME_PLAYED, timePlayed);
         }
 
-        uuidFile.incrementStat(StatType.GAMES_PLAYED, this);
-        uuidFile.addToStat(StatType.HITS, hits);
-        uuidFile.addToStat(StatType.SHOTS, shots);
-        uuidFile.addToStat(StatType.KILLS, kills);
-        uuidFile.addToStat(StatType.DEATHS, deaths);
+        uuidStatsFile.incrementStat(StatType.GAMES_PLAYED, this);
+        uuidStatsFile.addToStat(StatType.HITS, hits);
+        uuidStatsFile.addToStat(StatType.SHOTS, shots);
+        uuidStatsFile.addToStat(StatType.KILLS, kills);
+        uuidStatsFile.addToStat(StatType.DEATHS, deaths);
 
         // killstreak is less than past killstreak, return
-        if (uuidFile.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath()) < heightKillStreak)
-            uuidFile.setStat(StatType.HIGEST_KILL_STREAK, heightKillStreak);
+        if (uuidStatsFile.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath()) < heightKillStreak)
+            uuidStatsFile.setStat(StatType.HIGEST_KILL_STREAK, heightKillStreak);
 
         if (stopGame())
             arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
 
-        uuidFile.saveFile();
+        uuidStatsFile.saveFile();
     }
 
     public void incrementHits() {

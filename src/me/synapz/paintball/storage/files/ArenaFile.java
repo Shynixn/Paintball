@@ -85,7 +85,7 @@ public class ArenaFile extends PaintballFile {
 
         Hologram hologram = HologramsAPI.createHologram(Paintball.getInstance(), loc);
 
-        for (String statLine : Settings.getSettings().getPlayerDataFolder().getPage(statType, page)) {
+        for (String statLine : Settings.getSettings().getStatsFolder().getPage(statType, page)) {
             hologram.appendTextLine(statLine);
         }
 

@@ -22,7 +22,7 @@ public class PaintballFile extends File {
 
         if (!this.exists()) {
             try {
-                if (this.getName().equals("playerdata")) {
+                if (!this.getName().endsWith(".yml")) {
                     mkdir();
                 } else {
                     onFirstCreate();
@@ -34,7 +34,7 @@ public class PaintballFile extends File {
             }
         }
 
-        if (!this.getName().equals("playerdata"))
+        if (this.getName().endsWith(".yml"))
             this.saveFile();
     }
 

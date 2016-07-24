@@ -4,14 +4,20 @@ import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
-import me.synapz.paintball.enums.*;
+import me.synapz.paintball.enums.Items;
+import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
+import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.FlagLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.storage.files.UUIDFile;
-import me.synapz.paintball.utils.*;
+import me.synapz.paintball.storage.files.UUIDPlayerDataFile;
+import me.synapz.paintball.utils.ActionBar;
+import me.synapz.paintball.utils.MessageBuilder;
+import me.synapz.paintball.utils.Messenger;
+import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -51,11 +57,12 @@ public class Listeners extends BaseListener implements Listener {
     public void onPlayerJoinCheck(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
-        UUIDFile uuidFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId());
+        UUIDPlayerDataFile uuidPlayerDataFile = Settings.getSettings().getPlayerDataFolder().getPlayerFile(player.getUniqueId());
+        if (uuidPlayerDataFile == null) return;
 
         // remove player from stored playerdata so their information is given back from file
         PlayerData.removePlayer(player);
-        uuidFile.restorePlayerInformation(false);
+        uuidPlayerDataFile.restorePlayerInformation(false);
     }
 
     //When a player joins, check if they are from a bungee server and send them to the arena if they ar

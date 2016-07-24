@@ -51,7 +51,7 @@ public class LeaderboardSigns implements Listener {
             return;
         }
 
-        Map<String, String> playerAndStat = Settings.getSettings().getPlayerDataFolder().getPlayerAtRank(i, type);
+        Map<String, String> playerAndStat = Settings.getSettings().getStatsFolder().getPlayerAtRank(i, type);
         String player = (String) playerAndStat.keySet().toArray()[0];
         String value = (String) playerAndStat.values().toArray()[0];
 
@@ -95,14 +95,14 @@ public class LeaderboardSigns implements Listener {
                 return;
 
             if (Messenger.signPermissionValidator(player, "paintball.leaderboard.use"))
-                Settings.getSettings().getPlayerDataFolder().getStats(player, sign.getLine(1));
+                Settings.getSettings().getStatsFolder().getStats(player, sign.getLine(1));
         } else if (state instanceof Skull) {
             SignLocation signLoc = Settings.ARENA.getSigns().get(Utils.simplifyLocation(e.getClickedBlock().getLocation()));
 
             if (signLoc != null && signLoc instanceof SkullLocation && Messenger.signPermissionValidator(e.getPlayer(), "paintball.leaderboard.use")) {
                 Skull skull = (Skull) state;
 
-                Settings.getSettings().getPlayerDataFolder().getStats(player, skull.getOwner());
+                Settings.getSettings().getStatsFolder().getStats(player, skull.getOwner());
             }
 
         }

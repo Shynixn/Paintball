@@ -10,7 +10,7 @@ import me.synapz.paintball.listeners.*;
 import me.synapz.paintball.metrics.Metrics;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.PaintballFile;
-import me.synapz.paintball.storage.files.UUIDFile;
+import me.synapz.paintball.storage.files.UUIDStatsFile;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -142,15 +142,15 @@ public class Paintball extends JavaPlugin implements Listener {
         }
 
         for (String uuid : playerdata.getConfigurationSection("Player-Data").getKeys(false)) {
-            UUIDFile uuidFile = new UUIDFile(UUID.fromString(uuid));
+            UUIDStatsFile uuidStatsFile = new UUIDStatsFile(UUID.fromString(uuid));
 
             for (StatType type : StatType.values()) {
                 String path = type.getPath();
-                if (!path.equals("Player-Data.none")) uuidFile.getFileConfig().set(path,
+                if (!path.equals("none")) uuidStatsFile.getFileConfig().set(path,
                         playerdata.getInt("Player-Data." + uuid + type.getRawPath()));
             }
 
-            uuidFile.saveFile();
+            uuidStatsFile.saveFile();
         }
         playerDataFile.delete();
 

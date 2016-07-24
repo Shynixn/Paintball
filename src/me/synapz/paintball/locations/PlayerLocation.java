@@ -1,32 +1,32 @@
 package me.synapz.paintball.locations;
 
-import me.synapz.paintball.storage.files.UUIDFile;
+import me.synapz.paintball.storage.files.UUIDPlayerDataFile;
 import org.bukkit.Location;
 
 public class PlayerLocation extends PaintballLocation {
 
     private final String path;
-    private final UUIDFile uuidFile;
+    private final UUIDPlayerDataFile uuidPlayerDataFile;
 
     // Creates a new TeamLocation AND sets the location in Arenas.yml
-    public PlayerLocation(UUIDFile uuidFile, Location location) {
+    public PlayerLocation(UUIDPlayerDataFile uuidPlayerDataFile, Location location) {
         super(null, location);
 
-        this.uuidFile = uuidFile;
-        this.path = "Player-State.Location";
+        this.uuidPlayerDataFile = uuidPlayerDataFile;
+        this.path = "Location";
 
         setLocation();
     }
 
     // Creates a new TeamLocation by looking inside of arenas.yml and grabbing it out
-    public PlayerLocation(UUIDFile uuidFile) {
-        super(null, uuidFile.getFileConfig().getString("Player-State.Location"));
+    public PlayerLocation(UUIDPlayerDataFile uuidPlayerDataFile) {
+        super(null, uuidPlayerDataFile.getFileConfig().getString("Location"));
 
-        this.uuidFile = uuidFile;
-        this.path = "Player-State.Location";
+        this.uuidPlayerDataFile = uuidPlayerDataFile;
+        this.path = "Location";
     }
 
     protected void setLocation() {
-        uuidFile.getFileConfig().set(path, super.toString());
+        uuidPlayerDataFile.getFileConfig().set(path, super.toString());
     }
 }

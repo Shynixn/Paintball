@@ -12,7 +12,7 @@ public class SetHolo extends StatCommand {
     @Override
     public void onCommand() {
         int page = 1;
-        int max = Settings.getSettings().getPlayerDataFolder().getMaxPage();
+        int max = Settings.getSettings().getStatsFolder().getMaxPage();
 
         if (!Settings.HOLOGRAPHIC_DISPLAYS) {
             Messenger.error(player, Messages.DOWNLOAD_HOLO, Messages.HOLO_LINK);

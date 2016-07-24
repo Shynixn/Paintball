@@ -48,7 +48,7 @@ public enum StatType {
     }
 
     public String getPath() {
-        return "Player-Data." + this.path;
+        return this.path;
     }
 
     public String getName() {

@@ -1,6 +1,6 @@
 package me.synapz.paintball.storage.database;
 
-import me.synapz.paintball.storage.files.UUIDFile;
+import me.synapz.paintball.storage.files.UUIDStatsFile;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -86,20 +86,20 @@ public class MySQLManager extends Database{
         int flag_drop = set.getInt("flags_dropped");
         int time_played = set.getInt("time_played");
 
-        config.set("Player-Data.UUID", uuid);
-        config.set("Player-Data.Username", username);
-        config.set("Player-Data.Kills", kills);
-        config.set("Player-Data.Deaths", deaths);
-        config.set("Player-Data.Shots", shots);
-        config.set("Player-Data.Hits", hits);
-        config.set("Player-Data.Highest-Kill-Streak", streak);
-        config.set("Player-Data.Games-Played", games);
-        config.set("Player-Data.Wins", wins);
-        config.set("Player-Data.Defeats", defeats);
-        config.set("Player-Data.Ties", ties);
-        config.set("Player-Data.Flags-Captured", flag_cap);
-        config.set("Player-Data.Flags-Dropped", flag_drop);
-        config.set("Player-Data.Time-Played", time_played);
+        config.set("UUID", uuid);
+        config.set("Username", username);
+        config.set("Kills", kills);
+        config.set("Deaths", deaths);
+        config.set("Shots", shots);
+        config.set("Hits", hits);
+        config.set("Highest-Kill-Streak", streak);
+        config.set("Games-Played", games);
+        config.set("Wins", wins);
+        config.set("Defeats", defeats);
+        config.set("Ties", ties);
+        config.set("Flags-Captured", flag_cap);
+        config.set("PFlags-Dropped", flag_drop);
+        config.set("Time-Played", time_played);
         return config;
     }
 
@@ -163,7 +163,7 @@ public class MySQLManager extends Database{
         set = statement.executeQuery();
         while (set.next()) {
             FileConfiguration config = buildConfig(set.getString("uuid"));
-            UUIDFile uuidFile = new UUIDFile(UUID.fromString(set.getString("uuid")));
+            UUIDStatsFile uuidStatsFile = new UUIDStatsFile(UUID.fromString(set.getString("uuid")));
         }
         PreparedStatement drop = connection.prepareStatement("DROP TABLE " + statsTable);
         drop.executeUpdate();

@@ -43,6 +43,7 @@ public class Settings {
     public static Chat CHAT = null;
 
     private static PlayerDataFolder playerDataFolder;
+    private static StatsFolder statsFolder;
     public static ArenaFile ARENA;
     public static MessagesFile MESSAGES;
     public static FileConfiguration ARENA_FILE;
@@ -82,8 +83,12 @@ public class Settings {
         loadSettings(); // loads everything in config.yml into constants
         MESSAGES = new MessagesFile(pb);
         DATABASE_FILE = new DatabaseFile(pb);
+
         playerDataFolder = new PlayerDataFolder(pb);
         PlayerDataFolder.loadPlayerDataFiles();
+        statsFolder = new StatsFolder(pb);
+        StatsFolder.loadStatsFiles();
+
         ITEMS = new ItemFile(pb);
         CoinItems.getCoinItems().loadItems();
         ARENA = new ArenaFile(pb);
@@ -99,13 +104,13 @@ public class Settings {
             DATABASE.init();
             if (Databases.SQL_ENABLED.getBoolean()) {
                 if (DATABASE.doesTableExist()) {
-                    for (UUIDFile uuidFile : playerDataFolder.getPlayerDataList()) {
-                        DATABASE.addStats(uuidFile.getFileConfig());
+                    for (UUIDStatsFile uuidStatsFile : statsFolder.getUUIDStatsList()) {
+                        DATABASE.addStats(uuidStatsFile.getFileConfig());
                     }
                 }
                 else {
-                    for (UUIDFile uuidFile : playerDataFolder.getPlayerDataList()) {
-                        DATABASE.updateTable(uuidFile.getFileConfig());
+                    for (UUIDStatsFile uuidStatsFile : statsFolder.getUUIDStatsList()) {
+                        DATABASE.updateTable(uuidStatsFile.getFileConfig());
                     }
                 }
             }
@@ -132,6 +137,10 @@ public class Settings {
 
     public PlayerDataFolder getPlayerDataFolder() {
         return playerDataFolder;
+    }
+
+    public StatsFolder getStatsFolder() {
+        return statsFolder;
     }
 
     public void reloadConfig() {

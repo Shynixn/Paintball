@@ -1,8 +1,6 @@
 package me.synapz.paintball.utils;
 
 import me.synapz.paintball.enums.UpdateResult;
-import me.synapz.paintball.storage.Settings;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedReader;

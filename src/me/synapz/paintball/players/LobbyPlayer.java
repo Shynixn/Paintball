@@ -1,6 +1,5 @@
 package me.synapz.paintball.players;
 
-import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.countdowns.ChangeTeamCountdown;
 import me.synapz.paintball.countdowns.LobbyCountdown;
@@ -10,8 +9,9 @@ import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
+import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.storage.files.UUIDFile;
+import me.synapz.paintball.storage.files.UUIDPlayerDataFile;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
@@ -44,8 +44,8 @@ public class LobbyPlayer extends PaintballPlayer {
     @Override
     protected void initPlayer(boolean storeData) {
         playerData = new PlayerData(this);
-        UUIDFile uuidFile = new UUIDFile(player.getUniqueId());
-        uuidFile.savePlayerInformation();
+        UUIDPlayerDataFile uuidPlayerDataFile = new UUIDPlayerDataFile(player.getUniqueId());
+        uuidPlayerDataFile.savePlayerInformation();
 
         player.teleport(arena.getLocation(TeamLocation.TeamLocations.LOBBY, team, Utils.randomNumber(team.getSpawnPointsSize(TeamLocation.TeamLocations.LOBBY))));
         team.playerJoinTeam();

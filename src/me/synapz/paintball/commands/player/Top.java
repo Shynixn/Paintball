@@ -14,7 +14,7 @@ public class Top extends StatCommand {
 
     public void onCommand() {
         int page = 1;
-        int maxPage = Settings.getSettings().getPlayerDataFolder().getMaxPage();
+        int maxPage = Settings.getSettings().getStatsFolder().getMaxPage();
 
         if (args.length == 3) {
             try {
@@ -33,7 +33,7 @@ public class Top extends StatCommand {
             }
         }
 
-        for (String statLine : Settings.getSettings().getPlayerDataFolder().getPage(type, page)) {
+        for (String statLine : Settings.getSettings().getStatsFolder().getPage(type, page)) {
             Messenger.msg(player, statLine);
         }
     }

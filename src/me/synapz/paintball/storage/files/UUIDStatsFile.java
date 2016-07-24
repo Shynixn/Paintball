@@ -1,48 +1,40 @@
 package me.synapz.paintball.storage.files;
 
 import me.synapz.paintball.Paintball;
-import me.synapz.paintball.storage.PlayerData;
-import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.locations.PlayerLocation;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.utils.ExperienceManager;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class UUIDFile extends PaintballFile {
+public class UUIDStatsFile extends PaintballFile {
 
     private final UUID uuid;
     private Scoreboard cachedScoreboard;
 
-    public UUIDFile(UUID uuid) {
-        super(Paintball.getInstance(), "/playerdata/" + uuid + ".yml");
+    public UUIDStatsFile(UUID uuid) {
+        super(Paintball.getInstance(), "/stats/" + uuid + ".yml");
 
         this.uuid = uuid;
-        Settings.getSettings().getPlayerDataFolder().addPlayerFile(this);
+        Settings.getSettings().getStatsFolder().addPlayerFile(this);
     }
 
     @Override
     public void onFirstCreate() {
-        UUID uuid = UUID.fromString(this.getName().replace(".yml", "").replace("/playerdata/", ""));
+        UUID uuid = UUID.fromString(this.getName().replace(".yml", "").replace("/stats/", ""));
 
         if (getFileConfig().getConfigurationSection("Player-Data") == null) {
-            getFileConfig().set("Player-Data.UUID", uuid.toString());
-            getFileConfig().set("Player-Data.Username", Bukkit.getOfflinePlayer(uuid).getName());
+            getFileConfig().set("UUID", uuid.toString());
+            getFileConfig().set("Username", Bukkit.getOfflinePlayer(uuid).getName());
             // set the values to 0
             for (StatType value : StatType.values()) {
                 if (!value.isCalculated())
@@ -176,98 +168,9 @@ public class UUIDFile extends PaintballFile {
         return String.format("%d%s", (int) Math.round(Utils.divide(hits, shots)*100), "%");
     }
 
-    // Saves player information to PlayerData file
-    // Called when the player enters an arena
-    public void savePlayerInformation() {
-        String path = "Player-State.";
-        Player player = Bukkit.getPlayer(uuid);
-        ExperienceManager exp = new ExperienceManager(player);
-
-        new PlayerLocation(this, player.getLocation());
-
-        if (player.getScoreboard() != null)
-            cachedScoreboard = player.getScoreboard();
-
-        fileConfig.set(path + "Gamemode", player.getGameMode().toString());
-        fileConfig.set(path + "Food", player.getFoodLevel());
-        fileConfig.set(path + "Health", player.getHealth());
-        fileConfig.set(path + "Health-Scale", player.getHealthScale());
-        fileConfig.set(path + "Exp", exp.getCurrentExp());
-        fileConfig.set(path + "Allow-Flight", player.getAllowFlight());
-        fileConfig.set(path + "Flying", player.isFlying());
-        fileConfig.set(path + "Speed", player.getWalkSpeed());
-
-        if (Paintball.IS_1_9) {
-            fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getStorageContents()));
-        } else {
-            fileConfig.set(path + "Inventory", Arrays.asList(player.getInventory().getContents()));
-        }
-
-        fileConfig.set(path + "Armour", Arrays.asList(player.getInventory().getArmorContents()));
-
-        this.saveFile();
-        Utils.stripValues(player);
-    }
-
-    // Restores all of the player's settings, then sets the info to null
-    public void restorePlayerInformation(boolean stripValues) {
-        Player player = Bukkit.getPlayer(uuid);
-
-        ExperienceManager exp = new ExperienceManager(player);
-
-        if (stripValues)
-            Utils.stripValues(player);
-
-        if (cachedScoreboard != null)
-            player.setScoreboard(cachedScoreboard);
-        else
-            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-
-        if (!PlayerData.reset(player)) {
-            String path = "Player-State.";
-            if (!fileConfig.contains("Player-State")) return;
-
-            player.teleport(new PlayerLocation(this).getLocation());
-            player.setFoodLevel(fileConfig.getInt(path + "Food"));
-            player.setGameMode(fileConfig.getString(path + "Gamemode") == null ? GameMode.SURVIVAL : GameMode.valueOf(fileConfig.getString(path + "Gamemode")));
-            player.setAllowFlight(fileConfig.getBoolean(path + "Allow-Flight"));
-            player.setFlying(fileConfig.getBoolean(path + "Flying"));
-            player.setWalkSpeed((float) fileConfig.getDouble(path + "Speed"));
-            exp.setExp(fileConfig.getInt(path + "Exp"));
-            double health = fileConfig.getDouble(path + "Health");
-            double scale = fileConfig.getDouble(path + "Health-Scale");
-            if (health > 20d || health < 0) {
-                player.setHealth(20);
-            } else {
-                player.setHealth(health);
-            }
-
-            player.setHealthScale(scale);
-
-            player.getInventory().setContents(getLastInventoryContents(path + "Inventory"));
-            player.getInventory().setArmorContents(getLastInventoryContents(path + "Armour"));
-            player.updateInventory();
-        }
-
-        fileConfig.set("Player-State", null);
-        this.saveFile();
-    }
-
     // Increments the set path by one
     private void addOneToPath(String path) {
         getFileConfig().set(path, getFileConfig().getInt(path) + 1);
         if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
-    }
-
-    private ItemStack[] getLastInventoryContents(String path) {
-        ItemStack[] items = new ItemStack[fileConfig.getList(path).size()];
-        int count = 0;
-        for (Object item : fileConfig.getList(path).toArray()) {
-            if (item instanceof ItemStack) {
-                items[count] = new ItemStack((ItemStack)item);
-                count++;
-            }
-        }
-        return items;
     }
 }

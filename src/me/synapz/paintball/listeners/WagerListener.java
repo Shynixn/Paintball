@@ -13,7 +13,6 @@ import me.synapz.paintball.wager.WagerManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**

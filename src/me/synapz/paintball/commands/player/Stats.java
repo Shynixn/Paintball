@@ -11,7 +11,7 @@ public class Stats extends PaintballCommand {
     public void onCommand(Player player, String[] args) {
         String targetName = args.length == 1 ? player.getName() : args[1];
 
-        Settings.getSettings().getPlayerDataFolder().getStats(player, targetName);
+        Settings.getSettings().getStatsFolder().getStats(player, targetName);
     }
 
     public String getName() {

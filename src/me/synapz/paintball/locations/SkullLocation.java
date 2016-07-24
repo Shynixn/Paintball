@@ -47,7 +47,7 @@ public class SkullLocation extends SignLocation {
 
         skull.setRotation(face);
         skull.setSkullType(SkullType.PLAYER);
-        skull.setOwner((String) Settings.getSettings().getPlayerDataFolder().getPlayerAtRank(rank, statType).keySet().toArray()[0]);
+        skull.setOwner((String) Settings.getSettings().getStatsFolder().getPlayerAtRank(rank, statType).keySet().toArray()[0]);
         skull.update();
     }
 

@@ -1,10 +1,6 @@
 package me.synapz.paintball.enums;
 
-import me.synapz.paintball.storage.Settings;
 import org.bukkit.ChatColor;
-
-import static org.bukkit.ChatColor.GRAY;
-import static org.bukkit.ChatColor.GREEN;
 
 public enum Messages {
 

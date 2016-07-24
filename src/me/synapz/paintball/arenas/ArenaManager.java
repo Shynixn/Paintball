@@ -169,7 +169,7 @@ public class ArenaManager {
                         Map<String, String> playerAndStat;
 
                         try {
-                            playerAndStat = Settings.getSettings().getPlayerDataFolder().getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+                            playerAndStat = Settings.getSettings().getStatsFolder().getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
                         } catch (NumberFormatException exc) {
                             continue;
                         }
@@ -208,7 +208,7 @@ public class ArenaManager {
                 }
                 holo.clearLines();
 
-                for (String statLine : Settings.getSettings().getPlayerDataFolder().getPage(type, page)) {
+                for (String statLine : Settings.getSettings().getStatsFolder().getPage(type, page)) {
                     holo.appendTextLine(statLine);
                 }
             }

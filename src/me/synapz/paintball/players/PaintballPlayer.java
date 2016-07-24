@@ -1,11 +1,11 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.Paintball;
-import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
+import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Utils;
 import net.md_5.bungee.api.ChatColor;

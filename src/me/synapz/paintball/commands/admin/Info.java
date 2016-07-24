@@ -10,7 +10,6 @@ import me.synapz.paintball.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static me.synapz.paintball.storage.Settings.*;
 import static org.bukkit.ChatColor.RESET;

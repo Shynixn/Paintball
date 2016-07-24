@@ -3,14 +3,14 @@ package me.synapz.paintball.storage;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.utils.ExperienceManager;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlayerData {
 
@@ -28,7 +28,7 @@ public class PlayerData {
     private final int exp;
     private final double health;
     private final double healthScale;
-    private final List<ItemStack> inventory;
+    private final ItemStack[] inventory;
     private final ItemStack helmet;
     private final ItemStack chestplate;
     private final ItemStack leggings;
@@ -51,24 +51,15 @@ public class PlayerData {
         this.health = player.getHealth();
         this.healthScale = player.getHealthScale();
 
-        inventory = new ArrayList<ItemStack>() {{
-            if (Paintball.IS_1_9) {
-                for (ItemStack item : player.getInventory().getStorageContents()) {
-                    if (item != null)
-                        add(item);
-                }
-            } else {
-                for (ItemStack item : player.getInventory().getContents()) {
-                    if (item != null)
-                        add(item);
-                }
-            }
-        }};
+        if(Paintball.IS_1_9)
+            this.inventory = player.getInventory().getStorageContents();
+        else
+            this.inventory = player.getInventory().getContents();
 
-        helmet = player.getInventory().getHelmet();
-        chestplate = player.getInventory().getChestplate();
-        leggings = player.getInventory().getLeggings();
-        boots = player.getInventory().getBoots();
+        this.helmet = player.getInventory().getHelmet();
+        this.chestplate = player.getInventory().getChestplate();
+        this.leggings = player.getInventory().getLeggings();
+        this.boots = player.getInventory().getBoots();
 
         data.put(player.getUniqueId(), this);
     }
@@ -92,16 +83,12 @@ public class PlayerData {
         }
 
         player.setHealthScale(healthScale);
-
-        for (ItemStack inventoryItem : inventory) {
-            player.getInventory().addItem(inventoryItem);
-        }
+        player.getInventory().setContents(inventory);
 
         player.getInventory().setHelmet(helmet);
         player.getInventory().setChestplate(chestplate);
         player.getInventory().setLeggings(leggings);
         player.getInventory().setBoots(boots);
-
 
         player.updateInventory();
 
