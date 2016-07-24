@@ -1,5 +1,6 @@
 package me.synapz.paintball.storage.files;
 
+import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,7 +27,7 @@ public class PaintballFile extends File {
                     mkdir();
                 } else {
                     onFirstCreate();
-                    createNewFile();
+                    if (!Databases.SQL_ENABLED.getBoolean() && !this.getPath().contains("stats")) createNewFile();
                 }
             } catch (IOException e) {
                 Messenger.error(Bukkit.getConsoleSender(), "Could not create " + name + ". Stack trace: ");

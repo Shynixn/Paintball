@@ -823,6 +823,7 @@ public class Arena {
     }
 
     public void removePlayer(PaintballPlayer pbPlayer, boolean restoreData) {
+        Bukkit.broadcastMessage("UUID TO REMOVE: " + pbPlayer.getPlayer().getUniqueId());
         if (restoreData)
             Settings.getSettings().getPlayerDataFolder().getPlayerFile(pbPlayer.getPlayer().getUniqueId()).restorePlayerInformation(true);
         allPlayers.remove(pbPlayer.getPlayer(), pbPlayer);

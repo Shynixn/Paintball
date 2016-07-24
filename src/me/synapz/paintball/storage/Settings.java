@@ -106,13 +106,16 @@ public class Settings {
                 if (DATABASE.doesTableExist()) {
                     for (UUIDStatsFile uuidStatsFile : statsFolder.getUUIDStatsList()) {
                         DATABASE.addStats(uuidStatsFile.getFileConfig());
+                        uuidStatsFile.delete();
                     }
                 }
                 else {
                     for (UUIDStatsFile uuidStatsFile : statsFolder.getUUIDStatsList()) {
                         DATABASE.updateTable(uuidStatsFile.getFileConfig());
+                        uuidStatsFile.delete();
                     }
                 }
+
             }
         } catch (SQLException e) {
             if (Databases.SQL_ENABLED.getBoolean()) {

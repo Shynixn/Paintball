@@ -10,8 +10,10 @@ import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.UUIDStatsFile;
+import me.synapz.paintball.utils.FireworkUtil;
 import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
+import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -66,7 +68,7 @@ public class ArenaPlayer extends PaintballPlayer {
             }
         }
 
-        this.uuidStatsFile = new UUIDStatsFile(player.getUniqueId());
+        this.uuidStatsFile = Settings.getSettings().getStatsFolder().getPlayerFile(lobbyPlayer.getPlayer().getUniqueId());
     }
 
     public ArenaPlayer(SpectatorPlayer sp, Team team) {
@@ -207,8 +209,8 @@ public class ArenaPlayer extends PaintballPlayer {
         if (uuidStatsFile.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath()) < heightKillStreak)
             uuidStatsFile.setStat(StatType.HIGEST_KILL_STREAK, heightKillStreak);
 
-        if (stopGame())
-            arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
+//        if (stopGame())
+//            arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
 
         uuidStatsFile.saveFile();
     }
@@ -327,6 +329,11 @@ public class ArenaPlayer extends PaintballPlayer {
         // The game is already over and they won so just do not do anything
         if (arena.getTeamScore(team) == arena.MAX_SCORE)
             return;
+
+        // Firework stuff
+        FireworkEffect effect = FireworkEffect.builder().flicker(false).trail(true).with(FireworkEffect.Type.BALL).withColor(Color.BLUE).withFade(Color.ORANGE).build();
+        FireworkUtil.spawnFirework(effect, arenaPlayer.getPlayer().getLocation());
+
         kills++;
         killStreak++;
 
@@ -414,11 +421,6 @@ public class ArenaPlayer extends PaintballPlayer {
             // If they have no more lives turn them into a spectator player until the game ends
             if (arena.LIVES > 0 && lives == 0) {
                 turnToSpectator();
-
-                if (stopGame())
-                    arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
-
-                return;
             } else {
                 // Reloads their settings for them to go back... Sets their health, kill streak, location, protection and updates their scoreboard
                 health = arena.HITS_TO_KILL;
@@ -448,10 +450,8 @@ public class ArenaPlayer extends PaintballPlayer {
         // they leave the arena player arraylist so remake the inventories to show without them also
         arena.remakeSpectatorInventory();
 
-        if (arena.getAllArenaPlayers().size() <= 1) {
+        if (arena.getAllArenaPlayers().size() <= 1)
             arena.win(Arrays.asList(((ArenaPlayer) arena.getAllArenaPlayers().toArray()[0]).getTeam()));
-            return;
-        }
     }
 
     /**

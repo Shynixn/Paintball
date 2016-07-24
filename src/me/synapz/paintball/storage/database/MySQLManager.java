@@ -1,7 +1,6 @@
 package me.synapz.paintball.storage.database;
 
 import me.synapz.paintball.storage.files.UUIDStatsFile;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -48,19 +47,17 @@ public class MySQLManager extends Database{
     @Override
     public void updateTable(FileConfiguration config) throws SQLException {
         openConnection();
-        if (!config.contains("Player-Data")) return;
-        ConfigurationSection section = config.getConfigurationSection("Player-Data");
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO " + statsTable + " VALUES('" + section.getString("UUID") + "'" +
-                ",'" + section.getString("Username") + "'," + section.getInt("Kills") + "," + section.getInt("Deaths") + "," + section.getInt("Shots") +
-                "," + section.getInt("Hits") + "," + section.getInt("Highest-Kill-Streak") + "," + section.getInt("Games-Played") +
-                "," + section.getInt("Wins") + "," + section.getInt("Defeats") + "," + section.getInt("Ties") +
-                "," + section.getInt("Flags-Captured") + "," + section.getInt("Flags-Dropped") + "," + section.getInt("Time-Played") +
-                ") ON DUPLICATE KEY UPDATE" + " username = '" + section.getString("Username") + "',kills = " + section.getInt("Kills") + ",deaths = " + section.getInt("Deaths") +
-                ",shots = " + section.getInt("Shots") + ",hits = " + section.getInt("Hits") + ",highest_kill_streak = " +
-                section.getInt("Highest-Kill-Streak") + ",games_played = " + section.getInt("Games-Played") + ",wins = " +
-                section.getInt("Wins") + ",defeats = " + section.getInt("Defeats") + ",ties = " + section.getInt("Ties") +
-                ",flags_captured = " + section.getInt("Flags-Captured") + ",flags_dropped = " + section.getInt("Flags-Dropped") +
-                ",time_played = " + section.getInt("Time-Played") + ";");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO " + statsTable + " VALUES('" + config.getString("UUID") + "'" +
+                ",'" + config.getString("Username") + "'," + config.getInt("Kills") + "," + config.getInt("Deaths") + "," + config.getInt("Shots") +
+                "," + config.getInt("Hits") + "," + config.getInt("Highest-Kill-Streak") + "," + config.getInt("Games-Played") +
+                "," + config.getInt("Wins") + "," + config.getInt("Defeats") + "," + config.getInt("Ties") +
+                "," + config.getInt("Flags-Captured") + "," + config.getInt("Flags-Dropped") + "," + config.getInt("Time-Played") +
+                ") ON DUPLICATE KEY UPDATE" + " username = '" + config.getString("Username") + "',kills = " + config.getInt("Kills") + ",deaths = " + config.getInt("Deaths") +
+                ",shots = " + config.getInt("Shots") + ",hits = " + config.getInt("Hits") + ",highest_kill_streak = " +
+                config.getInt("Highest-Kill-Streak") + ",games_played = " + config.getInt("Games-Played") + ",wins = " +
+                config.getInt("Wins") + ",defeats = " + config.getInt("Defeats") + ",ties = " + config.getInt("Ties") +
+                ",flags_captured = " + config.getInt("Flags-Captured") + ",flags_dropped = " + config.getInt("Flags-Dropped") +
+                ",time_played = " + config.getInt("Time-Played") + ";");
         statement.executeUpdate();
     }
 
@@ -111,18 +108,15 @@ public class MySQLManager extends Database{
     @Override
     public void addStats(FileConfiguration config) throws SQLException {
         openConnection();
-        if (!config.contains("Player-Data")) return;
-
-        ConfigurationSection section = config.getConfigurationSection("Player-Data");
         PreparedStatement statement = connection.prepareStatement("UPDATE " + statsTable + " SET kills = kills + " +
-                section.getInt("Kills") + ",deaths = deaths + " + section.getInt("Deaths") +
-                ",shots = shots + " + section.getInt("Shots") + ",hits = hits + " + section.getInt("Hits") +
-                ",highest_kill_streak = highest_kill_streak + " + section.getInt("Highest-Kill-Streak") +
-                ",games_played = games_played + " + section.getInt("Games-Played") + ",wins = wins + " +
-                section.getInt("Wins") + ",defeats = defeats + " + section.getInt("Defeats") + ",ties = ties + " +
-                section.getInt("Ties") + ",flags_captured = flags_captured + " + section.getInt("Flags-Captured") +
-                ",flags_dropped = flags_dropped + " + section.getInt("Flags-Dropped") + ",time_played = time_played + " +
-                section.getInt("Time-Played") + " WHERE (uuid = '" + section.getString("UUID") + "');");
+                config.getInt("Kills") + ",deaths = deaths + " + config.getInt("Deaths") +
+                ",shots = shots + " + config.getInt("Shots") + ",hits = hits + " + config.getInt("Hits") +
+                ",highest_kill_streak = highest_kill_streak + " + config.getInt("Highest-Kill-Streak") +
+                ",games_played = games_played + " + config.getInt("Games-Played") + ",wins = wins + " +
+                config.getInt("Wins") + ",defeats = defeats + " + config.getInt("Defeats") + ",ties = ties + " +
+                config.getInt("Ties") + ",flags_captured = flags_captured + " + config.getInt("Flags-Captured") +
+                ",flags_dropped = flags_dropped + " + config.getInt("Flags-Dropped") + ",time_played = time_played + " +
+                config.getInt("Time-Played") + " WHERE (uuid = '" + config.getString("UUID") + "');");
         statement.executeUpdate();
     }
 

@@ -48,7 +48,7 @@ public class StatsFolder extends PaintballFile{
     }
 
     public UUIDStatsFile getPlayerFile(UUID uuid) {
-        return files.get(uuid);
+        return files.getOrDefault(uuid, new UUIDStatsFile(uuid));
     }
 
     public Collection<UUIDStatsFile> getUUIDStatsList() {
