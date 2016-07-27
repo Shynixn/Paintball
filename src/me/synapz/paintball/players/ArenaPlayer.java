@@ -330,10 +330,6 @@ public class ArenaPlayer extends PaintballPlayer {
         if (arena.getTeamScore(team) == arena.MAX_SCORE)
             return;
 
-        // Firework stuff
-        FireworkEffect effect = FireworkEffect.builder().flicker(false).trail(true).with(FireworkEffect.Type.BALL).withColor(Color.BLUE).withFade(Color.ORANGE).build();
-        FireworkUtil.spawnFirework(effect, arenaPlayer.getPlayer().getLocation());
-
         kills++;
         killStreak++;
 
@@ -410,12 +406,9 @@ public class ArenaPlayer extends PaintballPlayer {
             lives--;
 
             if (arena.FIREWORK_ON_DEATH) {
-                // Shots a firework from the team who killed them
-                final Firework firework = player.getWorld().spawn(player.getLocation().add(0, 4, 0), Firework.class);
-                FireworkMeta meta = firework.getFireworkMeta();
-                meta.addEffects(FireworkEffect.builder().withColor(fromTeam.getColor(), team.getColor()).withTrail().build());
-                firework.setVelocity(firework.getVelocity().multiply(10));
-                firework.setFireworkMeta(meta);
+                // Shoots a firework from the team who killed them
+                FireworkEffect effect = FireworkEffect.builder().flicker(false).trail(true).with(FireworkEffect.Type.BALL).withColor(fromTeam.getColor(), team.getColor()).build();
+                FireworkUtil.spawnFirework(effect, player.getLocation());
             }
 
             // If they have no more lives turn them into a spectator player until the game ends

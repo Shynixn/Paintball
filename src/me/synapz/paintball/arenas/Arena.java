@@ -13,10 +13,7 @@ import me.synapz.paintball.locations.SpectatorLocation;
 import me.synapz.paintball.locations.TeamLocation;
 import me.synapz.paintball.players.*;
 import me.synapz.paintball.storage.Settings;
-import me.synapz.paintball.utils.MessageBuilder;
-import me.synapz.paintball.utils.Messenger;
-import me.synapz.paintball.utils.Title;
-import me.synapz.paintball.utils.Utils;
+import me.synapz.paintball.utils.*;
 import me.synapz.paintball.wager.WagerManager;
 import org.bukkit.*;
 import org.bukkit.block.Sign;
@@ -645,11 +642,8 @@ public class Arena {
 
                 forPayout.add(arenaPlayer);
 
-                final Firework firework = player.getWorld().spawn(player.getLocation().add(0, 4, 0), Firework.class);
-                FireworkMeta meta = firework.getFireworkMeta();
-                meta.addEffects(FireworkEffect.builder().withColor(arenaPlayer.getTeam().getColor(), arenaPlayer.getTeam().getColor()).withTrail().build());
-                firework.setVelocity(firework.getVelocity().multiply(10));
-                firework.setFireworkMeta(meta);
+                FireworkEffect effect = FireworkEffect.builder().flicker(false).trail(true).with(FireworkEffect.Type.BALL).withColor(arenaPlayer.getTeam().getColor()).build();
+                FireworkUtil.spawnFirework(effect, arenaPlayer.getPlayer().getLocation());
             }
 
             if (!arenaPlayer.isTie() && !arenaPlayer.isWinner()) {
@@ -823,7 +817,6 @@ public class Arena {
     }
 
     public void removePlayer(PaintballPlayer pbPlayer, boolean restoreData) {
-        Bukkit.broadcastMessage("UUID TO REMOVE: " + pbPlayer.getPlayer().getUniqueId());
         if (restoreData)
             Settings.getSettings().getPlayerDataFolder().getPlayerFile(pbPlayer.getPlayer().getUniqueId()).restorePlayerInformation(true);
         allPlayers.remove(pbPlayer.getPlayer(), pbPlayer);
