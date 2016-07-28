@@ -48,6 +48,6 @@ public class PlayerDataFolder extends PaintballFile {
     }
 
     public void removePlayerFile(UUID uuid) {
-        files.remove(uuid);
+        files.remove(uuid).delete();
     }
 }
