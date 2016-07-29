@@ -643,7 +643,7 @@ public class Arena {
                 forPayout.add(arenaPlayer);
 
                 FireworkEffect effect = FireworkEffect.builder().flicker(false).trail(true).with(FireworkEffect.Type.BALL).withColor(arenaPlayer.getTeam().getColor()).build();
-                FireworkUtil.spawnFirework(effect, arenaPlayer.getPlayer().getLocation());
+                FireworkUtil.spawnFirework(effect, arenaPlayer.getPlayer().getLocation().add(0, 1, 0));
             }
 
             if (!arenaPlayer.isTie() && !arenaPlayer.isWinner()) {

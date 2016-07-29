@@ -13,17 +13,14 @@ import me.synapz.paintball.storage.files.UUIDStatsFile;
 import me.synapz.paintball.utils.FireworkUtil;
 import me.synapz.paintball.utils.Title;
 import me.synapz.paintball.utils.Utils;
-import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -408,7 +405,7 @@ public class ArenaPlayer extends PaintballPlayer {
             if (arena.FIREWORK_ON_DEATH) {
                 // Shoots a firework from the team who killed them
                 FireworkEffect effect = FireworkEffect.builder().flicker(false).trail(true).with(FireworkEffect.Type.BALL).withColor(fromTeam.getColor(), team.getColor()).build();
-                FireworkUtil.spawnFirework(effect, player.getLocation());
+                FireworkUtil.spawnFirework(effect, player.getLocation().add(0, 1, 0));
             }
 
             // If they have no more lives turn them into a spectator player until the game ends
