@@ -38,7 +38,7 @@ public class StatsFolder extends PaintballFile{
                 continue;
             }
 
-            if (Settings.getSettings().getStatsFolder().getPlayerFile(uuid) != null) {
+            if (Settings.getSettings().getStatsFolder().getPlayerFile(uuid, false) != null) {
                 // is already in list, continue
                 continue;
             }
@@ -47,8 +47,13 @@ public class StatsFolder extends PaintballFile{
         }
     }
 
-    public UUIDStatsFile getPlayerFile(UUID uuid) {
-        return files.getOrDefault(uuid, new UUIDStatsFile(uuid));
+    public UUIDStatsFile getPlayerFile(UUID uuid, boolean createIfNull) {
+        UUIDStatsFile uuidStatsFile = files.get(uuid);
+
+        if (createIfNull && uuidStatsFile == null)
+            return new UUIDStatsFile(uuid);
+        else
+            return files.get(uuid);
     }
 
     public Collection<UUIDStatsFile> getUUIDStatsList() {
@@ -145,7 +150,7 @@ public class StatsFolder extends PaintballFile{
         for (String uuid : uuidList.keySet()) {
             double value = Double.parseDouble(uuidList.get(uuid).replace("%", "").replace(",", "."));
             if (statValues.get(rank - 1) == value) {
-                UUIDStatsFile uuidStatsFile = Settings.getSettings().getStatsFolder().getPlayerFile(UUID.fromString(uuid));
+                UUIDStatsFile uuidStatsFile = Settings.getSettings().getStatsFolder().getPlayerFile(UUID.fromString(uuid), true);
 
                 result.clear(); // remove all entries so we know there will only be 1 set of things returning
                 if (Bukkit.getServer().getPlayer(UUID.fromString(uuid)) == null) {
@@ -167,7 +172,7 @@ public class StatsFolder extends PaintballFile{
     public void getStats(Player sender, String targetName) {
         UUID target = Bukkit.getPlayer(targetName) == null ? Bukkit.getOfflinePlayer(targetName).getUniqueId() : Bukkit.getPlayer(targetName).getUniqueId();
 
-        UUIDStatsFile file = getPlayerFile(target);
+        UUIDStatsFile file = getPlayerFile(target, false);
 
         if (file == null) {
             Messenger.error(sender, "Could not find player's stats.");

@@ -65,7 +65,7 @@ public class ArenaPlayer extends PaintballPlayer {
             }
         }
 
-        this.uuidStatsFile = Settings.getSettings().getStatsFolder().getPlayerFile(lobbyPlayer.getPlayer().getUniqueId());
+        this.uuidStatsFile = Settings.getSettings().getStatsFolder().getPlayerFile(lobbyPlayer.getPlayer().getUniqueId(), true);
     }
 
     public ArenaPlayer(SpectatorPlayer sp, Team team) {

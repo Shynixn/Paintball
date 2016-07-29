@@ -53,7 +53,7 @@ public class Listeners extends BaseListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onPlayerJoinCheck(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 

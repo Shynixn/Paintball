@@ -1,3 +1,7 @@
+v5.3.4
+- More fixes to MySQL
+-
+
 v5.3.3
 - Cool new fireworks
 - Fixed when players turn to spectator that their stats did not increment
