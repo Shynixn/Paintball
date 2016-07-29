@@ -52,11 +52,5 @@ public class PaintballFile extends File {
         return this.fileConfig;
     }
 
-    public void setFileConfig(FileConfiguration fileConfig) {
-        this.fileConfig = fileConfig;
-    }
-
-    public void onFirstCreate() {
-
-    }
+    public void onFirstCreate() { }
 }

@@ -603,12 +603,12 @@ public class Arena {
         ArenaManager.getArenaManager().updateAllSignsOnServer();
         this.resetTeamScores();
 
-        allPlayers = new HashMap<>();
-        lobby = new ArrayList<>();
-        spectators = new ArrayList<>();
-        inGame = new ArrayList<>();
-        cachedHeads = new HashMap<>();
-        activeTeams = new ArrayList<>();
+        allPlayers.clear();
+        lobby.clear();
+        spectators.clear();
+        inGame.clear();
+        cachedHeads.clear();
+        activeTeams.clear();
 
         setState(ArenaState.WAITING);
 

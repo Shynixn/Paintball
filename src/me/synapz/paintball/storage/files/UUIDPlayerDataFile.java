@@ -98,7 +98,6 @@ public class UUIDPlayerDataFile extends PaintballFile{
             player.getInventory().setArmorContents(getLastInventoryContents("Armour"));
             player.updateInventory();
         }
-
         Settings.getSettings().getPlayerDataFolder().removePlayerFile(uuid);
     }
 
@@ -107,14 +106,6 @@ public class UUIDPlayerDataFile extends PaintballFile{
     }
 
     private ItemStack[] getLastInventoryContents(String path) {
-        ItemStack[] items = new ItemStack[fileConfig.getList(path).size()];
-        int count = 0;
-        for (Object item : fileConfig.getList(path).toArray()) {
-            if (item instanceof ItemStack) {
-                items[count] = new ItemStack((ItemStack)item);
-                count++;
-            }
-        }
-        return items;
+        return (ItemStack[]) fileConfig.getList(path).toArray();
     }
 }
