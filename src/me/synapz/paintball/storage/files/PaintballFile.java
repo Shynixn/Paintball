@@ -27,7 +27,10 @@ public class PaintballFile extends File {
                     mkdir();
                 } else {
                     onFirstCreate();
-                    if (!Databases.SQL_ENABLED.getBoolean() && !this.getPath().contains("stats")) createNewFile();
+                    if (Databases.SQL_ENABLED.getBoolean() && !this.getPath().contains("stats")) {
+                        createNewFile();
+                    } else if (!Databases.SQL_ENABLED.getBoolean())
+                        createNewFile();
                 }
             } catch (IOException e) {
                 Messenger.error(Bukkit.getConsoleSender(), "Could not create " + name + ". Stack trace: ");

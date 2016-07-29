@@ -158,6 +158,7 @@ public class MySQLManager extends Database{
         while (set.next()) {
             FileConfiguration config = buildConfig(set.getString("uuid"));
             UUIDStatsFile uuidStatsFile = new UUIDStatsFile(UUID.fromString(set.getString("uuid")));
+            uuidStatsFile.setFileConfig(config);
         }
         PreparedStatement drop = connection.prepareStatement("DROP TABLE " + statsTable);
         drop.executeUpdate();

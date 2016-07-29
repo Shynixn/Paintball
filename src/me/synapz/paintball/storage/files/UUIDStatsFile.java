@@ -8,6 +8,7 @@ import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -168,5 +169,9 @@ public class UUIDStatsFile extends PaintballFile {
     private void addOneToPath(String path) {
         getFileConfig().set(path, getFileConfig().getInt(path) + 1);
         if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
+    }
+
+    public void setFileConfig(FileConfiguration config) {
+        this.fileConfig = config;
     }
 }

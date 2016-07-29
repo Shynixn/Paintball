@@ -148,9 +148,10 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
             }
         }
 
-        if ((this instanceof ArenaPlayer) && arena.getAllArenaPlayers().size() <= 1) {
-            arena.forceLeaveArena();
-        }
+        // This breaks the game. There's no reason to keep it in.
+//        if ((this instanceof ArenaPlayer) && arena.getAllArenaPlayers().size() <= 1) {
+//            arena.forceLeaveArena();
+//        }
 
         if ((this instanceof LobbyPlayer) && arena.getLobbyPlayers().size() <= 0) {
             arena.forceLeaveArena();
