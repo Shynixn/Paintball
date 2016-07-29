@@ -16,6 +16,7 @@ import org.bukkit.scoreboard.Scoreboard;
 public abstract class PaintballPlayer implements ScoreboardPlayer {
 
     private boolean restoreInfo = true;
+    private boolean removeLastPerson = true;
 
     /*
     -----
@@ -148,10 +149,9 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
             }
         }
 
-        // This breaks the game. There's no reason to keep it in.
-//        if ((this instanceof ArenaPlayer) && arena.getAllArenaPlayers().size() <= 1) {
-//            arena.forceLeaveArena();
-//        }
+        if ((this instanceof ArenaPlayer) && arena.getAllArenaPlayers().size() <= 1 && arena.removeLastPlayer()) {
+            arena.forceLeaveArena();
+        }
 
         if ((this instanceof LobbyPlayer) && arena.getLobbyPlayers().size() <= 0) {
             arena.forceLeaveArena();

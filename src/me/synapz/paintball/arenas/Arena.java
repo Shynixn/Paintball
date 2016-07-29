@@ -32,6 +32,7 @@ import static org.bukkit.ChatColor.*;
 
 public class Arena {
 
+    private boolean removeLastPlayer = true;
     private Inventory inventory;
 
     public double ACCURACY;
@@ -585,6 +586,7 @@ public class Arena {
     }
 
     public void forceLeaveArena() {
+        setRemoveLastPlayer(false);
         wagerManager = new WagerManager();
         List<PaintballPlayer> copiedList = new ArrayList<>(allPlayers.values());
 
@@ -616,6 +618,7 @@ public class Arena {
             this.toReload = false;
             this.loadConfigValues();
         }
+        setRemoveLastPlayer(true);
     }
 
     public void setReload(){
@@ -1028,6 +1031,14 @@ public class Arena {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
             }
         }
+    }
+
+    public boolean removeLastPlayer() {
+        return removeLastPlayer;
+    }
+
+    public void setRemoveLastPlayer(boolean remove) {
+        removeLastPlayer = remove;
     }
 
     public void loadConfigValues() {

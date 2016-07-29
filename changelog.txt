@@ -1,6 +1,8 @@
 v5.3.4
 - More fixes to MySQL
--
+- Fixed player inventory being cleared sometimes
+- Fixed console errors on leave
+- Fixed errors when setting health scale back from broken config
 
 v5.3.3
 - Cool new fireworks
