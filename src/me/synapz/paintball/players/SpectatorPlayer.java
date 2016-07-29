@@ -1,14 +1,12 @@
 package me.synapz.paintball.players;
 
 import me.synapz.paintball.arenas.Arena;
-import me.synapz.paintball.enums.Messages;
-import me.synapz.paintball.enums.ScoreboardLine;
-import me.synapz.paintball.enums.Tag;
-import me.synapz.paintball.enums.Team;
+import me.synapz.paintball.enums.*;
 import me.synapz.paintball.scoreboards.PaintballScoreboard;
 import me.synapz.paintball.storage.PlayerData;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.storage.files.UUIDPlayerDataFile;
+import me.synapz.paintball.storage.files.UUIDStatsFile;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import me.synapz.paintball.utils.Utils;
@@ -22,6 +20,7 @@ import static org.bukkit.ChatColor.*;
 public class SpectatorPlayer extends PaintballPlayer {
 
     private UUIDPlayerDataFile uuidPlayerDataFile;
+    private ArenaPlayer oldArenaPlayer;
     public static final String TELEPORTER = RED + "" + Settings.THEME + String.valueOf(BOLD) + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleporter";
 
     public SpectatorPlayer(Arena a, Player p) {
@@ -31,6 +30,7 @@ public class SpectatorPlayer extends PaintballPlayer {
 
     public SpectatorPlayer(ArenaPlayer arenaPlayer) {
         super(arenaPlayer.getArena(), new Team(arenaPlayer.getArena()), arenaPlayer.getPlayer(), false);
+        this.oldArenaPlayer = arenaPlayer;
         player.teleport(player.getLocation().add(0, 0.5, 0));
     }
 
@@ -90,6 +90,21 @@ public class SpectatorPlayer extends PaintballPlayer {
     public void leave() {
         super.leave();
         player.removePotionEffect(PotionEffectType.INVISIBILITY);
+
+        if (oldArenaPlayer != null) {
+            UUIDStatsFile uuidStatsFile = oldArenaPlayer.uuidStatsFile;
+            uuidStatsFile.incrementStat(StatType.GAMES_PLAYED, oldArenaPlayer);
+            uuidStatsFile.addToStat(StatType.HITS, oldArenaPlayer.hits);
+            uuidStatsFile.addToStat(StatType.SHOTS, oldArenaPlayer.shots);
+            uuidStatsFile.addToStat(StatType.KILLS, oldArenaPlayer.kills);
+            uuidStatsFile.addToStat(StatType.DEATHS, oldArenaPlayer.deaths);
+
+            // killstreak is less than past killstreak, return
+            if (uuidStatsFile.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath()) < oldArenaPlayer.heightKillStreak)
+                uuidStatsFile.setStat(StatType.HIGEST_KILL_STREAK, oldArenaPlayer.heightKillStreak);
+
+            uuidStatsFile.saveFile();
+        }
     }
 
     public void openMenu() {

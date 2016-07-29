@@ -39,15 +39,15 @@ public class ArenaPlayer extends PaintballPlayer {
     private CoinItem horseItem;
 
     private CoinItem lastClickedItem;
-    private int heightKillStreak;
+    protected int heightKillStreak;
     private int killStreak;
     private int coins;
-    private int deaths;
-    private int kills;
+    protected int deaths;
+    protected int kills;
     private double money;
     private int health;
-    private int hits;
-    private int shots;
+    protected int hits;
+    protected int shots;
     protected int lives;
     private int multiplier = 1;
 
@@ -205,9 +205,6 @@ public class ArenaPlayer extends PaintballPlayer {
         // killstreak is less than past killstreak, return
         if (uuidStatsFile.getFileConfig().getInt(StatType.HIGEST_KILL_STREAK.getPath()) < heightKillStreak)
             uuidStatsFile.setStat(StatType.HIGEST_KILL_STREAK, heightKillStreak);
-
-//        if (stopGame())
-//            arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
 
         uuidStatsFile.saveFile();
     }
