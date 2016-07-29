@@ -1,3 +1,11 @@
+v5.3.3
+- Cool new fireworks
+- Fixed when players turn to spectator that their stats did not increment
+- Seperated playerdata and stats into 2 folders
+- Fixed duplicate leaderboard entries (?)
+- MySQL now works (?)
+- Fixed inventories sometimes clearing (?)
+
 v5.3.2
 - Fixed Teleportation being cancelled by other plugins
 - Fixed saving/loading, inventories should ALWAYS be given back now

@@ -90,14 +90,10 @@ public class UUIDStatsFile extends PaintballFile {
     // Usedful for leaderboards and /pb stats
     public Map<StatType, String> getPlayerStats() {
         Map<StatType, String> stats = new HashMap<>();
-        boolean uuidNotFound = getFileConfig().getConfigurationSection("Player-Data") == null;
 
-        for (StatType type : StatType.values()) {
-            if (uuidNotFound) // their uuid wasn't in file so they have no stats, so add 0 for everything
-                stats.put(type, 0 + "");
-            else
-                stats.put(type, type == StatType.KD ? getKD() : type == StatType.ACCURACY ? getAccuracy() : getFileConfig().getString(type.getPath()));
-        }
+        for (StatType type : StatType.values())
+            stats.put(type, type == StatType.KD ? getKD() : type == StatType.ACCURACY ? getAccuracy() : getFileConfig().getString(type.getPath(), "0"));
+
         return stats;
     }
 
@@ -107,7 +103,7 @@ public class UUIDStatsFile extends PaintballFile {
 
     // Adds one to a player's stat
     // ex: if a player gets 1 kill, add one the stat in config
-    public void incrementStat(StatType type, ArenaPlayer player) {
+    public void  incrementStat(StatType type, ArenaPlayer player) {
         switch (type) {
             // KD and ACCURACY are automatically determined by dividing
             case KD:

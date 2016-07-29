@@ -148,15 +148,13 @@ public abstract class PaintballPlayer implements ScoreboardPlayer {
             }
         }
 
-        // Wtf? Why? This just causes things to run twice when they shouldn't...
-//        if ((this instanceof ArenaPlayer) && arena.getAllArenaPlayers().size() <= 1) {
-//            arena.forceLeaveArena();
-//        }
+        if ((this instanceof ArenaPlayer) && arena.getAllArenaPlayers().size() <= 1) {
+            arena.forceLeaveArena();
+        }
 
-        // Wtf? Why? This just causes things to run twice when they shouldn't...
-//        if ((this instanceof LobbyPlayer) && arena.getLobbyPlayers().size() <= 0) {
-//            arena.forceLeaveArena();
-//        }
+        if ((this instanceof LobbyPlayer) && arena.getLobbyPlayers().size() <= 0) {
+            arena.forceLeaveArena();
+        }
     }
 
     public void leaveDontSave() {

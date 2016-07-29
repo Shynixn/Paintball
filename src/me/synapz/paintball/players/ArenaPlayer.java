@@ -207,6 +207,10 @@ public class ArenaPlayer extends PaintballPlayer {
             uuidStatsFile.setStat(StatType.HIGEST_KILL_STREAK, heightKillStreak);
 
         uuidStatsFile.saveFile();
+
+        if (stopGame()) {
+            arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
+        }
     }
 
     public void incrementHits() {
@@ -408,6 +412,9 @@ public class ArenaPlayer extends PaintballPlayer {
             // If they have no more lives turn them into a spectator player until the game ends
             if (arena.LIVES > 0 && lives == 0) {
                 turnToSpectator();
+
+                if (stopGame())
+                    arena.win(Arrays.asList(arena.getAllArenaPlayers().get(0).getTeam()));
             } else {
                 // Reloads their settings for them to go back... Sets their health, kill streak, location, protection and updates their scoreboard
                 health = arena.HITS_TO_KILL;

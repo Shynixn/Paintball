@@ -6,25 +6,25 @@ import org.bukkit.entity.Player;
 
 public enum StatType {
 
-    HIGEST_KILL_STREAK(Messages.HIGEST_KILL_STREAK, ".Highest-Kill-Streak", "killstreak"),
+    HIGEST_KILL_STREAK(Messages.HIGEST_KILL_STREAK, "Highest-Kill-Streak", "killstreak"),
 
     KD(Messages.KD, "none", "kd"),
-    KILLS(Messages.KILLS, ".Kills", "kills"),
-    DEATHS(Messages.DEATHS, ".Deaths", "deaths"),
+    KILLS(Messages.KILLS, "Kills", "kills"),
+    DEATHS(Messages.DEATHS, "Deaths", "deaths"),
 
     ACCURACY(Messages.ACCURACY, "none", "accuracy", "%"),
-    SHOTS(Messages.SHOTS, ".Shots", "shots"),
-    HITS(Messages.HITS, ".Hits", "hits"),
+    SHOTS(Messages.SHOTS, "Shots", "shots"),
+    HITS(Messages.HITS, "Hits", "hits"),
 
-    GAMES_PLAYED(Messages.GAMES_PLAYED, ".Games-Played", "gamesplayed"),
-    WINS(Messages.WINS, ".Wins", "wins"),
-    DEFEATS(Messages.DEFEATS, ".Defeats", "defeats"),
-    TIES(Messages.TIES, ".Ties", "ties"),
+    GAMES_PLAYED(Messages.GAMES_PLAYED, "Games-Played", "gamesplayed"),
+    WINS(Messages.WINS, "Wins", "wins"),
+    DEFEATS(Messages.DEFEATS, "Defeats", "defeats"),
+    TIES(Messages.TIES, "Ties", "ties"),
 
-    FLAGS_CAPTURED(Messages.FLAGS_CAPTURED, ".Flags-Captured", "flagscaptured"),
-    FLAGS_DROPPED(Messages.FLAGS_DROPPED, ".Flags-Dropped", "flagsdropped"),
+    FLAGS_CAPTURED(Messages.FLAGS_CAPTURED, "Flags-Captured", "flagscaptured"),
+    FLAGS_DROPPED(Messages.FLAGS_DROPPED, "Flags-Dropped", "flagsdropped"),
 
-    TIME_PLAYED(Messages.TIME_PLAYED, ".Time-Played", "timeplayed", "s");
+    TIME_PLAYED(Messages.TIME_PLAYED, "Time-Played", "timeplayed", "s");
 
     private Messages message;
     String name;
