@@ -3,6 +3,7 @@ v5.3.4
 - Fixed player inventory being cleared sometimes
 - Fixed console errors on leave
 - Fixed errors when setting health scale back from broken config
+- Fixed large issues created from 5.3.2 -> 5.3.3 from new loading
 
 v5.3.3
 - Cool new fireworks

@@ -571,6 +571,7 @@ public class ArenaPlayer extends PaintballPlayer {
     }
 
     private boolean stopGame() {
+        if (!arena.getState().equals(Arena.ArenaState.IN_PROGRESS)) return false;
         int left = 0;
         // There must be at least one team
         for (Team team : arena.getActiveArenaTeamList()) {

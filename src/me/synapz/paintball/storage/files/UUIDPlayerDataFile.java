@@ -77,27 +77,29 @@ public class UUIDPlayerDataFile extends PaintballFile{
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
         if (!PlayerData.reset(player)) {
-            player.teleport(new PlayerLocation(this).getLocation());
-            player.setFoodLevel(fileConfig.getInt("Food"));
-            player.setGameMode(fileConfig.getString("Gamemode") == null ? GameMode.SURVIVAL : GameMode.valueOf(fileConfig.getString("Gamemode")));
-            player.setAllowFlight(fileConfig.getBoolean("Allow-Flight"));
-            player.setFlying(fileConfig.getBoolean("Flying"));
-            player.setWalkSpeed((float) fileConfig.getDouble("Speed"));
-            exp.setExp(fileConfig.getInt("Exp"));
-            double health = fileConfig.getDouble("Health");
-            double scale = fileConfig.getDouble("Health-Scale");
+            if (fileConfig.isSet("Food")) {
+                player.teleport(new PlayerLocation(this).getLocation());
+                player.setFoodLevel(fileConfig.getInt("Food"));
+                player.setGameMode(fileConfig.getString("Gamemode") == null ? GameMode.SURVIVAL : GameMode.valueOf(fileConfig.getString("Gamemode")));
+                player.setAllowFlight(fileConfig.getBoolean("Allow-Flight"));
+                player.setFlying(fileConfig.getBoolean("Flying"));
+                player.setWalkSpeed((float) fileConfig.getDouble("Speed"));
+                exp.setExp(fileConfig.getInt("Exp"));
+                double health = fileConfig.getDouble("Health");
+                double scale = fileConfig.getDouble("Health-Scale");
 
-            if (health > 20d || health < 0) {
-                player.setHealth(20);
-            } else {
-                player.setHealth(health);
+                if (health > 20d || health < 0) {
+                    player.setHealth(20);
+                } else {
+                    player.setHealth(health);
+                }
+
+                player.setHealthScale(scale <= 0 ? 20 : scale);
+
+                player.getInventory().setContents(getLastInventoryContents("Inventory"));
+                player.getInventory().setArmorContents(getLastInventoryContents("Armour"));
+                player.updateInventory();
             }
-
-            player.setHealthScale(scale <= 0 ? 20 : scale);
-
-            player.getInventory().setContents(getLastInventoryContents("Inventory"));
-            player.getInventory().setArmorContents(getLastInventoryContents("Armour"));
-            player.updateInventory();
         }
         Settings.getSettings().getPlayerDataFolder().removePlayerFile(uuid);
     }
