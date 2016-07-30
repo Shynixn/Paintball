@@ -581,7 +581,7 @@ public class ArenaPlayer extends PaintballPlayer {
         }
 
         // If there is less than one team with a player, end the game
-        return left <= 1 && arena.getAllPlayers().keySet().size() >= 1;
+        return left <= 1 && arena.getAllPlayers().keySet().size() >= 1 && arena.getState().equals(Arena.ArenaState.IN_PROGRESS);
     }
 
     private String shortenMoney(double money) {
