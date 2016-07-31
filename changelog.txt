@@ -1,3 +1,13 @@
+v5.3.6
+- Added stat type suffix to leaderboard signs and holograms (ex: s for seconds % for percent)
+- Removed duplicate leaderboard values on /pb top <all/stat>
+- FFA shows player names instead of team names on win
+- Kill Confirmed bug fixed when 2+ kill confirmed items joined resulting in just 1 point
+
+v5.3.5
+- Removed SQLLite
+- Removed old stuff which isnt needed anymore
+
 v5.3.4
 - More fixes to MySQL
 - Fixed player inventory being cleared sometimes

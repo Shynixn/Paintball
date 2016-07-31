@@ -87,13 +87,14 @@ public class StatsFolder extends PaintballFile{
             for (StatType type : StatType.values()) {
                 Multimap<String, UUID> playerAndStat = getPlayerAtRankMultimap(page, type);
                 String value = playerAndStat.keySet().toArray()[0].toString();
-                String playername = Bukkit.getOfflinePlayer((UUID) playerAndStat.values().toArray()[0]).getName();
+                UUID uuid = (UUID) playerAndStat.values().toArray()[0];
+                String playername = Bukkit.getOfflinePlayer(uuid).getName();
 
                 stats.add(new MessageBuilder(Messages.TOP_LEADERBOARD_LAYOUT)
                         .replace(Tag.RANK, page + "")
                         .replace(Tag.STAT, type.getName())
                         .replace(Tag.SENDER, playername)
-                        .replace(Tag.AMOUNT, value)
+                        .replace(Tag.AMOUNT, type == StatType.KD ? getPlayerFile(uuid, true).getKD() : (int) Double.parseDouble(value.replace(type.getSuffix(), "")) + type.getSuffix())
                         .build());
             }
         } else {
@@ -104,14 +105,14 @@ public class StatsFolder extends PaintballFile{
                     if (uuid == null) continue;
 
                     String playerName = Bukkit.getOfflinePlayer(uuid).getName();
-
                     String value = playerAndStat.keySet().toArray()[0].toString();
+
                     if (value.equals("Unknown")) continue;
 
                     String line = new MessageBuilder(Messages.PER_LEADERBOARD_LAYOUT)
                             .replace(Tag.RANK, (add + i) + "")
                             .replace(Tag.SENDER, playerName)
-                            .replace(Tag.AMOUNT, value)
+                            .replace(Tag.AMOUNT, statType == StatType.KD ? getPlayerFile(uuid, true).getKD() : (int) Double.parseDouble(value.replace(statType.getSuffix(), "")) + statType.getSuffix())
                             .build();
 
                     stats.add(line);
@@ -165,7 +166,7 @@ public class StatsFolder extends PaintballFile{
         result.clear();
 
         Double scoreToGet = (scores.get(rank - 1));
-        result.putAll(String.valueOf(scoreToGet), playersWithSameValue.get(scoreToGet));
+        result.putAll(String.valueOf(scoreToGet) + type.getSuffix(), playersWithSameValue.get(scoreToGet));
 
         return result;
     }
@@ -207,12 +208,12 @@ public class StatsFolder extends PaintballFile{
                 if (Bukkit.getServer().getPlayer(UUID.fromString(uuid)) == null) {
                     String name = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
                     String score = uuidStatsFile.getPlayerStats().get(type);
-                    result.put(name == null ? "Unknown" : name, score == null ? "" : score);
+                    result.put(name == null ? "Unknown" : name, (score == null ? "" : score) + type.getSuffix());
                     return result;
                 } else {
                     String name = Bukkit.getPlayer(UUID.fromString(uuid)).getName();
                     String score = uuidStatsFile.getPlayerStats().get(type);
-                    result.put(name == null ? "Unknown" : name, score == null ? "" : score);
+                    result.put(name == null ? "Unknown" : name, (score == null ? "" : score) + type.getSuffix());
                     return result;
                 }
             }
@@ -238,7 +239,7 @@ public class StatsFolder extends PaintballFile{
             String name = type.getName();
             if (type == StatType.SHOTS || type == StatType.HITS || type == StatType.KILLS || type == StatType.DEATHS || type == StatType.DEFEATS || type == StatType.WINS)
                 name = "  " + name;
-            Messenger.msg(sender, THEME + name + ": " + SECONDARY + stats.get(type));
+            Messenger.msg(sender, THEME + name + ": " + SECONDARY + stats.get(type) + type.getSuffix());
         }
     }
 

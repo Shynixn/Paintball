@@ -162,7 +162,7 @@ public class UUIDStatsFile extends PaintballFile {
     public String getAccuracy() {
         int shots = getFileConfig().getInt(StatType.SHOTS.getPath());
         int hits = getFileConfig().getInt(StatType.HITS.getPath());
-        return String.format("%d%s", (int) Math.round(Utils.divide(hits, shots)*100), "%");
+        return String.format("%d", (int) Math.round(Utils.divide(hits, shots)*100));
     }
 
     // Increments the set path by one
