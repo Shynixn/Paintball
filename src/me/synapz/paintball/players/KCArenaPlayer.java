@@ -30,11 +30,13 @@ public class KCArenaPlayer extends ArenaPlayer {
         }
     }
 
-    public void score() {
-        arena.incrementTeamScore(team, true);
+    public void score(int amount) {
+        while (amount > 0) {
+            arena.incrementTeamScore(team, true);
+            player.getWorld().playSound(player.getLocation(), ((KCArena) arena).killConfirmedSound, 5, 5);
+            amount--;
+        }
         arena.updateAllScoreboard();
-
-        player.getWorld().playSound(player.getLocation(), ((KCArena) arena).killConfirmedSound, 5, 5);
     }
 
     public void deny() {

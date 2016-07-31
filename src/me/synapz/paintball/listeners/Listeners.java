@@ -744,7 +744,7 @@ public class Listeners extends BaseListener implements Listener {
                         Messenger.info(player, Messages.KILL_DENIED);
                     } else {
                         Messenger.info(player, Messages.KILL_CONFIRMED);
-                        kcArenaPlayer.score();
+                        kcArenaPlayer.score(item.getAmount());
                     }
                     kcArena.removeDogTag(e.getItem());
                     e.getItem().remove();
