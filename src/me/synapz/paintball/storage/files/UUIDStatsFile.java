@@ -51,7 +51,7 @@ public class UUIDStatsFile extends PaintballFile {
 
     @Override
     public void saveFile() {
-        if (Databases.SQL_ENABLED.getBoolean()) { // if sql is enabled, save Async to database
+        if (Databases.ENABLED.getBoolean()) { // if sql is enabled, save Async to database
             try {
                 saveAsynchronously();
             }
@@ -64,7 +64,7 @@ public class UUIDStatsFile extends PaintballFile {
     }
 
     public void shutdown() {
-        if (Databases.SQL_ENABLED.getBoolean()) { // if sql is enabled, save sync to database
+        if (Databases.ENABLED.getBoolean()) { // if sql is enabled, save sync to database
             try {
                 Settings.DATABASE.updateTable(fileConfig);
             } catch (SQLException e)  {
@@ -113,7 +113,7 @@ public class UUIDStatsFile extends PaintballFile {
                 return;
             case HIGEST_KILL_STREAK:
                 getFileConfig().set(StatType.HIGEST_KILL_STREAK.getPath(), player.getKillStreak());
-                if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
+                if (Databases.ENABLED.getBoolean()) saveAsynchronously();
                 return;
             case GAMES_PLAYED:
                 if (player.isWinner())
@@ -126,24 +126,24 @@ public class UUIDStatsFile extends PaintballFile {
         }
 
         addOneToPath(type.getPath());
-        if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
+        if (Databases.ENABLED.getBoolean()) saveAsynchronously();
     }
 
     public void addToStat(StatType type, int toAdd) {
         getFileConfig().set(type.getPath(), getFileConfig().getInt(type.getPath()) + toAdd);
-        if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
+        if (Databases.ENABLED.getBoolean()) saveAsynchronously();
     }
 
     public void setStat(StatType type, int toSet) {
         getFileConfig().set(type.getPath(), toSet);
-        if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
+        if (Databases.ENABLED.getBoolean()) saveAsynchronously();
     }
 
     // Resets a specific stat
     public void resetStats(StatType type) {
         if (!type.isCalculated()) {
             getFileConfig().set(type.getPath(), 0);
-            if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
+            if (Databases.ENABLED.getBoolean()) saveAsynchronously();
         }
     }
 
@@ -168,7 +168,7 @@ public class UUIDStatsFile extends PaintballFile {
     // Increments the set path by one
     private void addOneToPath(String path) {
         getFileConfig().set(path, getFileConfig().getInt(path) + 1);
-        if (Databases.SQL_ENABLED.getBoolean()) saveAsynchronously();
+        if (Databases.ENABLED.getBoolean()) saveAsynchronously();
     }
 
     public void setFileConfig(FileConfiguration config) {

@@ -27,9 +27,9 @@ public class PaintballFile extends File {
                     mkdir();
                 } else {
                     onFirstCreate();
-                    if (Databases.SQL_ENABLED.getBoolean() && !this.getPath().contains("stats")) {
+                    if (Databases.ENABLED.getBoolean() && !this.getPath().contains("stats")) {
                         createNewFile();
-                    } else if (!Databases.SQL_ENABLED.getBoolean())
+                    } else if (!Databases.ENABLED.getBoolean())
                         createNewFile();
                 }
             } catch (IOException e) {

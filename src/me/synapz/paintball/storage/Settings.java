@@ -9,7 +9,6 @@ import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.storage.database.Database;
 import me.synapz.paintball.storage.database.MySQLManager;
-import me.synapz.paintball.storage.database.SQLiteManager;
 import me.synapz.paintball.storage.files.*;
 import me.synapz.paintball.utils.Messenger;
 import net.milkbowl.vault.chat.Chat;
@@ -83,6 +82,7 @@ public class Settings {
         loadSettings(); // loads everything in config.yml into constants
         MESSAGES = new MessagesFile(pb);
         DATABASE_FILE = new DatabaseFile(pb);
+        DATABASE = new MySQLManager();
 
         playerDataFolder = new PlayerDataFolder(pb);
         PlayerDataFolder.loadPlayerDataFiles();
@@ -98,11 +98,10 @@ public class Settings {
 
         // Tries to connect to database if SQL is enabled. If not, attempts to load previous data from the database and
         // transfers to playerdata.yml if the table exists, then drops the table.
-        DATABASE = Databases.MY_SQL.getBoolean() ? new MySQLManager() : new SQLiteManager("database.db");
         try {
             DATABASE.openConnection();
             DATABASE.init();
-            if (Databases.SQL_ENABLED.getBoolean()) {
+            if (Databases.ENABLED.getBoolean()) {
                 if (DATABASE.doesTableExist()) {
                     for (UUIDStatsFile uuidStatsFile : statsFolder.getUUIDStatsList()) {
                         DATABASE.addStats(uuidStatsFile.getFileConfig());
@@ -118,10 +117,11 @@ public class Settings {
 
             }
         } catch (SQLException e) {
-            if (Databases.SQL_ENABLED.getBoolean()) {
+            if (Databases.ENABLED.getBoolean()) {
                 Messenger.error(Bukkit.getConsoleSender(), "Could not initialize database connection!");
-                Databases.SQL_ENABLED.setBoolean(false);
+                Databases.ENABLED.setBoolean(false);
                 DATABASE_FILE.saveFile();
+                e.printStackTrace();
             }
         }
     }

@@ -45,7 +45,7 @@ public abstract class Database {
     protected abstract void attemptDataTransfer() throws SQLException;
 
     public void init() throws SQLException {
-        if (Databases.SQL_ENABLED.getBoolean()) {
+        if (Databases.ENABLED.getBoolean()) {
             setupDatabase();
             setupTable();
         }
