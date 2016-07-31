@@ -1,5 +1,7 @@
 package me.synapz.paintball.storage.files;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.StatType;
 import me.synapz.paintball.enums.Tag;
@@ -73,7 +75,7 @@ public class StatsFolder extends PaintballFile{
         List<String> stats = new ArrayList<>();
 
         int end = page*10;
-        int start = end-10;
+        int start = end-9;
 
         // Adds the title
         String title = statType == null ? new MessageBuilder(Messages.TOP_LEADERBOARD_TITLE).replace(Tag.PAGE, page + "").build() : new MessageBuilder(Messages.PER_LEADERBOARD_TITLE).replace(Tag.STAT, statType.getName().replace(" ", "")).replace(Tag.MAX, getMaxPage() + "").replace(Tag.PAGE, page + "").build();
@@ -83,43 +85,92 @@ public class StatsFolder extends PaintballFile{
         if (statType == null) {
             // Go through each value and find the rank of it and add it to the list
             for (StatType type : StatType.values()) {
-                Map<String, String> playerAndStat = getPlayerAtRank(page, type);
-                String value = playerAndStat.values().toArray()[0].toString();
+                Multimap<String, UUID> playerAndStat = getPlayerAtRankMultimap(page, type);
+                String value = playerAndStat.keySet().toArray()[0].toString();
+                String playername = Bukkit.getOfflinePlayer((UUID) playerAndStat.values().toArray()[0]).getName();
 
                 stats.add(new MessageBuilder(Messages.TOP_LEADERBOARD_LAYOUT)
                         .replace(Tag.RANK, page + "")
                         .replace(Tag.STAT, type.getName())
-                        .replace(Tag.SENDER, playerAndStat.keySet().toArray()[0] + "")
+                        .replace(Tag.SENDER, playername)
                         .replace(Tag.AMOUNT, value)
                         .build());
             }
         } else {
+            int add = 0;
             for (int i = start; i <= end; i++) {
-                if (i > 0) {
-                    Map<String, String> playerAndStat = getPlayerAtRank(i, statType);
-                    String playerName = (String) playerAndStat.keySet().toArray()[0];
+                Multimap<String, UUID> playerAndStat = getPlayerAtRankMultimap(i, statType);
+                for (UUID uuid : playerAndStat.values()) {
+                    if (uuid == null) continue;
 
-                    if (!playerName.equals("Unknown")) {
-                        String value = playerAndStat.values().toArray()[0].toString();
+                    String playerName = Bukkit.getOfflinePlayer(uuid).getName();
 
-                        String line = new MessageBuilder(Messages.PER_LEADERBOARD_LAYOUT)
-                                .replace(Tag.RANK, i + "")
-                                .replace(Tag.SENDER, playerName)
-                                .replace(Tag.AMOUNT, value)
-                                .build();
+                    String value = playerAndStat.keySet().toArray()[0].toString();
+                    if (value.equals("Unknown")) continue;
 
-                        if (!stats.contains(line))
-                            stats.add(line);
-                    }
+                    String line = new MessageBuilder(Messages.PER_LEADERBOARD_LAYOUT)
+                            .replace(Tag.RANK, (add + i) + "")
+                            .replace(Tag.SENDER, playerName)
+                            .replace(Tag.AMOUNT, value)
+                            .build();
+
+                    stats.add(line);
+                    if (playerAndStat.values().size() > 1)
+                        add++;
                 }
+                if (playerAndStat.values().size() > 1)
+                    add--;
             }
+
+            if (stats.size() > 10)
+                stats = stats.subList(0, 9);
         }
 
         return stats;
     }
 
     // Gets a player at a rank, returns Unknown if no player can be found at rank
-    public Map<String, String> getPlayerAtRank(int rank, StatType type) {
+    public Multimap<String, UUID> getPlayerAtRankMultimap(int rank, StatType type) {
+        Multimap<String, UUID> result = ArrayListMultimap.create();
+        result.put("Unknown", UUID.randomUUID());
+
+        Map<UUID, String> uuidList = new HashMap<>();
+
+        for (UUIDStatsFile uuidStatsFile : Settings.getSettings().getStatsFolder().getUUIDStatsList()) {
+            UUID uuid = uuidStatsFile.getUUID();
+            uuidList.put(uuid, uuidStatsFile.getPlayerStats().get(type));
+        }
+
+        Multimap<Double, UUID> playersWithSameValue = ArrayListMultimap.create();
+        List<Double> scores = new ArrayList<>();
+        for (UUID player : uuidList.keySet()) {
+            String stat = uuidList.get(player);
+            if (stat == null)
+                continue;
+
+            stat = stat.replace("%", "");
+            stat = stat.replace(",", ".");
+            if (!scores.contains(Double.parseDouble(stat)))
+                scores.add(Double.parseDouble(stat));
+            playersWithSameValue.put(Double.parseDouble(stat), player);
+        }
+
+        Collections.sort(scores);
+        Collections.reverse(scores);
+        if (scores.size() < rank) {
+            return result;//
+        }
+
+        // We have a value!
+        result.clear();
+
+        Double scoreToGet = (scores.get(rank - 1));
+        result.putAll(String.valueOf(scoreToGet), playersWithSameValue.get(scoreToGet));
+
+        return result;
+    }
+
+    public Map<String, String> getPlayerAtRankMap(int rank, StatType type) {
         HashMap<String, String> result = new HashMap<String, String>() {{
             put("Unknown", "");
         }};

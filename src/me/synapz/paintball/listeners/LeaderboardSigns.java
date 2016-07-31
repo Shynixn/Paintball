@@ -51,7 +51,7 @@ public class LeaderboardSigns implements Listener {
             return;
         }
 
-        Map<String, String> playerAndStat = Settings.getSettings().getStatsFolder().getPlayerAtRank(i, type);
+        Map<String, String> playerAndStat = Settings.getSettings().getStatsFolder().getPlayerAtRankMap(i, type);
         String player = (String) playerAndStat.keySet().toArray()[0];
         String value = (String) playerAndStat.values().toArray()[0];
 

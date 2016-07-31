@@ -169,7 +169,7 @@ public class ArenaManager {
                         Map<String, String> playerAndStat;
 
                         try {
-                            playerAndStat = Settings.getSettings().getStatsFolder().getPlayerAtRank(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
+                            playerAndStat = Settings.getSettings().getStatsFolder().getPlayerAtRankMap(Integer.parseInt(sign.getLine(0).replace("#", "")), type);
                         } catch (NumberFormatException exc) {
                             continue;
                         }
