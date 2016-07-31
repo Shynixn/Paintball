@@ -80,7 +80,7 @@ public class UUIDPlayerDataFile extends PaintballFile{
             if (fileConfig.isSet("Food")) {
                 player.teleport(new PlayerLocation(this).getLocation());
                 player.setFoodLevel(fileConfig.getInt("Food"));
-                player.setGameMode(fileConfig.getString("Gamemode") == null ? GameMode.SURVIVAL : GameMode.valueOf(fileConfig.getString("Gamemode")));
+                player.setGameMode(GameMode.valueOf(fileConfig.getString("Gamemode")));
                 player.setAllowFlight(fileConfig.getBoolean("Allow-Flight"));
                 player.setFlying(fileConfig.getBoolean("Flying"));
                 player.setWalkSpeed((float) fileConfig.getDouble("Speed"));
@@ -94,7 +94,7 @@ public class UUIDPlayerDataFile extends PaintballFile{
                     player.setHealth(health);
                 }
 
-                player.setHealthScale(scale <= 0 ? 20 : scale);
+                player.setHealthScale(scale);
 
                 player.getInventory().setContents(getLastInventoryContents("Inventory"));
                 player.getInventory().setArmorContents(getLastInventoryContents("Armour"));
