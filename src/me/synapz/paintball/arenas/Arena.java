@@ -666,21 +666,42 @@ public class Arena {
         }
 
         StringBuilder formattedWinnerList = new StringBuilder();
-        for (Team winningTeam : teams) {
-            formattedWinnerList.append(winningTeam.getChatColor()).append(winningTeam.getTitleName()).append(Settings.THEME).append(", ");
+        if (this instanceof FFAArena) {
+            for (Team winningTeam : teams) {
+                formattedWinnerList.append(winningTeam.getChatColor()).append(winners.get(0).getPlayer().getName()).append(Settings.THEME).append(", ");
+            }
+        } else {
+            for (Team winningTeam : teams) {
+                formattedWinnerList.append(winningTeam.getChatColor()).append(winningTeam.getTitleName()).append(Settings.THEME).append(", ");
+            }
         }
 
         String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", "));
 
-        if (BROADCAST_WINNER) {
-            Bukkit.broadcastMessage((teams.size() == 1 ? "The " + list + " team won!" : "There was a tie between " + list));
+        if (this instanceof FFAArena) {
+            if (BROADCAST_WINNER) {
+                Bukkit.broadcastMessage((teams.size() == 1 ? list + " won!" : "There was a tie between " + list));
+            } else {
+                broadcastMessage((teams.size() == 1 ? list + " won!" : "There was a tie between " + list));
+            }
         } else {
-            broadcastMessage((teams.size() == 1 ? "The " + list + " team won!" : "There was a tie between " + list));
+            if (BROADCAST_WINNER) {
+                Bukkit.broadcastMessage((teams.size() == 1 ? "The " + list + " team won!" : "There was a tie between " + list));
+            } else {
+                broadcastMessage((teams.size() == 1 ? "The " + list + " team won!" : "There was a tie between " + list));
+            }
         }
 
-        for (PaintballPlayer player : getAllPlayers().values()) {
-            Title title = new Title(THEME + (teams.size() == 1 ? "The " + list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list), 20, 40, 20);
-            title.send(player.getPlayer());
+        if (this instanceof FFAArena) {
+            for (PaintballPlayer player : getAllPlayers().values()) {
+                Title title = new Title(THEME + (teams.size() == 1 ? list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list), 20, 40, 20);
+                title.send(player.getPlayer());
+            }
+        } else {
+            for (PaintballPlayer player : getAllPlayers().values()) {
+                Title title = new Title(THEME + (teams.size() == 1 ? "The " + list + " team won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list), 20, 40, 20);
+                title.send(player.getPlayer());
+            }
         }
 
         if (wagerManager.hasWager()) {
