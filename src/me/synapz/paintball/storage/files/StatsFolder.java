@@ -90,6 +90,8 @@ public class StatsFolder extends PaintballFile{
                 UUID uuid = (UUID) playerAndStat.values().toArray()[0];
                 String playername = Bukkit.getOfflinePlayer(uuid).getName();
 
+                if (value.equals("Unknown")) continue;
+
                 stats.add(new MessageBuilder(Messages.TOP_LEADERBOARD_LAYOUT)
                         .replace(Tag.RANK, page + "")
                         .replace(Tag.STAT, type.getName())

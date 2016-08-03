@@ -137,7 +137,8 @@ public class ArenaManager {
     public void updateAllSignsOnServer() {
         String prefix = Messages.SIGN_TITLE.getString();
 
-        Paintball.getInstance().getBungeeManager().updateBungeeSigns();
+        // TODO: idk what is going on with bungee if dart even has it even working but this is throwing a NPE
+        // Paintball.getInstance().getBungeeManager().updateBungeeSigns();
 
         for (SignLocation signLoc : Settings.ARENA.getSigns().values()) {
             if (!(signLoc instanceof SkullLocation) && !(signLoc.getLocation().getBlock().getState() instanceof Sign)) {
