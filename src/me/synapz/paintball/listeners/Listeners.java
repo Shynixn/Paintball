@@ -308,12 +308,10 @@ public class Listeners extends BaseListener implements Listener {
                 }
                 e.setCancelled(true);
             } else if (gamePlayer instanceof ArenaPlayer) {
-                if (player.getOpenInventory().getTitle().contains("Horse") || Utils.contains(clickedItem, "Team") || Utils.contains(clickedItem, "Flag") || Utils.equals(clickedItem, ChatColor.GOLD + Messages.ARENA_SHOP_NAME.getString()) || player.getOpenInventory().getTitle().contains(Messages.ARENA_SHOP_NAME.getString())) {
-                    e.setCancelled(true);
+                e.setCancelled(true);
 
-                    if (!player.getOpenInventory().getTitle().contains(Messages.ARENA_SHOP_NAME.getString()))
+                if (!player.getOpenInventory().getTitle().contains(Messages.ARENA_SHOP_NAME.getString()))
                         Messenger.error(player, Messages.ARENA_MOVE_ERROR);
-                }
             }
         }
     }

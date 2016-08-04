@@ -113,6 +113,9 @@ public class CoinItemListener implements Listener {
             player.playSound(player.getLocation(), clickedItem.getSound(), 1.0F, 1.0F);
         }
 
+        if (clickedItem.getSpeed() != player.getWalkSpeed())
+            player.setWalkSpeed(clickedItem.getSpeed());
+
         e.setCancelled(true);
 
         ArenaClickItemEvent event = new ArenaClickItemEvent(arenaPlayer, clickedItem, e.getAction());
