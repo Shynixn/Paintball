@@ -12,16 +12,9 @@ import static me.synapz.paintball.storage.Settings.THEME;
 import static org.bukkit.ChatColor.*;
 
 public class Messenger {
-    
-    public static final String SUFFIX = SECONDARY + " » ";
-    public static final String EXPIRATION_TIME = createPrefix("Expiration") + SECONDARY + "%time%" + THEME + " seconds";
-    public static final String EXPIRATION_END = createPrefix("Expiration") + SECONDARY + "Item %item% " + SECONDARY + "has expired";
-    public static final String PROTECTION_END = createPrefix("Protection") + SECONDARY + "Protection has expired";
-    public static final String PROTECTION_TIME = createPrefix("Protection") + SECONDARY + "%time% " + THEME + "seconds";
-    public static final String TEAM_SWITCH_TIME = createPrefix("Team Switch") + SECONDARY + "%time%" + THEME + " seconds";
-    public static final String TEAM_SWITCH_END = createPrefix("Team Switch") + SECONDARY + "Team switching unlocked";
-    public static final String TEAM_SWITCH_ERROR = createPrefix("Team Switch") + SECONDARY + "Wait for the team switch cooldown to end.";
 
+    public static final String SUFFIX = SECONDARY + " » ";
+    
     public static void error(CommandSender sender, Messages...msgs) {
         for (Messages msg : msgs)
             info(sender, RED + msg.getString());

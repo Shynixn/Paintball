@@ -1,6 +1,7 @@
 package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.utils.ActionBar;
@@ -29,7 +30,7 @@ public class ProtectionCountdown extends PaintballCountdown {
         this.arena = player.getArena();
         this.team = player.getTeam();
 
-        ActionBar.sendActionBar(this.player, Messenger.PROTECTION_TIME.replace("%time%", String.valueOf(counter)));
+        ActionBar.sendActionBar(this.player, Messages.PROTECTION_TIME.getString().replace("%time%", String.valueOf(counter)));
         if (!godPlayers.keySet().contains(name)) {
             godPlayers.put(name, this);
         }
@@ -37,13 +38,13 @@ public class ProtectionCountdown extends PaintballCountdown {
 
     public void onFinish() {
         godPlayers.remove(name, this);
-        Messenger.msg(this.player, Messenger.PROTECTION_END);
-        ActionBar.sendActionBar(this.player, Messenger.PROTECTION_END);
+        Messenger.msg(this.player, Messages.PROTECTION_END.getString());
+        ActionBar.sendActionBar(this.player, Messages.PROTECTION_END.getString());
     }
 
     // Called every iteration of run()
     public void onIteration() {
-        String protectionMessage = Messenger.PROTECTION_TIME.replace("%time%", String.valueOf((int) counter-1));
+        String protectionMessage = Messages.PROTECTION_TIME.getString().replace("%time%", String.valueOf((int) counter-1));
 
         ActionBar.sendActionBar(this.player, protectionMessage);
     }

@@ -1,3 +1,6 @@
+v5.3.9
+- Added requested messages
+
 v5.3.8
 - Fixed player being able to keep Expiration item forever by temp holding it in inventory
 - Fixed player being able to bypass movement speed

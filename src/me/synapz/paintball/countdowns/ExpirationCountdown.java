@@ -2,6 +2,7 @@ package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.utils.ActionBar;
 import me.synapz.paintball.utils.Messenger;
@@ -51,7 +52,7 @@ public class ExpirationCountdown extends PaintballCountdown {
             return; // Dont want it to double when it players
         if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && item.equals(itemInHand) && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
             if (times.get(inv.getItemInHand().getItemMeta().getDisplayName()).getCounter() == counter) {
-                ActionBar.sendActionBar(player, Messenger.EXPIRATION_TIME.replace("%time%", String.valueOf((int)(counter-1))));
+                ActionBar.sendActionBar(player, Messages.EXPIRATION_TIME.getString().replace("%time%", String.valueOf((int)(counter-1))));
             }
         } else if (itemInHand != null && itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasDisplayName() && times.get(inv.getItemInHand().getItemMeta().getDisplayName()) != null) {
         } else {
@@ -74,7 +75,7 @@ public class ExpirationCountdown extends PaintballCountdown {
     @Override
     public void cancel() {
         if (inventoryContainsItem()) {
-            ActionBar.sendActionBar(player, Messenger.EXPIRATION_END.replace("%item%", item.getItemName(false)));
+            ActionBar.sendActionBar(player, Messages.EXPIRATION_END.getString().replace("%item%", item.getItemName(false)));
         } else {
             Utils.removeActionBar(player);
         }

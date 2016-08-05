@@ -2,6 +2,7 @@ package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.arenas.Arena;
 import me.synapz.paintball.arenas.ArenaManager;
+import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.utils.ActionBar;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.entity.Player;
@@ -29,12 +30,12 @@ public class ChangeTeamCountdown extends PaintballCountdown {
 
     public void onFinish() {
         teamPlayers.remove(name, this);
-        ActionBar.sendActionBar(this.player, Messenger.TEAM_SWITCH_END);
+        ActionBar.sendActionBar(this.player, Messages.TEAM_SWITCH_END.getString());
     }
 
     // Called every iteration of run()
     public void onIteration() {
-        ActionBar.sendActionBar(this.player, Messenger.TEAM_SWITCH_TIME.replace("%time%", String.valueOf((int) counter)));
+        ActionBar.sendActionBar(this.player, Messages.TEAM_SWITCH_TIME.getString().replace("%time%", String.valueOf((int) counter)));
     }
 
     public boolean stop() {

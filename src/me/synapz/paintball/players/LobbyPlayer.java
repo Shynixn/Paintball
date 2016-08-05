@@ -162,7 +162,7 @@ public class LobbyPlayer extends PaintballPlayer {
      */
     public void setTeam(Team newTeam) {
         if (ChangeTeamCountdown.teamPlayers.containsKey(player.getName())) {
-            Messenger.msg(player, Messenger.TEAM_SWITCH_ERROR);
+            Messenger.msg(player, Messages.TEAM_SWITCH_ERROR.getString());
             return;
         }
         team.playerLeaveTeam();

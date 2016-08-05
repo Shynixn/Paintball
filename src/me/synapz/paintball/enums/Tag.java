@@ -30,7 +30,8 @@ public enum Tag {
     PAGE,
     WAGER_AMOUNT,
     WAGER_TOTAL,
-    DIED;
+    DIED,
+    ITEM;
 
     @Override
     public String toString() {

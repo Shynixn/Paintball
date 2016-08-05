@@ -2,6 +2,9 @@ package me.synapz.paintball.enums;
 
 import org.bukkit.ChatColor;
 
+import static me.synapz.paintball.storage.Settings.THEME;
+import static org.bukkit.ChatColor.BOLD;
+
 public enum Messages {
 
     SIGN_TITLE("&8[" + Tag.THEME + "Paintball&8]"),
@@ -252,6 +255,14 @@ public enum Messages {
     STOPPING("Stopping"),
     PLAYING("Playing"),
     REMOVED("Remoaced"),
+
+    EXPIRATION_TIME(Tag.THEME + "&l" + "Expiration" + " » " + Tag.SECONDARY + Tag.TIME + Tag.THEME + " seconds"),
+    EXPIRATION_END(Tag.THEME + "&l" + "Expiration" + " » " + Tag.SECONDARY + "Item " + Tag.ITEM + " has expired"),
+    PROTECTION_END(Tag.THEME + "&l" + "Protection" + " » " + Tag.SECONDARY + "Protection has expired"),
+    PROTECTION_TIME(Tag.THEME + "&l" + "Protection" + " » " + Tag.SECONDARY + "%time% " + THEME + "seconds"),
+    TEAM_SWITCH_TIME(Tag.THEME + "&l" + "Team Switch" + " » " + Tag.SECONDARY + "%time%" + THEME + " seconds"),
+    TEAM_SWITCH_END(Tag.THEME + "&l" + "Team Switch" + " » " + Tag.SECONDARY + "Team switching unlocked"),
+    TEAM_SWITCH_ERROR(Tag.THEME + "&l" + "Team Switch" + " » " + Tag.SECONDARY + "Wait for the team switch cooldown to end."),
 
     // Wager
     PLAYER_WAGERED(Tag.PLAYER + " has wagered " + Tag.CURRENCY + Tag.WAGER_AMOUNT + " (" + Tag.CURRENCY + Tag.WAGER_TOTAL + ")");
