@@ -30,7 +30,7 @@ public class DelHolo extends PaintballCommand {
             try {
                 radius = Integer.parseInt(args[2]);
             } catch (NumberFormatException exc) {
-                Messenger.error(player, Messages.VALID_RADIUS);
+                Messenger.error(player, Messages.VALID_NUMBER);
                 return;
             }
         }

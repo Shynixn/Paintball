@@ -54,7 +54,7 @@ public enum Messages {
     HOLO_LINK("http://dev.bukkit.org/bukkit-plugins/holographic-displays/"),
     HOLO_SET("Hologram leaderboard set to your location!"),
     IN_ARENA_TO_WAGER("You must be in an arena to wager!"),
-    WAGER_GREATER_THAN_0("Wager must be greater than zero!"),
+    AMOUNT_GREATER_THAN_0("Amount must be greater than zero!"),
     WAGER_IN_ARENA("You must be in an arena to wager!"),
     ENABLE_VAULT("Vault must be enabled for this feature."),
     VAULT_NOT_ENOUGH_MONEY("You do not have enough money!"),
@@ -63,10 +63,11 @@ public enum Messages {
     INVALID_LAST_LOCATION("You do not have a last location."),
     TELEPORTING_TO_LAST_LOCATION("Teleporting to last location..."),
     CANNOT_USE_WHILE_RIDING("You cannot use an item while riding something."),
-    VALID_RADIUS("Please enter a valid number for radius"),
+    VALID_NUMBER("Please enter a valid number"),
     HOLOGRAMS_REMOVED("Removed &7" + Tag.AMOUNT + " &aholograms."),
     NO_HOLOGRAMS_REMOVED("No holograms were removed."),
     NO_ARENAS("No arenas are currently opened."),
+    TARGET_NOT_IN_ARENA("Target is not in an arena!"),
     NOT_IN_ARENA("You are not in an arena."),
     CANNOT_JOIN("Error: arena is not available to join!"),
     CANNOT_SPECTATE("Error: arena is not available to spectate!"),
@@ -74,6 +75,7 @@ public enum Messages {
     ARENA_NOT_SETUP(Tag.ARENA + " has not been fully setup."),
     ARENA_DISABLED(Tag.ARENA + " is disabled."),
     ARENA_NOT_IN_PROGRESS(Tag.ARENA + " is currently not in progress"),
+    NOT_FOUND("Target '" + Tag.PLAYER + "' was not found."),
     IN_ARENA("You are already in an arena!"),
     ARENA_NOT_FOUND("No arena named " + Tag.ARENA + " found."),
     PAGE_REAL_NUMBER("Please specify a real number as the page."),
@@ -248,6 +250,8 @@ public enum Messages {
     HIT_PLAYER("Hit player! " + Tag.AMOUNT + "/" + Tag.MAX),
     TEAM_FULL("&rTeam " + Tag.TEAM + " is full!"),
 
+    MUST_BE_ARENA_PLAYER("Target must be an arena player!"),
+
     NOT_SETUP("Not Setup"),
     WAITING("Waiting"),
     DISABLED("Disabled"),
@@ -263,6 +267,8 @@ public enum Messages {
     TEAM_SWITCH_TIME(Tag.THEME + "&l" + "Team Switch" + " » " + Tag.SECONDARY + "%time%" + THEME + " seconds"),
     TEAM_SWITCH_END(Tag.THEME + "&l" + "Team Switch" + " » " + Tag.SECONDARY + "Team switching unlocked"),
     TEAM_SWITCH_ERROR(Tag.THEME + "&l" + "Team Switch" + " » " + Tag.SECONDARY + "Wait for the team switch cooldown to end."),
+
+    GAVE_COINS("You have given &7" + Tag.AMOUNT + " &acoins to &7" + Tag.PLAYER),
 
     // Wager
     PLAYER_WAGERED(Tag.PLAYER + " has wagered " + Tag.CURRENCY + Tag.WAGER_AMOUNT + " (" + Tag.CURRENCY + Tag.WAGER_TOTAL + ")");

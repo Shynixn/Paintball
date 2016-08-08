@@ -5,8 +5,10 @@ import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.commands.PaintballCommand;
 import me.synapz.paintball.enums.CommandType;
 import me.synapz.paintball.enums.Messages;
+import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.players.PaintballPlayer;
+import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,7 +24,7 @@ public class AddCoins extends PaintballCommand {
         int coins;
 
         if (Bukkit.getPlayer(targetStr) == null) {
-            Messenger.error(player, "Target '" + targetStr + "' was not found.");
+            Messenger.error(player, new MessageBuilder(Messages.NOT_FOUND).replace(Tag.PLAYER, targetStr).build());
             return;
         }
 
@@ -30,36 +32,37 @@ public class AddCoins extends PaintballCommand {
         Arena targetArena = getArena(Bukkit.getPlayer(targetStr));
 
         if (targetArena == null) {
-            Messenger.error(player, "Target player is not an arena");
+            Messenger.error(player, Messages.TARGET_NOT_IN_ARENA.getString());
             return;
         }
 
         try {
             coins = Integer.parseInt(coinStr);
         } catch (NumberFormatException e) {
-            Messenger.error(player, coinStr + " is not a valid number!");
+            Messenger.error(player, Messages.VALID_NUMBER.getString());
             return;
         }
 
         if (coins <= 0) {
-            Messenger.error(player, "Amount must be greater then 0.");
+            Messenger.error(player, Messages.AMOUNT_GREATER_THAN_0.getString());
             return;
         }
 
         if (targetArena.getState() != Arena.ArenaState.IN_PROGRESS) {
-            Messenger.error(player, "Arena is not in progress.");
+            Messenger.error(player, Messages.ARENA_NOT_IN_PROGRESS);
             return;
         }
 
         PaintballPlayer pbPlayer = targetArena.getPaintballPlayer(target);
 
         if (!(pbPlayer instanceof ArenaPlayer)) {
-            Messenger.error(player, "Target must be an arena player!");
+            Messenger.error(player, Messages.MUST_BE_ARENA_PLAYER.getString());
             return;
         }
 
         ArenaPlayer targetArenaPlayer = (ArenaPlayer) pbPlayer;
 
+        Messenger.success(player, new MessageBuilder(Messages.GAVE_COINS).replace(Tag.AMOUNT, coins + "").replace(Tag.PLAYER, targetArenaPlayer.getPlayer().getName()).build());
         targetArenaPlayer.depositCoin(coins);
         targetArena.updateAllScoreboard();
     }

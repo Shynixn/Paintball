@@ -44,7 +44,7 @@ public class Wager extends PaintballCommand {
         }
 
         if (wager <= 0) {
-            Messenger.error(player, Messages.WAGER_GREATER_THAN_0);
+            Messenger.error(player, Messages.AMOUNT_GREATER_THAN_0);
             return;
         }
 
