@@ -3,6 +3,7 @@ package me.synapz.paintball.listeners;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;
+import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.enums.Messages;
@@ -34,6 +35,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
 
 import java.util.ArrayList;
@@ -771,6 +773,9 @@ public class Listeners extends BaseListener implements Listener {
         if (!isInArena(player)) return;
 
         ItemStack stack = player.getInventory().getItem(event.getNewSlot());
+
+        player.removePotionEffect(PotionEffectType.SLOW);
+        CoinItemListener.zooming.remove(player.getUniqueId());
 
         if (stack == null || stack.getType().equals(Material.AIR)
                 || !stack.hasItemMeta() || !stack.getItemMeta().hasDisplayName()) {

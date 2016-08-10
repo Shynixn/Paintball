@@ -39,7 +39,7 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
-                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
                     Projectile snowball = player.launchProjectile(Snowball.class);
                     snowball.setVelocity(snowball.getVelocity().multiply(event.getArena().SPEED));
                 }
@@ -50,7 +50,7 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
-                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
                     Projectile snowball = player.launchProjectile(Snowball.class);
                     double speed = event.getArena().SPEED;
                     snowball.setVelocity(snowball.getVelocity().multiply(speed));
@@ -269,7 +269,7 @@ public class CoinItems implements Listener {
                     Player player = event.getArenaPlayer().getPlayer();
                     Arena arena = event.getArena();
 
-                    if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                    if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK)
                         Utils.shootSnowball(player, event.getArena(), arena.ACCURACY);
                 }
             };

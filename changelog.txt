@@ -1,3 +1,9 @@
+v5.4.1
+- Changed shooting to left click
+- Added right click zoom feature
+- Added "zoom" boolean to items.yml which will define if an item zooms in or not
+- Fixed tags not replacing
+
 v5.4.0
 - Fixed addcoin command not sending output messages
 - Added more messages to messages.yml

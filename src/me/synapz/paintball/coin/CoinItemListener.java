@@ -12,16 +12,22 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class CoinItemListener implements Listener {
 
+    public static java.util.List<UUID> zooming = new ArrayList<>();
     private Map<String, Long> timeSinceLastShot;
 
     public CoinItemListener() {
@@ -73,6 +79,7 @@ public class CoinItemListener implements Listener {
     @EventHandler
     public void onClickCoinItem(PlayerInteractEvent e) {
         Player player = e.getPlayer();
+        UUID uuid = player.getUniqueId();
         ItemStack item = e.getItem();
         if (player == null) {
             return;
@@ -105,6 +112,7 @@ public class CoinItemListener implements Listener {
         }
 
         long delay = clickedItem.getDelay();
+        boolean canZoom = clickedItem.getCanZoom();
 
         if (System.currentTimeMillis() - timeSinceLastShot.getOrDefault(player.getName(), delay) < delay) return;
         timeSinceLastShot.put(player.getName(), System.currentTimeMillis());
@@ -116,6 +124,16 @@ public class CoinItemListener implements Listener {
         if (clickedItem.getSpeed() != player.getWalkSpeed())
             player.setWalkSpeed(clickedItem.getSpeed());
 
+        if (canZoom && e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (zooming.contains(uuid)) {
+                zooming.remove(uuid);
+                player.removePotionEffect(PotionEffectType.SLOW);
+            } else {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 5));
+                zooming.add(uuid);
+            }
+        }
+
         e.setCancelled(true);
 
         ArenaClickItemEvent event = new ArenaClickItemEvent(arenaPlayer, clickedItem, e.getAction());
@@ -124,4 +142,5 @@ public class CoinItemListener implements Listener {
 
         arenaPlayer.setLastClickedItem(clickedItem);
     }
+
 }

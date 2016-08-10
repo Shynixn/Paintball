@@ -2,6 +2,7 @@ package me.synapz.paintball.countdowns;
 
 import me.synapz.paintball.coin.CoinItem;
 import me.synapz.paintball.coin.CoinItemHandler;
+import me.synapz.paintball.coin.CoinItemListener;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.players.ArenaPlayer;
 import me.synapz.paintball.utils.ActionBar;
@@ -11,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,6 +88,9 @@ public class ExpirationCountdown extends PaintballCountdown {
         item.remove(arenaPlayer);
         times.remove(item.getItemName(true), this);
         player.setWalkSpeed(0.2f);
+
+        player.removePotionEffect(PotionEffectType.SLOW);
+        CoinItemListener.zooming.remove(player.getUniqueId());
         super.cancel();
     }
 

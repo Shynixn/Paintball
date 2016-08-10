@@ -68,6 +68,10 @@ public class ItemFile extends PaintballFile {
         return loadFloat(item, "walking-speed", item.getDefaultSpeed());
     }
 
+    public boolean getCanZoom(Items item) {
+        return loadBoolean(item, "zoom", item.getDefaultCanZoom());
+    }
+
     public Sound getSound(Items item) {
         return Utils.strToSound(loadString(item, "sound", item.getDefaultSound().toString()));
     }
