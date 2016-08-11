@@ -1,3 +1,7 @@
+v5.4.2
+- Fixed unlimited enderpearl glitch
+- Fixed item getting stuck in storage inventory, now they cannot buy an item if inventory is full
+
 v5.4.1
 - Changed shooting to left click
 - Added right click zoom feature

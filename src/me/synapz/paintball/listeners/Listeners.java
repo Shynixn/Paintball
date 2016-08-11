@@ -24,6 +24,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -32,8 +33,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.entity.EntityDismountEvent;
@@ -146,6 +150,7 @@ public class Listeners extends BaseListener implements Listener {
         if (!isInArena(player)) {
             return;
         }
+
         Arena a = getArena(player);
         PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
 
@@ -226,14 +231,16 @@ public class Listeners extends BaseListener implements Listener {
     public void onItemMoveInArena(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         ItemStack clickedItem = e.getCurrentItem();
-
-        if (clickedItem == null || clickedItem.getType() == Material.AIR || clickedItem.hasItemMeta() && !clickedItem.getItemMeta().hasDisplayName() && !isInArena(player))
-            return;
-
-        String name = clickedItem.getItemMeta().getDisplayName();
+        Arena a = getArena(player);
 
         if (isInArena(player)) {
-            Arena a = getArena(player);
+            if (clickedItem == null || clickedItem.getType() == Material.AIR) {
+                e.setCancelled(true);
+                return;
+            }
+
+            String name = clickedItem.getItemMeta().getDisplayName();
+
             PaintballPlayer gamePlayer = a.getPaintballPlayer(player);
 
             if (gamePlayer instanceof LobbyPlayer) {
@@ -272,7 +279,7 @@ public class Listeners extends BaseListener implements Listener {
                 }
                 e.setCancelled(true);
             } else if (gamePlayer instanceof SpectatorPlayer) {
-                if (clickedItem.getType() == Material.SKULL_ITEM) {
+                if (clickedItem != null && clickedItem.getType() == Material.SKULL_ITEM) {
                     String[] splitName = name.split(" ");
                     String targetName = "";
 

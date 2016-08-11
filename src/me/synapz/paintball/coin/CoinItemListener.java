@@ -6,9 +6,11 @@ import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.events.ArenaBuyItemEvent;
 import me.synapz.paintball.events.ArenaClickItemEvent;
 import me.synapz.paintball.players.ArenaPlayer;
+import me.synapz.paintball.utils.ActionBar;
 import me.synapz.paintball.utils.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -63,14 +65,28 @@ public class CoinItemListener implements Listener {
             Messenger.error(player, new String[]{(String) coinItem.getError(arenaPlayer).get(0)});
             return;
         } else {
+            boolean emptySlot = false;
 
-            coinItem.giveItemToPlayer(arenaPlayer);
-            if ((coinItem.requiresMoney()) || (coinItem.requiresCoins())) {
-                arena.updateAllScoreboard();
+            for (int i = 0; i < 9; i++) {
+                ItemStack nullableItem = player.getInventory().getItem(i);
+
+                if (nullableItem == null || nullableItem.getType() == Material.AIR) {
+                    emptySlot = true;
+                    break;
+                }
             }
 
-            ArenaBuyItemEvent event = new ArenaBuyItemEvent(arenaPlayer, coinItem);
-            Bukkit.getServer().getPluginManager().callEvent(event);
+            if (emptySlot) {
+                coinItem.giveItemToPlayer(arenaPlayer);
+                if ((coinItem.requiresMoney()) || (coinItem.requiresCoins())) {
+                    arena.updateAllScoreboard();
+                }
+
+                ArenaBuyItemEvent event = new ArenaBuyItemEvent(arenaPlayer, coinItem);
+                Bukkit.getServer().getPluginManager().callEvent(event);
+            } else {
+                Messenger.error(player, Messages.NO_SPACE.getString());
+            }
         }
         e.setCancelled(true);
         player.closeInventory();
