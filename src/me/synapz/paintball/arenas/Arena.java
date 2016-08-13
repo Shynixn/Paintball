@@ -668,11 +668,21 @@ public class Arena {
         StringBuilder formattedWinnerList = new StringBuilder();
         if (this instanceof FFAArena) {
             int c = 0;
+
             for (Team winningTeam : teams) {
-                if (winners.size() > 0)
+
+
+                if (winners.size() > 0) {
+                    if (winners.size() <= 0)
+                        break;
+
                     formattedWinnerList.append(winningTeam.getChatColor()).append(winners.get(0).getPlayer().getName()).append(Settings.THEME).append(", ");
-                else
+                } else {
+                    if (tiers.size() <= 0)
+                        break;
+
                     formattedWinnerList.append(winningTeam.getChatColor()).append(tiers.get(c).getPlayer().getName()).append(Settings.THEME).append(", ");
+                }
                 c++;
             }
         } else {

@@ -1,3 +1,10 @@
+v5.4.4
+- Fixed 5 console errors
+- Test for Black Flag issue in CTF
+
+v5.4.3
+- Made Time Warp cancel ProtectionCountdown task to give better gameplay
+
 v5.4.2
 - Fixed unlimited enderpearl glitch
 - Fixed item getting stuck in storage inventory, now they cannot buy an item if inventory is full

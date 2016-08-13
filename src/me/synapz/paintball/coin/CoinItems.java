@@ -2,6 +2,7 @@ package me.synapz.paintball.coin;
 
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.Arena;
+import me.synapz.paintball.countdowns.ProtectionCountdown;
 import me.synapz.paintball.enums.Items;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Team;
@@ -205,6 +206,13 @@ public class CoinItems implements Listener {
                 if (player.getLastLocation() == null) {
                     Messenger.error(player.getPlayer(), Messages.INVALID_LAST_LOCATION);
                 } else {
+                    ProtectionCountdown countdown = ProtectionCountdown.godPlayers.get(player.getPlayer().getName());
+
+                    if (countdown != null) {
+                        countdown.onFinish();
+                        countdown.cancel();
+                    }
+
                     Messenger.success(player.getPlayer(), Messages.TELEPORTING_TO_LAST_LOCATION);
                     event.getCoinItem().remove(player);
 

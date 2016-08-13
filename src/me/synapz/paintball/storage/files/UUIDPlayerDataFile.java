@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -109,6 +110,17 @@ public class UUIDPlayerDataFile extends PaintballFile{
     }
 
     private ItemStack[] getLastInventoryContents(String path) {
-        return (ItemStack[]) fileConfig.getList(path).toArray();
+        List<?> objects = fileConfig.getList(path);
+        ItemStack[] list = new ItemStack[objects.size()];
+
+        int index = 0;
+        for (Object rawItem : objects) {
+            if (rawItem instanceof ItemStack) {
+                list[index] = (ItemStack) rawItem;
+            }
+            index++;
+        }
+
+        return list;
     }
 }

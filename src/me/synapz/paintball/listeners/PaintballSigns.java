@@ -5,6 +5,7 @@ import me.synapz.paintball.arenas.ArenaManager;
 import me.synapz.paintball.enums.Messages;
 import me.synapz.paintball.enums.Tag;
 import me.synapz.paintball.locations.SignLocation;
+import me.synapz.paintball.players.PaintballPlayer;
 import me.synapz.paintball.storage.Settings;
 import me.synapz.paintball.utils.MessageBuilder;
 import me.synapz.paintball.utils.Messenger;
@@ -120,7 +121,10 @@ public class PaintballSigns implements Listener {
                 Messenger.error(player, Messages.NOT_IN_ARENA);
                 return;
             } else {
-                arena.getPaintballPlayer(player).leave();
+                PaintballPlayer pbPlayer = arena.getPaintballPlayer(player);
+
+                if (pbPlayer != null)
+                    pbPlayer.leave();
                 return;
             }
         }
@@ -237,9 +241,13 @@ public class PaintballSigns implements Listener {
                             Messenger.success(e.getPlayer(), new MessageBuilder(Messages.SIGN_SPECTATE_REMOVED)
                                     .replace(Tag.ARENA, a.getName()).build());
                     } else if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.join.remove")) {
-                        a.getSignLocations().get(sign.getLocation()).removeSign();
-                        Messenger.success(e.getPlayer(), new MessageBuilder(Messages.SIGN_JOIN_REMOVED)
-                                .replace(Tag.ARENA, a.getName()).build());
+                        SignLocation signLocation = a.getSignLocations().get(sign.getLocation());
+
+                        if (signLocation != null) {
+                            signLocation.removeSign();
+                            Messenger.success(e.getPlayer(), new MessageBuilder(Messages.SIGN_JOIN_REMOVED)
+                                    .replace(Tag.ARENA, a.getName()).build());
+                        }
                     }
                 } else if (sign.getLine(1).equals(Messages.SIGN_LEAVE.getString())) {
                     if (Messenger.signPermissionValidator(e.getPlayer(), "paintball.leave.remove"))

@@ -31,6 +31,9 @@ public abstract class TeamCommand extends ArenaCommand {
             return;
         }
 
+        if (arena == null)
+            return;
+
         if (arena.getActiveArenaTeamList().isEmpty()) {
             Messenger.error(player, new MessageBuilder(Messages.NO_TEAMS_SET).replace(Tag.ARENA, arena.toString(ChatColor.RED)).build());
             return;

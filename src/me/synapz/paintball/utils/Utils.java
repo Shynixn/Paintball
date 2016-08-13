@@ -167,7 +167,7 @@ public class Utils {
     }
 
     public static Location createFlag(Team team, Location location, BlockManager blockManager) {
-        DyeColor color = team == null ? DyeColor.WHITE : team.getDyeColor();
+        DyeColor color = team == null || team.getDyeColor() == null ? DyeColor.WHITE : team.getDyeColor();
 
         // Makes sure the bottom block is not air, because barriers cannot be palced over air
         while (location.clone().subtract(0, 1, 0).getBlock().getType() == Material.AIR && location.getBlockY() > 0)
@@ -195,6 +195,12 @@ public class Utils {
 
         // Updates the banner
         banner.update();
+
+        // TODO: Remove after debuging
+        DyeColor base = banner.getBaseColor();
+        if (base == DyeColor.BLACK) {
+            Messenger.error(Bukkit.getConsoleSender(), "ERROR. BLACK FLAG...", "TEAM: " + team.getTitleName());
+        }
 
         // In case the new location is lower
         return location;
