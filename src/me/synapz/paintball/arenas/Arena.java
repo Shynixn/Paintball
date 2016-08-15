@@ -550,7 +550,7 @@ public class Arena {
             startLocs.put(player.getPlayer(), player.getPlayer().getLocation());
 
             sendCommands(p.getPlayer(), START_COMMANDS);
-            cachedHeads.put(player.getPlayer().getUniqueId(), Utils.getSkull(player.getPlayer(), Settings.THEME + BOLD + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleport to " + ITALIC + player.getPlayer().getName()));
+            cachedHeads.put(player.getPlayer().getUniqueId(), Utils.getSkull(player.getPlayer(), Settings.THEME + BOLD + Messages.CLICK.getString() + Messenger.SUFFIX + RESET + Settings.SECONDARY + Messages.TELEPORT_TO.getString() + ITALIC + player.getPlayer().getName()));
         }
 
         remakeSpectatorInventory();
@@ -654,14 +654,14 @@ public class Arena {
             }
 
             String spaces = Settings.SECONDARY + ChatColor.STRIKETHROUGH + Utils.makeSpaces(20);
-            String title = THEME + " Games Stats ";
+            String title = Messages.GAME_STATS.getString();
             Messenger.msg(player, spaces + title + spaces,
-                    Settings.THEME + "Money: " + Settings.SECONDARY + (arenaPlayer.getMoney() < 0 ? "-" : "+") + "$" + Math.abs(arenaPlayer.getMoney()),
-                    Settings.THEME + "Kills: " + Settings.SECONDARY + arenaPlayer.getKills(),
-                    Settings.THEME + "Deaths: " + Settings.SECONDARY + arenaPlayer.getDeaths(),
-                    Settings.THEME + "Killstreak: " + Settings.SECONDARY + arenaPlayer.getKillStreak(),
-                    Settings.THEME + "KD: " + Settings.SECONDARY + arenaPlayer.getKd(),
-                    Settings.THEME + "Your team " + Settings.SECONDARY + (teams.size() >= 2 ? "tied" : (teams.contains(arenaPlayer.getTeam()) ? "won" : "lost")),
+                    Settings.THEME + Messages.MONEY1.getString() + Settings.SECONDARY + (arenaPlayer.getMoney() < 0 ? "-" : "+") + "$" + Math.abs(arenaPlayer.getMoney()),
+                    Settings.THEME + Messages.KILLS1.getString() + Settings.SECONDARY + arenaPlayer.getKills(),
+                    Settings.THEME + Messages.DEATHS1.getString() + Settings.SECONDARY + arenaPlayer.getDeaths(),
+                    Settings.THEME + Messages.KILLSTREAK1.getString() + Settings.SECONDARY + arenaPlayer.getKillStreak(),
+                    Settings.THEME + Messages.KD1.getString() + Settings.SECONDARY + arenaPlayer.getKd(),
+                    Settings.THEME + Messages.YOUR_TEAM1.getString() + Settings.SECONDARY + (teams.size() >= 2 ? Messages.TIED1.getString() : (teams.contains(arenaPlayer.getTeam()) ? Messages.WON.getString() : Messages.LOST.getString())),
                     spaces + Utils.makeSpaces(title +  "123") + spaces);
         }
 
@@ -695,26 +695,26 @@ public class Arena {
 
         if (this instanceof FFAArena) {
             if (BROADCAST_WINNER) {
-                Bukkit.broadcastMessage((teams.size() == 1 ? list + " won!" : "There was a tie between " + list));
+                Bukkit.broadcastMessage((teams.size() == 1 ? list + " " + Messages.WON.getString() + "!" : Messages.THERE_WAS_A_TIE_BETWEEN.getString() + list));
             } else {
-                broadcastMessage((teams.size() == 1 ? list + " won!" : "There was a tie between " + list));
+                broadcastMessage((teams.size() == 1 ? list + " " + Messages.WON.getString() + "!" : Messages.THERE_WAS_A_TIE_BETWEEN.getString() + list));
             }
         } else {
             if (BROADCAST_WINNER) {
-                Bukkit.broadcastMessage((teams.size() == 1 ? "The " + list + " team won!" : "There was a tie between " + list));
+                Bukkit.broadcastMessage((teams.size() == 1 ? new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() : Messages.THERE_WAS_A_TIE_BETWEEN.getString() + list));
             } else {
-                broadcastMessage((teams.size() == 1 ? "The " + list + " team won!" : "There was a tie between " + list));
+                broadcastMessage((teams.size() == 1 ? new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() : new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() + list));
             }
         }
 
         if (this instanceof FFAArena) {
             for (PaintballPlayer player : getAllPlayers().values()) {
-                Title title = new Title(THEME + (teams.size() == 1 ? list + " won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list), 20, 40, 20);
+                Title title = new Title(THEME + (teams.size() == 1 ? list + " " + Messages.WON.getString() + "!" : new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build()), SECONDARY + (teams.size() == 1 ? Messages.YOU.getString() + " " + (teams.contains(player.getTeam()) ? Messages.WON.getString() : Messages.LOST.getString()) : list), 20, 40, 20);
                 title.send(player.getPlayer());
             }
         } else {
             for (PaintballPlayer player : getAllPlayers().values()) {
-                Title title = new Title(THEME + (teams.size() == 1 ? "The " + list + " team won" : "There was a tie between"), SECONDARY + (teams.size() == 1 ? "You " + (teams.contains(player.getTeam()) ? "won" : "lost") : list), 20, 40, 20);
+                Title title = new Title(THEME + (teams.size() == 1 ? new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() : new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build()), SECONDARY + (teams.size() == 1 ? Messages.YOU.getString() + " " + (teams.contains(player.getTeam()) ? Messages.WON.getString() : Messages.LOST.getString()) : list), 20, 40, 20);
                 title.send(player.getPlayer());
             }
         }

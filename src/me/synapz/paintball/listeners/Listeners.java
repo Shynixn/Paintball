@@ -45,6 +45,10 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static org.bukkit.ChatColor.BOLD;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.RESET;
+
 public class Listeners extends BaseListener implements Listener {
 
     @EventHandler
@@ -219,7 +223,7 @@ public class Listeners extends BaseListener implements Listener {
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (name.equals(Messages.ITEM_LEAVE_ARENA.getString())) {
                     spectatorPlayer.leave();
-                } else if (name.equals(SpectatorPlayer.TELEPORTER)) {
+                } else if (name.equals(RED + "" + Settings.THEME + String.valueOf(BOLD) + Messages.CLICK.getString() + Messenger.SUFFIX + RESET + Settings.SECONDARY + Messages.Teleporter.getString())) {
                     spectatorPlayer.openMenu();
                 }
             }

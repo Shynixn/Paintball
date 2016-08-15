@@ -21,7 +21,6 @@ public class SpectatorPlayer extends PaintballPlayer {
 
     private UUIDPlayerDataFile uuidPlayerDataFile;
     private ArenaPlayer oldArenaPlayer;
-    public static final String TELEPORTER = RED + "" + Settings.THEME + String.valueOf(BOLD) + "Click" + Messenger.SUFFIX + RESET + Settings.SECONDARY + "Teleporter";
 
     public SpectatorPlayer(Arena a, Player p) {
         super(a, new Team(a), p, true);
@@ -53,7 +52,7 @@ public class SpectatorPlayer extends PaintballPlayer {
 
     @Override
     protected void giveItems() {
-        player.getInventory().setItem(0, Utils.getSkull(this.getPlayer(), TELEPORTER));
+        player.getInventory().setItem(0, Utils.getSkull(this.getPlayer(), RED + "" + Settings.THEME + String.valueOf(BOLD) + Messages.CLICK.getString() + Messenger.SUFFIX + RESET + Settings.SECONDARY + Messages.Teleporter.getString()));
         player.getInventory().setItem(8, Utils.makeItem(Material.BED, Messages.ITEM_LEAVE_ARENA.getString(), 1));
         player.updateInventory();
     }

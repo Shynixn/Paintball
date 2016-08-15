@@ -1,3 +1,6 @@
+v5.4.5
+- Added many messages (I think full game can be played now in a different language!) @div
+
 v5.4.4
 - Fixed 5 console errors
 - Test for Black Flag issue in CTF

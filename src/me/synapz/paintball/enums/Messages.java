@@ -224,6 +224,12 @@ public enum Messages {
 
     HIGEST_KILL_STREAK("Highest Killstreak"),
 
+    TEAM_WON("The " + Tag.TEAM + " team won!"),
+    THERE_WAS_A_TIE_BETWEEN("There was a tie between "),
+    WON("won"),
+    LOST("lost"),
+    YOU("You"),
+
     KD("K/D"),
     KILLS("Kills"),
     DEATHS("Deaths"),
@@ -270,6 +276,20 @@ public enum Messages {
     TEAM_SWITCH_ERROR(Tag.THEME + "&l" + "Team Switch" + " » " + Tag.SECONDARY + "Wait for the team switch cooldown to end."),
 
     GAVE_COINS("You have given &7" + Tag.AMOUNT + " &acoins to &7" + Tag.PLAYER),
+
+    GAME_STATS(Tag.THEME + " Games Stats "),
+    MONEY1("Money: "),
+    KILLS1("Kills: "),
+    DEATHS1("Deaths: "),
+    KILLSTREAK1("Killstreak: "),
+    KD1("KD: "),
+    YOUR_TEAM1("Your team "),
+    TIED1("tied"),
+    CLICK("Click"),
+    JOIN("Join"),
+    Teleporter("Teleporter"),
+    TELEPORT_TO("Teleport to "),
+    CHANGE_TEAM("Change Team"),
 
     // Wager
     PLAYER_WAGERED(Tag.PLAYER + " has wagered " + Tag.CURRENCY + Tag.WAGER_AMOUNT + " (" + Tag.CURRENCY + Tag.WAGER_TOTAL + ")");
