@@ -1,3 +1,8 @@
+v5.4.6
+- Added PlaceHolderAPI for all stats
+    - Syntax: paintball_{stat name}
+    - Example: paintball_kills, paintball_deaths, paintball_kd, etc.
+
 v5.4.5
 - Added many messages (I think full game can be played now in a different language!) @div
 

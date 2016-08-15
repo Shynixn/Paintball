@@ -79,6 +79,9 @@ public class Paintball extends JavaPlugin implements Listener {
 
         if (getServer().getPluginManager().getPlugin("NoCheatPlus") != null)
             NoCheatPlusCompat.addHook();
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
+            new PlaceholderRequest(this).hook();
     }
 
     @Override

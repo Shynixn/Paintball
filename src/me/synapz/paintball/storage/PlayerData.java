@@ -100,7 +100,7 @@ public class PlayerData {
      * @param player Player's state to reset
      * @return Whether the state was reset or not
      */
-    public static boolean reset(Player player) {
+    public static boolean resetFromRam(Player player) {
         PlayerData playerData = data.get(player.getUniqueId());
 
         if (playerData != null)

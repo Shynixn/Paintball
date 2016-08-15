@@ -1,5 +1,6 @@
 package me.synapz.paintball.listeners;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.synapz.paintball.Paintball;
 import me.synapz.paintball.arenas.*;
 import me.synapz.paintball.coin.CoinItem;

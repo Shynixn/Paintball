@@ -77,7 +77,7 @@ public class UUIDPlayerDataFile extends PaintballFile{
         else
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 
-        if (!PlayerData.reset(player)) {
+        if (!PlayerData.resetFromRam(player)) {
             if (fileConfig.isSet("Food")) {
                 player.teleport(new PlayerLocation(this).getLocation());
                 player.setFoodLevel(fileConfig.getInt("Food"));
@@ -102,6 +102,7 @@ public class UUIDPlayerDataFile extends PaintballFile{
                 player.updateInventory();
             }
         }
+
         Settings.getSettings().getPlayerDataFolder().removePlayerFile(uuid);
     }
 
