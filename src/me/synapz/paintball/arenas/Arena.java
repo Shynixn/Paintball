@@ -357,6 +357,7 @@ public class Arena {
         if (getActiveArenaTeamList().isEmpty()) {
             spawnsSet = false;
         }
+
         for (Team t : getActiveArenaTeamList()) {
             if (ARENA_FILE.getString(t.getPath(TeamLocations.SPAWN, 1)) == null) {
                 spawnsSet = false;

@@ -269,7 +269,7 @@ public class ArenaPlayer extends PaintballPlayer {
         PlayerInventory inv = player.getInventory();
 
         inv.setArmorContents(Utils.colorLeatherItems(team, new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_HELMET)));
-        CoinItems.getCoinItems().getDefaultItem().giveItemToPlayer(this);
+        CoinItems.getCoinItems().getDefaultItem().giveItemToPlayer(0, this);
 
         if (arena.COIN_SHOP)
             inv.setItem(8, Utils.makeItem(arena.COIN_SHOP_TYPE, Messages.ARENA_SHOP_NAME.getString(), 1));
@@ -367,8 +367,8 @@ public class ArenaPlayer extends PaintballPlayer {
      * Adds a CoinItem to a player's inventory
      * @param item CoinItem to be added to the inventory
      */
-    public void addItem(CoinItem item) {
-        this.getPlayer().getInventory().addItem(item.getItemStack(this, false));
+    public void addItem(int slot, CoinItem item) {
+        this.getPlayer().getInventory().setItem(slot, item.getItemStack(this, false));
         if (item.hasExpirationTime()) {
             new ExpirationCountdown(item, this, item.getExpirationTime());
         }

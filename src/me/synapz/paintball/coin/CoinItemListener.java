@@ -66,18 +66,20 @@ public class CoinItemListener implements Listener {
             return;
         } else {
             boolean emptySlot = false;
+            int empty = 0;
 
             for (int i = 0; i < 9; i++) {
                 ItemStack nullableItem = player.getInventory().getItem(i);
 
                 if (nullableItem == null || nullableItem.getType() == Material.AIR) {
                     emptySlot = true;
+                    empty = i;
                     break;
                 }
             }
 
             if (emptySlot) {
-                coinItem.giveItemToPlayer(arenaPlayer);
+                coinItem.giveItemToPlayer(empty, arenaPlayer);
                 if ((coinItem.requiresMoney()) || (coinItem.requiresCoins())) {
                     arena.updateAllScoreboard();
                 }

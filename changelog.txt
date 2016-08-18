@@ -1,3 +1,8 @@
+v5.4.7
+- Fixed glitching items (?)
+- Rocket launcher removes zoom when shot
+- Changed some items from having zoom
+
 v5.4.6
 - Added PlaceHolderAPI for all stats
     - Syntax: paintball_{stat name}

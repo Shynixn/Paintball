@@ -243,11 +243,11 @@ public class CoinItem extends ItemStack {
     }
 
     // Adds a copy of the CoinItem to the player's inventory
-    public void giveItemToPlayer(ArenaPlayer playerToGetItem) {
+    public void giveItemToPlayer(int slot, ArenaPlayer playerToGetItem) {
         playerToGetItem.incrementCoinUsePerPlayer(this);
         playerToGetItem.getArena().incrementCoinUse(this);
 
-        playerToGetItem.addItem(new CoinItem(this));
+        playerToGetItem.addItem(slot, new CoinItem(this));
     }
 
     // Removes the item from the inventory

@@ -19,9 +19,9 @@ public enum Items {
     SNIPER("Sniper", Material.ARROW, true, 1, "One shot one kill, extremely accurate.", 0, 7, 120, "", "sniped", Sounds.DIG_GRASS.bukkitSound(), -1, -1, 10, 2000, 0.05f, true),
     FLY("Fly", Material.FLINT, false, 1, "Activates fly on click", 0, 6, 0, "", "", Sounds.ZOMBIE_PIG_HURT.bukkitSound(), -1, -1, 0, 0, 0.2f, false),
     ROCKET_LAUNCHER("Rocket Launcher",  Material.DIAMOND_BARDING, true, 1, "Shoot a giant wave of Paintballs", 0, 7, 0, "", "blasted",  Sounds.BLAZE_HIT.bukkitSound(), -1, -1, 3, 0, 0.05f, true),
-    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Sounds.WOOD_CLICK.bukkitSound(), -1, -1, 3, 150, 0.05f, true),
+    MINI_GUN("Mini-Gun", Material.IRON_HOE, true, 1, "High precision fast shotting gun", 0, 8, 10, "", "gunned down",  Sounds.WOOD_CLICK.bukkitSound(), -1, -1, 3, 150, 0.05f, false),
     DOUBLE("2x Coins", Material.GOLD_INGOT, true, 1, "Earn 2x Coins for the rest of the game", 0, 9, 0, "", "", Sounds.BURP.bukkitSound(), -1, -1, 0, 0, 0.2f, false),
-    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed",  Sounds.CHICKEN_EGG_POP.bukkitSound(), -1, -1, 3, 150, 0.2f, true),
+    SPRAY_N_PRAY("Spray n' Pray", Material.IRON_BARDING, true, 1, "Spray tons of Paintballs\ntowards your enemies!", 0, 10, 10, "", "sprayed",  Sounds.CHICKEN_EGG_POP.bukkitSound(), -1, -1, 3, 150, 0.2f, false),
     CYCLONE("Cyclone", Material.HOPPER, true, 1, "Turns you into a Paintball shooting Cyclone", 0, 11, 0, "", "winded", Sounds.ANVIL_LAND.bukkitSound(), -1, -1, 3, 0, 0.2f, false),
     PAINTBALL_SHOWER("Paintball Shower", Material.GOLD_NUGGET, true, 1, "Launch 300 Paintballs\ninto the air to fall on the enemies!", 0, 15, 0, "", "ended", Sounds.BAT_TAKEOFF.bukkitSound(), -1, -1, 3, 0, 0.2f, false),
     NUKE("Nuke", Material.TNT, true, 1, "Click to kill everyone\non the other teams", 0, 24, 0, "", "nuked", Sounds.ENDERDRAGON_GROWL.bukkitSound(), 1, -1, 0, 0, 0.2f, false);

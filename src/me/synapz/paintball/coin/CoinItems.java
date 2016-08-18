@@ -165,6 +165,7 @@ public class CoinItems implements Listener {
                     Utils.shootSnowball(player, event.getArena(), 0.3);
                 }
                 player.getInventory().remove(player.getItemInHand());
+                player.removePotionEffect(PotionEffectType.SLOW);
             }
         };
         new CoinItem(Items.NUKE) {
