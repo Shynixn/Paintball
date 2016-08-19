@@ -40,7 +40,7 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
-                if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     Projectile snowball = player.launchProjectile(Snowball.class);
                     snowball.setVelocity(snowball.getVelocity().multiply(event.getArena().SPEED));
                 }
@@ -51,7 +51,7 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
-                if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     Projectile snowball = player.launchProjectile(Snowball.class);
                     double speed = event.getArena().SPEED;
                     snowball.setVelocity(snowball.getVelocity().multiply(speed));
@@ -76,8 +76,10 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
-                for (int i = 0; i < 20; i++)
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    for (int i = 0; i < 20; i++)
                     Utils.shootSnowball(player, event.getArena(), 0.2);
+                }
             }
         };
 
@@ -85,9 +87,11 @@ public class CoinItems implements Listener {
             public void onClickItem(ArenaClickItemEvent event) {
                 Player player = event.getArenaPlayer().getPlayer();
 
-                for (int i = 0; i < 20; i++) {
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    for (int i = 0; i < 20; i++) {
                     Projectile snowball = player.launchProjectile(Snowball.class);
                     snowball.setVelocity(snowball.getVelocity().multiply(event.getArena().SPEED));
+                    }
                 }
             }
         };
@@ -160,14 +164,20 @@ public class CoinItems implements Listener {
 
         new CoinItem(Items.ROCKET_LAUNCHER) {
             public void onClickItem(ArenaClickItemEvent event) {
+
                 Player player = event.getArenaPlayer().getPlayer();
-                for (int i = 0; i < 50; i++) {
-                    Utils.shootSnowball(player, event.getArena(), 0.3);
+
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    for (int i = 0; i < 50; i++) {
+                        Utils.shootSnowball(player, event.getArena(), 0.3);
+                    }
+
+                    player.getInventory().remove(player.getItemInHand());
+                    player.removePotionEffect(PotionEffectType.SLOW);
                 }
-                player.getInventory().remove(player.getItemInHand());
-                player.removePotionEffect(PotionEffectType.SLOW);
             }
         };
+
         new CoinItem(Items.NUKE) {
             public void onClickItem(ArenaClickItemEvent event) {
                 Team safeTeam = event.getArenaPlayer().getTeam();
@@ -278,7 +288,7 @@ public class CoinItems implements Listener {
                     Player player = event.getArenaPlayer().getPlayer();
                     Arena arena = event.getArena();
 
-                    if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK)
+                    if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
                         Utils.shootSnowball(player, event.getArena(), arena.ACCURACY);
                 }
             };

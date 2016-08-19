@@ -142,7 +142,7 @@ public class CoinItemListener implements Listener {
         if (clickedItem.getSpeed() != player.getWalkSpeed())
             player.setWalkSpeed(clickedItem.getSpeed());
 
-        if (canZoom && e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        if (canZoom && e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
             if (zooming.contains(uuid)) {
                 zooming.remove(uuid);
                 player.removePotionEffect(PotionEffectType.SLOW);
@@ -150,6 +150,7 @@ public class CoinItemListener implements Listener {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 5));
                 zooming.add(uuid);
             }
+            return;
         }
 
         e.setCancelled(true);

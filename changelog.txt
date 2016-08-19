@@ -1,3 +1,9 @@
+v5.4.8
+- Requested to change click to right click
+- Moved zoom to left click, if you do not want zoom turn it off for an item in items.yml, zoom: false
+- Fixed zoom being counted as a shot and delay click
+- Fixed items being used while zooming in
+
 v5.4.7
 - Fixed glitching items (?)
 - Rocket launcher removes zoom when shot
