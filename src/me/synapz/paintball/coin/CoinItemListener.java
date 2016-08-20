@@ -132,16 +132,6 @@ public class CoinItemListener implements Listener {
         long delay = clickedItem.getDelay();
         boolean canZoom = clickedItem.getCanZoom();
 
-        if (System.currentTimeMillis() - timeSinceLastShot.getOrDefault(player.getName(), delay) < delay) return;
-        timeSinceLastShot.put(player.getName(), System.currentTimeMillis());
-
-        if (clickedItem.hasSound()) {
-            player.playSound(player.getLocation(), clickedItem.getSound(), 1.0F, 1.0F);
-        }
-
-        if (clickedItem.getSpeed() != player.getWalkSpeed())
-            player.setWalkSpeed(clickedItem.getSpeed());
-
         if (canZoom && e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
             if (zooming.contains(uuid)) {
                 zooming.remove(uuid);
@@ -152,6 +142,16 @@ public class CoinItemListener implements Listener {
             }
             return;
         }
+
+        if (System.currentTimeMillis() - timeSinceLastShot.getOrDefault(player.getName(), delay) < delay) return;
+        timeSinceLastShot.put(player.getName(), System.currentTimeMillis());
+
+        if (clickedItem.hasSound()) {
+            player.playSound(player.getLocation(), clickedItem.getSound(), 1.0F, 1.0F);
+        }
+
+        if (clickedItem.getSpeed() != player.getWalkSpeed())
+            player.setWalkSpeed(clickedItem.getSpeed());
 
         e.setCancelled(true);
 

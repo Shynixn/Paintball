@@ -272,26 +272,23 @@ public class CoinItems implements Listener {
             }
         };
 
-        makeDefaultItem();
+        setDefaultItem(new CoinItem(Items.DEFAULT) {
+            @Override
+            public void onClickItem(ArenaClickItemEvent event) {
+                Player player = event.getArenaPlayer().getPlayer();
+                Arena arena = event.getArena();
+
+                if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                    Utils.shootSnowball(player, event.getArena(), arena.ACCURACY);
+            }
+        });
     }
 
     public CoinItem getDefaultItem() {
-        makeDefaultItem();
         return defaultItem;
     }
 
-    private void makeDefaultItem() {
-        if (defaultItem == null) {
-            defaultItem = new CoinItem(Items.DEFAULT) {
-                @Override
-                public void onClickItem(ArenaClickItemEvent event) {
-                    Player player = event.getArenaPlayer().getPlayer();
-                    Arena arena = event.getArena();
-
-                    if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-                        Utils.shootSnowball(player, event.getArena(), arena.ACCURACY);
-                }
-            };
-        }
+    public void setDefaultItem(CoinItem coinItem) {
+        this.defaultItem = coinItem;
     }
 }
