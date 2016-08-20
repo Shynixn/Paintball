@@ -7,8 +7,8 @@ import me.synapz.paintball.coin.CoinItems;
 import me.synapz.paintball.enums.Databases;
 import me.synapz.paintball.enums.ScoreboardLine;
 import me.synapz.paintball.enums.StatType;
-import me.synapz.paintball.storage.database.Database;
-import me.synapz.paintball.storage.database.MySQLManager;
+import me.synapz.paintball.storage.database.ConnectionPool;
+import me.synapz.paintball.storage.database.DatabaseManager;
 import me.synapz.paintball.storage.files.*;
 import me.synapz.paintball.utils.Messenger;
 import net.milkbowl.vault.chat.Chat;
@@ -47,7 +47,7 @@ public class Settings {
     public static MessagesFile MESSAGES;
     public static FileConfiguration ARENA_FILE;
     public static ItemFile ITEMS;
-    public static Database DATABASE;
+    public static DatabaseManager DATABASE;
     public static DatabaseFile DATABASE_FILE;
 
     // Variables
@@ -82,7 +82,7 @@ public class Settings {
         loadSettings(); // loads everything in config.yml into constants
         MESSAGES = new MessagesFile(pb);
         DATABASE_FILE = new DatabaseFile(pb);
-        DATABASE = new MySQLManager();
+        DATABASE = new DatabaseManager();
 
         playerDataFolder = new PlayerDataFolder(pb);
         PlayerDataFolder.loadPlayerDataFiles();
@@ -99,7 +99,7 @@ public class Settings {
         // Tries to connect to database if SQL is enabled. If not, attempts to load previous data from the database and
         // transfers to playerdata.yml if the table exists, then drops the table.
         try {
-            DATABASE.openConnection();
+            ConnectionPool.init();
             DATABASE.init();
             if (Databases.ENABLED.getBoolean()) {
                 if (DATABASE.doesTableExist()) {
