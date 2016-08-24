@@ -1,3 +1,10 @@
+v5.5.1
+- Fixed DTC gamemode being too hard to score
+
+v5.5.0
+- Fixed items not being given and console error
+- Started Search & Destory gamemode
+
 v5.4.9
 - Made it so default item can be set through addon plugin
 - Fixed coin item delay affecting coin item zoom

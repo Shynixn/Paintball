@@ -39,7 +39,7 @@ public class DTCArena extends FlagArena implements Listener {
     }
 
     public void resetFlagCore(Team team) {
-        Set<Location> copyLocations = coreLocations.keySet();
+        Set<Location> copyLocations = new HashSet<>(coreLocations.keySet());
         for (Location loc : copyLocations) {
             if (coreLocations.get(loc) == team) {
                 loc.getBlock().setType(Material.AIR);

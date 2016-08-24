@@ -14,7 +14,8 @@ public enum ArenaType {
     RTF(Messages.RTF_LONG_NAME, Messages.RTF_DESCRIPTION, Messages.RTF_SHORT_NAME),
     DTC(Messages.DTC_LONG_NAME, Messages.DTC_DESCRIPTION, Messages.DTC_SHORT_NAME),
     SFG(Messages.SFG_LONG_NAME, Messages.SFG_DESCRIPTION, Messages.SFG_SHORT_NAME),
-    KC(Messages.KC_LONG_NAME, Messages.KC_DESCRIPTION, Messages.KC_SHORT_NAME);
+    KC(Messages.KC_LONG_NAME, Messages.KC_DESCRIPTION, Messages.KC_SHORT_NAME),
+    SAD(Messages.SAD_LONG_NAME, Messages.SAD_DESCRIPTION, Messages.SAD_SHORT_NAME);
 
     private Messages fullName;
     private Messages shortName;

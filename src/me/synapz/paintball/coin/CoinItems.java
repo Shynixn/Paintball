@@ -33,6 +33,10 @@ public class CoinItems implements Listener {
         return instance;
     }
 
+    public CoinItems() {
+        makeItem();
+    }
+
     public void loadItems() {
         instance = new CoinItems();
 
@@ -272,6 +276,18 @@ public class CoinItems implements Listener {
             }
         };
 
+        makeItem();
+    }
+
+    public CoinItem getDefaultItem() {
+        return defaultItem;
+    }
+
+    public void setDefaultItem(CoinItem coinItem) {
+        this.defaultItem = coinItem;
+    }
+
+    private void makeItem() {
         setDefaultItem(new CoinItem(Items.DEFAULT) {
             @Override
             public void onClickItem(ArenaClickItemEvent event) {
@@ -282,13 +298,5 @@ public class CoinItems implements Listener {
                     Utils.shootSnowball(player, event.getArena(), arena.ACCURACY);
             }
         });
-    }
-
-    public CoinItem getDefaultItem() {
-        return defaultItem;
-    }
-
-    public void setDefaultItem(CoinItem coinItem) {
-        this.defaultItem = coinItem;
     }
 }

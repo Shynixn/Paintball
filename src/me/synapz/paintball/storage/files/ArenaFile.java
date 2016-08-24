@@ -150,6 +150,9 @@ public class ArenaFile extends PaintballFile {
                     case KC:
                         a = new KCArena(arenaName, name, false);
                         break;
+                    case SAD:
+                        a = new SADArena(arenaName, name, false);
+                        break;
                     default:
                         a = new Arena(arenaName, name, false);
                         break;
