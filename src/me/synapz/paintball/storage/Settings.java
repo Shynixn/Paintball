@@ -99,7 +99,8 @@ public class Settings {
         // Tries to connect to database if SQL is enabled. If not, attempts to load previous data from the database and
         // transfers to playerdata.yml if the table exists, then drops the table.
         try {
-            ConnectionPool.init();
+            // TODO: HOW TO IMPORT??
+            // ConnectionPool.init();
             DATABASE.init();
             if (Databases.ENABLED.getBoolean()) {
                 if (DATABASE.doesTableExist()) {

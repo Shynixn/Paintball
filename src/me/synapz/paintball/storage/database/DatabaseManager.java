@@ -19,12 +19,14 @@ public class DatabaseManager{
         this.statsTable = Databases.TABLE.getString();
     }
     private Connection getConnection() {
-        try {
-            return ConnectionPool.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return null;
+
+        //try {
+            // return ConnectionPool.getConnection();
+        //} catch (SQLException e) {
+        //    e.printStackTrace();
+          //  return null;
+        //}
     }
 
     public void init() throws  SQLException{
