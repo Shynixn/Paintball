@@ -1,3 +1,12 @@
+v4.5.4
+- Fixed FFA NullPointerException error
+
+v4.5.3
+- Fixed errors
+
+v4.5.2
+- Fixed DTC exception when resetting flags
+
 v5.5.1
 - Fixed DTC gamemode being too hard to score
 

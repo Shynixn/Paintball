@@ -667,29 +667,18 @@ public class Arena {
         }
 
         StringBuilder formattedWinnerList = new StringBuilder();
-        if (this instanceof FFAArena) {
-            int c = 0;
 
-            for (Team winningTeam : teams) {
+        int index = 0;
+        for (Team winningTeam : teams) {
+            String name = winningTeam.getTitleName();
 
+            if (winners.size() != 0 && this instanceof FFAArena)
+                name = winners.get(0).getPlayer().getName();
+            else if (winners.size() == 0 && this instanceof FFAArena)
+                name = tiers.get(index).getPlayer().getName();
 
-                if (winners.size() > 0) {
-                    if (winners.size() <= 0)
-                        break;
-
-                    formattedWinnerList.append(winningTeam.getChatColor()).append(winners.get(0).getPlayer().getName()).append(Settings.THEME).append(", ");
-                } else {
-                    if (tiers.size() <= 0)
-                        break;
-
-                    formattedWinnerList.append(winningTeam.getChatColor()).append(tiers.get(c).getPlayer().getName()).append(Settings.THEME).append(", ");
-                }
-                c++;
-            }
-        } else {
-            for (Team winningTeam : teams) {
-                formattedWinnerList.append(winningTeam.getChatColor()).append(winningTeam.getTitleName()).append(Settings.THEME).append(", ");
-            }
+            formattedWinnerList.append(winningTeam.getChatColor()).append(name).append(Settings.THEME).append(", ");
+            index++;
         }
 
         String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", "));
