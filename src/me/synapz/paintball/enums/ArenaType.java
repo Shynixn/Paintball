@@ -13,9 +13,7 @@ public enum ArenaType {
     LTS(Messages.LTS_LONG_NAME, Messages.LTS_DESCRIPTION, Messages.LTS_SHORT_NAME),
     RTF(Messages.RTF_LONG_NAME, Messages.RTF_DESCRIPTION, Messages.RTF_SHORT_NAME),
     DTC(Messages.DTC_LONG_NAME, Messages.DTC_DESCRIPTION, Messages.DTC_SHORT_NAME),
-    SFG(Messages.SFG_LONG_NAME, Messages.SFG_DESCRIPTION, Messages.SFG_SHORT_NAME),
-    KC(Messages.KC_LONG_NAME, Messages.KC_DESCRIPTION, Messages.KC_SHORT_NAME),
-    SAD(Messages.SAD_LONG_NAME, Messages.SAD_DESCRIPTION, Messages.SAD_SHORT_NAME);
+    KC(Messages.KC_LONG_NAME, Messages.KC_DESCRIPTION, Messages.KC_SHORT_NAME);
 
     private Messages fullName;
     private Messages shortName;
@@ -45,10 +43,6 @@ public enum ArenaType {
 
     public static ArenaType getArenaType(Player sender, String strType) {
         ArenaType type = null;
-
-        // Had to convert ELM to FFA so this will turn the type to FFA if it loads as ELM
-        if (strType.equalsIgnoreCase("elm"))
-            return FFA;
 
         for (ArenaType t : ArenaType.values()) {
             if (t.getFullName().equalsIgnoreCase(strType) || t.getShortName().equalsIgnoreCase(strType) || t.getStaticName().equalsIgnoreCase(strType))

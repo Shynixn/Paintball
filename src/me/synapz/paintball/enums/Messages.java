@@ -190,10 +190,6 @@ public enum Messages {
     CTF_LONG_NAME("Capture the Flag"),
     CTF_DESCRIPTION("Capture other team's flags and bring them to your base"),
 
-    SAD_SHORT_NAME("S&D", false),
-    SAD_LONG_NAME("Search & Destory", false),
-    SAD_DESCRIPTION("Plant the bomb by placing it on the other team's area or mine it to diffuse it"),
-
     TDM_SHORT_NAME("TDM"),
     TDM_LONG_NAME("Team Deathmatch"),
     TDM_DESCRIPTION("Kill players on the other team"),
@@ -217,10 +213,6 @@ public enum Messages {
     DTC_SHORT_NAME("DTC"),
     DTC_LONG_NAME("Destroy the Core"),
     DTC_DESCRIPTION("Get to the other team's Core and shoot it to destroy it"),
-
-    SFG_SHORT_NAME("SFG"),
-    SFG_LONG_NAME("Safe Guard"),
-    SFG_DESCRIPTION("Bring your zombie to your base by standing close to it"),
 
     KC_SHORT_NAME("KC"),
     KC_LONG_NAME("Kill Confirmed"),

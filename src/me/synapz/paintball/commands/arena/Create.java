@@ -50,12 +50,6 @@ public class Create extends PaintballCommand {
                 case LTS:
                     a = new LTSArena(arenaName, arenaName, true);
                     break;
-                case SFG:
-                    a = new SFGArena(arenaName, arenaName, true);
-                    break;
-                case SAD:
-                    a = new SADArena(arenaName, arenaName, true);
-                    break;
                 case KC:
                     a = new KCArena(arenaName, arenaName, true);
                     break;

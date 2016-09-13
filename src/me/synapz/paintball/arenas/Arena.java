@@ -541,8 +541,6 @@ public class Arena {
                 player = new LTSArenaPlayer(p);
             else if (this instanceof DTCArena)
                 player = new DTCArenaPlayer(p);
-            else if (this instanceof SFGArena)
-                player = new SFGArenaPlayer(p);
             else if (this instanceof KCArena)
                 player = new KCArenaPlayer(p);
             else
@@ -682,32 +680,6 @@ public class Arena {
         }
 
         String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", "));
-
-        if (this instanceof FFAArena) {
-            if (BROADCAST_WINNER) {
-                Bukkit.broadcastMessage((teams.size() == 1 ? list + " " + Messages.WON.getString() + "!" : Messages.THERE_WAS_A_TIE_BETWEEN.getString() + list));
-            } else {
-                broadcastMessage((teams.size() == 1 ? list + " " + Messages.WON.getString() + "!" : Messages.THERE_WAS_A_TIE_BETWEEN.getString() + list));
-            }
-        } else {
-            if (BROADCAST_WINNER) {
-                Bukkit.broadcastMessage((teams.size() == 1 ? new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() : Messages.THERE_WAS_A_TIE_BETWEEN.getString() + list));
-            } else {
-                broadcastMessage((teams.size() == 1 ? new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() : new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() + list));
-            }
-        }
-
-        if (this instanceof FFAArena) {
-            for (PaintballPlayer player : getAllPlayers().values()) {
-                Title title = new Title(THEME + (teams.size() == 1 ? list + " " + Messages.WON.getString() + "!" : new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build()), SECONDARY + (teams.size() == 1 ? Messages.YOU.getString() + " " + (teams.contains(player.getTeam()) ? Messages.WON.getString() : Messages.LOST.getString()) : list), 20, 40, 20);
-                title.send(player.getPlayer());
-            }
-        } else {
-            for (PaintballPlayer player : getAllPlayers().values()) {
-                Title title = new Title(THEME + (teams.size() == 1 ? new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() : new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build()), SECONDARY + (teams.size() == 1 ? Messages.YOU.getString() + " " + (teams.contains(player.getTeam()) ? Messages.WON.getString() : Messages.LOST.getString()) : list), 20, 40, 20);
-                title.send(player.getPlayer());
-            }
-        }
 
         if (wagerManager.hasWager()) {
             WagerPayoutEvent event = new WagerPayoutEvent(forPayout, wagerManager.getAndResetWager());

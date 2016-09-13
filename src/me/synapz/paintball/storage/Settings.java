@@ -98,6 +98,7 @@ public class Settings {
 
         // Tries to connect to database if SQL is enabled. If not, attempts to load previous data from the database and
         // transfers to playerdata.yml if the table exists, then drops the table.
+        /*
         try {
             // TODO: HOW TO IMPORT??
             // ConnectionPool.init();
@@ -125,6 +126,7 @@ public class Settings {
                 e.printStackTrace();
             }
         }
+        */
     }
 
     // Called on server start, reload, and pb admin reload
