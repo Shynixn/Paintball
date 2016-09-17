@@ -21,12 +21,14 @@ public class DatabaseManager{
     private Connection getConnection() {
         return null;
 
-        //try {
-            // return ConnectionPool.getConnection();
-        //} catch (SQLException e) {
-        //    e.printStackTrace();
-          //  return null;
-        //}
+        /*
+        try {
+            return ConnectionPool.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        */
     }
 
     public void init() throws  SQLException{

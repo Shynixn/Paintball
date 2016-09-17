@@ -1,18 +1,15 @@
 package me.synapz.paintball.storage.database;
 
-/*import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.synapz.paintball.enums.Databases;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-*/
-/**
- * Created by Jeremy Lugo on 8/20/2016.
- */
+
 public class ConnectionPool {
-/* WHERE IS THIS??
+    /*
     private static HikariDataSource dataSource;
 
     public static void init() {

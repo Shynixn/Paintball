@@ -666,20 +666,24 @@ public class Arena {
 
         StringBuilder formattedWinnerList = new StringBuilder();
 
-        int index = 0;
         for (Team winningTeam : teams) {
             String name = winningTeam.getTitleName();
 
-            if (winners.size() != 0 && this instanceof FFAArena)
-                name = winners.get(0).getPlayer().getName();
-            else if (winners.size() == 0 && this instanceof FFAArena)
-                name = tiers.get(index).getPlayer().getName();
-
             formattedWinnerList.append(winningTeam.getChatColor()).append(name).append(Settings.THEME).append(", ");
-            index++;
         }
 
         String list = formattedWinnerList.substring(0, formattedWinnerList.lastIndexOf(", "));
+
+        if (BROADCAST_WINNER) {
+            Bukkit.broadcastMessage((teams.size() == 1 ? new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() : Messages.THERE_WAS_A_TIE_BETWEEN.getString() + list));
+         } else {
+            broadcastMessage((teams.size() == 1 ? new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() : new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() + list));
+        }
+
+        for (PaintballPlayer player : getAllPlayers().values()) {
+            Title title = new Title(THEME + (teams.size() == 1 ? new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build() : new MessageBuilder(Messages.TEAM_WON).replace(Tag.TEAM, list).build()), SECONDARY + (teams.size() == 1 ? Messages.YOU.getString() + " " + (teams.contains(player.getTeam()) ? Messages.WON.getString() : Messages.LOST.getString()) : list), 20, 40, 20);
+            title.send(player.getPlayer());
+        }
 
         if (wagerManager.hasWager()) {
             WagerPayoutEvent event = new WagerPayoutEvent(forPayout, wagerManager.getAndResetWager());

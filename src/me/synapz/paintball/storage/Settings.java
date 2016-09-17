@@ -100,8 +100,7 @@ public class Settings {
         // transfers to playerdata.yml if the table exists, then drops the table.
         /*
         try {
-            // TODO: HOW TO IMPORT??
-            // ConnectionPool.init();
+            ConnectionPool.init();
             DATABASE.init();
             if (Databases.ENABLED.getBoolean()) {
                 if (DATABASE.doesTableExist()) {
