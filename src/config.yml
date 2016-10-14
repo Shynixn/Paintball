@@ -36,11 +36,11 @@ Per-Arena-Settings:
     currency: "$"
     # The score (amount of kills) a team must get to win
     max-score: 15
-    # How much time (in seconds) the game lasts. If no one reaches the kills-to-win when this timer ends the team with most kills is the winner
+    # How much time the game lasts. If no one reaches the kills-to-win when this timer ends the team with most kills is the winner
     time: 300
     # How many lives a player has before they are set to a spectator. 0 for unlimited lives, where they play until the time or max-score is reached
     lives: 0
-    # How much time (in seconds) to wait after a team wins before players will be sent out of the arena. In this time players can see their scores and who won
+    # How much time to wait after a team wins before players will be sent out of the arena. In this time players can see their scores and who won
     win-waiting-time: 10
     # True - Coin Shop is enabled for the arena. False - No Coin Shop and Coins are removed
     coin-shop: true
@@ -56,7 +56,7 @@ Per-Arena-Settings:
     nametags: true
     # True - Coins will be shown on the scoreboard and incremented. False - Coins will be disabled
     coins: true
-    # Material the Coin Shop will be, for a list of Materials see plugin page's FAQ
+    # Material the Coin Shop will be, for a list of Materials see plugin page FAQ
     coin-shop-type: MAGMA_CREAM
 
     # Settings for when a player joins an arena
@@ -172,7 +172,7 @@ Per-Arena-Settings:
         per-win: 100
         per-defeat: 50
 
-    # Settings to do with chat aspects of Paintball-- when players are in the arena
+    # Settings to do with chat aspects of Paintball in game
     Chat:
       # True - use arena chat which can only be viewed by arena players. False - will use global chat
       use-arena-chat: true
