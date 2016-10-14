@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ConnectionPool {
-    /*
+
     private static HikariDataSource dataSource;
 
     public static void init() {
@@ -55,5 +55,5 @@ public class ConnectionPool {
         config.addDataSourceProperty("useServerPrepStmts", "true");
         return new HikariDataSource(config);
     }
-    */
+
 }

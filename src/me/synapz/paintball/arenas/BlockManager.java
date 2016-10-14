@@ -21,13 +21,21 @@ public class BlockManager {
     }
 
     public void restore(Location location) {
-        BlockState state = blocks.get(Utils.simplifyLocation(location));
-        BlockState topState = upperBlocks.get(Utils.simplifyLocation(location.clone().add(0, 1, 0)));
+        Location lowerLoc = Utils.simplifyLocation(location);
+        Location upperLoc = Utils.simplifyLocation(location.clone().add(0, 1, 0));
+        BlockState lowerState = blocks.get(lowerLoc);
+        BlockState topState = upperBlocks.get(upperLoc);
 
-        if (state != null)
-            state.update(true);
+        if (lowerState != null) {
+            lowerState.update(true);
 
-        if (topState != null)
+            blocks.remove(lowerLoc, lowerState);
+        }
+
+        if (topState != null) {
             topState.update(true);
+
+            upperBlocks.remove(upperLoc, topState);
+        }
     }
 }
