@@ -18,6 +18,7 @@ public class DatabaseManager{
     public DatabaseManager() {
         this.statsTable = Databases.TABLE.getString();
     }
+
     private Connection getConnection() {
         try {
             return ConnectionPool.getConnection();
