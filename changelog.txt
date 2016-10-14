@@ -1,3 +1,6 @@
+v4.5.7
+- Fixed black flag issue in CTF and RTF (?)
+
 v4.5.6
 - Fixed FFA from being stuck on Stopping
 

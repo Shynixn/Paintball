@@ -71,10 +71,6 @@ public class Paintball extends JavaPlugin implements Listener {
 
         }
 
-        //if (new Update(this).check()) {
-        //    sendUpdate();
-        //}
-
         removeOldPlayerDatsFile();
 
         if (getServer().getPluginManager().getPlugin("NoCheatPlus") != null)
