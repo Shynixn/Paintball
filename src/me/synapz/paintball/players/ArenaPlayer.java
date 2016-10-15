@@ -41,7 +41,7 @@ public class ArenaPlayer extends PaintballPlayer {
     private CoinItem lastClickedItem;
     protected int heightKillStreak;
     private int killStreak;
-    private int coins = 100;
+    private int coins;
     protected int deaths;
     protected int kills;
     private double money;
