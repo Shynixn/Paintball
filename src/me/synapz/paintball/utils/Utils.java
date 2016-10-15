@@ -22,6 +22,7 @@ import org.bukkit.material.Wool;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -131,7 +132,39 @@ public class Utils {
             editedItems[location] = armour;
             location++;
         }
+        addUnbreakableTag(editedItems);
         return editedItems;
+    }
+
+
+    public static ItemStack addUnbreakableTag(ItemStack itemStack) {
+        try {
+            Class<?> clazz = Class.forName("org.bukkit.craftbukkit." + getServerVersion() + ".inventory.CraftItemStack");
+
+            Object handle = ReflectionUtil.getMethod(clazz, "asNMSCopy", ItemStack.class).invoke(null, itemStack);
+            Object nbtInstance = ReflectionUtil.getMethod(handle.getClass(), "getTag").invoke(handle);
+            ReflectionUtil.getMethod(nbtInstance.getClass(), "setBoolean", String.class, boolean.class).invoke(nbtInstance, "Unbreakable",true);
+
+            ReflectionUtil.getMethod(handle.getClass(), "setTag", nbtInstance.getClass()).invoke(handle, nbtInstance);
+            return (ItemStack) ReflectionUtil.getMethod(clazz, "asCraftMirror", handle.getClass()).invoke(null, handle);
+        }
+        catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private static String getServerVersion() {
+        return Bukkit.getServer().getClass().getPackage().getName().replace(".",  ",").split(",")[3];
+    }
+
+    public static void addUnbreakableTag(ItemStack[] itemStacks) {
+        for(int i = 0; i< itemStacks.length; i++) {
+            if(itemStacks[i] != null && itemStacks[i].getType() != Material.AIR) {
+                itemStacks[i] = addUnbreakableTag(itemStacks[i]);
+            }
+        }
     }
 
     public static boolean locEquals(Location loc, Location loc2) {

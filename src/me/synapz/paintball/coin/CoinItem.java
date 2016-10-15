@@ -253,7 +253,7 @@ public class CoinItem extends ItemStack {
     // Removes the item from the inventory
     public void remove(ArenaPlayer arenaPlayer) {
         Player player = arenaPlayer.getPlayer();
-        if (player != null && player.getInventory().contains(this)) {
+        if (player != null) {
             for (ItemStack itemStack : player.getPlayer().getInventory().getContents()) {
                 if (Utils.equals(itemStack, this.getItemName(true))) {
                     player.getPlayer().getInventory().remove(itemStack);

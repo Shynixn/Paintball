@@ -41,7 +41,7 @@ public class ArenaPlayer extends PaintballPlayer {
     private CoinItem lastClickedItem;
     protected int heightKillStreak;
     private int killStreak;
-    private int coins;
+    private int coins = 100;
     protected int deaths;
     protected int kills;
     private double money;
@@ -368,7 +368,7 @@ public class ArenaPlayer extends PaintballPlayer {
      * @param item CoinItem to be added to the inventory
      */
     public void addItem(int slot, CoinItem item) {
-        this.getPlayer().getInventory().setItem(slot, item.getItemStack(this, false));
+        this.getPlayer().getInventory().setItem(slot, Utils.addUnbreakableTag(item.getItemStack(this, false)));
         if (item.hasExpirationTime()) {
             new ExpirationCountdown(item, this, item.getExpirationTime());
         }
